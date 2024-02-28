@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { DeviceRepository } from "../device.repository";
+import { DeviceRepository } from "../security-device.repository";
 
 export class DeleteAllDevicesCommnad {
 	constructor() {}

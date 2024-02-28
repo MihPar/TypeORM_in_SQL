@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { DeviceQueryRepository } from '../deviceQuery.repository';
+import { DeviceQueryRepository } from '../security-deviceQuery.repository';
 
 @Injectable()
 export class ForbiddenCalss implements CanActivate {

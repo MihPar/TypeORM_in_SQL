@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersQueryRepository } from '../../users/users.queryRepository';
-import { DeviceQueryRepository } from '../../security-devices/deviceQuery.repository';
+import { DeviceQueryRepository } from '../../security-devices/security-deviceQuery.repository';
 
 @Injectable()
 export class CheckRefreshToken implements CanActivate {
@@ -32,7 +32,7 @@ export class CheckRefreshToken implements CanActivate {
 	const oldActiveDate = new Date(payload.iat * 1000).toISOString()
 	if (
 	  !session ||
-	  session!.lastActiveDate.toISOString() !== oldActiveDate
+	  session!.lastActiveDate.toString() !== oldActiveDate
 	) {
 		throw new UnauthorizedException("401")
 	}

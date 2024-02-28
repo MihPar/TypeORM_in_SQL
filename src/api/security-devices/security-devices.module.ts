@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { SecurityDeviceController } from './device.controller';
+import { SecurityDeviceController } from './security-device.controller';
 import { DeleteAllDevicesUseCase } from './useCase/deleteAllDevices-use-case';
 import { LogoutUseCase } from './useCase/logout-use-case';
 import { TerminateAllCurrentSessionUseCase } from './useCase/terminateAllCurrentSeccion-use-case';
 import { UpdateDeviceUseCase } from './useCase/updateDevice-use-case';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Device } from './entities/security-device.entity';
-import { DeviceRepository } from './device.repository';
-import { DeviceQueryRepository } from './deviceQuery.repository';
+import { DeviceRepository } from './security-device.repository';
+import { DeviceQueryRepository } from './security-deviceQuery.repository';
 import { CommandBus } from '@nestjs/cqrs';
 import { CheckRefreshToken } from '../auth/guards/checkRefreshToken';
 import { ForbiddenCalss } from './gards/forbidden';

@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs"
 import { randomUUID } from 'crypto';
 import { UserClass } from '../../users/user.class';
-import { DeviceRepository } from '../../security-devices/device.repository';
+import { DeviceRepository } from '../../security-devices/security-device.repository';
 import { ApiJwtService } from '../../../infrastructura/jwt/jwt.service';
 import { DeviceClass } from '../../security-devices/dto/device.class';
 

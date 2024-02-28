@@ -1,7 +1,7 @@
 import { HttpException } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { PayloadAdapter } from "../../auth/adapter/payload.adapter";
-import { DeviceRepository } from "../device.repository";
+import { DeviceRepository } from "../security-device.repository";
 
 	export class LogoutCommand {
 		constructor(

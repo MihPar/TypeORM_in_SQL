@@ -1,16 +1,14 @@
 import "reflect-metadata"
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository, WithId } from "typeorm";
-import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 import { UserViewType } from './user.type';
 import { PaginationType } from "../../types/pagination.types";
-import { UserClass } from "./user.class";
 import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UsersQueryRepository {
   constructor(
-	// @InjectDataSource() protected dataSource: DataSource,
 	@InjectRepository(User) protected readonly repository: Repository<User>,
 	) {}
   async getAllUsers(
@@ -59,71 +57,70 @@ export class UsersQueryRepository {
     };
   }
 
-  async findByLoginOrEmail(loginOrEmail: string): Promise<UserClass | null> {
-    const user: UserClass | null = (
-      await this.dataSource.query(`
-		SELECT *
-			FROM public."Users"
-			WHERE "userName" = '${loginOrEmail}' OR "email" = '${loginOrEmail}'
-		`)
-    )[0];
-    return user;
-  }
+//   async findByLoginOrEmail(loginOrEmail: string): Promise<UserClass | null> {
+//     const user: UserClass | null = (
+//       await this.dataSource.query(`
+// 		SELECT *
+// 			FROM public."Users"
+// 			WHERE "userName" = '${loginOrEmail}' OR "email" = '${loginOrEmail}'
+// 		`)
+//     )[0];
+//     return user;
+//   }
 
-  async findUserByEmail(email: string): Promise<UserClass | null> {
-    const user: UserClass | null = (
-      await this.dataSource.query(`
-			SELECT *
-				FROM public."Users"
-				WHERE "email" = '${email}'
-		`)
-    )[0];
-    return user;
-  }
+//   async findUserByEmail(email: string): Promise<UserClass | null> {
+//     const user: UserClass | null = (
+//       await this.dataSource.query(`
+// 			SELECT *
+// 				FROM public."Users"
+// 				WHERE "email" = '${email}'
+// 		`)
+//     )[0];
+//     return user;
+//   }
 
-  async findUserByLogin(login: string): Promise<UserClass | null> {
-    const user: UserClass | null = (
-      await this.dataSource.query(`
-			SELECT *
-				FROM public."Users"
-				WHERE "userName" = '${login}'
-		`)
-    )[0];
-    return user;
-  }
+//   async findUserByLogin(login: string): Promise<UserClass | null> {
+//     const user: UserClass | null = (
+//       await this.dataSource.query(`
+// 			SELECT *
+// 				FROM public."Users"
+// 				WHERE "userName" = '${login}'
+// 		`)
+//     )[0];
+//     return user;
+//   }
 
-  async findUserByCode(
-    recoveryCode: string
-  ): Promise<WithId<UserClass> | null> {
-    const result = await this.dataSource.query(`
-		SELECT *
-			FROM public."Users"
-			WHERE "confirmationCode" = '${recoveryCode}'
-		`);
-    return result[0];
-  }
+//   async findUserByCode(
+//     recoveryCode: string
+//   ): Promise<WithId<UserClass> | null> {
+//     const result = await this.dataSource.query(`
+// 		SELECT *
+// 			FROM public."Users"
+// 			WHERE "confirmationCode" = '${recoveryCode}'
+// 		`);
+//     return result[0];
+//   }
 
-  async findUserByConfirmation(code: string): Promise<UserClass | null> {
-    const user: UserClass | null = (
-      await this.dataSource.query(`
-		SELECT *
-			FROM public."Users"
-			WHERE "confirmationCode" = $1
-	`,
-        [code]
-      )
-    )[0];
-    return user;
-  }
+//   async findUserByConfirmation(code: string): Promise<UserClass | null> {
+//     const user: UserClass | null = (
+//       await this.dataSource.query(`
+// 		SELECT *
+// 			FROM public."Users"
+// 			WHERE "confirmationCode" = $1
+// 	`,
+//         [code]
+//       )
+//     )[0];
+//     return user;
+//   }
 
-  async findUserById(id: string): Promise<UserClass | null> {
-    let user: UserClass | null = (
-      await this.dataSource.query(`
-			SELECT *
-				FROM public."Users"
-				WHERE "id" = '${id}'
-		`)
-    )[0];
+  async findUserById(id: string): Promise<User | null> {
+    let user: User | null = await this.repository
+		.createQueryBuilder("u")
+		.select("user")
+		.where("u.id = :id", {id})
+		.getOne()
+      
     return user;
   }
 }

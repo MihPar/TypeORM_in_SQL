@@ -13,14 +13,18 @@ export class Device {
 	title: string
 
 	@Column()
-	lastActiveDate: string
-
-	@Column()
-	deviceId: string
+	lastActiveDate: Date
 
 	@ManyToOne(() => User, u => u.device)
 	user: User
 
 	@Column()
 	userId: string
+}
+
+export type DeviceView = {
+	ip: string
+	title: string
+	lastActiveDate: Date
+	deviceId: number
 }
