@@ -1,23 +1,24 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { TestingModule } from './testing/testing.module';
+import { AuthModule } from './api/auth/auth.module';
+import { TestingModule } from './api/testing/testing.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { SecurityDevicesModule } from './security-devices/security-devices.module';
+import { SecurityDevicesModule } from './api/security-devices/security-devices.module';
+import { UsersModule } from './api/users/users.module';
 
-export const options: TypeOrmModuleOptions = {
-	type: "postgres",
-	host: "localhost",
-	port: 5432,
-	username: process.env.USERNAME,
-	password: process.env.PASSWORD,
-	database: "BankSystem",
-	autoLoadEntities: true,
-	synchronize: true,
-} 
+// export const options: TypeOrmModuleOptions = {
+// 	type: "postgres",
+// 	host: "localhost",
+// 	port: 5432,
+// 	username: process.env.USERNAME,
+// 	password: process.env.PASSWORD,
+// 	database: "homeWordTypeORM_SQL",
+// 	autoLoadEntities: true,
+// 	synchronize: true,
+// } 
 
 @Module({
   imports: [
@@ -30,10 +31,21 @@ export const options: TypeOrmModuleOptions = {
 	// 	ttl: 10000,
 	// 	limit: 5,
 	//   }]),
-	TypeOrmModule.forRoot(options),
+	TypeOrmModule.forRoot({
+		type: "postgres",
+		host: "localhost",
+		port: 5432,
+		username: process.env.USERNAME,
+		password: process.env.PASSWORD,
+		database: "homeWordTypeORM_SQL",
+		autoLoadEntities: true,
+		synchronize: true,
+	} 
+	),
 	SecurityDevicesModule,
 	AuthModule,
 	TestingModule,
+	UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

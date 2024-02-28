@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 import {
   Injectable,
   CanActivate,
@@ -8,7 +8,6 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthRepository } from '../auth.repository';
-import { CollectionIP } from '../../CollectionIP/collection.class';
 
 @Injectable()
 export class Ratelimits implements CanActivate {

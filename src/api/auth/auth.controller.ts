@@ -16,6 +16,15 @@ import { IsExistEmailUser } from "./guards/isExixtEmailUser";
 import { GetUserIdByTokenCommand } from "./useCase.ts/getUserIdByToken-use-case";
 import { Ratelimits } from "./guards/rateLimits";
 import { SkipThrottle, Throttle, ThrottlerGuard } from '@nestjs/throttler';
+import { RegistrationConfirmationCommand } from "../users/useCase/registratinConfirmation-use-case";
+import { RegistrationCommand } from "../users/useCase/registration-use-case";
+import { UpdateDeviceCommand } from "../security-devices/useCase/updateDevice-use-case";
+import { CheckRefreshTokenForComments } from "./useCase.ts/bearer.authForComments";
+import { UserClass } from "../users/user.class";
+import { LogoutCommand } from "../security-devices/useCase/logout-use-case";
+import { RegistrationEmailResendingCommand } from "../users/useCase/registrationEmailResending-use-case";
+import { UserDecorator, UserIdDecorator } from "src/infrastructura/decorators/decorator.user";
+import { UsersQueryRepository } from "../users/users.queryRepository";
 
 
 // @UseGuards(ThrottlerGuard)
