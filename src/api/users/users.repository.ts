@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { add } from 'date-fns';
 import { UsersQueryRepository } from './users.queryRepository';
 import { User } from './entities/user.entity';
@@ -8,7 +8,7 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UsersRepository {
   constructor(
-	@InjectRepository(User) protected readonly repository: Repository<User>,
+	@InjectRepository(User) protected readonly userRepository: Repository<User>,
     protected readonly usersQueryRepository: UsersQueryRepository
   ) {}
 
@@ -18,14 +18,14 @@ export class UsersRepository {
       expirationDate: add(new Date(), { minutes: 5 }),
     };
 
-	const recoveryPassword = await this.repository
-		.createQueryBuilder("u")
-		.update("user")
+	const recoveryPassword = await this.userRepository
+		.createQueryBuilder()
+		.update(User)
 		.set({
 			expirationDate: recoveryInfo.expirationDate,
 			confirmationCode: recoveryInfo.recoveryCode
 		})
-		.where("u.id = :id", {id})
+		.where("id = :id", {id})
 		.execute()
 
 		if (!recoveryPassword) return false;
@@ -33,11 +33,11 @@ export class UsersRepository {
   }
 
   async updatePassword(id: any, newPasswordHash: string): Promise<boolean> {
-	const updatePassword = await this.repository
-		.createQueryBuilder("u")
-		.update("user")
-		.set({passwortdHash: newPasswordHash})
-		.where("u.id = :id", {id})
+	const updatePassword = await this.userRepository
+		.createQueryBuilder()
+		.update(User)
+		.set({passwordHash: newPasswordHash})
+		.where("id = :id", {id})
 		.execute()
 
 		if (!updatePassword) return false;
@@ -45,33 +45,33 @@ export class UsersRepository {
   }
 
   async updateConfirmation(id: number) {
-	const result = await this.repository
-		.createQueryBuilder("u")
-		.update("user")
+	const result = await this.userRepository
+		.createQueryBuilder()
+		.update(User)
 		.set({isConfirmed: true})
-		.where("u.id = id", {id})
+		.where("id = :id", {id})
 		.execute()
 
 		return true;
   }
 
   async createUser(newUser: User) {
-	const insertUser = await this.repository
-		.createQueryBuilder("u")
+	const insertUser = await this.userRepository
+		.createQueryBuilder()
 		.insert()
-		.into("user u")
+		.into(User)
 		.values([
 			{
-				userName: newUser.login, 
+				login: newUser.login, 
 				email: newUser.email, 
-				passportHash: newUser.passwordHash,
+				passwordHash: newUser.passwordHash,
 				createdAt: newUser.createdAt,
 				confirmationCode: newUser.confirmationCode,
 				expirationDate: newUser.expirationDate,
 				isConfirmed: newUser.isConfirmed
 			}
 		])
-		.returning("u.id")
+		.returning("id")
 		.execute()
 	return insertUser
   }
@@ -82,14 +82,14 @@ export class UsersRepository {
     newExpirationDate: Date
   ): Promise<boolean> {
 
-	const updateCunfirmation = await this.repository
-		.createQueryBuilder("u")
-		.update("user")
+	const updateCunfirmation = await this.userRepository
+		.createQueryBuilder()
+		.update(User)
 		.set({
 			expirationDate: newExpirationDate,
 			confirmationCode: confirmationCode
 		})
-		.where("u.id = :id", {id})
+		.where("id = :id", {id})
 		.execute()
     
     if (!updateCunfirmation) return false;
@@ -97,18 +97,19 @@ export class UsersRepository {
   }
 
   async deleteById(userId: string) {
-	const findUserById: User | null = await this.repository
-		.createQueryBuilder("u")
-		.select("user u")
+	const findUserById: User | null = await this.userRepository
+		.createQueryBuilder()
+		.select("user")
+		.from(User, "user")
 		.where("user.id = :id", {id: userId})
 		.getOne()
 	if(!findUserById) return false
 
-	const deleteById = await this.repository
-		.createQueryBuilder("u")
+	const deleteById = await this.userRepository
+		.createQueryBuilder()
 		.delete()
-		.from("user")
-		.where("user.id = :id", {id: userId})
+		.from(User)
+		.where("id = :id", {id: userId})
 		.execute()
 		
     if (!deleteById) return false;
@@ -116,10 +117,10 @@ export class UsersRepository {
   }
 
   async deleteAllUsers() {
-    await this.repository
-		.createQueryBuilder("u")
+    await this.userRepository
+		.createQueryBuilder()
 		.delete()
-		.from("user")
+		.from(User)
 		.execute()
     return true;
   }

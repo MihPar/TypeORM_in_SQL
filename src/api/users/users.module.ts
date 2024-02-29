@@ -11,7 +11,7 @@ import { RegistrationEmailResendingUseCase } from './useCase/registrationEmailRe
 import { Device } from '../security-devices/entities/security-device.entity';
 import { UsersRepository } from './users.repository';
 import { UsersQueryRepository } from './users.queryRepository';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { PayloadAdapter } from '../auth/adapter/payload.adapter';
 import { GenerateHashAdapter } from '../auth/adapter/generateHashAdapter';
 import { EmailManager } from 'src/infrastructura/email/email.manager';
@@ -30,7 +30,6 @@ const userCase = [
 const repo = [
   UsersRepository,
   UsersQueryRepository,
-  CommandBus,
   PayloadAdapter,
 ];
 
@@ -39,7 +38,7 @@ const manager = [EmailManager];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device])],
+  imports: [TypeOrmModule.forFeature([User, Device]), CqrsModule],
   controllers: [UsersController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })

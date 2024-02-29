@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './api/auth/auth.module';
 import { TestingModule } from './api/testing/testing.module';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -22,7 +20,6 @@ import { UsersModule } from './api/users/users.module';
 
 @Module({
   imports: [
-	CqrsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env",
@@ -31,7 +28,8 @@ import { UsersModule } from './api/users/users.module';
 	// 	ttl: 10000,
 	// 	limit: 5,
 	//   }]),
-	TypeOrmModule.forRoot({
+	TypeOrmModule.forRoot(
+		{
 		type: "postgres",
 		host: "localhost",
 		port: 5432,
@@ -47,7 +45,5 @@ import { UsersModule } from './api/users/users.module';
 	TestingModule,
 	UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

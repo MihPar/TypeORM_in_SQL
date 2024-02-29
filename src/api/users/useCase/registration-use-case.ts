@@ -28,18 +28,16 @@ export class RegistrationUseCase
     const passwordHash = await this.generateHashAdapter._generateHash(
       command.inputDataReq.password
     );
-    const newUser = new User(
-      passwordHash,
-      uuidv4(),
-      add(new Date(), {
-        hours: 1,
-        minutes: 10,
-      }).toISOString(),
-	  false
-    );
-	  newUser.login = command.inputDataReq.login,
-      newUser.email = command.inputDataReq.email,
-	  newUser.createdAt = new Date()
+    const newUser = new User()
+	
+    newUser.login = command.inputDataReq.login
+    newUser.email = command.inputDataReq.email
+	newUser.createdAt = new Date()
+	newUser.passwordHash = passwordHash,
+	newUser.expirationDate = add(new Date(), {hours: 1, minutes: 10})
+	newUser.confirmationCode = uuidv4()
+	newUser.isConfirmed = false
+	
     const userId: any = await this.usersRepository.createUser(newUser);
     try {
       await this.emailManager.sendEamilConfirmationMessage(

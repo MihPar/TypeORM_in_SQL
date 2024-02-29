@@ -9,7 +9,7 @@ import { User } from "./entities/user.entity";
 @Injectable()
 export class UsersQueryRepository {
   constructor(
-	@InjectRepository(User) protected readonly repository: Repository<User>,
+	@InjectRepository(User) protected readonly userRepository: Repository<User>,
 	) {}
   async getAllUsers(
     sortBy: string,
@@ -23,21 +23,23 @@ export class UsersQueryRepository {
 		sortBy = "userName";
 	  }
 
-	const users = await this.repository
-		.createQueryBuilder("u")
-		.select("user u")
-		.where("u.userName ILIKE :loginTerm", {loginTerm: `%${searchLoginTerm}%`})
-		.orWhere("u.userName ILIKE :emailTerm", {emailTerm: `%${searchEmailTerm}%`})
-		.orderBy(`${sortBy}`,`${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
+	const users = await this.userRepository
+		.createQueryBuilder()
+		.select("user")
+		.from(User, "user")
+		.where("user.login ILIKE :loginTerm", {loginTerm: `%${searchLoginTerm}%`})
+		.orWhere("user.email ILIKE :emailTerm", {emailTerm: `%${searchEmailTerm}%`})
+		.orderBy(`"${sortBy}"`,`${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getMany()
     
-	const totalCount = await this.repository
-		.createQueryBuilder("u")
-		.select("user u")
-		.where("u.userName ILIKE :loginTerm", {loginTerm: `%${searchLoginTerm}%`})
-		.orWhere("u.userName ILIKE :emailTerm", {emailTerm: `%${searchEmailTerm}%`})
+	const totalCount = await this.userRepository
+		.createQueryBuilder()
+		.select("user")
+		.from(User, "user")
+		.where("user.login ILIKE :loginTerm", {loginTerm: `%${searchLoginTerm}%`})
+		.orWhere("user.email ILIKE :emailTerm", {emailTerm: `%${searchEmailTerm}%`})
 		.getCount()
 
     const pagesCount: number = await Math.ceil(totalCount / +pageSize);
@@ -58,29 +60,32 @@ export class UsersQueryRepository {
   }
 
   async findByLoginOrEmail(loginOrEmail: string): Promise<User | null> {
-    const user: User | null = await this.repository
-		.createQueryBuilder("u")
+    const user: User | null = await this.userRepository
+		.createQueryBuilder()
 		.select("user")
-		.where("u.userName = :login OR u.userName = :email", {login: loginOrEmail, email: loginOrEmail})
+		.from(User, "user")
+		.where("user.login = :login OR user.email = :email", {login: loginOrEmail, email: loginOrEmail})
 		.getOne()
     
     return user;
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
-    const user: User | null = await this.repository
-		.createQueryBuilder("u")
-		.select("user u")
-		.where("u.email = :email", {email})
+    const user: User | null = await this.userRepository
+		.createQueryBuilder()
+		.select("user")
+		.from(User, "user")
+		.where("user.email = :email", {email})
 		.getOne()
     return user;
   }
 
   async findUserByLogin(login: string): Promise<User | null> {
-    const user: User | null = await this.repository
-		.createQueryBuilder("u")
+    const user: User | null = await this.userRepository
+		.createQueryBuilder()
 		.select("user")
-		.where("u.login = login", {login})
+		.from(User, "user")
+		.where("user.login = :log", {log: login})
 		.getOne()
     return user;
   }
@@ -88,29 +93,32 @@ export class UsersQueryRepository {
   async findUserByCode(
     recoveryCode: string
   ): Promise<User | null> {
-	const result = await this.repository
-		.createQueryBuilder("u")
+	const result = await this.userRepository
+		.createQueryBuilder()
 		.select("user")
-		.where("u.confirmationCode = :code", {code: recoveryCode})
+		.from(User, "user")
+		.where("user.confirmationCode = :code", {code: recoveryCode})
 		.getOne()
     return result
   }
 
   async findUserByConfirmation(code: string): Promise<User | null> {
-    const user: User | null = await this.repository
-		.createQueryBuilder("u")
+    const user: User | null = await this.userRepository
+		.createQueryBuilder()
 		.select("user")
-		.where("u.code = :code", {code})
+		.from(User, "user")
+		.where("user.code = :code", {code})
 		.execute()
     
     return user;
   }
 
   async findUserById(id: string): Promise<User | null> {
-    let user: User | null = await this.repository
-		.createQueryBuilder("u")
+    let user: User | null = await this.userRepository
+		.createQueryBuilder()
 		.select("user")
-		.where("u.id = :id", {id})
+		.from(User, "user")
+		.where("user.id = :id", {id})
 		.getOne()
 
 		// const sqlRequest = user.getSql()

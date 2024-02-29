@@ -46,27 +46,3 @@ export class dtoType {
 	@IsUUID()
 	id: string
 }
-
-// export class UserClass {
-// 	constructor(
-// 		public userName: string,
-// 		public email: string,
-// 		public passwordHash: string,
-// 		public createdAt: string,
-// 		public confirmationCode: string,
-// 		public expirationDate: string,
-// 		public isConfirmed: boolean = false
-// 	){}
-// 	id: string
- 
-
-//   getViewUser(): UserViewType {
-//     return {
-//       id: this.id.toString(),
-//       login: this.userName,
-//       email: this.email,
-//       createdAt: this.createdAt,
-//     };
-//   }
-// }
-

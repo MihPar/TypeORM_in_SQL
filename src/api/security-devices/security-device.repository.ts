@@ -1,17 +1,17 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { DeviceClass } from './dto/device.class';
 import { Device } from './entities/security-device.entity';
 
 @Injectable()
 export class DeviceRepository {
   constructor(
-		@InjectRepository(Device) protected readonly repository: Repository<Device>	
+		@InjectRepository(Device) protected readonly deviceRepository: Repository<Device>	
 	) {}
 
   async terminateSession(deviceId: number) {
-	const terminator = await this.repository
+	const terminator = await this.deviceRepository
 		.createQueryBuilder("d")
 		.delete()
 		.from("device d")
@@ -23,7 +23,7 @@ export class DeviceRepository {
   }
 
   async deleteAllDevices() {
-	await this.repository
+	await this.deviceRepository
 		.createQueryBuilder("d")
 		.delete()
 		.from("device")
@@ -33,14 +33,14 @@ export class DeviceRepository {
 
   async createDevice(device: Device): Promise<boolean | null> {
     try {
-		await this.repository
-			.createQueryBuilder("d")
+		await this.deviceRepository
+			.createQueryBuilder()
 			.insert()
-			.into("device")
+			.into(Device)
 			.values({
 				ip: device.ip,
 				title: device.title,
-				id: device.id,
+				// id: device.id,
 				userId: device.userId,
 				lastActiveDate: device.lastActiveDate
 			})
@@ -57,7 +57,7 @@ export class DeviceRepository {
     deviceId: string,
     newLastActiveDate: string
   ) {
-	await this.repository
+	await this.deviceRepository
 		.createQueryBuilder("d")
 		.update("device")
 		.set({lastActiveDate: newLastActiveDate})
@@ -66,7 +66,7 @@ export class DeviceRepository {
   }
 
   async logoutDevice(deviceId: number): Promise<boolean> {
-	const deleteDevice = await this.repository
+	const deleteDevice = await this.deviceRepository
 		.createQueryBuilder("d")
 		.delete()
 		.from("device")

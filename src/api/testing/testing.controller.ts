@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { DeleteAllDevicesCommnad } from '../security-devices/useCase/deleteAllDevices-use-case';
 import { DeleteAllUsersCommnad } from '../users/useCase/deleteAllUsers-use-case';
@@ -10,6 +10,7 @@ export class TestingController {
   ) {}
 
   @Delete()
+  @HttpCode(204)
   async remove() {
     await this.commandBus.execute(new DeleteAllDevicesCommnad())
     await this.commandBus.execute(new DeleteAllUsersCommnad())

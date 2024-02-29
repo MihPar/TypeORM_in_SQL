@@ -8,12 +8,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Device } from './entities/security-device.entity';
 import { DeviceRepository } from './security-device.repository';
 import { DeviceQueryRepository } from './security-deviceQuery.repository';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { CheckRefreshToken } from '../auth/guards/checkRefreshToken';
 import { ForbiddenCalss } from './gards/forbidden';
 import { PayloadAdapter } from '../auth/adapter/payload.adapter';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
+import { UsersRepository } from '../users/users.repository';
+import { User } from '../users/entities/user.entity';
 
 const useCase = [
   DeleteAllDevicesUseCase,
@@ -24,13 +26,13 @@ const useCase = [
 
 const guard = [CheckRefreshToken, ForbiddenCalss]
 
-const repo = [DeviceRepository, DeviceQueryRepository, CommandBus, UsersQueryRepository];
+const repo = [DeviceRepository, DeviceQueryRepository, UsersQueryRepository, UsersRepository, UsersRepository];
 
 const adapter = [PayloadAdapter]
 const service = [JwtService]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device])],
+  imports: [TypeOrmModule.forFeature([Device, User]), CqrsModule],
   controllers: [SecurityDeviceController],
   providers: [...useCase, ...repo, ...guard, ...adapter, ...service],
 })

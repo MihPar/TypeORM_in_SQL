@@ -26,9 +26,14 @@ import { ApiJwtService } from 'src/infrastructura/jwt/jwt.service';
 import { ApiConfigService } from 'src/infrastructura/config/configService';
 import { DeviceQueryRepository } from '../security-devices/security-deviceQuery.repository';
 import { EmailAdapter } from 'src/infrastructura/email/email.adapter';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { AuthRepository } from './auth.repository';
 import { CheckLoginOrEmail } from './guards/checkEmailOrLogin';
+import { Device } from '../security-devices/entities/security-device.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../users/entities/user.entity';
+import { CustomLoginvalidation } from './adapter/customLoginValidator';
+import { CustomEmailvalidation } from './adapter/customEmailValidatro';
 
 const guards = [
   CheckRefreshTokenForComments,
@@ -51,16 +56,33 @@ const useCase = [
   GetUserIdByTokenUseCase,
 ];
 
-const adapter = [PayloadAdapter, GenerateHashAdapter, EmailAdapter]
+const adapter = [PayloadAdapter, GenerateHashAdapter, EmailAdapter];
 
-const repo = [DeviceRepository, UsersQueryRepository, UsersRepository, DeviceQueryRepository, CommandBus, AuthRepository]
+const repo = [
+  DeviceRepository,
+  UsersQueryRepository,
+  UsersRepository,
+  DeviceQueryRepository,
+  AuthRepository,
+  UsersRepository,
+];
 
-const manager = [EmailManager]
+const manager = [EmailManager];
 
-const service = [JwtService, ApiJwtService, ApiConfigService]
+const service = [JwtService, ApiJwtService, ApiConfigService];
+const validator = [CustomLoginvalidation, CustomEmailvalidation]
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Device, User]), CqrsModule],
   controllers: [AuthController],
-  providers: [...useCase, ...guards, ...adapter, ...repo, ...manager, ...service],
+  providers: [
+    ...useCase,
+    ...guards,
+    ...adapter,
+    ...repo,
+    ...manager,
+    ...service,
+	...validator
+  ],
 })
 export class AuthModule {}

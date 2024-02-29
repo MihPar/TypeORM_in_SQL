@@ -4,13 +4,6 @@ import { UserViewType } from "../user.type";
 
 @Entity()
 export class User {
-	constructor(
-		public passwordHash: string,
-		public confirmationCode: string,
-		public expirationDate: string,
-		public isConfirmed: boolean = false
-	){}
-
 	@PrimaryGeneratedColumn()
 	id: number
 
@@ -22,6 +15,18 @@ export class User {
 
 	@Column()
 	createdAt: Date
+
+	@Column({nullable: false})
+	passwordHash: string
+
+	@Column()
+	expirationDate: Date
+
+	@Column()
+	confirmationCode: string
+
+	@Column()
+	isConfirmed: boolean = false
 
 	@OneToMany(() => Device, d => d.user)
 	device: Device[]

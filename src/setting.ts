@@ -32,4 +32,5 @@ export const appSettings = (app: INestApplication): void => {
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
     app.enableCors()
     app.use(cookieParser())
+	app.init()
 }

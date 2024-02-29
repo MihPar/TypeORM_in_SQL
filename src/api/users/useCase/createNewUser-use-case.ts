@@ -23,15 +23,15 @@ export class CreateNewUserUseCase implements ICommandHandler<CreateNewUserComman
     const passwordHash = await this.generateHashAdapter._generateHash(
       command.body.password
     );
-    const newUser = new User(
-      passwordHash,
-	  uuidv4(),
-	  add(new Date(), {hours: 1, minutes: 10}).toISOString(),
-	  false
-    );
+    const newUser = new User()
+	
     newUser.login = command.body.login
     newUser.email = command.body.email
 	newUser.createdAt = new Date()
+	newUser.passwordHash = passwordHash,
+	newUser.expirationDate = add(new Date(), {hours: 1, minutes: 10})
+	newUser.confirmationCode = uuidv4()
+	newUser.isConfirmed = false
 
     const userId: any = await this.usersRepository.createUser(newUser);
     try {
