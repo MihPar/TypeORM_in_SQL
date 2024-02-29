@@ -3,9 +3,9 @@ import { UsersQueryRepository } from '../users.queryRepository';
 import { v4 as uuidv4 } from 'uuid';
 import { add } from 'date-fns';
 import { UsersRepository } from '../users.repository';
-import { UserClass } from '../user.class';
 import { emailInputDataClass } from '../../auth/dto/auth.class.pipe';
 import { EmailManager } from '../../../infrastructura/email/email.manager';
+import { User } from '../entities/user.entity';
 
 export class RegistrationEmailResendingCommand {
   constructor(public inputDateReqEmailResending: emailInputDataClass) {}
@@ -21,7 +21,7 @@ export class RegistrationEmailResendingUseCase
     protected readonly emailManager: EmailManager,
   ) {}
   async execute(command: RegistrationEmailResendingCommand): Promise<any> {
-    const user: UserClass | null =
+    const user: User | null =
       await this.usersQueryRepository.findUserByEmail(
         command.inputDateReqEmailResending.email,
       );

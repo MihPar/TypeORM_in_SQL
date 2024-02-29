@@ -57,62 +57,54 @@ export class UsersQueryRepository {
     };
   }
 
-//   async findByLoginOrEmail(loginOrEmail: string): Promise<UserClass | null> {
-//     const user: UserClass | null = (
-//       await this.dataSource.query(`
-// 		SELECT *
-// 			FROM public."Users"
-// 			WHERE "userName" = '${loginOrEmail}' OR "email" = '${loginOrEmail}'
-// 		`)
-//     )[0];
-//     return user;
-//   }
+  async findByLoginOrEmail(loginOrEmail: string): Promise<User | null> {
+    const user: User | null = await this.repository
+		.createQueryBuilder("u")
+		.select("user")
+		.where("u.userName = :login OR u.userName = :email", {login: loginOrEmail, email: loginOrEmail})
+		.getOne()
+    
+    return user;
+  }
 
-//   async findUserByEmail(email: string): Promise<UserClass | null> {
-//     const user: UserClass | null = (
-//       await this.dataSource.query(`
-// 			SELECT *
-// 				FROM public."Users"
-// 				WHERE "email" = '${email}'
-// 		`)
-//     )[0];
-//     return user;
-//   }
+  async findUserByEmail(email: string): Promise<User | null> {
+    const user: User | null = await this.repository
+		.createQueryBuilder("u")
+		.select("user u")
+		.where("u.email = :email", {email})
+		.getOne()
+    return user;
+  }
 
-//   async findUserByLogin(login: string): Promise<UserClass | null> {
-//     const user: UserClass | null = (
-//       await this.dataSource.query(`
-// 			SELECT *
-// 				FROM public."Users"
-// 				WHERE "userName" = '${login}'
-// 		`)
-//     )[0];
-//     return user;
-//   }
+  async findUserByLogin(login: string): Promise<User | null> {
+    const user: User | null = await this.repository
+		.createQueryBuilder("u")
+		.select("user")
+		.where("u.login = login", {login})
+		.getOne()
+    return user;
+  }
 
-//   async findUserByCode(
-//     recoveryCode: string
-//   ): Promise<WithId<UserClass> | null> {
-//     const result = await this.dataSource.query(`
-// 		SELECT *
-// 			FROM public."Users"
-// 			WHERE "confirmationCode" = '${recoveryCode}'
-// 		`);
-//     return result[0];
-//   }
+  async findUserByCode(
+    recoveryCode: string
+  ): Promise<User | null> {
+	const result = await this.repository
+		.createQueryBuilder("u")
+		.select("user")
+		.where("u.confirmationCode = :code", {code: recoveryCode})
+		.getOne()
+    return result
+  }
 
-//   async findUserByConfirmation(code: string): Promise<UserClass | null> {
-//     const user: UserClass | null = (
-//       await this.dataSource.query(`
-// 		SELECT *
-// 			FROM public."Users"
-// 			WHERE "confirmationCode" = $1
-// 	`,
-//         [code]
-//       )
-//     )[0];
-//     return user;
-//   }
+  async findUserByConfirmation(code: string): Promise<User | null> {
+    const user: User | null = await this.repository
+		.createQueryBuilder("u")
+		.select("user")
+		.where("u.code = :code", {code})
+		.execute()
+    
+    return user;
+  }
 
   async findUserById(id: string): Promise<User | null> {
     let user: User | null = await this.repository
@@ -120,6 +112,9 @@ export class UsersQueryRepository {
 		.select("user")
 		.where("u.id = :id", {id})
 		.getOne()
+
+		// const sqlRequest = user.getSql()
+		// await writeSql(sqlRequest)
       
     return user;
   }

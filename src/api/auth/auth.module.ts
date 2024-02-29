@@ -28,11 +28,13 @@ import { DeviceQueryRepository } from '../security-devices/security-deviceQuery.
 import { EmailAdapter } from 'src/infrastructura/email/email.adapter';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthRepository } from './auth.repository';
+import { CheckLoginOrEmail } from './guards/checkEmailOrLogin';
 
 const guards = [
   CheckRefreshTokenForComments,
   CheckRefreshToken,
   IsExistEmailUser,
+  CheckLoginOrEmail
 ];
 
 const useCase = [

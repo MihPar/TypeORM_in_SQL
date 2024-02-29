@@ -12,50 +12,48 @@ export class UsersRepository {
     protected readonly usersQueryRepository: UsersQueryRepository
   ) {}
 
-//   async passwordRecovery(id: any, recoveryCode: string): Promise<boolean> {
-//     const recoveryInfo = {
-//       recoveryCode,
-//       expirationDate: add(new Date(), { minutes: 5 }),
-//     };
-//     const query = `
-// 		UPDATE public."Users"
-// 				SET 
-// 					"expirationDate"='${recoveryInfo.expirationDate}', 
-// 					"confirmationCode"='${recoveryInfo.recoveryCode}'
-// 			WHERE "id" = $1
-// 			RETURNING *
-// 	`;
-//     const updateRes = await this.dataSource.query(query, [id]);
-//     if (!updateRes) return false;
-//     return true;
-//   }
+  async passwordRecovery(id: any, recoveryCode: string): Promise<boolean> {
+    const recoveryInfo = {
+      recoveryCode,
+      expirationDate: add(new Date(), { minutes: 5 }),
+    };
 
-//   async updatePassword(id: any, newPasswordHash: string) {
-//     const query = `
-// 		UPDATE public."Users"
-// 			SET "passswordHash"= $1
-// 			WHERE "id" = $2
-// 			RETURNING *
-// `;
-//     const updatePassword = await this.dataSource.query(query, [
-//       newPasswordHash,
-//       id,
-//     ]);
-//     if (!updatePassword) return false;
-//     return true;
-//   }
+	const recoveryPassword = await this.repository
+		.createQueryBuilder("u")
+		.update("user")
+		.set({
+			expirationDate: recoveryInfo.expirationDate,
+			confirmationCode: recoveryInfo.recoveryCode
+		})
+		.where("u.id = :id", {id})
+		.execute()
 
-//   async updateConfirmation(id: string) {
-//     const result = await this.dataSource.query(
-//       `
-// 		UPDATE public."Users"
-// 			SET "isConfirmed"=true
-// 			WHERE "id" = $1
-// 	`,
-//       [id]
-//     );
-//     return true;
-//   }
+		if (!recoveryPassword) return false;
+    return true;
+  }
+
+  async updatePassword(id: any, newPasswordHash: string): Promise<boolean> {
+	const updatePassword = await this.repository
+		.createQueryBuilder("u")
+		.update("user")
+		.set({passwortdHash: newPasswordHash})
+		.where("u.id = :id", {id})
+		.execute()
+
+		if (!updatePassword) return false;
+    return true;
+  }
+
+  async updateConfirmation(id: number) {
+	const result = await this.repository
+		.createQueryBuilder("u")
+		.update("user")
+		.set({isConfirmed: true})
+		.where("u.id = id", {id})
+		.execute()
+
+		return true;
+  }
 
   async createUser(newUser: User) {
 	const insertUser = await this.repository
@@ -66,7 +64,7 @@ export class UsersRepository {
 			{
 				userName: newUser.login, 
 				email: newUser.email, 
-				passportHash: newUser.passwortdHash,
+				passportHash: newUser.passwordHash,
 				createdAt: newUser.createdAt,
 				confirmationCode: newUser.confirmationCode,
 				expirationDate: newUser.expirationDate,
@@ -78,24 +76,25 @@ export class UsersRepository {
 	return insertUser
   }
 
-//   async updateUserConfirmation(
-//     id: string,
-//     confirmationCode: string,
-//     newExpirationDate: Date
-//   ): Promise<boolean> {
-//     const query = `
-// 		UPDATE public."Users"
-// 			SET "expirationDate"=$1, "confirmationCode"=$2
-// 			WHERE "id" = $3
-// 	`;
-//     const result = await this.dataSource.query(query, [
-//       newExpirationDate,
-//       confirmationCode,
-//       id,
-//     ]);
-//     if (!result) return false;
-//     return true;
-//   }
+  async updateUserConfirmation(
+    id: number,
+    confirmationCode: string,
+    newExpirationDate: Date
+  ): Promise<boolean> {
+
+	const updateCunfirmation = await this.repository
+		.createQueryBuilder("u")
+		.update("user")
+		.set({
+			expirationDate: newExpirationDate,
+			confirmationCode: confirmationCode
+		})
+		.where("u.id = :id", {id})
+		.execute()
+    
+    if (!updateCunfirmation) return false;
+    return true;
+  }
 
   async deleteById(userId: string) {
 	const findUserById: User | null = await this.repository
@@ -116,10 +115,12 @@ export class UsersRepository {
     return true;
   }
 
-//   async deleteAllUsers() {
-//     await this.dataSource.query(`
-// 		DELETE FROM public."Users"
-// 	`);
-//     return true;
-//   }
+  async deleteAllUsers() {
+    await this.repository
+		.createQueryBuilder("u")
+		.delete()
+		.from("user")
+		.execute()
+    return true;
+  }
 }

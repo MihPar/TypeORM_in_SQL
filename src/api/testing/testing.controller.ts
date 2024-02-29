@@ -1,34 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TestingService } from './testing.service';
-import { CreateTestingDto } from './dto/create-testing.dto';
-import { UpdateTestingDto } from './dto/update-testing.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { DeleteAllDevicesCommnad } from '../security-devices/useCase/deleteAllDevices-use-case';
+import { DeleteAllUsersCommnad } from '../users/useCase/deleteAllUsers-use-case';
 
-@Controller('testing')
+@Controller('testing/all-data')
 export class TestingController {
-  constructor(private readonly testingService: TestingService) {}
+  constructor(
+	protected readonly commandBus: CommandBus
+  ) {}
 
-  @Post()
-  create(@Body() createTestingDto: CreateTestingDto) {
-    return this.testingService.create(createTestingDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.testingService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.testingService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTestingDto: UpdateTestingDto) {
-    return this.testingService.update(+id, updateTestingDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.testingService.remove(+id);
+  @Delete()
+  async remove() {
+    await this.commandBus.execute(new DeleteAllDevicesCommnad())
+    await this.commandBus.execute(new DeleteAllUsersCommnad())
   }
 }

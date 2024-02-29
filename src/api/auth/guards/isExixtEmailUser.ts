@@ -7,7 +7,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { UsersQueryRepository } from '../../users/users.queryRepository';
-import { UserClass } from '../../users/user.class';
+import { User } from 'src/api/users/entities/user.entity';
 
 @Injectable()
 export class IsExistEmailUser implements CanActivate {
@@ -16,7 +16,7 @@ export class IsExistEmailUser implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const email = req.body.email;
-    const user: UserClass| null =
+    const user: User| null =
       await this.usersQueryRepository.findByLoginOrEmail(email);
     if (!user) {
       throw new BadRequestException([

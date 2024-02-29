@@ -20,11 +20,11 @@ import { RegistrationConfirmationCommand } from "../users/useCase/registratinCon
 import { RegistrationCommand } from "../users/useCase/registration-use-case";
 import { UpdateDeviceCommand } from "../security-devices/useCase/updateDevice-use-case";
 import { CheckRefreshTokenForComments } from "./useCase.ts/bearer.authForComments";
-import { UserClass } from "../users/user.class";
 import { LogoutCommand } from "../security-devices/useCase/logout-use-case";
 import { RegistrationEmailResendingCommand } from "../users/useCase/registrationEmailResending-use-case";
 import { UserDecorator, UserIdDecorator } from "src/infrastructura/decorators/decorator.user";
 import { UsersQueryRepository } from "../users/users.queryRepository";
+import { User } from "../users/entities/user.entity";
 
 
 // @UseGuards(ThrottlerGuard)
@@ -63,7 +63,7 @@ export class AuthController {
 		@Headers("user-agent") deviceName = "unknown",
 		@Res({passthrough: true}) res: Response) {
 		const command = new CreateLoginCommand(inutDataModel)
-		const user: UserClass | null = await this.commandBus.execute(command);
+		const user: User | null = await this.commandBus.execute(command);
 		  if (!user) {
 			throw new UnauthorizedException("Not authorization 401")
 		  } else {
@@ -87,7 +87,7 @@ export class AuthController {
 	async cretaeRefreshToken(
 		@Req() req: Request,
 		@Res({passthrough: true}) res: Response,
-		@UserDecorator() user: UserClass,
+		@UserDecorator() user: User,
 		@UserIdDecorator() userId: string | null,
 	) {
 		const refreshToken: string = req.cookies.refreshToken;
@@ -152,11 +152,11 @@ export class AuthController {
 	async findMe(@Req() req: Request) {
 		if (!req.headers.authorization) throw new UnauthorizedException('Not authorization 401')
 		const command = new GetUserIdByTokenCommand(req)
-		const findUserById: UserClass = await this.commandBus.execute(command)
+		const findUserById: User = await this.commandBus.execute(command)
 		  return {
 			userId: findUserById.id.toString(),
 			email: findUserById.email,
-			login: findUserById.userName,
+			login: findUserById.login,
 		  }
 	}
 }

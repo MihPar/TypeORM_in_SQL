@@ -7,7 +7,7 @@ import {
 	BadRequestException,
   } from '@nestjs/common';
   import { UsersQueryRepository } from '../../users/users.queryRepository';
-import { UserClass } from '../../users/user.class';
+import { User } from 'src/api/users/entities/user.entity';
   
   @Injectable()
   export class IsConfirmed implements CanActivate {
@@ -16,7 +16,7 @@ import { UserClass } from '../../users/user.class';
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 	  const req = context.switchToHttp().getRequest();
 	  const code = req.body.code;
-	const user: UserClass | null = await this.usersQueryRepository.findUserByConfirmation(code)
+	const user: User | null = await this.usersQueryRepository.findUserByConfirmation(code)
 	
 	if(!user) {
 		throw new BadRequestException([{message: 'Incorrect code!', field: 'code'}])

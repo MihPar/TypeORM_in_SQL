@@ -4,7 +4,7 @@ import {v4 as uuidv4} from "uuid"
 import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { EmailManager } from "../../../infrastructura/email/email.manager";
 import { UsersRepository } from "../../users/users.repository";
-import { UserClass } from "../../users/user.class";
+import { User } from "src/api/users/entities/user.entity";
 
 
 export class RecoveryPasswordCommand {
@@ -24,7 +24,7 @@ export class RecoveryPasswordCommand {
 		command: RecoveryPasswordCommand
 	) {
 		const recoveryCode = uuidv4();
-		const findUser: UserClass | null =
+		const findUser: User | null =
 		  await this.usersQueryRepository.findUserByEmail(command.email);
 		if (!findUser) {
 		  return false;

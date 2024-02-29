@@ -1,16 +1,17 @@
 import { JwtService } from '@nestjs/jwt';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs"
 import { randomUUID } from 'crypto';
-import { UserClass } from '../../users/user.class';
 import { DeviceRepository } from '../../security-devices/security-device.repository';
 import { ApiJwtService } from '../../../infrastructura/jwt/jwt.service';
 import { DeviceClass } from '../../security-devices/dto/device.class';
+import { Device } from 'src/api/security-devices/entities/security-device.entity';
+import { User } from 'src/api/users/entities/user.entity';
 
 export class CreateDeviceCommand {
 	constructor(
 		public IP: string, 
 		public deviceName: string,
-		public user: UserClass,
+		public user: User,
 	) {}
 }
 
@@ -33,16 +34,16 @@ export class CreateDeviceUseCase implements ICommandHandler<CreateDeviceCommand>
 			const ip = command.IP || "unknown";
 			// const title = command.Headers["user-agent"] || "unknown";
 	
-			const device  = new DeviceClass()
+			const device  = new Device()
 			device.ip = ip
-			device.deviceId = deviceId
-			device.lastActiveDate = new Date(date).toISOString()
+			device.id = Number(deviceId)
+			device.lastActiveDate = new Date(date)
 			device.title = command.deviceName
 			device.userId = command.user.id.toString()
 			
-			const createdDeviceId: string | null = await this.deviceRepository.createDevice(device);
+			const createdDevice: boolean | null = await this.deviceRepository.createDevice(device);
 	
-			if(!createdDeviceId){
+			if(!createdDevice){
 				return null
 			}
 			return {

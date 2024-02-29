@@ -2,8 +2,8 @@ import bcrypt  from 'bcrypt';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { UsersQueryRepository } from "../../../api/users/users.queryRepository";
 import { InputDataModelClassAuth } from '../dto/auth.class.pipe';
-import { UserClass } from '../../users/user.class';
 import { v4 as uuidv4 } from 'uuid'; 
+import { User } from 'src/api/users/entities/user.entity';
 
 export class CreateLoginCommand {
 	constructor(
@@ -14,9 +14,9 @@ export class CreateLoginCommand {
 @CommandHandler(CreateLoginCommand)
 export class CreateLoginUseCase implements ICommandHandler<CreateLoginCommand> {
   constructor(protected readonly usersQueryRepository: UsersQueryRepository) {}
-  async execute(command: CreateLoginCommand): Promise<UserClass | null> {
+  async execute(command: CreateLoginCommand): Promise<User | null> {
     try {
-      const user: UserClass | null =
+      const user: User | null =
         await this.usersQueryRepository.findByLoginOrEmail(
           command.inutDataModel.loginOrEmail
         );

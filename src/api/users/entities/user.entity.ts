@@ -5,7 +5,7 @@ import { UserViewType } from "../user.type";
 @Entity()
 export class User {
 	constructor(
-		public passwortdHash: string,
+		public passwordHash: string,
 		public confirmationCode: string,
 		public expirationDate: string,
 		public isConfirmed: boolean = false

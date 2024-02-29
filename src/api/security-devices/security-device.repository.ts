@@ -22,60 +22,57 @@ export class DeviceRepository {
     return true;
   }
 
-//   async deleteAllDevices() {
-//     const deletedAll = await this.dataSource.query(`
-// 		DELETE FROM public."Devices"
-// 	`);
-//     return true;
-//   }
+  async deleteAllDevices() {
+	await this.repository
+		.createQueryBuilder("d")
+		.delete()
+		.from("device")
+		.execute()
+    return true;
+  }
 
-//   async createDevice(device: DeviceClass): Promise<string | null> {
-//     try {
-//       const createDevice: DeviceClass = await this.dataSource.query(`
-// 			INSERT INTO public."Devices"(
-// 				"ip", "title", "deviceId", "userId", "lastActiveDate")
-// 				VALUES (
-// 					'${device.ip}', '${device.title}', '${device.deviceId}', 
-// 					'${device.userId}', '${device.lastActiveDate}')
-// 		`);
+  async createDevice(device: Device): Promise<boolean | null> {
+    try {
+		await this.repository
+			.createQueryBuilder("d")
+			.insert()
+			.into("device")
+			.values({
+				ip: device.ip,
+				title: device.title,
+				id: device.id,
+				userId: device.userId,
+				lastActiveDate: device.lastActiveDate
+			})
+			.execute()
+     return true
+    } catch (error) {
+      console.log(error, "error in create device");
+      return null
+    }
+  }
 
-//       const query = `
-// 			select *
-// 				from public."Devices"
-// 				where "deviceId" = $1
-// 	`;
-//       const select = await this.dataSource.query(query, [device.deviceId]);
-//       return select;
-//     } catch (error) {
-//       console.log(error, "error in create device");
-//       return null;
-//     }
-//   }
+  async updateDeviceUser(
+    userId: string,
+    deviceId: string,
+    newLastActiveDate: string
+  ) {
+	await this.repository
+		.createQueryBuilder("d")
+		.update("device")
+		.set({lastActiveDate: newLastActiveDate})
+		.where("d.id = :deviceId, d.userId = :userId", {deviceId, userId})
+		.execute()
+  }
 
-//   async updateDeviceUser(
-//     userId: string,
-//     deviceId: string,
-//     newLastActiveDate: string
-//   ) {
-//     const query = `
-// 		UPDATE public."Devices"
-// 			SET "lastActiveDate" = $1
-// 			WHERE "deviceId" = $2 AND "userId" = $3
-// `;
-//     await this.dataSource.query(query, [
-//       newLastActiveDate,
-//       deviceId,
-//       userId,
-//     ]);
-//   }
-
-//   async logoutDevice(deviceId: string): Promise<boolean> {
-// 	const query = `
-// 		DELETE FROM public."Devices"
-// 			WHERE "deviceId" = $1
-// `
-//     const decayResult = await this.dataSource.query(query, [deviceId]);
-//     if (!decayResult) return false;
-//     return true;
-//   }
+  async logoutDevice(deviceId: number): Promise<boolean> {
+	const deleteDevice = await this.repository
+		.createQueryBuilder("d")
+		.delete()
+		.from("device")
+		.where("d.id = :id", {id: deviceId})
+	
+    if (!deleteDevice) return false;
+    return true;
+  }
 }

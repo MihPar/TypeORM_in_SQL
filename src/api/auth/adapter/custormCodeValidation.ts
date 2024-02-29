@@ -6,7 +6,7 @@ import {
   ValidatorConstraintInterface,
 } from "class-validator";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
-import { UserClass } from "../../users/user.class";
+import { User } from "src/api/users/entities/user.entity";
 
 @ValidatorConstraint({ name: "code", async: true })
 @Injectable()
@@ -15,7 +15,7 @@ export class CustomCodeValidation implements ValidatorConstraintInterface {
 	protected readonly usersQueryRepository: UsersQueryRepository
 	) {}
   async validate(value: string): Promise<boolean> {
-    const user: UserClass | null = await this.usersQueryRepository.findUserByConfirmation(value);
+    const user: User | null = await this.usersQueryRepository.findUserByConfirmation(value);
     if (user) {
       throw new BadRequestException([{ message: "code already exists", field: "code" }]);
     } if(user!.isConfirmed) {

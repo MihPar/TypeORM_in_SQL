@@ -3,11 +3,12 @@ import { UserViewType } from '../user.type';
 import { v4 as uuidv4 } from 'uuid';
 import { add } from 'date-fns';
 import { UsersRepository } from '../users.repository';
-import { UserClass } from '../user.class';
 import { InputDataReqClass } from '../../auth/dto/auth.class.pipe';
 import { EmailManager } from '../../../infrastructura/email/email.manager';
 import { GenerateHashAdapter } from '../../auth/adapter/generateHashAdapter';
 import { UsersQueryRepository } from '../users.queryRepository';
+import { InsertResult } from 'typeorm';
+import { User } from '../entities/user.entity';
 
 export class RegistrationCommand {
   constructor(public inputDataReq: InputDataReqClass) {}
@@ -27,18 +28,19 @@ export class RegistrationUseCase
     const passwordHash = await this.generateHashAdapter._generateHash(
       command.inputDataReq.password
     );
-    const newUser = new UserClass(
-      command.inputDataReq.login,
-      command.inputDataReq.email,
+    const newUser = new User(
       passwordHash,
-	  new Date().toISOString(),
       uuidv4(),
       add(new Date(), {
         hours: 1,
         minutes: 10,
-      }).toISOString()
+      }).toISOString(),
+	  false
     );
-    const userId: string = await this.usersRepository.createUser(newUser);
+	  newUser.login = command.inputDataReq.login,
+      newUser.email = command.inputDataReq.email,
+	  newUser.createdAt = new Date()
+    const userId: any = await this.usersRepository.createUser(newUser);
     try {
       await this.emailManager.sendEamilConfirmationMessage(
         newUser.email,

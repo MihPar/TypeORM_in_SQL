@@ -7,7 +7,7 @@ import {
 	BadRequestException,
   } from '@nestjs/common';
 import { UsersQueryRepository } from '../../users/users.queryRepository';
-import { UserClass } from '../../users/user.class';
+import { User } from 'src/api/users/entities/user.entity';
 
   
   @Injectable()
@@ -20,7 +20,7 @@ import { UserClass } from '../../users/user.class';
 		const req = context.switchToHttp().getRequest()
 		const login = req.body.login
 		const email = req.body.email
-		const userByLoginOrEmail: UserClass | null = await this.usersQueryRepository.findByLoginOrEmail(login)
+		const userByLoginOrEmail: User | null = await this.usersQueryRepository.findByLoginOrEmail(login)
 		// const userByLogin: UserClass | null = await this.usersQueryRepository.findByLoginOrEmail(login)
 		// const userByEmail: UserClass | null = await this.usersQueryRepository.findByLoginOrEmail(email)
 
