@@ -22,9 +22,9 @@ import { UpdateDeviceCommand } from "../security-devices/useCase/updateDevice-us
 import { CheckRefreshTokenForComments } from "./useCase.ts/bearer.authForComments";
 import { LogoutCommand } from "../security-devices/useCase/logout-use-case";
 import { RegistrationEmailResendingCommand } from "../users/useCase/registrationEmailResending-use-case";
-import { UserDecorator, UserIdDecorator } from "src/infrastructura/decorators/decorator.user";
 import { UsersQueryRepository } from "../users/users.queryRepository";
 import { User } from "../users/entities/user.entity";
+import { UserDecorator, UserIdDecorator } from "../../infrastructura/decorators/decorator.user";
 
 
 // @UseGuards(ThrottlerGuard)
@@ -110,6 +110,7 @@ export class AuthController {
 		const command = new RegistrationConfirmationCommand(inputDateRegConfirm)
 		const registrationConfirmation =  await this.commandBus.execute(command)
 		if(!registrationConfirmation) throw new BadRequestException([{ message: "bed request", field: "code" }])
+		return 
 	}
 
 	@Post("registration")

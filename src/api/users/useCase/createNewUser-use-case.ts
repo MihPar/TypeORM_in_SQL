@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UsersRepository } from '../users.repository';
 import { GenerateHashAdapter } from '../../auth/adapter/generateHashAdapter';
 import { User } from '../entities/user.entity';
-import { EmailManager } from 'src/infrastructura/email/email.manager';
+import { EmailManager } from '../../../infrastructura/email/email.manager';
 
 export class CreateNewUserCommand {
   constructor(public body: InputModelClassCreateBody) {}

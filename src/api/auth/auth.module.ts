@@ -19,13 +19,9 @@ import { PayloadAdapter } from './adapter/payload.adapter';
 import { DeviceRepository } from '../security-devices/security-device.repository';
 import { UsersQueryRepository } from '../users/users.queryRepository';
 import { UsersRepository } from '../users/users.repository';
-import { EmailManager } from 'src/infrastructura/email/email.manager';
 import { GenerateHashAdapter } from './adapter/generateHashAdapter';
 import { JwtService } from '@nestjs/jwt';
-import { ApiJwtService } from 'src/infrastructura/jwt/jwt.service';
-import { ApiConfigService } from 'src/infrastructura/config/configService';
 import { DeviceQueryRepository } from '../security-devices/security-deviceQuery.repository';
-import { EmailAdapter } from 'src/infrastructura/email/email.adapter';
 import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { AuthRepository } from './auth.repository';
 import { CheckLoginOrEmail } from './guards/checkEmailOrLogin';
@@ -34,6 +30,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { CustomLoginvalidation } from './adapter/customLoginValidator';
 import { CustomEmailvalidation } from './adapter/customEmailValidatro';
+import { EmailAdapter } from '../../infrastructura/email/email.adapter';
+import { EmailManager } from '../../infrastructura/email/email.manager';
+import { ApiJwtService } from '../../infrastructura/jwt/jwt.service';
+import { ApiConfigService } from '../../infrastructura/config/configService';
 
 const guards = [
   CheckRefreshTokenForComments,

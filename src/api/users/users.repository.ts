@@ -60,7 +60,9 @@ export class UsersRepository {
 		.createQueryBuilder()
 		.insert()
 		.into(User)
-		.values([
+		.values(
+			// newUser
+			[
 			{
 				login: newUser.login, 
 				email: newUser.email, 
@@ -70,7 +72,8 @@ export class UsersRepository {
 				expirationDate: newUser.expirationDate,
 				isConfirmed: newUser.isConfirmed
 			}
-		])
+		]
+		)
 		.returning("id")
 		.execute()
 	return insertUser
@@ -96,7 +99,7 @@ export class UsersRepository {
     return true;
   }
 
-  async deleteById(userId: string) {
+  async deleteById(userId: number) {
 	const findUserById: User | null = await this.userRepository
 		.createQueryBuilder()
 		.select("user")

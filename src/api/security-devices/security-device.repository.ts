@@ -12,10 +12,10 @@ export class DeviceRepository {
 
   async terminateSession(deviceId: number) {
 	const terminator = await this.deviceRepository
-		.createQueryBuilder("d")
+		.createQueryBuilder()
 		.delete()
-		.from("device d")
-		.where("d.id = :id", {id:deviceId})
+		.from(Device)
+		.where("id = :id", {id: deviceId})
 		.execute()
 
 		if (!terminator) return false;
@@ -40,7 +40,6 @@ export class DeviceRepository {
 			.values({
 				ip: device.ip,
 				title: device.title,
-				// id: device.id,
 				userId: device.userId,
 				lastActiveDate: device.lastActiveDate
 			})
@@ -67,10 +66,11 @@ export class DeviceRepository {
 
   async logoutDevice(deviceId: number): Promise<boolean> {
 	const deleteDevice = await this.deviceRepository
-		.createQueryBuilder("d")
+		.createQueryBuilder()
 		.delete()
-		.from("device")
-		.where("d.id = :id", {id: deviceId})
+		.from(Device)
+		.where("id = :id", {id: deviceId})
+		.execute()
 	
     if (!deleteDevice) return false;
     return true;

@@ -17,9 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config test/jest-e2e.json",
     "serveoNeon": "ssh -R 80:ep-weathered-mouse-a5h47925.us-east-2.aws.neon.tech:5432 serveo.net",
-    "serveo": "ssh -R 80:localhost:3000 serveo.net"
+    "serveo": "ssh -R 80:localhost:4000 serveo.net"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

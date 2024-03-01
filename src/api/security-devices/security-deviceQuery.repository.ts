@@ -21,9 +21,10 @@ export class DeviceQueryRepository {
 
 async findDeviceByDeviceId(deviceId: string) {
 	const findDeviceById: Device = await this.repository
-		.createQueryBuilder("d")
+		.createQueryBuilder()
 		.select("device")
-		.where("d.id = :id", {id: deviceId})
+		.from(Device, "device")
+		.where("device.id = :id", {id: deviceId})
 		.getOne()
     
     return findDeviceById ? {
@@ -37,9 +38,10 @@ async findDeviceByDeviceId(deviceId: string) {
 
 	async getAllDevicesUser(userId: string): Promise<DeviceView[]> {
 		const getAllDevices = await this.repository
-			.createQueryBuilder("d")
+			.createQueryBuilder()
 			.select("device")
-			.where("d.userId = :id", {id: userId})
+			.from(Device, "device")
+			.where("device.userId = :id", {id: userId})
 			.getMany()
 
 		return getAllDevices.map(function (item: Device) {

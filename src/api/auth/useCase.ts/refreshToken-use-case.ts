@@ -1,9 +1,9 @@
-import { User } from 'src/api/users/entities/user.entity';
 import { UnauthorizedException } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { JwtService } from "@nestjs/jwt";
 import { PayloadAdapter } from "../adapter/payload.adapter";
 import { ApiJwtService } from "../../../infrastructura/jwt/jwt.service";
+import { User } from "../../users/entities/user.entity";
 
 export class RefreshTokenCommand {
   constructor(

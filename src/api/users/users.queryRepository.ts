@@ -14,11 +14,13 @@ export class UsersQueryRepository {
   async getAllUsers(
     sortBy: string,
     sortDirection: string,
-    pageNumber: string,
-    pageSize: string,
+    pageNumber: number,
+    pageSize: number,
     searchLoginTerm: string,
     searchEmailTerm: string
-  ): Promise<PaginationType<UserViewType>> {
+  )
+  : Promise<PaginationType<UserViewType>> 
+  {
     if (sortBy === "login") {
 		sortBy = "userName";
 	  }
@@ -27,30 +29,35 @@ export class UsersQueryRepository {
 		.createQueryBuilder()
 		.select("user")
 		.from(User, "user")
-		.where("user.login ILIKE :loginTerm", {loginTerm: `%${searchLoginTerm}%`})
-		.orWhere("user.email ILIKE :emailTerm", {emailTerm: `%${searchEmailTerm}%`})
-		.orderBy(`"${sortBy}"`,`${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
-		.limit(+pageSize)
+		.where("user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm", {loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%`})
+		.orderBy(`"user"."${sortBy}"`,`${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
+		.limit(pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getMany()
+		// .getSql()
+
+		// console.log("users: ", users)
     
 	const totalCount = await this.userRepository
 		.createQueryBuilder()
 		.select("user")
 		.from(User, "user")
-		.where("user.login ILIKE :loginTerm", {loginTerm: `%${searchLoginTerm}%`})
-		.orWhere("user.email ILIKE :emailTerm", {emailTerm: `%${searchEmailTerm}%`})
+		.where("user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm", {loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%`})
 		.getCount()
+		// .getSql()
 
-    const pagesCount: number = await Math.ceil(totalCount / +pageSize);
+		// const totalCount = users1.length
+		// console.log("totalCount2: ", totalCount)
+
+    const pagesCount = Math.ceil(totalCount / +pageSize);
     return {
       pagesCount: pagesCount,
-      page: +pageNumber,
-      pageSize: +pageSize,
-      totalCount: +totalCount,
+      page: pageNumber,
+      pageSize: pageSize,
+      totalCount: totalCount,
       items: users.map(
         (user: User): UserViewType => ({
-          id: user.id.toString(),
+          id: user.id,
           login: user.login,
           email: user.email,
           createdAt: user.createdAt,
@@ -107,8 +114,8 @@ export class UsersQueryRepository {
 		.createQueryBuilder()
 		.select("user")
 		.from(User, "user")
-		.where("user.code = :code", {code})
-		.execute()
+		.where("user.confirmationCode = :code", {code})
+		.getOne()
     
     return user;
   }

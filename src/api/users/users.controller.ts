@@ -8,7 +8,7 @@ import { CreateNewUserCommand } from './useCase/createNewUser-use-case';
 import { dtoType } from './user.class';
 import { SkipThrottle } from '@nestjs/throttler';
 import { UsersQueryRepository } from './users.queryRepository';
-import { HttpExceptionFilter } from 'src/infrastructura/exceptionFilters.ts/exceptionFilter';
+import { HttpExceptionFilter } from '../../infrastructura/exceptionFilters.ts/exceptionFilter';
 
 // @SkipThrottle()
 @UseGuards(AuthBasic)
@@ -26,16 +26,16 @@ export class UsersController {
     query: {
       sortBy: string;
       sortDirection: string;
-      pageNumber: string;
-      pageSize: string;
+      pageNumber: number;
+      pageSize: number;
       searchLoginTerm: string;
       searchEmailTerm: string;
     },
   ) {
 		query.sortBy = query.sortBy || 'createdAt'
 		query.sortDirection = query.sortDirection || "desc"
-		query.pageNumber = query.pageNumber || '1'
-		query.pageSize = query.pageSize || '10'
+		query.pageNumber = query.pageNumber || 1
+		query.pageSize = query.pageSize || 10
 		query.searchLoginTerm = query.searchLoginTerm || ''
 		query.searchEmailTerm = query.searchEmailTerm || ''
 		

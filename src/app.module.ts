@@ -38,6 +38,7 @@ import { UsersModule } from './api/users/users.module';
 		database: "homeWordTypeORM_SQL",
 		autoLoadEntities: true,
 		synchronize: true,
+		logging: ['query']
 	} 
 	),
 	SecurityDevicesModule,

@@ -4,7 +4,7 @@ import {v4 as uuidv4} from "uuid"
 import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { EmailManager } from "../../../infrastructura/email/email.manager";
 import { UsersRepository } from "../../users/users.repository";
-import { User } from "src/api/users/entities/user.entity";
+import { User } from "../../users/entities/user.entity";
 
 
 export class RecoveryPasswordCommand {

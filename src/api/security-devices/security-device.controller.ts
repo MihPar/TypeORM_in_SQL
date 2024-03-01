@@ -8,8 +8,8 @@ import { CheckRefreshToken } from "../auth/guards/checkRefreshToken";
 import { TerminateAllCurrentSessionCommand } from "./useCase/terminateAllCurrentSeccion-use-case";
 import { ForbiddenCalss } from "./gards/forbidden";
 import { SkipThrottle } from "@nestjs/throttler";
-import { UserDecorator, UserIdDecorator } from "src/infrastructura/decorators/decorator.user";
 import { User } from "../users/entities/user.entity";
+import { UserDecorator, UserIdDecorator } from "../../infrastructura/decorators/decorator.user";
 
 @SkipThrottle()
 @Controller('security/devices')

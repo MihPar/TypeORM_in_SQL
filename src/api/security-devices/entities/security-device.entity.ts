@@ -1,5 +1,5 @@
-import { User } from "src/api/users/entities/user.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { User } from "../../users/entities/user.entity";
 
 @Entity()
 export class Device {
@@ -19,7 +19,7 @@ export class Device {
 	user: User
 
 	@Column()
-	userId: string
+	userId: number
 }
 
 export type DeviceView = {

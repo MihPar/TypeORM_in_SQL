@@ -4,8 +4,8 @@ import { randomUUID } from 'crypto';
 import { DeviceRepository } from '../../security-devices/security-device.repository';
 import { ApiJwtService } from '../../../infrastructura/jwt/jwt.service';
 import { DeviceClass } from '../../security-devices/dto/device.class';
-import { Device } from 'src/api/security-devices/entities/security-device.entity';
-import { User } from 'src/api/users/entities/user.entity';
+import { User } from '../../users/entities/user.entity';
+import { Device } from '../../security-devices/entities/security-device.entity';
 
 export class CreateDeviceCommand {
 	constructor(
@@ -39,7 +39,7 @@ export class CreateDeviceUseCase implements ICommandHandler<CreateDeviceCommand>
 			device.id = Number(deviceId)
 			device.lastActiveDate = new Date(date)
 			device.title = command.deviceName
-			device.userId = command.user.id.toString()
+			device.userId = command.user.id
 			
 			const createdDevice: boolean | null = await this.deviceRepository.createDevice(device);
 	

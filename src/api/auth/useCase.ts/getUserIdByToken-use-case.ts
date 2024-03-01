@@ -1,11 +1,9 @@
-import { User } from 'src/api/users/entities/user.entity';
 import { UnauthorizedException } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { JwtService } from "@nestjs/jwt";
 import { UsersQueryRepository } from "../../../api/users/users.queryRepository";
 import { Request } from "express";
-import { ApiConfigService } from "../../../infrastructura/config/configService";
-import { ApiJwtService } from 'src/infrastructura/jwt/jwt.service';
+import { ApiJwtService } from "../../../infrastructura/jwt/jwt.service";
+import { User } from "../../users/entities/user.entity";
 export class GetUserIdByTokenCommand {
 	constructor(
 		public req: Request
@@ -15,9 +13,7 @@ export class GetUserIdByTokenCommand {
 @CommandHandler(GetUserIdByTokenCommand)
 export class GetUserIdByTokenUseCase implements ICommandHandler<GetUserIdByTokenCommand> {
 	constructor(
-		protected readonly jwtService: JwtService,
 		protected readonly usersQueryRepository:  UsersQueryRepository,
-		protected readonly apiConfigService: ApiConfigService,
 		protected readonly apiJwtService: ApiJwtService
 	) {}
 	async execute(command: GetUserIdByTokenCommand): Promise<User> {

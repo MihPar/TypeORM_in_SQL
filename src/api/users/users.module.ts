@@ -14,9 +14,9 @@ import { UsersQueryRepository } from './users.queryRepository';
 import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { PayloadAdapter } from '../auth/adapter/payload.adapter';
 import { GenerateHashAdapter } from '../auth/adapter/generateHashAdapter';
-import { EmailManager } from 'src/infrastructura/email/email.manager';
 import { JwtService } from '@nestjs/jwt';
-import { EmailAdapter } from 'src/infrastructura/email/email.adapter';
+import { EmailAdapter } from '../../infrastructura/email/email.adapter';
+import { EmailManager } from '../../infrastructura/email/email.manager';
 
 const userCase = [
   CreateNewUserUseCase,

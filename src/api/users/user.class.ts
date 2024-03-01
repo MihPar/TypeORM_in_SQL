@@ -6,6 +6,7 @@ import {
   MaxLength,
   IsUUID,
   MinLength,
+  IsNumber,
 } from "class-validator";
 import { UserViewType } from "./user.type";
 
@@ -41,8 +42,9 @@ export class InputModelClassCreateBody {
 }
 
 export class dtoType {
-	@IsString()
-	@Trim()
-	@IsUUID()
-	id: string
+	// @IsString()
+	// @Trim()
+	// @IsUUID()
+	@IsNumber()
+	id: number
 }

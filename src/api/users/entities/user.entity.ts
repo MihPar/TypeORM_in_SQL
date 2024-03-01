@@ -1,6 +1,6 @@
-import { Device } from "src/api/security-devices/entities/security-device.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserViewType } from "../user.type";
+import { Device } from "../../security-devices/entities/security-device.entity";
 
 @Entity()
 export class User {
@@ -33,7 +33,7 @@ export class User {
 	
   getViewUser(): UserViewType {
     return {
-      id: this.id.toString(),
+      id: this.id,
       login: this.login,
       email: this.email,
       createdAt: this.createdAt,
