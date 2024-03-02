@@ -19,7 +19,7 @@ import { SkipThrottle, Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { RegistrationConfirmationCommand } from "../users/useCase/registratinConfirmation-use-case";
 import { RegistrationCommand } from "../users/useCase/registration-use-case";
 import { UpdateDeviceCommand } from "../security-devices/useCase/updateDevice-use-case";
-import { CheckRefreshTokenForComments } from "./useCase.ts/bearer.authForComments";
+import { CheckRefreshTokenFor } from "./useCase.ts/bearer.authForComments";
 import { LogoutCommand } from "../security-devices/useCase/logout-use-case";
 import { RegistrationEmailResendingCommand } from "../users/useCase/registrationEmailResending-use-case";
 import { UsersQueryRepository } from "../users/users.queryRepository";
@@ -27,7 +27,7 @@ import { User } from "../users/entities/user.entity";
 import { UserDecorator, UserIdDecorator } from "../../infrastructura/decorators/decorator.user";
 
 
-// @UseGuards(ThrottlerGuard)
+@UseGuards(ThrottlerGuard)
 @Controller('auth')
 export class AuthController {
 	constructor(
@@ -39,7 +39,6 @@ export class AuthController {
 
 	@HttpCode(204)
 	@Post("password-recovery")
-	// @UseGuards(Ratelimits)
 	async createPasswordRecovery(@Body() emailInputData: emailInputDataClass) {
 		const command = new RecoveryPasswordCommand(emailInputData.email)
 		const passwordRecovery = await this.commandBus.execute(command)
@@ -47,7 +46,6 @@ export class AuthController {
 
 	@HttpCode(204)
 	@Post("new-password")
-	// @UseGuards(Ratelimits)
 	async createNewPassword(@Body() inputDataNewPassword: InputModelNewPasswordClass) {
 		const command = new NewPasswordCommand(inputDataNewPassword)
 		const resultUpdatePassword = await this.commandBus.execute(command)
@@ -56,7 +54,6 @@ export class AuthController {
 
 	@HttpCode(200)
 	@Post('login')
-	// @UseGuards(Ratelimits)
 	async createLogin(
 		@Body() inutDataModel: InputDataModelClassAuth,
 		@Ip() IP: string, 
@@ -82,7 +79,7 @@ export class AuthController {
 	
 	@HttpCode(200)
 	@Post("refresh-token")
-	// @SkipThrottle({default: true})
+	@SkipThrottle({default: true})
 	@UseGuards(CheckRefreshToken)
 	async cretaeRefreshToken(
 		@Req() req: Request,
@@ -105,7 +102,6 @@ export class AuthController {
 
 	@HttpCode(204)
 	@Post("registration-confirmation")
-	// @UseGuards(Ratelimits)
 	async createRegistrationConfirmation(@Body() inputDateRegConfirm: InputDateReqConfirmClass) {
 		const command = new RegistrationConfirmationCommand(inputDateRegConfirm)
 		const registrationConfirmation =  await this.commandBus.execute(command)
@@ -115,7 +111,6 @@ export class AuthController {
 
 	@Post("registration")
 	@HttpCode(204)
-	// @UseGuards(Ratelimits)
 	@UseGuards(CheckLoginOrEmail)
 	async creteRegistration(@Req() req: Request, @Body() inputDataReq: InputDataReqClass) {
 		const command = new RegistrationCommand(inputDataReq)
@@ -126,7 +121,6 @@ export class AuthController {
 
 	@HttpCode(204)
 	@Post("registration-email-resending")
-	// @UseGuards(Ratelimits)
 	@UseGuards(IsExistEmailUser)
 	async createRegistrationEmailResending(@Req() req: Request, @Body() inputDateReqEmailResending: emailInputDataClass) {
 		const command = new RegistrationEmailResendingCommand(inputDateReqEmailResending)
@@ -137,23 +131,25 @@ export class AuthController {
 
 	@HttpCode(204)
 	@Post("logout")
-	// @SkipThrottle({default: true})
+	@SkipThrottle({default: true})
 	@UseGuards(CheckRefreshToken)
 	async cretaeLogout(@Req() req: Request) {
 		const refreshToken: string = req.cookies.refreshToken;
 		const command = new LogoutCommand(refreshToken)
 		const isDeleteDevice = await this.commandBus.execute(command)
 		if (!isDeleteDevice) throw new UnauthorizedException('Not authorization 401')
+		return
 	}
 
 	@HttpCode(200)
 	@Get("me")
-	// @SkipThrottle({default: true})
-	@UseGuards(CheckRefreshTokenForComments)
-	async findMe(@Req() req: Request) {
+	@SkipThrottle({default: true})
+	@UseGuards(CheckRefreshTokenFor)
+	async findMe(@Req() req: Request, @UserDecorator() user: User,) {
 		if (!req.headers.authorization) throw new UnauthorizedException('Not authorization 401')
 		const command = new GetUserIdByTokenCommand(req)
 		const findUserById: User = await this.commandBus.execute(command)
+		// console.log("findUserById: ", findUserById)
 		  return {
 			userId: findUserById.id.toString(),
 			email: findUserById.email,

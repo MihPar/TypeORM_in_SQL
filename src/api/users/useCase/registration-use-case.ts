@@ -28,7 +28,7 @@ export class RegistrationUseCase
     const passwordHash = await this.generateHashAdapter._generateHash(
       command.inputDataReq.password
     );
-    const newUser = new User()
+    const newUser: User = new User()
 	
     newUser.login = command.inputDataReq.login
     newUser.email = command.inputDataReq.email
@@ -37,8 +37,11 @@ export class RegistrationUseCase
 	newUser.expirationDate = add(new Date(), {hours: 1, minutes: 10})
 	newUser.confirmationCode = uuidv4()
 	newUser.isConfirmed = false
+
+	// console.log("newUser: ", newUser)
 	
     const userId: any = await this.usersRepository.createUser(newUser);
+	// console.log("userId: ", userId)
     try {
       await this.emailManager.sendEamilConfirmationMessage(
         newUser.email,
@@ -47,7 +50,8 @@ export class RegistrationUseCase
     } catch (error) {
       console.log(error, "error with send mail");
     }
-    newUser.id = userId;
-    return newUser.getViewUser();
+    newUser.id = userId.generatedMaps[0].id;
+	// console.log("id: ",  newUser.id)
+    return User.getViewUser(newUser);
   }
 }

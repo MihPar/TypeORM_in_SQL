@@ -24,4 +24,16 @@ export class ApiConfigService {
  get EXPIRED_REFRESH_JWT(): string |undefined {
 	return this.configService.get("EXPIRED_REFRESH", {infer: true})
  }
+
+//  get USERNAME(): string |undefined {
+// 	return this.configService.get("USERNAME", {infer: true})
+//  }
+
+//  get PASSWORD(): string |undefined {
+// 	return this.configService.get("PASSWORD", {infer: true})
+//  }
+
+//  get DATABASE_URL(): string |undefined {
+// 	return this.configService.get("DATABASE_URL", {infer: true})
+//  }
 }

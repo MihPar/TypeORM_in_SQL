@@ -42,9 +42,9 @@ export class InputModelClassCreateBody {
 }
 
 export class dtoType {
-	// @IsString()
-	// @Trim()
-	// @IsUUID()
-	@IsNumber()
-	id: number
+	@IsString()
+	@Trim()
+	@IsUUID()
+	// @IsNumber()
+	id: string
 }

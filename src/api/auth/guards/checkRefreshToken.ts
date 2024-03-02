@@ -30,14 +30,16 @@ export class CheckRefreshToken implements CanActivate {
 	);
 	const payload = await this.jwtService.decode(refreshToken);
 	const oldActiveDate = new Date(payload.iat * 1000).toISOString()
+	
 	if (
 	  !session ||
-	  session!.lastActiveDate.toString() !== oldActiveDate
+	  session!.lastActiveDate.toISOString() !== oldActiveDate
 	) {
 		throw new UnauthorizedException("401")
 	}
 	if (result.userId) {
 	  const user = await this.usersQueryRepository.findUserById(result.userId)
+// console.log("user: ", user)
 	  if (!user) {
 		throw new UnauthorizedException("401")
 	  }

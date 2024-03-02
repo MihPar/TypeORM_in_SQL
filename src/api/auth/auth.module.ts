@@ -1,7 +1,7 @@
 import { Module, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { CheckRefreshTokenForComments } from './useCase.ts/bearer.authForComments';
+import { CheckRefreshTokenFor } from './useCase.ts/bearer.authForComments';
 import { LogoutUseCase } from '../security-devices/useCase/logout-use-case';
 import { RegistrationEmailResendingUseCase } from '../users/useCase/registrationEmailResending-use-case';
 import { RecoveryPasswordUseCase } from './useCase.ts/recoveryPassowrdUseCase';
@@ -36,7 +36,7 @@ import { ApiJwtService } from '../../infrastructura/jwt/jwt.service';
 import { ApiConfigService } from '../../infrastructura/config/configService';
 
 const guards = [
-  CheckRefreshTokenForComments,
+  CheckRefreshTokenFor,
   CheckRefreshToken,
   IsExistEmailUser,
   CheckLoginOrEmail

@@ -28,7 +28,7 @@ export class CreateDeviceUseCase implements ICommandHandler<CreateDeviceCommand>
 	  ): Promise<{refreshToken: string, token: string} | null> {
 		try {
 			const deviceId = randomUUID()
-			const {accessToken, refreshToken} = await this.apiJwtService.createJWT(command.user.id.toString(), deviceId)
+			const {accessToken, refreshToken} = await this.apiJwtService.createJWT(command.user.id, deviceId)
 			const payload = await this.jwtService.decode(refreshToken);
 			const date = payload.iat * 1000
 			const ip = command.IP || "unknown";
@@ -36,10 +36,11 @@ export class CreateDeviceUseCase implements ICommandHandler<CreateDeviceCommand>
 	
 			const device  = new Device()
 			device.ip = ip
-			device.id = Number(deviceId)
+			device.id = deviceId
 			device.lastActiveDate = new Date(date)
 			device.title = command.deviceName
 			device.userId = command.user.id
+			// console.log("userId: ", command.user.id)
 			
 			const createdDevice: boolean | null = await this.deviceRepository.createDevice(device);
 	

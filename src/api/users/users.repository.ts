@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectDataSource, InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { add } from 'date-fns';
 import { UsersQueryRepository } from './users.queryRepository';
 import { User } from './entities/user.entity';
@@ -9,7 +9,10 @@ import { User } from './entities/user.entity';
 export class UsersRepository {
   constructor(
 	@InjectRepository(User) protected readonly userRepository: Repository<User>,
-    protected readonly usersQueryRepository: UsersQueryRepository
+    protected readonly usersQueryRepository: UsersQueryRepository,
+	@InjectEntityManager()
+    private readonly entityManager: EntityManager,
+	@InjectDataSource() protected dataSource: DataSource
   ) {}
 
   async passwordRecovery(id: any, recoveryCode: string): Promise<boolean> {
@@ -44,7 +47,7 @@ export class UsersRepository {
     return true;
   }
 
-  async updateConfirmation(id: number) {
+  async updateConfirmation(id: string) {
 	const result = await this.userRepository
 		.createQueryBuilder()
 		.update(User)
@@ -56,13 +59,12 @@ export class UsersRepository {
   }
 
   async createUser(newUser: User) {
+	// return newUser.save()
 	const insertUser = await this.userRepository
 		.createQueryBuilder()
 		.insert()
 		.into(User)
-		.values(
-			// newUser
-			[
+		.values([
 			{
 				login: newUser.login, 
 				email: newUser.email, 
@@ -72,15 +74,15 @@ export class UsersRepository {
 				expirationDate: newUser.expirationDate,
 				isConfirmed: newUser.isConfirmed
 			}
-		]
-		)
-		.returning("id")
+		])
+		// .returning("id")
 		.execute()
+		// console.log("Id: ", typeof insertUser.raw[0].id)
 	return insertUser
   }
 
   async updateUserConfirmation(
-    id: number,
+    id: string,
     confirmationCode: string,
     newExpirationDate: Date
   ): Promise<boolean> {
@@ -99,29 +101,32 @@ export class UsersRepository {
     return true;
   }
 
-  async deleteById(userId: number) {
+  async deleteById(userId: string) {
 	const findUserById: User | null = await this.userRepository
-		.createQueryBuilder()
-		.select("user")
-		.from(User, "user")
+		.createQueryBuilder("user")
+		.select(["user"])
 		.where("user.id = :id", {id: userId})
 		.getOne()
+	// console.log("id: ", findUserById.id)
+
 	if(!findUserById) return false
 
+	// console.log("id: ", findUserById.id)
+
 	const deleteById = await this.userRepository
-		.createQueryBuilder()
+		.createQueryBuilder("user")
 		.delete()
 		.from(User)
 		.where("id = :id", {id: userId})
 		.execute()
-		
+	// console.log("deleteById: ", deleteById)
     if (!deleteById) return false;
     return true;
   }
 
   async deleteAllUsers() {
     await this.userRepository
-		.createQueryBuilder()
+		.createQueryBuilder("user")
 		.delete()
 		.from(User)
 		.execute()

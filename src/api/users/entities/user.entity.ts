@@ -4,8 +4,8 @@ import { Device } from "../../security-devices/entities/security-device.entity";
 
 @Entity()
 export class User {
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 
 	@Column()
 	login: string
@@ -16,7 +16,7 @@ export class User {
 	@Column()
 	createdAt: Date
 
-	@Column({nullable: false})
+	@Column()
 	passwordHash: string
 
 	@Column()
@@ -28,15 +28,15 @@ export class User {
 	@Column()
 	isConfirmed: boolean = false
 
-	@OneToMany(() => Device, d => d.user)
+	@OneToMany(() => Device, d => d.user, { onDelete: "CASCADE" })
 	device: Device[]
 	
-  getViewUser(): UserViewType {
+  static getViewUser(user: User): UserViewType {
     return {
-      id: this.id,
-      login: this.login,
-      email: this.email,
-      createdAt: this.createdAt,
+      id: user.id,
+      login: user.login,
+      email: user.email,
+      createdAt: user.createdAt,
     };
   }
 }

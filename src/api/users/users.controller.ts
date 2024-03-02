@@ -26,16 +26,16 @@ export class UsersController {
     query: {
       sortBy: string;
       sortDirection: string;
-      pageNumber: number;
-      pageSize: number;
+      pageNumber: string;
+      pageSize: string;
       searchLoginTerm: string;
       searchEmailTerm: string;
     },
   ) {
 		query.sortBy = query.sortBy || 'createdAt'
 		query.sortDirection = query.sortDirection || "desc"
-		query.pageNumber = query.pageNumber || 1
-		query.pageSize = query.pageSize || 10
+		query.pageNumber = query.pageNumber || '1'
+		query.pageSize = query.pageSize || "10"
 		query.searchLoginTerm = query.searchLoginTerm || ''
 		query.searchEmailTerm = query.searchEmailTerm || ''
 		
@@ -47,6 +47,8 @@ export class UsersController {
 		query.searchLoginTerm,
 		query.searchEmailTerm
     );
+	// console.log('users: ', users)
+
 	return users
   }
 

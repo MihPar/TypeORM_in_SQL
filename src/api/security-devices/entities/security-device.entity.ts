@@ -3,8 +3,8 @@ import { User } from "../../users/entities/user.entity";
 
 @Entity()
 export class Device {
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 
 	@Column()
 	ip: string
@@ -15,16 +15,16 @@ export class Device {
 	@Column()
 	lastActiveDate: Date
 
-	@ManyToOne(() => User, u => u.device)
+	@ManyToOne(() => User, u => u.device, { onDelete: "CASCADE" })
 	user: User
 
 	@Column()
-	userId: number
+	userId: string
 }
 
 export type DeviceView = {
 	ip: string
 	title: string
 	lastActiveDate: Date
-	deviceId: number
+	deviceId: string
 }

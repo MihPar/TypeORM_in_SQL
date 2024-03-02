@@ -19,7 +19,7 @@ import { DeviceRepository } from "../security-device.repository";
       const payload = await this.payloadAdapter.getPayload(command.refreshToken);
       if (!payload) throw new HttpException( 'Can not be payload', 400)
       const logoutDevice = await this.deviceRepository.logoutDevice(
-        Number(payload.deviceId)
+        payload.deviceId
       );
       if (!logoutDevice) throw new HttpException( 'Can not be logoutDevice', 400)
       return true;

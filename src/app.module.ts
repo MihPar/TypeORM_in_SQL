@@ -1,50 +1,41 @@
+import databaseConf, { DatabaseConfig } from './infrastructura/config/db.config';
 import { Module } from '@nestjs/common';
 import { AuthModule } from './api/auth/auth.module';
 import { TestingModule } from './api/testing/testing.module';
-import { CqrsModule } from '@nestjs/cqrs';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { SecurityDevicesModule } from './api/security-devices/security-devices.module';
 import { UsersModule } from './api/users/users.module';
-
-// export const options: TypeOrmModuleOptions = {
-// 	type: "postgres",
-// 	host: "localhost",
-// 	port: 5432,
-// 	username: process.env.USERNAME,
-// 	password: process.env.PASSWORD,
-// 	database: "homeWordTypeORM_SQL",
-// 	autoLoadEntities: true,
-// 	synchronize: true,
-// } 
+import { ApiConfigService } from './infrastructura/config/configService';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ".env",
+	  load: [databaseConf]
     }),
-	// ThrottlerModule.forRoot([{
-	// 	ttl: 10000,
-	// 	limit: 5,
-	//   }]),
-	TypeOrmModule.forRoot(
-		{
-		type: "postgres",
-		host: "localhost",
-		port: 5432,
-		username: process.env.USERNAME,
-		password: process.env.PASSWORD,
-		database: "homeWordTypeORM_SQL",
-		autoLoadEntities: true,
-		synchronize: true,
-		logging: ['query']
-	} 
-	),
+	ThrottlerModule.forRoot([{
+		ttl: 10000,
+		limit: 5,
+	  }]),
+	TypeOrmModule.forRootAsync({
+		useFactory(
+			config: ConfigService<DatabaseConfig>,
+			) {
+			return config.get('database', {
+				infer: true
+			})
+		},
+		inject: [
+			ConfigService,
+		]
+	}),
 	SecurityDevicesModule,
 	AuthModule,
 	TestingModule,
 	UsersModule,
-  ],
+  ]
 })
 export class AppModule {}

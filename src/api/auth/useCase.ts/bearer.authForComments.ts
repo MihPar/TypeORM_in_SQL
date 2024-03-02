@@ -8,13 +8,15 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersQueryRepository } from '../../users/users.queryRepository';
+import { ApiJwtService } from '../../../infrastructura/jwt/jwt.service';
 // dotenv.config();
 
 @Injectable()
-export class CheckRefreshTokenForComments implements CanActivate {
+export class CheckRefreshTokenFor implements CanActivate {
   constructor(
     protected jwtService: JwtService,
     protected usersQueryRepository: UsersQueryRepository,
+	protected readonly apiJwtService: ApiJwtService
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
 	const req: Request = context.switchToHttp().getRequest();
@@ -28,6 +30,7 @@ export class CheckRefreshTokenForComments implements CanActivate {
 	}
     if (userId) {
       const user = await this.usersQueryRepository.findUserById(userId);
+	//   console.log("user: ", user)
       if (user) {
         req['user'] = user;
         return true

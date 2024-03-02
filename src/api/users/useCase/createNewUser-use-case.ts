@@ -33,7 +33,8 @@ export class CreateNewUserUseCase implements ICommandHandler<CreateNewUserComman
 	newUser.confirmationCode = uuidv4()
 	newUser.isConfirmed = false
 
-    const userId: any = await this.usersRepository.createUser(newUser);
+    const user: any = await this.usersRepository.createUser(newUser);
+	
     try {
       await this.emailManager.sendEamilConfirmationMessage(
         newUser.email,
@@ -42,7 +43,7 @@ export class CreateNewUserUseCase implements ICommandHandler<CreateNewUserComman
     } catch (error) {
       console.log(error, "error with send mail");
     }
-    newUser.id = userId;
-    return newUser.getViewUser();
+    newUser.id = user.raw[0].id;
+    return User.getViewUser(newUser);
   }
 }

@@ -23,6 +23,7 @@ export class SecurityDeviceController {
   
   @Get('')
   @HttpCode(200)
+  @SkipThrottle({default: true})
   @UseGuards(CheckRefreshToken)
   async getDevicesUser(
     @UserDecorator() user: User,
@@ -33,6 +34,7 @@ export class SecurityDeviceController {
   }
 
   @Delete('')
+  @SkipThrottle({default: true})
   @UseGuards(CheckRefreshToken)
   @HttpCode(204)
   async terminateCurrentSession(
@@ -45,7 +47,7 @@ export class SecurityDeviceController {
     const refreshToken = req.cookies.refreshToken;
     const payload = await this.payloadAdapter.getPayload(refreshToken);
     if (!payload) throw new UnauthorizedException('401');
-	const command = new TerminateAllCurrentSessionCommand(userId, +payload.deviceId)
+	const command = new TerminateAllCurrentSessionCommand(userId, payload.deviceId)
 	  const findAllCurrentDevices =
       await this.commandBus.execute(command)
     if (!findAllCurrentDevices) throw new UnauthorizedException('401');
@@ -53,9 +55,10 @@ export class SecurityDeviceController {
 
   @Delete(':deviceId')
   @HttpCode(204)
+  @SkipThrottle({default: true})
   @UseGuards(CheckRefreshToken, ForbiddenCalss)
   async terminateSessionById(@Param('deviceId') deviceId: string) {
-	const deleteDeviceById = await this.deviceRepository.terminateSession(+deviceId);
+	const deleteDeviceById = await this.deviceRepository.terminateSession(deviceId);
 	if (!deleteDeviceById) throw new NotFoundException("404")
 	return
   }

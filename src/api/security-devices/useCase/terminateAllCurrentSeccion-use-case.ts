@@ -7,7 +7,7 @@ import { Device, DeviceView } from "../entities/security-device.entity";
 export class TerminateAllCurrentSessionCommand {
 	constructor(
 		public userId: string | null,
-		public deviceId: number
+		public deviceId: string
 	) {}
 }
 

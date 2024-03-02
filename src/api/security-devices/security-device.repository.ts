@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeviceClass } from './dto/device.class';
 import { Device } from './entities/security-device.entity';
+import { stringify } from 'querystring';
 
 @Injectable()
 export class DeviceRepository {
@@ -10,7 +11,7 @@ export class DeviceRepository {
 		@InjectRepository(Device) protected readonly deviceRepository: Repository<Device>	
 	) {}
 
-  async terminateSession(deviceId: number) {
+  async terminateSession(deviceId: string) {
 	const terminator = await this.deviceRepository
 		.createQueryBuilder()
 		.delete()
@@ -37,12 +38,15 @@ export class DeviceRepository {
 			.createQueryBuilder()
 			.insert()
 			.into(Device)
-			.values({
+			.values([
+				{
+				id: device.id,
 				ip: device.ip,
 				title: device.title,
 				userId: device.userId,
 				lastActiveDate: device.lastActiveDate
-			})
+			}
+		])
 			.execute()
      return true
     } catch (error) {
@@ -56,15 +60,18 @@ export class DeviceRepository {
     deviceId: string,
     newLastActiveDate: string
   ) {
-	await this.deviceRepository
-		.createQueryBuilder("d")
-		.update("device")
+	const result = await this.deviceRepository
+		.createQueryBuilder()
+		.update(Device)
 		.set({lastActiveDate: newLastActiveDate})
-		.where("d.id = :deviceId, d.userId = :userId", {deviceId, userId})
+		.where("id = :deviceId", {deviceId})
+		.andWhere('userId = :userId', {userId})
 		.execute()
+		
+		return result
   }
 
-  async logoutDevice(deviceId: number): Promise<boolean> {
+  async logoutDevice(deviceId: string): Promise<boolean> {
 	const deleteDevice = await this.deviceRepository
 		.createQueryBuilder()
 		.delete()
