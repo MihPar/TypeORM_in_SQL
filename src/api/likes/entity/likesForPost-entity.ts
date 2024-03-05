@@ -9,13 +9,16 @@ export class LikeForPost {
 	id: number
 
 	@Column()
-	myStatus: LikeStatusEnum
+	myStatus: string
 
 	@Column()
 	addedAt: string
 
 	@ManyToOne(() => User, u => u.likeForPost)
 	user: User
+
+	@Column()
+	userId: number
 
 	@ManyToOne(() => Posts, lfp => lfp.extendedLikesInfo, {onDelete: "CASCADE" })
 	post: Posts

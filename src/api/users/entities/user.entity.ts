@@ -1,8 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserViewType } from "../user.type";
 import { Device } from "../../security-devices/entities/security-device.entity";
-import { LikeForPost } from "../../likes/entity/likesInfo-entity";
+import { LikeForPost } from "../../likes/entity/likesForPost-entity";
 import { Blogs } from "../../blogs/entity/blogs.entity";
+import { Posts } from "../../posts/entity/entity-posts";
+import { Comments } from "../../comment/entity/comment.entity";
 
 @Entity()
 export class User {
@@ -32,6 +34,18 @@ export class User {
 
 	@OneToMany(() => Blogs, b => b.user)
 	blog: Blogs
+
+	@Column()
+	postId: number
+
+	@OneToMany(() => Posts, p => p.user)
+	post: Posts
+
+	@Column()
+	commentId: number
+
+	@OneToMany(() => Comments, c => c.user)
+	comment: Comments
 
 	@OneToMany(() => LikeForPost, lfp => lfp.user)
 	likeForPost: LikeForPost

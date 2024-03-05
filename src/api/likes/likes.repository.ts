@@ -1,13 +1,17 @@
+import { PostsRepository } from './../posts/posts.repository';
 import { Injectable } from "@nestjs/common";
 import { LikeComment, LikePost } from "./likes.class";
 import { LikeStatusEnum } from "./likes.emun";
-import { InjectDataSource } from "@nestjs/typeorm";
-import { DataSource } from "typeorm";
+import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
+import { DataSource, Repository } from "typeorm";
+import { Posts } from "../posts/entity/entity-posts";
+import { LikeForPost } from './entity/likesForPost-entity';
 
 @Injectable()
 export class LikesRepository {
 	constructor(
-		@InjectDataSource() protected dataSource: DataSource
+		@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>
+		@InjectRepository(LikeForPost) protected readonly likeForPostRepository: Repository<LikeForPost>
 	) {}
 
 	async deletePostLikes() {
@@ -24,29 +28,28 @@ export class LikesRepository {
     	return true
 	}
 
-	async findLikeByPostId(postId: string, userId: string): Promise<LikePost | null> {
-		const query = `
-			select *
-				from public."PostLikes"
-				where "postId" = $1 and "userId" = $2
-		`
-		const findLike = (await this.dataSource.query(query, [postId, userId]))[0]
-		if(!findLike) return null
-		return findLike
+	async findLikeByPostId(postId: number, userId: number): Promise<LikeForPost | null> {
+		const findLikes = await this.likeForPostRepository
+			.createQueryBuilder('lp')
+			.select()
+			.where('lp.id = :id AND lp.userId = :userId', {id: postId, userId})
+			.getOne()
+
+		if(!findLikes) return null
+		return findLikes
 	}
 
-	async saveLikeForPost(postId: string, userId: string, likeStatus: string, login: string): Promise<string> {
-		const createAddedAt = new Date().toISOString()
-		const saveLikeForPostQuery = `
-			INSERT INTO public."PostLikes"("userId", "postId", "myStatus", "addedAt")
-				VALUES ($1, $2, $3, $4)
-				returning *
-		`
-		const saveLikeForPost = (await this.dataSource.query(saveLikeForPostQuery, [userId, postId, likeStatus, createAddedAt]))[0]
-		return saveLikeForPost.id
+	async saveLikeForPost(postId: number, userId: number, likeStatus: string, login: string): Promise<void> {
+		
+		const saveLikeForPost = await this.likeForPostRepository
+			.createQueryBuilder("lp")
+			.insert()
+			.into(LikeForPost)
+			.values([{userId, postId, myStatus: likeStatus}])
+		return
 	}
 
-	async updateLikeStatusForPost(postId: string, likeStatus: string, userId: string) {
+	async updateLikeStatusForPost(postId: number, likeStatus: string, userId: number) {
 		const addedAt = new Date().toISOString()
 		const query1 = `
 			UPDATE public."PostLikes"

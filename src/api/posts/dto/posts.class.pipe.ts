@@ -1,6 +1,6 @@
 import { Transform, TransformFnParams } from "class-transformer";
 import { applyDecorators } from "@nestjs/common";
-import { IsEnum, IsMongoId, IsNotEmpty, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
+import { IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsString, IsUUID, MaxLength, MinLength } from "class-validator";
 import { LikeStatusEnum } from "../../likes/likes.emun";
 
 const Trim = () => Transform(({value}: TransformFnParams) => {
@@ -61,8 +61,9 @@ export class inputModelPostClass {
   }
 
   export class InputModelClassPostId {
-	@IsUUID()
-	postId: string
+	// @IsUUID()
+	@IsNumber()
+	postId: number
   }
 
   export class InputModelContentePostClass {

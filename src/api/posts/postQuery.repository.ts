@@ -3,7 +3,7 @@ import { PaginationType } from "../../types/pagination.types";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Posts } from "./entity/entity-posts";
-import { LikeForPost } from "../likes/entity/likesInfo-entity";
+import { LikeForPost } from "../likes/entity/likesForPost-entity";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { PostsViewModel } from "./posts.type";
 
@@ -159,16 +159,16 @@ export class PostsQueryRepository {
     return result;
   }
 
-//   async getPostById(
-//     postId: string,
-//   ): Promise<PostsViewModel | boolean> {
-//     const queryPost = `
-// 		SELECT *
-// 			FROM public."Posts"
-// 			WHERE "id" = $1
-// 	  `;
-//     const post: PostClass | null = (await this.dataSource.query(queryPost, [postId]))[0]
-// 	if(!post) return false
-// 	return true
-//   }
+  async getPostById(
+    postId: number,
+  ): Promise<PostsViewModel | boolean> {
+	const post = await this.postRepositor
+		.createQueryBuilder("p")
+		.select()
+		.where("p.id = :id", {id: postId})
+		.getOne()
+		
+	if(!post) return false
+	return true
+  }
 }

@@ -1,10 +1,11 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { LikeForPost } from "../../likes/entity/likesInfo-entity";
+import { LikeForPost } from "../../likes/entity/likesForPost-entity";
 import { Blogs } from "../../blogs/entity/blogs.entity";
 import { LikeStatusEnum } from "../../likes/likes.emun";
 import { PostsViewModel } from "../posts.type";
 import { LikesType, NewestLikesType } from "../../likes/likes.type";
 import { bodyPostsModelClass } from "../dto/posts.class.pipe";
+import { User } from "../../users/entities/user.entity";
 
 @Entity()
 export class Posts {
@@ -40,6 +41,12 @@ export class Posts {
 		name: "blogId"
 	})
 	blog: Blogs
+
+	@Column()
+	userId: number
+
+	@ManyToOne(() => User, u => u.post)
+	user: User
 
 	@OneToMany(() => LikeForPost, lp => lp.post, {onDelete: "CASCADE"})
 	extendedLikesInfo: LikeForPost[]

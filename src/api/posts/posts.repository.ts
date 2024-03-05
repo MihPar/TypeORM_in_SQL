@@ -5,7 +5,7 @@ import { DataSource, Repository } from 'typeorm';
 import { NewestLikesClass } from '../likes/likes.class';
 import { Posts } from './entity/entity-posts';
 import { PostsViewModel } from './posts.type';
-import { LikeForPost } from '../likes/entity/likesInfo-entity';
+import { LikeForPost } from '../likes/entity/likesForPost-entity';
 
 @Injectable()
 export class PostsRepository {
@@ -81,51 +81,50 @@ export class PostsRepository {
     return true;
   }
 
-  async increase(postId: string, likeStatus: string, userId): Promise<boolean> {
+  async increase(postId: number, likeStatus: string): Promise<boolean> {
     if (likeStatus === LikeStatusEnum.None) {
 		return true
     } else if (likeStatus === "Dislike") {
-      const updateLikesCountQuery = `
-			UPDATE public."Posts"
-				SET "dislikesCount" = "dislikesCount" + 1
-				WHERE "id" = $1
-		`;
-      const updateLikeCount = (await this.dataSource.query(updateLikesCountQuery, [postId]))[0]
-	  if(!updateLikeCount) return false
+		const updateLikesCountQuery = await this.postsRepository
+			.createQueryBuilder('p')
+			.update()
+			.set({dislikesCount: Number("dislikeCount" + 1)})
+			.where('p.id = :id', {id: postId})
+
+	  if(!updateLikesCountQuery) return false
 	  return  true
     } else {
-      const updateLikesCountQuery = `
-			UPDATE public."Posts"
-				SET "likesCount" = "likesCount" + 1
-				WHERE "id" = $1
-		`;
-    const updateLikeCount = (await this.dataSource.query(updateLikesCountQuery, [postId]))[0]
-	if(!updateLikeCount) return false
-	  return  true
-    }
-  }
+		const updateLikesCountQuery = await this.postsRepository
+		.createQueryBuilder('p')
+		.update()
+		.set({likesCount: Number("likeCount") + 1})
+		.where('p.id = :id', {id: postId})
 
-  async decrease(postId: string, likeStatus: string, userId: string) {
+  if(!updateLikesCountQuery) return false
+  return  true
+  	}
+}
+  async decrease(postId: number, likeStatus: string) {
     if (likeStatus === LikeStatusEnum.None) {
       return true
     } else if (likeStatus === "Dislike") {
-      const updateLikesCountQuery = `
-			UPDATE public."Posts"
-				SET "dislikesCount" = "dislikesCount" - 1
-				WHERE "id" = $1 
-		`;
-      const updateLikeCount = (await this.dataSource.query(updateLikesCountQuery, [postId]))[0]
-	if(!updateLikeCount) return false
-	  return  true
+		const updateLikesCountQuery = await this.postsRepository
+		.createQueryBuilder('p')
+		.update()
+		.set({dislikesCount: Number("dislikeCount") - 1})
+		.where('p.id = :id', {id: postId})
+
+  if(!updateLikesCountQuery) return false
+  return  true
     } else {
-      const updateLikesCountQuery = `
-			UPDATE public."Posts"
-				SET "likesCount" = "likesCount" - 1
-				WHERE "id" = $1
-		`;
-	const updateLikeCount = (await this.dataSource.query(updateLikesCountQuery, [postId]))[0]
-	if(!updateLikeCount) return false
-	  return  true
+		const updateLikesCountQuery = await this.postsRepository
+		.createQueryBuilder('p')
+		.update()
+		.set({likesCount: Number("likeCount") - 1})
+		.where('p.id = :id', {id: postId})
+
+  if(!updateLikesCountQuery) return false
+  return  true
     }
   }
 
