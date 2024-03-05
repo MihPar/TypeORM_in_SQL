@@ -10,7 +10,6 @@ import { User } from "./entities/user.entity";
 export class UsersQueryRepository {
   constructor(
 	@InjectRepository(User) protected readonly userRepository: Repository<User>,
-	@InjectEntityManager() private readonly entityManager: EntityManager
 	) {}
   async getAllUsers(
     sortBy: string,
@@ -19,12 +18,7 @@ export class UsersQueryRepository {
     pageSize: string,
     searchLoginTerm: string,
     searchEmailTerm: string
-  )
-  : Promise<PaginationType<UserViewType>> 
-  {
-    // if (sortBy === "login") {
-	// 	sortBy = "userName";
-	//   }
+  ): Promise<PaginationType<UserViewType>> {
 
 	const users = await this.userRepository
 		.createQueryBuilder('user')
@@ -35,40 +29,6 @@ export class UsersQueryRepository {
 		.offset((+pageNumber - 1) * +pageSize)
 		.getMany();
 
-		// console.log("user: ", users[1])
-		// console.log("user: ", users)
-
-		// const totalCount = users[1]
-		// const totalCount = users.length
-		// console.log("length: ", totalCount)
-
-		// const [users, totalCount] = await this.entityManager
-	  	// 	.findAndCount(User, {
-		// 		where: {
-		// 			login: `%${searchLoginTerm}%`,
-		// 			email: `%${searchEmailTerm}%`
-		// 		}
-		// 	})
-
-
-		// 	console.log("users: ", users)
-		// 	console.log("totalCount: ", totalCount)
-
-		// const count = await this.entityManager
-	  	// .count(User, {
-		// 	where: {
-		// 		login: `%${searchLoginTerm}%`,
-		// 		email: `%${searchEmailTerm}%`
-		// 	}
-		// })
-		// console.log("count: ", count)
-	// const totalCount = await this.userRepository
-	// 	.createQueryBuilder()
-	// 	.from(User, "user")
-	// 	.where("user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm", {loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%`})
-	// 	.getCount()
-
-	// 	console.log("count: ", totalCount)
 
 	const queryBuilderTotalCount =
       this.userRepository.createQueryBuilder('user');
