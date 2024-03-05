@@ -1,5 +1,5 @@
+import { PostsRepository } from './../posts.repository';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { PostsRepository } from "../posts.repository";
 
 export class DeleteAllPostsComand {
 	constructor() {}

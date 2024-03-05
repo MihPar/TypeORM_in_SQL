@@ -8,11 +8,11 @@ export type BlogsViewType = {
   };
 
   export type BlogsViewTypeWithUserId = {
-	id: string,
+	id: number,
 	name: string
 	description: string
 	websiteUrl: string
 	createdAt: string
 	isMembership: boolean
-	userId: string
+	userId: number
   };

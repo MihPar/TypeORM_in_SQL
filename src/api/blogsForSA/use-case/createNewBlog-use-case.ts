@@ -1,0 +1,34 @@
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { bodyBlogsModel } from "../dto/blogs.class-pipe";
+import { BlogsRepositoryForSA } from "../blogsForSA.repository";
+import { BlogsViewType } from "../../blogs/blogs.type";
+import { Blogs } from "../../blogs/entity/blogs.entity";
+
+export class CreateNewBlogForSACommand {
+	constructor(
+		public inputDateModel: bodyBlogsModel,
+		public userId: string
+	) {}
+}
+
+@CommandHandler(CreateNewBlogForSACommand) 
+export class CreateNewBlogForSAUseCase
+  implements ICommandHandler<CreateNewBlogForSACommand>
+{
+  constructor(protected readonly blogsRepositoryForSA: BlogsRepositoryForSA) {}
+  async execute(
+    command: CreateNewBlogForSACommand
+  ): Promise<BlogsViewType | null> {
+    const newBlog: Blogs = new Blogs()
+
+      newBlog.name = command.inputDateModel.name,
+      newBlog.description = command.inputDateModel.description,
+      newBlog.websiteUrl = command.inputDateModel.websiteUrl,
+      newBlog.isMembership = false
+	  
+    const createBlog: Blogs | null =
+      await this.blogsRepositoryForSA.createNewBlogs(newBlog);
+    if (!createBlog) return null;
+    return Blogs.createNewBlogForSA(createBlog)
+  }
+}

@@ -1,12 +1,12 @@
 import { LikesInfoViewModel } from "../likes/likes.type";
 
 export type PostsViewModel = {
-	id: string;
+	id: number;
 	title: string;
 	shortDescription: string;
 	content: string;
-	blogId: string;
+	blogId: number;
 	blogName: string;
-	createdAt: string;
+	createdAt: Date;
 	extendedLikesInfo: LikesInfoViewModel,
   };

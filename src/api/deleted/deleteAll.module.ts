@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TestingService } from './testing.service';
-import { TestingController } from './testing.controller';
+import { TestingController } from './deleteAll.controller';
 import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { DeleteAllDevicesUseCase } from '../security-devices/useCase/deleteAllDevices-use-case';
 import { DeleteAllUsersUseCase } from '../users/useCase/deleteAllUsers-use-case';
@@ -11,9 +11,14 @@ import { User } from '../users/entities/user.entity';
 import { UsersRepository } from '../users/users.repository';
 import { UsersQueryRepository } from '../users/users.queryRepository';
 import { DeviceQueryRepository } from '../security-devices/security-deviceQuery.repository';
+import { DeleteAllPostsUseCase } from '../posts/use-case/deleteAllPosts-use-case';
+import { PostsRepository } from '../posts/posts.repository';
+import { Posts } from '../posts/entity/entity-posts';
+import { DeleteAllBlogsUseCase } from '../blogs/use-case/deletAllBlogs-use-case';
+import { DeleteAllBlogsForSAUseCase } from '../blogsForSA/use-case/deletAllBlogs-use-case';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts]), CqrsModule],
   controllers: [TestingController],
   providers: [
     TestingService,
@@ -22,7 +27,11 @@ import { DeviceQueryRepository } from '../security-devices/security-deviceQuery.
     DeviceRepository,
     UsersRepository,
     UsersQueryRepository,
-	DeviceQueryRepository
+	DeviceQueryRepository,
+	PostsRepository,
+	DeleteAllPostsUseCase,
+	DeleteAllBlogsUseCase,
+	DeleteAllBlogsForSAUseCase
   ],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]
 })

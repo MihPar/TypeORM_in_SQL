@@ -1,18 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { InjectDataSource } from "@nestjs/typeorm";
-import { DataSource } from "typeorm";
-import { BlogClass } from "./blogs.class";
+import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
+import { DataSource, Repository } from "typeorm";
+import { Blogs } from "./entity/blogs.entity";
 
 @Injectable()
 export class BlogsRepository {
 	constructor(
-		@InjectDataSource() protected dataSource: DataSource
+		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>
 	) {}
   async deleteRepoBlogs() {
-    await this.dataSource.query(`
-		DELETE FROM public."Blogs"
-	`);
-    return true
+    await this.blogsRepository
+		.createQueryBuilder()
+		.delete()
+		.execute()
+		
+    return true;
   }
 
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {

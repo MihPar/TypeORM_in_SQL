@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, IsUUID, IsUrl, MaxLength } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsNumber, IsString, IsUUID, IsUrl, MaxLength } from "class-validator";
 import { Transform, TransformFnParams } from "class-transformer";
 import { applyDecorators } from "@nestjs/common";
 
@@ -27,7 +27,23 @@ function IsCustomString() {
 }
 
 export class inputModelClass {
+	// @IsString()
+	// @Trim()
 	// @IsUUID()
 	@IsNumber()
 	blogId: number
+}
+
+export class inputModelUpdataPost {
+	// @IsString()
+	// @Trim()
+	// @IsUUID()
+	@IsNumber()
+	blogId: number
+
+	// @IsString()
+	// @Trim()
+	// @IsUUID()
+	@IsNumber()
+	postId: number
 }

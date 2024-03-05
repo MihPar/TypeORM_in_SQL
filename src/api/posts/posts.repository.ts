@@ -1,82 +1,83 @@
 import { Injectable } from '@nestjs/common';
 import { LikeStatusEnum } from '../../api/likes/likes.emun';
-import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
-import { PostClass } from './post.class';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { NewestLikesClass } from '../likes/likes.class';
+import { Posts } from './entity/entity-posts';
+import { PostsViewModel } from './posts.type';
+import { LikeForPost } from '../likes/entity/likesInfo-entity';
 
 @Injectable()
 export class PostsRepository {
-  constructor(@InjectDataSource() protected dataSource: DataSource) {}
+  constructor(
+	@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>,
+	@InjectRepository(LikeForPost) protected readonly likeForPostRepository: Repository<LikeForPost>
+	) {}
 
-  async createNewPosts(newPost: PostClass): Promise<PostClass | null> {
+  async createNewPosts(newPost: Posts) {
     try {
-      const query = `
-			INSERT INTO public."Posts"(
-				"blogId", "title", "shortDescription", "content", "blogName", "createdAt", "likesCount", "dislikesCount")
-				VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-				returning *
-		`;
-      const resultNewPost = (
-        await this.dataSource.query(query, [
-          newPost.blogId,
-          newPost.title,
-          newPost.shortDescription,
-          newPost.content,
-          newPost.blogName,
-          newPost.createdAt,
-          newPost.likesCount,
-          newPost.dislikesCount,
-        ])
-      )[0];
-
-      return resultNewPost;
+		const createNewPost = await this.postsRepository
+			.createQueryBuilder()
+			.insert()
+			.into(Posts)
+			.values([
+				{
+				blogId: newPost.blogId,
+				title: newPost.title,
+				shortDescription: newPost.shortDescription,
+				content: newPost.content,
+				blogName: newPost.blogName,
+				likesCount: newPost.likesCount,
+				dislikesCount: newPost.dislikesCount
+			}
+		])
+			.execute()
+      return createNewPost;
     } catch (error) {
       console.log(error, "error in create post");
       return null;
     }
   }
 
-  async updatePost(newPost: PostClass, id: string): Promise<PostClass> {
-    const query = `
-		UPDATE public."Posts"
-			SET "blogId"=$1, "title"=$2, "shortDescription"=$3, "content"=$4, "blogName"=$5, "createdAt"=$6, "likesCount"=$7, "dislikesCount"=$8
-			WHERE "id" = $9
-			returning *
-	`;
-    const result = (
-      await this.dataSource.query(query, [
-        newPost.blogId,
-        newPost.title,
-        newPost.shortDescription,
-		newPost.content,
-		newPost.blogName,
-		newPost.createdAt,
-		newPost.likesCount,
-		newPost.dislikesCount,
-        id,
-      ])
-    )[0];
-    return result[0];
+  async updatePost(newPost: Posts, id: number): Promise<Posts> {
+	const updatePost = await this.postsRepository
+		.createQueryBuilder("p")
+		.update()
+		.set({
+			blogId: newPost.blogId,
+			title: newPost.title,
+			shortDescription: newPost.shortDescription,
+			content: newPost.content,
+			blogName: newPost.blogName,
+			likesCount: newPost.likesCount,
+			dislikesCount: newPost.dislikesCount,
+		})
+		.where("p.id = :id", {id})
+		.execute()
+
+    return updatePost.raw[0]
   }
 
   async deletedPostByIdWithBlogId(
-    id: string,
-    blogId: string
+    id: number,
+    blogId: number
   ): Promise<boolean> {
-    const query = `
-		delete from "Posts"
-			where "id" = $1 and "blogId" = $2
-	`;
-    const result = await this.dataSource.query(query, [id, blogId]);
-    if (!result) return false;
+	const deleted = await this.postsRepository
+		.createQueryBuilder("p")
+		.delete()
+		.where("p.id = :id and p.blogId = :blogId", {id, blogId})
+		.execute()
+		
+    if (!deleted) return false;
     return true;
   }
 
   async deleteRepoPosts() {
-    await this.dataSource.query(`
-		DELETE FROM public."Posts"
-	`);
+    await this.postsRepository
+		.createQueryBuilder()
+		.delete()
+		.execute()
+		
     return true;
   }
 
@@ -142,27 +143,28 @@ export class PostsRepository {
     }
   }
 
-  async findNewestLike(id: string) {
+  async findNewestLike(id: number): Promise<LikeForPost> {
     try {
-      const query = `
-			select *
-				from public."PostLikes"
-				where "postId" = $1
-		`;
-      const findNewestLike = (await this.dataSource.query(query, [id]))[0];
-      return findNewestLike;
+		const findLike = await this.likeForPostRepository
+			.createQueryBuilder("lfp")
+			.select()
+			.where("lfp.id = :id and lfp.myStatus = :myStatus", {id, myStatus: 'Like'})
+			.limit(3)
+			.getOne()
+
+      return findLike;
     } catch (erro) {
       return null;
     }
   }
 
-  async findPostByIdAndBlogId(id: string, blogId: string) {
-    const query = `
-		select *
-			from "Posts"
-			where "id" = $1 and "blogId" = $2
-	`;
-    const findPostById = (await this.dataSource.query(query, [id, blogId]))[0];
+  async findPostByIdAndBlogId(id: number, blogId: number) {
+	const findPostById = await this.postsRepository
+		.createQueryBuilder("p")
+		.select()
+		.where("p.id = :id and p.blogId = :blogId", {id, blogId})
+		.getOne()
+
     return findPostById;
   }
 

@@ -1,5 +1,8 @@
 import request from 'supertest';
 import { InputModelClassCreateBody } from '../api/users/user.class';
+import { Posts } from '../api/posts/entity/entity-posts';
+import { LikeStatusEnum } from '../api/likes/likes.emun';
+import { PostsViewModel } from '../api/posts/posts.type';
 
 // export const commentDBToView = (
 //   item: CommentClass, 

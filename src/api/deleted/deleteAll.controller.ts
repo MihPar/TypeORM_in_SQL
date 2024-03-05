@@ -3,6 +3,9 @@ import { CommandBus } from '@nestjs/cqrs';
 import { DeleteAllDevicesCommnad } from '../security-devices/useCase/deleteAllDevices-use-case';
 import { DeleteAllUsersCommnad } from '../users/useCase/deleteAllUsers-use-case';
 import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
+import { DeleteAllPostsComand } from '../posts/use-case/deleteAllPosts-use-case';
+import { DeleteAllBlogsCommnad } from '../blogs/use-case/deletAllBlogs-use-case';
+import { DeleteAllBlogsForSACommnad } from '../blogsForSA/use-case/deletAllBlogs-use-case';
 
 @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
@@ -16,6 +19,9 @@ export class TestingController {
   @SkipThrottle({default: true})
   async remove() {
     await this.commandBus.execute(new DeleteAllDevicesCommnad())
+    await this.commandBus.execute(new DeleteAllPostsComand())
+    await this.commandBus.execute(new DeleteAllBlogsCommnad())
+    await this.commandBus.execute(new DeleteAllBlogsForSACommnad())
     await this.commandBus.execute(new DeleteAllUsersCommnad())
   }
 }

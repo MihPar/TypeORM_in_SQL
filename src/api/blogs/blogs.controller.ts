@@ -7,7 +7,7 @@ import { CheckRefreshTokenForGet } from './use-case/bearer.authGetComment';
 import { UserDecorator, UserIdDecorator } from '../../infrastructura/decorators/decorator.user';
 import { PostsQueryRepository } from "../posts/postQuery.repository";
 import { User } from "../users/entities/user.entity";
-import { Posts } from "../posts/post.class";
+import { Posts } from "../posts/entity/entity-posts";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -63,7 +63,7 @@ export class BlogsController {
 
     const blog = await this.blogsQueryRepository.findBlogById(dto.blogId);
     if (!blog) throw new NotFoundException('Blogs by id not found');
-    const getPosts: PaginationType<Posts> =
+    const getPosts =
       await this.postsQueryRepository.findPostsByBlogsId(
         query.pageNumber,
         query.pageSize,
@@ -76,21 +76,6 @@ export class BlogsController {
     return getPosts;
   }
 
-//   @HttpCode(201)
-//   @Post(':blogId/posts')
-//   @UseGuards(AuthBasic)
-//   async createPostByBlogId(
-//     @Param() dto: inputModelClass,
-//     @Body(new ValidationPipe({ validateCustomDecorators: true })) inputDataModel: bodyPostsModelClass,
-//   ) {
-//     const findBlog: BlogsViewType | null = await this.blogsQueryRepository.findBlogById(dto.blogId);
-//     if (!findBlog) throw new NotFoundException('Blogs by id not found 404');
-// 	const command = new CreateNewPostForBlogCommand( dto.blogId, inputDataModel, findBlog.name)
-// 	const createNewPost: Posts | null = await this.commandBus.execute(command)
-//     if (!createNewPost) throw new NotFoundException('Blogs by id not found 404');
-//     return createNewPost;
-//   }
-
   @Get(':blogId')
   @HttpCode(200)
   async getBlogsById(
@@ -101,27 +86,4 @@ export class BlogsController {
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');
     return blogById;
   }
-
-//   @Put(':blogId')
-//   @HttpCode(204)
-//   @UseGuards(AuthBasic)
-//   @UseFilters(new HttpExceptionFilter())
-//   async updateBlogsById(
-//     @Param() dto: inputModelClass,
-//     @Body(new ValidationPipe({ validateCustomDecorators: true })) inputDateMode: bodyBlogsModel,
-//   ) {
-// 	const command = new UpdateBlogCommand(dto.blogId, inputDateMode)
-// 	const isUpdateBlog = await this.commandBus.execute(command)
-//     if (!isUpdateBlog) throw new NotFoundException('Blogs by id not found 404');
-// 	return isUpdateBlog
-//   }
-
-//   @Delete(':id')
-//   @HttpCode(204)
-//   @UseGuards(AuthBasic)
-//   async deleteBlogsById(@Param('id') id: string) {
-//     const isDeleted: boolean = await this.blogsRepository.deletedBlog(id);
-//     if (!isDeleted) throw new NotFoundException('Blogs by id not found 404');
-//     return isDeleted;
-//   }
 }

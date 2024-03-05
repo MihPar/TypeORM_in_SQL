@@ -1,6 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserViewType } from "../user.type";
 import { Device } from "../../security-devices/entities/security-device.entity";
+import { LikeForPost } from "../../likes/entity/likesInfo-entity";
+import { Blogs } from "../../blogs/entity/blogs.entity";
 
 @Entity()
 export class User {
@@ -27,6 +29,12 @@ export class User {
 
 	@Column()
 	isConfirmed: boolean = false
+
+	@OneToMany(() => Blogs, b => b.user)
+	blog: Blogs
+
+	@OneToMany(() => LikeForPost, lfp => lfp.user)
+	likeForPost: LikeForPost
 
 	@OneToMany(() => Device, d => d.user, { onDelete: "CASCADE" })
 	device: Device[]

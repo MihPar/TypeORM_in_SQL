@@ -59,7 +59,6 @@ export class UsersRepository {
   }
 
   async createUser(newUser: User) {
-	// return newUser.save()
 	const insertUser = await this.userRepository
 		.createQueryBuilder()
 		.insert()
@@ -75,9 +74,7 @@ export class UsersRepository {
 				isConfirmed: newUser.isConfirmed
 			}
 		])
-		// .returning("id")
 		.execute()
-		// console.log("Id: ", typeof insertUser.raw[0].id)
 	return insertUser
   }
 
