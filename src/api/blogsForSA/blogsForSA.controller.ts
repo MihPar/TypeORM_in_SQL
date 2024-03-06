@@ -1,5 +1,5 @@
 import { CommandBus } from '@nestjs/cqrs';
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Post, Put, Query, UseGuards, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, ParseIntPipe, Post, Put, Query, UseGuards, ValidationPipe } from "@nestjs/common";
 import { bodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
 import {BlogsRepositoryForSA } from "./blogsForSA.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
@@ -33,19 +33,20 @@ export class BlogsControllerForSA {
 	protected commandBus: CommandBus
   ) {}
 
-  @Put(':blogId')
+  @Put(':id')
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForSA)
   async updateBlogsById(
-    @Param() dto: inputModelClass,
+    @Param('id', ParseIntPipe) id: number,
     @Body() inputDateMode: bodyBlogsModel,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: number,
   ): Promise<boolean> {
-	const isExistBlog = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId)
+	const isExistBlog = await this.blogsQueryRepositoryForSA.findBlogById(id)
 	if(!isExistBlog) throw new NotFoundException("404")
+
 	if(userId !== isExistBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
-	const command = new UpdateBlogForSACommand(dto.blogId, inputDateMode)
+	const command = new UpdateBlogForSACommand(id, inputDateMode)
 	const isUpdateBlog: boolean = await this.commandBus.execute(command)
     if (!isUpdateBlog) throw new NotFoundException('Blogs by id not found 404');
 	return true
@@ -55,11 +56,11 @@ export class BlogsControllerForSA {
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForSA)
   async deleteBlogsById(
-	@Param('id') id: number,
+	@Param('id', ParseIntPipe) id: number,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: number,
 	) {
-	const isExistBlog = await this.blogsQueryRepositoryForSA.findBlogById(id, userId)
+	const isExistBlog = await this.blogsQueryRepositoryForSA.findBlogById(id)
 	if(!isExistBlog) throw new NotFoundException("404")
 	if(userId !== isExistBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 	const command = new DeleteBlogByIdForSACommnad(id)

@@ -28,13 +28,13 @@ export class BlogsRepositoryForSA {
   ): Promise<Blogs | any> {
 
 	const updateBlogById = await this.blogsRepository
-		.createQueryBuilder("b")
+		.createQueryBuilder()
 		.update()
 		.set({name, description, websiteUrl})
-		.where('b.id = :id', {id: blogId})
+		.where('id = :id', {id: blogId})
 		.execute()
 
-	if(!updateBlogById) return false
+		if(!updateBlogById) return false
     return true
   }
 
