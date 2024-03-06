@@ -50,7 +50,7 @@ export class BlogsQueryRepositoryForSA {
   ): Promise<BlogsViewTypeWithUserId | null> {
 	const findBlogId = await this.blogsRepository
 		.createQueryBuilder("b")
-		.select("b.*")
+		.select()
 		.where("b.id = :id", {id: blogId})
 		.getOne()
 

@@ -25,6 +25,9 @@ import { BlogsRepository } from './blogs.repository';
 import { Posts } from '../posts/entity/entity-posts';
 import { Comments } from '../comment/entity/comment.entity';
 import { LikeForComment } from '../likes/entity/likesForComment-entity';
+import { BlogsController } from './blogs.controller';
+import { JwtService } from '@nestjs/jwt';
+import { UsersQueryRepository } from '../users/users.queryRepository';
 
 const userCase = [
   UpdateBlogForSAUseCase,
@@ -45,17 +48,18 @@ const repo = [
   PostsRepository,
   LikesRepository,
   BlogsRepository,
+  UsersQueryRepository
 ];
 
 const useGuard = [CheckRefreshTokenForGet, CheckRefreshTokenForSA];
 
 const adapter = [];
 const manager = [];
-const service = [];
+const service = [JwtService];
 
 @Module({
   imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment]), CqrsModule],
-  controllers: [],
-  providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
+  controllers: [BlogsController],
+  providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })
 export class BlogsModule {}

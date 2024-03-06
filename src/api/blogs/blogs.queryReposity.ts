@@ -21,9 +21,9 @@ export class BlogsQueryRepository {
 
 	const findAllBlogs = await this.blogsRepository
 		.createQueryBuilder("b")
-		.select('blogs')
+		.select()
 		.where("b.name ILIKE :name", {name: `%${searchNameTerm}%`})
-		.orderBy(`"user"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
+		.orderBy(`"b"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getMany()
@@ -54,7 +54,7 @@ const totalCount = await this.blogsRepository
   async findBlogById(blogId: number): Promise<BlogsViewType | null> {
 	const findBlogById = await this.blogsRepository
 		.createQueryBuilder("b")
-		.select("blogs")
+		.select()
 		.where("b.id = :id", {id: blogId})
 		.getOne()
   	return findBlogById ? Blogs.createNewBlogForSA(findBlogById) : null;

@@ -21,10 +21,10 @@ import { BlogsForSAModule } from './api/blogsForSA/blogsForSA.module';
       envFilePath: ".env",
 	  load: [databaseConf]
     }),
-	ThrottlerModule.forRoot([{
-		ttl: 10000,
-		limit: 5,
-	  }]),
+	// ThrottlerModule.forRoot([{
+	// 	ttl: 10000,
+	// 	limit: 5,
+	//   }]),
 	TypeOrmModule.forRootAsync({
 		useFactory(
 			config: ConfigService<DatabaseConfig>,

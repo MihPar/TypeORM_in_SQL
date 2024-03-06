@@ -1,5 +1,5 @@
 import { Cipher } from "crypto";
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "../../posts/entity/entity-posts";
 import { BlogsViewType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
@@ -18,8 +18,8 @@ export class Blogs {
 	@Column()
 	websiteUrl: string
 
-	@Column()
-	createdAt: string
+	@CreateDateColumn()
+	createdAt: Date
 
 	@Column()
 	isMembership: boolean
@@ -27,7 +27,7 @@ export class Blogs {
 	@ManyToOne(() => User, u => u.blog)
 	user: User
 
-	@Column()
+	@Column({nullable: true})
 	userId: number
 
 	@OneToMany(() => Posts, p => p.blog)
@@ -35,12 +35,12 @@ export class Blogs {
 
 	static createNewBlogForSA(inputBlog: Blogs) {
 		return {
-			id: inputBlog.id,
+			id: inputBlog.id.toString(),
 			name: inputBlog.name,
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,
 			createdAt: inputBlog.createdAt,
-			isMembership: inputBlog.isMembership,
+			isMembership: false
 		}
 	}
 
@@ -57,7 +57,7 @@ export class Blogs {
 
 	static getBlogsViewModel(inputBlog: Blogs) {
 		return {
-			id: inputBlog.id,
+			id: inputBlog.id.toString(),
 			name: inputBlog.name,
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,

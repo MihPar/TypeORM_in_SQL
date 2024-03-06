@@ -27,7 +27,7 @@ import { User } from "../users/entities/user.entity";
 import { UserDecorator, UserIdDecorator } from "../../infrastructura/decorators/decorator.user";
 
 
-@UseGuards(ThrottlerGuard)
+// @UseGuards(ThrottlerGuard)
 @Controller('auth')
 export class AuthController {
 	constructor(

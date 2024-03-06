@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, NotFoundException, Param, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, HttpCode, NotFoundException, Param, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
 import { BlogsQueryRepository } from "./blogs.queryReposity";
 import { inputModelClass } from "./dto/blogs.class.pipe";
 import { BlogsViewType } from "./blogs.type";
@@ -7,7 +7,6 @@ import { CheckRefreshTokenForGet } from './use-case/bearer.authGetComment';
 import { UserDecorator, UserIdDecorator } from '../../infrastructura/decorators/decorator.user';
 import { PostsQueryRepository } from "../posts/postQuery.repository";
 import { User } from "../users/entities/user.entity";
-import { Posts } from "../posts/entity/entity-posts";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -37,6 +36,7 @@ export class BlogsController {
         (query.pageNumber || '1'),
         (query.pageSize || '10'),
       );
+	//   console.log("getAllBlogs: ", getAllBlogs)
     return getAllBlogs;
   }
 
@@ -76,13 +76,13 @@ export class BlogsController {
     return getPosts;
   }
 
-  @Get(':blogId')
+  @Get(':id')
   @HttpCode(200)
   async getBlogsById(
-    @Param() dto: inputModelClass,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<BlogsViewType | null> {
     const blogById: BlogsViewType | null =
-      await this.blogsQueryRepository.findBlogById(dto.blogId);
+      await this.blogsQueryRepository.findBlogById(id);
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');
     return blogById;
   }

@@ -35,14 +35,14 @@ export class User {
 	@OneToMany(() => Blogs, b => b.user)
 	blog: Blogs
 
-	@Column()
-	postId: number
+	// @Column({nullable: true})
+	// postId: number
 
 	@OneToMany(() => Posts, p => p.user)
 	post: Posts
 
-	@Column()
-	commentId: number
+	// @Column()
+	// commentId: number
 
 	@OneToMany(() => Comments, c => c.user)
 	comment: Comments
