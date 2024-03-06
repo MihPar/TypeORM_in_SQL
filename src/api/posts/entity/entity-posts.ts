@@ -6,6 +6,7 @@ import { PostsViewModel } from "../posts.type";
 import { LikesType, NewestLikesType } from "../../likes/likes.type";
 import { bodyPostsModelClass } from "../dto/posts.class.pipe";
 import { User } from "../../users/entities/user.entity";
+import { Comments } from "../../comment/entity/comment.entity";
 
 @Entity()
 export class Posts {
@@ -37,19 +38,19 @@ export class Posts {
 	blogId: number
 
 	@ManyToOne(() => Blogs, b => b.post)
-	@JoinColumn({
-		name: "blogId"
-	})
 	blog: Blogs
 
-	@Column()
-	userId: number
+	// @Column()
+	// userId: number
 
 	@ManyToOne(() => User, u => u.post)
 	user: User
 
 	@OneToMany(() => LikeForPost, lp => lp.post, {onDelete: "CASCADE"})
 	extendedLikesInfo: LikeForPost[]
+
+	@OneToMany(() => Comments, c => c.post)
+	comment: Comments[]
 
 	static getPostsViewModelSAMyOwnStatus(post: Posts,
 		newestLikes: any[], myOwnStatus: LikeStatusEnum): PostsViewModel {
@@ -73,27 +74,28 @@ export class Posts {
 		  };
 	  }
 
-	  static getPostsViewModelForSA(post: Posts,
-				newestLikes?: LikesType[]): PostsViewModel {
-				return {
-				  id: post.id,
-				  title: post.title,
-				  shortDescription: post.shortDescription,
-				  content: post.content,
-				  blogId: post.blogId,
-				  blogName: post.blogName,
-				  createdAt: post.createdAt,
-				  extendedLikesInfo: {
-					  dislikesCount: post.dislikesCount, 
-					  likesCount: post.likesCount, 
-					  myStatus: newestLikes[newestLikes.length - 1] || LikeStatusEnum.None,
-					  newestLikes: newestLikes ? newestLikes.map(l => ({
-						  addedAt: l.addedAt,
-						  login: l.login,
-						  userId: l.userId
-					  })) : []},
-				  };
-			  }
+	 static getPostsViewModelForSA(post: Posts,
+		newestLikes?: NewestLikesType[]
+		): PostsViewModel {
+			return {
+			  id: post.id,
+			  title: post.title,
+			  shortDescription: post.shortDescription,
+			  content: post.content,
+			  blogId: post.blogId,
+			  blogName: post.blogName,
+			  createdAt: post.createdAt,
+			  extendedLikesInfo: {
+				  dislikesCount: post.dislikesCount, 
+				  likesCount: post.likesCount, 
+				  myStatus: LikeStatusEnum.None,
+				  newestLikes: newestLikes ? newestLikes.map(l => ({
+					  addedAt: l.addedAt,
+					  login: l.login,
+					  userId: l.userId
+				  })) : []},
+			  };
+		  }
 
 	static updatePresentPost(post: Posts, newData: bodyPostsModelClass): Posts {
 		post.title = newData.title,

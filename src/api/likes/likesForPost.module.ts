@@ -4,10 +4,16 @@ import { User } from "../users/entities/user.entity";
 import { Device } from "../security-devices/entities/security-device.entity";
 import { CqrsModule } from "@nestjs/cqrs";
 import { LikeForPost } from "./entity/likesForPost-entity";
-import { UpdateLikeStatusForPostUseCase } from "../posts/use-case/updateLikeStatus-use-case";
 import { LikesRepository } from "./likes.repository";
 import { PostsRepository } from "../posts/posts.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
+import { BlogsQueryRepository } from "../blogs/blogs.queryReposity";
+import { CommentQueryRepository } from "../comment/comment.queryRepository";
+import { UpdateLikeStatusForPostUseCase } from "../posts/use-case/updateLikeStatus-use-case";
+import { Posts } from "../posts/entity/entity-posts";
+import { LikeForComment } from "./entity/likesForComment-entity";
+import { Comments } from "../comment/entity/comment.entity";
+import { Blogs } from "../blogs/entity/blogs.entity";
 
 const userCase = [
 	UpdateLikeStatusForPostUseCase
@@ -16,7 +22,9 @@ const userCase = [
 const repo = [
 	LikesRepository,
 	PostsRepository,
-	PostsQueryRepository
+	PostsQueryRepository,
+	BlogsQueryRepository,
+	CommentQueryRepository,
 ];
 
 const adapter = [];
@@ -24,7 +32,7 @@ const manager = [];
 const service = [];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LikeForPost, User, Device]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([LikeForPost, User, Device, Posts, LikeForComment, Comments, Blogs]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })

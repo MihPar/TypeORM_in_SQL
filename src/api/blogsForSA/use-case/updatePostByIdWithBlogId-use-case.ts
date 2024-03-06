@@ -14,7 +14,7 @@ export class UpdateExistingPostByIdWithBlogIdCommand {
 }
 
 @CommandHandler(UpdateExistingPostByIdWithBlogIdCommand)
-export class updateExistingPostByIdWithBlogIdUseCase
+export class UpdateExistingPostByIdWithBlogIdUseCase
   implements ICommandHandler<UpdateExistingPostByIdWithBlogIdCommand>
 {
   constructor(

@@ -6,6 +6,7 @@ import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
 import { DeleteAllPostsComand } from '../posts/use-case/deleteAllPosts-use-case';
 import { DeleteAllBlogsCommnad } from '../blogs/use-case/deletAllBlogs-use-case';
 import { DeleteAllBlogsForSACommnad } from '../blogsForSA/use-case/deletAllBlogs-use-case';
+import { DeleteAllCommentLikesCommand } from '../likes/use-case/deleteAllCommentLikes-use-case copy';
 
 @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
@@ -19,6 +20,7 @@ export class TestingController {
   @SkipThrottle({default: true})
   async remove() {
     await this.commandBus.execute(new DeleteAllDevicesCommnad())
+    await this.commandBus.execute(new DeleteAllCommentLikesCommand())
     await this.commandBus.execute(new DeleteAllPostsComand())
     await this.commandBus.execute(new DeleteAllBlogsCommnad())
     await this.commandBus.execute(new DeleteAllBlogsForSACommnad())

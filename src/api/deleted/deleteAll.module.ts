@@ -16,23 +16,39 @@ import { PostsRepository } from '../posts/posts.repository';
 import { Posts } from '../posts/entity/entity-posts';
 import { DeleteAllBlogsUseCase } from '../blogs/use-case/deletAllBlogs-use-case';
 import { DeleteAllBlogsForSAUseCase } from '../blogsForSA/use-case/deletAllBlogs-use-case';
+import { DeleteAllCommentLikesUseCase } from '../likes/use-case/deleteAllCommentLikes-use-case copy';
+import { LikesRepository } from '../likes/likes.repository';
+import { BlogsRepository } from '../blogs/blogs.repository';
+import { BlogsRepositoryForSA } from '../blogsForSA/blogsForSA.repository';
+import { LikeForPost } from '../likes/entity/likesForPost-entity';
+import { LikeForComment } from '../likes/entity/likesForComment-entity';
+import { Blogs } from '../blogs/entity/blogs.entity';
+
+const useCase = [
+  DeleteAllCommentLikesUseCase,
+  DeleteAllDevicesUseCase,
+  DeleteAllUsersUseCase,
+  DeleteAllPostsUseCase,
+  DeleteAllBlogsUseCase,
+  DeleteAllBlogsForSAUseCase,
+];
+
+const service = [TestingService];
+const repo = [
+  DeviceRepository,
+  UsersRepository,
+  UsersQueryRepository,
+  DeviceQueryRepository,
+  PostsRepository,
+  LikesRepository,
+  BlogsRepository,
+  BlogsRepositoryForSA,
+];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs]), CqrsModule],
   controllers: [TestingController],
-  providers: [
-    TestingService,
-    DeleteAllDevicesUseCase,
-    DeleteAllUsersUseCase,
-    DeviceRepository,
-    UsersRepository,
-    UsersQueryRepository,
-	DeviceQueryRepository,
-	PostsRepository,
-	DeleteAllPostsUseCase,
-	DeleteAllBlogsUseCase,
-	DeleteAllBlogsForSAUseCase
-  ],
+  providers: [...useCase, ...service, ...repo],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]
 })
-export class TestingModule {}
+export class DeletedModule {}

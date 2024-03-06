@@ -16,33 +16,33 @@ export class CommentQueryRepository {
 	@InjectRepository(LikeForComment) protected readonly likeForCommentRepository: Repository<LikeForComment>
   ) {}
 
-  async findCommentById(
-    commentId: string,
-    userId: string | null,
-  ): Promise<CommentViewModel | null> {
-    try {
-		const query = `
-			select *
-				from public."Comments"
-				where "id" = $1
-		`
-   const findCommentById = (await this.dataSource.query(query, [commentId]))[0]
-   const commentsLikeQuery = `
-		select *
-			from public."CommentLikes"
-			where "commentId" = $1 and "userId" = $2
-   `
-   let myStatus: LikeStatusEnum = LikeStatusEnum.None;
-		if(userId) {
-			const commentLikeStatus = (await this.dataSource.query(commentsLikeQuery, [commentId, userId]))[0]
-			myStatus = commentLikeStatus ? (commentLikeStatus.myStatus as LikeStatusEnum) : LikeStatusEnum.None
-		}
-	const viewModelComment = {...findCommentById, commentatorInfo: {userId: findCommentById.userId, userLogin: findCommentById.userLogin}}
-      return commentDBToView(viewModelComment, myStatus);
-    } catch (e) {
-      return null;
-    }
-  }
+//   async findCommentById(
+//     commentId: string,
+//     userId: string | null,
+//   ): Promise<CommentViewModel | null> {
+//     try {
+// 		const query = `
+// 			select *
+// 				from public."Comments"
+// 				where "id" = $1
+// 		`
+//    const findCommentById = (await this.dataSource.query(query, [commentId]))[0]
+//    const commentsLikeQuery = `
+// 		select *
+// 			from public."CommentLikes"
+// 			where "commentId" = $1 and "userId" = $2
+//    `
+//    let myStatus: LikeStatusEnum = LikeStatusEnum.None;
+// 		if(userId) {
+// 			const commentLikeStatus = (await this.dataSource.query(commentsLikeQuery, [commentId, userId]))[0]
+// 			myStatus = commentLikeStatus ? (commentLikeStatus.myStatus as LikeStatusEnum) : LikeStatusEnum.None
+// 		}
+// 	const viewModelComment = {...findCommentById, commentatorInfo: {userId: findCommentById.userId, userLogin: findCommentById.userLogin}}
+//       return commentDBToView(viewModelComment, myStatus);
+//     } catch (e) {
+//       return null;
+//     }
+//   }
 
   async findCommentsByPostId(
     postId: number,
@@ -106,27 +106,27 @@ export class CommentQueryRepository {
     };
   }
 
-  async findCommentByCommentId(commentId: string, userId?: string | null) {
-	const query = `
-		SELECT *
-			FROM public."Comments"
-			WHERE "id" = $1
-	`
-    const commentById = (await this.dataSource.query(query, [commentId]))[0]
-    if (!commentById) {
-      return null;
-    }
-	return {...commentById, commentatorInfo: {userId: commentById.userId, userLogin: commentById.userLogin}}
-  }
+//   async findCommentByCommentId(commentId: string, userId?: string | null) {
+// 	const query = `
+// 		SELECT *
+// 			FROM public."Comments"
+// 			WHERE "id" = $1
+// 	`
+//     const commentById = (await this.dataSource.query(query, [commentId]))[0]
+//     if (!commentById) {
+//       return null;
+//     }
+// 	return {...commentById, commentatorInfo: {userId: commentById.userId, userLogin: commentById.userLogin}}
+//   }
 
-  async getCommentsByPostId(postId: string): Promise<CommentClass | null> {
-	const query = `
-		select *
-			from public."Comments"
-			where "postId" = $1
-	`
-	const getCommentsById = (await this.dataSource.query(query, [postId]))[0]
-	if(!getCommentsById) return null
-	return getCommentsById
-  }
+//   async getCommentsByPostId(postId: string): Promise<CommentClass | null> {
+// 	const query = `
+// 		select *
+// 			from public."Comments"
+// 			where "postId" = $1
+// 	`
+// 	const getCommentsById = (await this.dataSource.query(query, [postId]))[0]
+// 	if(!getCommentsById) return null
+// 	return getCommentsById
+//   }
 }

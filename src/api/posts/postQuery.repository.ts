@@ -1,17 +1,19 @@
+import { LikeForPost } from './../likes/entity/likesForPost-entity';
 import { Injectable } from "@nestjs/common";
 import { PaginationType } from "../../types/pagination.types";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Posts } from "./entity/entity-posts";
-import { LikeForPost } from "../likes/entity/likesForPost-entity";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { PostsViewModel } from "./posts.type";
+import { Comments } from "../comment/entity/comment.entity";
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
 	@InjectRepository(Posts) protected readonly postRepositor: Repository<Posts>,
-	@InjectRepository(LikeForPost) protected readonly likesInfoRepositor: Repository<LikeForPost>
+	@InjectRepository(LikeForPost) protected readonly LikeForPostRepository: Repository<LikeForPost>,
+	@InjectRepository(Comments) protected readonly commentsRepositor: Repository<Comments>
 	) {}
 
   async findPostsById(
@@ -25,7 +27,7 @@ export class PostsQueryRepository {
 		.where("p.id = :id", {id: postId})
 		.getOne()
 	
-	const newestLikesQuery = await this.likesInfoRepositor
+	const newestLikesQuery = await this.LikeForPostRepository
 		.createQueryBuilder("lfp")
 		.select()
 		.where("lfp.postId = :id AND lfp.myStatus = :myStatus", {id: postId, myStatus: "Like"})
@@ -35,7 +37,7 @@ export class PostsQueryRepository {
 	
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
-			const likeQuery = await this.likesInfoRepositor
+			const likeQuery = await this.LikeForPostRepository
 				.createQueryBuilder("lfp")
 				.select()
 				.where("lfp.postId = :id", {id: postId})
@@ -45,64 +47,74 @@ export class PostsQueryRepository {
     return findPostByBlogId ? Posts.getPostsViewModelSAMyOwnStatus(findPostByBlogId, newestLikesQuery, myStatus) : null;
   }
 
-//   async findAllPosts(
-//     pageNumber: string,
-//     pageSize: string,
-//     sortBy: string,
-//     sortDirection: string,
-//     userId?: string | null
-//   ): Promise<PaginationType<Posts>> {
-//     const getPostQuery = `
-// 			select *
-// 				from "Posts"
-// 				order by "${sortBy}" ${sortDirection}
-// 				limit $1 offset $2
-// 		`;
-//     const allPosts = await this.dataSource.query(getPostQuery, [
-//       +pageSize,
-//       (+pageNumber - 1) * +pageSize,
-//     ]);
+  async findAllPosts(
+    pageNumber: string,
+    pageSize: string,
+    sortBy: string,
+    sortDirection: string,
+    userId?: string | null
+  ): Promise<PaginationType<PostsViewModel>> {
 
-//     const countQuery = `
-// 		select count(*)
-// 			from "Posts"
-// 	`;
-//     const totalCount = (await this.dataSource.query(countQuery))[0].count;
-//     const pagesCount: number = Math.ceil(+totalCount / +pageSize);
+	const getPosts = await this.postRepositor
+		.createQueryBuilder('p')
+		.select()
+		.orderBy(`'p'.${sortBy}`, `${sortDirection.toUpperCase()}` === 'DESC' ? 'DESC' : 'ASC')
+		.limit(+pageSize)
+		.offset((+pageNumber - 1) * +pageSize)
+		.getManyAndCount()
+	
+	const allPosts = getPosts[0]
+	const postId = allPosts[0].id
+	const totalCount = getPosts[1]
+	const pagesCount: number = Math.ceil(+totalCount / +pageSize);
 
-// 	const newestLikesQuery = `
-// 			select *
-// 				from public."PostLikes" as pl
-// 				left join public."Users" as u
-// 				on pl."userId" = u."id"
-// 					where "postId" = $1 and "myStatus" = 'Like'
-// 					order by "addedAt" desc
-// 					limit 3 
-// 		`;
-// 	const LikesQuery = `
-// 			select *
-// 				from public."PostLikes" 
-// 					where "postId" = $1 and "userId" = $2
-// 		`;
-//     let result: PaginationType<Posts> = {
-//       pagesCount: pagesCount,
-//       page: +pageNumber,
-//       pageSize: +pageSize,
-//       totalCount: +totalCount,
-//       items: await Promise.all(
-//         allPosts.map(async (post) => {
-// 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
-// 		if(userId) {
-// 			const userLike = (await this.dataSource.query(LikesQuery, [post.id, userId]))[0];
-// 			myStatus = userLike ? (userLike.myStatus as LikeStatusEnum) : LikeStatusEnum.None
-// 		}
-// 		const newestLikes = await this.dataSource.query(newestLikesQuery, [post.id])
-//           return PostClass.getPostsViewModelSAMyOwnStatus(post, newestLikes, myStatus);
-//         })
-//       ),
-//     };
-//     return result;
-//   }
+	// const newestLikesQuery = `
+	// 		select *
+	// 			from public."PostLikes" as pl
+	// 			left join public."Users" as u
+	// 			on pl."userId" = u."id"
+	// 				where "postId" = $1 and "myStatus" = 'Like'
+	// 				order by "addedAt" desc
+	// 				limit 3 
+	// 	`;
+
+	
+	// const LikesQuery = `
+	// 		select *
+	// 			from public."PostLikes" 
+	// 				where "postId" = $1 and "userId" = $2
+	// 	`;
+    let result: PaginationType<PostsViewModel> = {
+      pagesCount: pagesCount,
+      page: +pageNumber,
+      pageSize: +pageSize,
+      totalCount: +totalCount,
+      items: await Promise.all(
+        allPosts.map(async (post) => {
+		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
+		if(userId) {
+			const allLikesUser = await this.LikeForPostRepository
+				.createQueryBuilder('lfp')
+				.select()
+				.where("lfp.postId = :postId AND lfp.userId = :userId", {postId, userId})
+				.getMany()
+			myStatus = allLikesUser ? (allLikesUser[0].myStatus as LikeStatusEnum) : LikeStatusEnum.None
+		}
+		const newestLikesQuery = await this.LikeForPostRepository
+			.createQueryBuilder('lfp')
+			.select()
+			.leftJoinAndSelect('lfp', 'u', "lfp.postId = :postId AND lfp.userId = :userId", {postId, userId})
+			.where("lfp.postId = :postId AND lfp.myStatus = :myStatus", {postId, myStatus: "Like"})
+			.orderBy("lfp.addedAt", 'DESC')
+			.limit(3)
+			.getMany()
+
+          return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus);
+        })
+      ),
+    };
+    return result;
+  }
 
   async findPostsByBlogsId(
     pageNumber: string,
@@ -137,14 +149,14 @@ export class PostsQueryRepository {
       items: await Promise.all (findPostByBlogId.map(async (post: Posts):Promise<PostsViewModel> => {
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
-			const userLike = await this.likesInfoRepositor
+			const userLike = await this.LikeForPostRepository
 				.createQueryBuilder("lfp")
 				.where("lfp.userId = :userId", {userId})
 				.getOne()
 
 			myStatus = userLike ? (userLike.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
-		const newestLikes = await this.likesInfoRepositor
+		const newestLikes = await this.LikeForPostRepository
 			.createQueryBuilder("lfp")
 			.where("lfp.userId = :userId AND lfp.myStatus = myStatus", {userId, myStaus: "Like"})
 			.orderBy("lfp.addedAt", "DESC")

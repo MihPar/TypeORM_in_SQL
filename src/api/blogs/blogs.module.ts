@@ -15,18 +15,23 @@ import { CheckRefreshTokenForSA } from '../blogsForSA/guards/bearer.authGetComme
 import { DeleteBlogByIdForSAUseCase } from '../blogsForSA/use-case/deleteBlogById-use-case';
 import { CreateNewBlogForSAUseCase } from '../blogsForSA/use-case/createNewBlog-use-case';
 import { CreateNewPostForBlogUseCase } from '../blogsForSA/use-case/createNewPostForBlog-use-case';
-import { updateExistingPostByIdWithBlogIdUseCase } from '../blogsForSA/use-case/updatePostByIdWithBlogId-use-case';
+import { UpdateExistingPostByIdWithBlogIdUseCase } from '../blogsForSA/use-case/updatePostByIdWithBlogId-use-case';
 import { DeletePostByIdCommandUseCase } from '../blogsForSA/use-case/deletPostById-use-case';
 import { LikeForPost } from '../likes/entity/likesForPost-entity';
 import { DeleteAllBlogsUseCase } from './use-case/deletAllBlogs-use-case';
 import { DeleteAllBlogsForSAUseCase } from '../blogsForSA/use-case/deletAllBlogs-use-case';
+import { LikesRepository } from '../likes/likes.repository';
+import { BlogsRepository } from './blogs.repository';
+import { Posts } from '../posts/entity/entity-posts';
+import { Comments } from '../comment/entity/comment.entity';
+import { LikeForComment } from '../likes/entity/likesForComment-entity';
 
 const userCase = [
   UpdateBlogForSAUseCase,
   DeleteBlogByIdForSAUseCase,
   CreateNewBlogForSAUseCase,
   CreateNewPostForBlogUseCase,
-  updateExistingPostByIdWithBlogIdUseCase,
+  UpdateExistingPostByIdWithBlogIdUseCase,
   DeletePostByIdCommandUseCase,
   DeleteAllBlogsUseCase,
   DeleteAllBlogsForSAUseCase
@@ -38,6 +43,8 @@ const repo = [
   BlogsQueryRepositoryForSA,
   BlogsRepositoryForSA,
   PostsRepository,
+  LikesRepository,
+  BlogsRepository,
 ];
 
 const useGuard = [CheckRefreshTokenForGet, CheckRefreshTokenForSA];
@@ -47,7 +54,7 @@ const manager = [];
 const service = [];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })

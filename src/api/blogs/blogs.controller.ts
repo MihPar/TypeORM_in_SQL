@@ -47,7 +47,7 @@ export class BlogsController {
   async getPostsByBlogId(
     @Param() dto: inputModelClass,
 	@UserDecorator() user: User,
-	@UserIdDecorator() userId: string | null,
+	@UserIdDecorator() userId: number | null,
     @Query()
 		query: {
 		pageNumber: string;

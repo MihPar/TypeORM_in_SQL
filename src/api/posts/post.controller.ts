@@ -23,7 +23,9 @@ import { CommentQueryRepository } from '../comment/comment.queryRepository';
 import { InputModelLikeStatusClass } from '../comment/dto/comment.class-pipe';
 import { User } from '../users/entities/user.entity';
 import { UpdateLikeStatusCommand } from './use-case/updateLikeStatus-use-case';
-import { CommentViewType } from '../comment/comment.type';
+import { CommentViewModel, CommentViewType } from '../comment/comment.type';
+import { CreateNewCommentByPostIdCommnad } from '../comment/use-case/createNewCommentByPotsId-use-case';
+import { Posts } from './entity/entity-posts';
 
 // @SkipThrottle()
 @Controller('posts')
@@ -67,7 +69,7 @@ export class PostController {
   ) {
     const isExistPots: PostsViewModel | boolean= await this.postsQueryRepository.getPostById(dto.postId);
     if (!isExistPots) throw new NotFoundException('Blogs by id not found');
-    const commentByPostsId: PaginationType<CommentViewType> | null =
+    const commentByPostsId: PaginationType<CommentViewModel> | null =
       await this.commentQueryRepository.findCommentsByPostId(
         dto.postId,
         (query.pageNumber || '1'),
@@ -86,8 +88,8 @@ export class PostController {
   async createNewCommentByPostId(
 	@Param() dto: InputModelClassPostId, 
 	@Body() inputModelContent: InputModelContentePostClass,
-  	@UserDecorator() user: UserClass,
-	@UserIdDecorator() userId: string | null
+  	@UserDecorator() user: User,
+	@UserIdDecorator() userId: number | null
 	) {
     const post: PostsViewModel | boolean = await this.postsQueryRepository.getPostById(dto.postId)
     if (!post) throw new NotFoundException('Blogs by id not found 404')
@@ -109,7 +111,7 @@ export class PostController {
       sortDirection: string;
     },
   ) {
-    const getAllPosts: PaginationType<Posts> =
+    const getAllPosts: PaginationType<PostsViewModel> =
       await this.postsQueryRepository.findAllPosts(
         (query.pageNumber || '1'),
         (query.pageSize || '10'),
@@ -120,27 +122,14 @@ export class PostController {
     return getAllPosts;
   }
 
-//   @Post()
-//   @HttpCode(201)
-//   @UseGuards(AuthBasic)
-//   async createPost(@Body(new ValidationPipe({ validateCustomDecorators: true })) inputModelPost: inputModelPostClass) {
-//     const findBlog: BlogClass | null = await this.blogsQueryRepository.findRawBlogById(
-//       inputModelPost.blogId,
-//     );
-//     if (!findBlog) throw new BadRequestException('Blogs by id not found 400');
-// 	const command = new CreatePostCommand(inputModelPost, findBlog.name)
-// 	const createNewPost: Posts | null = await this.commandBus.execute(command)
-// 	if(!createNewPost) throw new BadRequestException('Blogs by id not found 400');
-//     return createNewPost;
-//   }
 
   @Get(':postId')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostById(
     @Param() dto: InputModelClassPostId, 
-	@UserIdDecorator() userId: string | null,
-	@UserDecorator() user: UserClass
+	@UserIdDecorator() userId: number | null,
+	@UserDecorator() user: User
   ) {
     const getPostById: PostsViewModel | null =
       await this.postsQueryRepository.findPostsById(dto.postId, userId);
@@ -149,27 +138,4 @@ export class PostController {
     }
     return getPostById;
   }
-
-//   @Put(':postId')
-//   @HttpCode(204)
-//   @UseGuards(AuthBasic)
-//   async updatePostById(
-//     @Param() dto: InputModelClassPostId, 
-//     @Body(new ValidationPipe({ validateCustomDecorators: true })) inputModelData: inputModelPostClass,
-//   ) {
-// 	const command = new UpdateOldPostCommand(dto.postId, inputModelData)
-// 	const updatePost: boolean = await this.commandBus.execute(command)
-//     if (!updatePost) throw new NotFoundException('Blogs by id not found 404');
-//     return
-//   }
-
-//   @Delete(':id')
-//   @HttpCode(204)
-//   @UseGuards(AuthBasic)
-//   async deletePostById(@Param('id') id: string, ): Promise<boolean> {
-// 	const command = new DeletePostByIdCommand(id)
-// 	const deletPost: boolean = await this.commandBus.execute(command)
-//     if (!deletPost) throw new NotFoundException('Blogs by id not found 404');
-//     return true;
-//   }
 }

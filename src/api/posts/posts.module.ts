@@ -11,6 +11,14 @@ import { UpdateLikeStatusForPostUseCase } from "./use-case/updateLikeStatus-use-
 import { PostsQueryRepository } from "./postQuery.repository";
 import { BlogsQueryRepository } from "../blogs/blogs.queryReposity";
 import { CommentQueryRepository } from "../comment/comment.queryRepository";
+import { LikesRepository } from "../likes/likes.repository";
+import { LikeForPost } from "../likes/entity/likesForPost-entity";
+import { LikeForComment } from "../likes/entity/likesForComment-entity";
+import { Comments } from "../comment/entity/comment.entity";
+import { BlogsRepository } from "../blogs/blogs.repository";
+import { Blogs } from "../blogs/entity/blogs.entity";
+import { JwtService } from "@nestjs/jwt";
+import { UsersQueryRepository } from "../users/users.queryRepository";
 
 const userCase = [
 	DeleteAllPostsUseCase,
@@ -21,15 +29,18 @@ const repo = [
 	PostsRepository,
 	PostsQueryRepository,
 	BlogsQueryRepository,
-	CommentQueryRepository
+	CommentQueryRepository,
+	LikesRepository,
+	BlogsRepository,
+	UsersQueryRepository
 ];
 const userGuard = [CheckRefreshTokenForPost]
 const adapter = [];
 const manager = [];
-const service = [];
+const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Posts, User, Device]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...userGuard],
 })

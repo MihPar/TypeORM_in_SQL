@@ -1,3 +1,4 @@
+import { LikeForComment } from './entity/likesForComment-entity';
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../users/entities/user.entity";
@@ -17,8 +18,8 @@ const manager = [];
 const service = [];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, LikeForComment]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })
-export class NewestLikesModule {}
+export class 	LikeForCommentModue{}

@@ -1,6 +1,7 @@
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { likeInfoType } from "../likes/likes.type";
 import { CommentViewModel, CommentatorInfoType } from "./comment.type";
+import { Comments } from "./entity/comment.entity";
 
 export class Comment {
   public createdAt: string;
@@ -35,25 +36,28 @@ export class CommentClass extends Comment {
 		likesCount: number
 		dislikesCount: number
 
-		getNewComment(myStatus: LikeStatusEnum): CommentViewModel {
-			return {
-			  id: this.id!.toString(),
-			  content: this.content,
-			  commentatorInfo: this.commentatorInfo,
-			  createdAt: this.createdAt,
-			  likesInfo: {
-				likesCount: this.likesCount,
-				dislikesCount: this.dislikesCount,
-				myStatus: myStatus
-			  }
-			};
-		  }
+		// getNewComment(myStatus: LikeStatusEnum): CommentViewModel {
+		// 	return {
+		// 	  id: this.id!.toString(),
+		// 	  content: this.content,
+		// 	  commentatorInfo: this.commentatorInfo,
+		// 	  createdAt: this.createdAt,
+		// 	  likesInfo: {
+		// 		likesCount: this.likesCount,
+		// 		dislikesCount: this.dislikesCount,
+		// 		myStatus: myStatus
+		// 	  }
+		// 	};
+		//   }
 		
-		static getNewComments(comment: CommentClass, myStatus: LikeStatusEnum): CommentViewModel {
+		static getNewComments(comment: Comments, myStatus: LikeStatusEnum): CommentViewModel {
 			return {
 			  id: comment.id,
 			  content: comment.content,
-			  commentatorInfo: comment.commentatorInfo,
+			  commentatorInfo: {
+				userId: comment.userId,
+				userLogin: comment.userLogin
+			  },
 			  createdAt: comment.createdAt,
 			  likesInfo: {
 				likesCount: comment.likesCount,

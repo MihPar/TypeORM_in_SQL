@@ -128,19 +128,19 @@ export class PostsRepository {
     }
   }
 
-  async findPostByBlogId(blogId: string) {
-    try {
-      const query = `
-			select * 
-				from "Posts"
-				where "blogId" = $1
-		`;
-      const post = (await this.dataSource.query(query, [blogId]))[0];
-      return post;
-    } catch (error) {
-      return null;
-    }
-  }
+//   async findPostByBlogId(blogId: string) {
+//     try {
+//       const query = `
+// 			select * 
+// 				from "Posts"
+// 				where "blogId" = $1
+// 		`;
+//       const post = (await this.dataSource.query(query, [blogId]))[0];
+//       return post;
+//     } catch (error) {
+//       return null;
+//     }
+//   }
 
   async findNewestLike(id: number): Promise<LikeForPost> {
     try {
@@ -167,32 +167,32 @@ export class PostsRepository {
     return findPostById;
   }
 
-  async findPostById(id: string) {
-    const query = `
-		select *
-			from "Posts"
-			where "id" = $1
-	`;
-    const findPostById = (await this.dataSource.query(query, [id]))[0];
-    return findPostById;
-  }
+//   async findPostById(id: string) {
+//     const query = `
+// 		select *
+// 			from "Posts"
+// 			where "id" = $1
+// 	`;
+//     const findPostById = (await this.dataSource.query(query, [id]))[0];
+//     return findPostById;
+//   }
 
-  async createNewestLikes(newest: NewestLikesClass) {
-    const query = `
-		INSERT INTO public."Likes"(
-			"addedAt", "userId", "login", "postId", "myStatus")
-			VALUES ($1, $2, $3, $4)
-			returning *
-	`;
-    const createNewest = (
-      await this.dataSource.query(query, [
-        newest.addedAT,
-        newest.userId,
-        newest.login,
-        newest.postId,
-		newest.myStatus
-      ])
-    )[0];
-	return createNewest
-  }
+//   async createNewestLikes(newest: NewestLikesClass) {
+//     const query = `
+// 		INSERT INTO public."Likes"(
+// 			"addedAt", "userId", "login", "postId", "myStatus")
+// 			VALUES ($1, $2, $3, $4)
+// 			returning *
+// 	`;
+//     const createNewest = (
+//       await this.dataSource.query(query, [
+//         newest.addedAT,
+//         newest.userId,
+//         newest.login,
+//         newest.postId,
+// 		newest.myStatus
+//       ])
+//     )[0];
+// 	return createNewest
+//   }
 }

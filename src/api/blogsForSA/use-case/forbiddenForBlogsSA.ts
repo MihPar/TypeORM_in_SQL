@@ -17,7 +17,7 @@ import { BlogsQueryRepositoryForSA } from '../blogsForSA.queryReposity';
 	  const blogId = req.params.blogId;
 	  if (!blogId) throw new NotFoundException('404');
 	  const findBlogById = await this.blogsQueryRepositoryForSA.findBlogById(
-		blogId,
+		Number(blogId),
 	  );
 	  if (!findBlogById) throw new NotFoundException('404');
 	  if (!req['user']) throw new UnauthorizedException('401');

@@ -3,23 +3,29 @@ import { InputModelClassCreateBody } from '../api/users/user.class';
 import { Posts } from '../api/posts/entity/entity-posts';
 import { LikeStatusEnum } from '../api/likes/likes.emun';
 import { PostsViewModel } from '../api/posts/posts.type';
+import { CommentViewModel } from '../api/comment/comment.type';
+import { Comments } from '../api/comment/entity/comment.entity';
 
-// export const commentDBToView = (
-//   item: CommentClass, 
-//   myStatus: LikeStatusEnum | null
-// ): CommentViewModel => {
-//   return {
-//     id: item.id,
-//     content: item.content,
-//     commentatorInfo: item.commentatorInfo,
-//     createdAt: item.createdAt,
-//     likesInfo: {
-//       likesCount: item?.likesCount || 0,
-//       dislikesCount: item?.dislikesCount || 0,
-//       myStatus: myStatus || LikeStatusEnum.None
-//     },
-//   };
-// };
+export const commentDBToView = (
+  item: Comments, 
+  myStatus: LikeStatusEnum | null
+): CommentViewModel => {
+  return {
+    id: item.id,
+    content: item.content,
+    // commentatorInfo: item.commentatorInfo,
+    commentatorInfo: {
+		userId: item.userId,
+		userLogin: item.userLogin
+	},
+    createdAt: item.createdAt,
+    likesInfo: {
+      likesCount: item?.likesCount || 0,
+      dislikesCount: item?.dislikesCount || 0,
+      myStatus: myStatus || LikeStatusEnum.None
+    },
+  };
+};
 
 // export const commentByPostView = (
 // 	item: CommentClass,

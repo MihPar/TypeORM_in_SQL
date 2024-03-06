@@ -20,6 +20,9 @@ export class LikeForPost {
 	@Column()
 	userId: number
 
+	@Column()
+	login: string
+
 	@ManyToOne(() => Posts, lfp => lfp.extendedLikesInfo, {onDelete: "CASCADE" })
 	post: Posts
 

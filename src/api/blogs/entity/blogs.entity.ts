@@ -1,5 +1,5 @@
 import { Cipher } from "crypto";
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "../../posts/entity/entity-posts";
 import { BlogsViewType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
