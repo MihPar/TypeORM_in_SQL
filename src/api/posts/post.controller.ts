@@ -124,19 +124,20 @@ export class PostController {
   }
 
 
-  @Get(':blogId')
+  @Get(':id')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostById(
-    @Param() dto: InputModelClassPostId, 
+    @Param('id') id: string, 
 	@UserIdDecorator() userId: string | null,
 	@UserDecorator() user: User
   ) {
     const getPostById: PostsViewModel | null =
-      await this.postsQueryRepository.findPostsById(dto.postId, userId);
+      await this.postsQueryRepository.findPostsById(id, userId);
     if (!getPostById) {
       throw new NotFoundException('Post by id not found');
     }
+	console.log({getPostById_repo: getPostById})
     return getPostById;
   }
 }

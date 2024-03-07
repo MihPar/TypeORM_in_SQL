@@ -19,6 +19,7 @@ import { BlogsRepository } from "../blogs/blogs.repository";
 import { Blogs } from "../blogs/entity/blogs.entity";
 import { JwtService } from "@nestjs/jwt";
 import { UsersQueryRepository } from "../users/users.queryRepository";
+import { PostController } from "./post.controller";
 
 const userCase = [
 	DeleteAllPostsUseCase,
@@ -41,7 +42,7 @@ const service = [JwtService];
 
 @Module({
   imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs]), CqrsModule],
-  controllers: [],
+  controllers: [PostController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...userGuard],
 })
 export class PostsModule {}

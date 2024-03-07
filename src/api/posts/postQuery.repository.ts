@@ -11,7 +11,7 @@ import { Comments } from "../comment/entity/comment.entity";
 @Injectable()
 export class PostsQueryRepository {
   constructor(
-	@InjectRepository(Posts) protected readonly postRepositor: Repository<Posts>,
+	@InjectRepository(Posts) protected readonly postRepository: Repository<Posts>,
 	@InjectRepository(LikeForPost) protected readonly LikeForPostRepository: Repository<LikeForPost>,
 	@InjectRepository(Comments) protected readonly commentsRepositor: Repository<Comments>
 	) {}
@@ -20,31 +20,36 @@ export class PostsQueryRepository {
     postId: string,
     userId?: string | null,
   ): Promise<PostsViewModel | null> {
-
-	const findPostByBlogId = await this.postRepositor
+	try {
+		const findPostByBlogId = await this.postRepository
 		.createQueryBuilder()
 		.select()
 		.where("id = :id", {id: postId})
 		.getOne()
+	console.log({findPostByBlogId_repo: findPostByBlogId})
 	
 	const newestLikesQuery = await this.LikeForPostRepository
-		.createQueryBuilder("lfp")
+		.createQueryBuilder()
 		.select()
-		.where("lfp.postId = :id AND lfp.myStatus = :myStatus", {id: postId, myStatus: "Like"})
-		.orderBy("lfp.addedAt", "DESC")
+		.where(`"postId" = :postId AND "myStatus" = :myStatus`, {postId, myStatus: "Like"})
+		.orderBy(`"addedAt"`, "DESC")
 		.limit(3)
 		.execute()
 	
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
 			const likeQuery = await this.LikeForPostRepository
-				.createQueryBuilder("lfp")
+				.createQueryBuilder()
 				.select()
-				.where("lfp.postId = :id", {id: postId})
+				.where(`"postId" = :id`, {id: postId})
 				.getOne()
 			myStatus = likeQuery ? (likeQuery.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
-    return findPostByBlogId ? Posts.getPostsViewModelSAMyOwnStatus(findPostByBlogId, newestLikesQuery, myStatus) : null;
+    return findPostByBlogId ? Posts.getPostsViewModelSAMyOwnStatus(findPostByBlogId, newestLikesQuery, myStatus) : null
+
+	} catch(err) {
+		console.log({repo_err: err})
+	}
   }
 
   async findAllPosts(
@@ -55,7 +60,7 @@ export class PostsQueryRepository {
     userId?: string | null
   ): Promise<PaginationType<PostsViewModel>> {
 
-	const getPosts = await this.postRepositor
+	const getPosts = await this.postRepository
 		.createQueryBuilder('p')
 		.select()
 		.orderBy(`'p'.${sortBy}`, `${sortDirection.toUpperCase()}` === 'DESC' ? 'DESC' : 'ASC')
@@ -123,29 +128,21 @@ export class PostsQueryRepository {
     sortDirection: string,
     blogId: string,
 	userId: string | null
-  )
-  : Promise<PaginationType<PostsViewModel>> 
-  {
-// console.log("blogId: ", blogId)
-	const getAllPostWithPagin = await this.postRepositor
+  ): Promise<PaginationType<PostsViewModel>> {
+	const getAllPostWithPagin = await this.postRepository
 		.createQueryBuilder()
-		.select()
+		// .select()
 		.where("id = :blogId", {blogId})
 		.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getManyAndCount()
-		// .getMany()
 
-		console.log("getAllPostWithPagin: ", getAllPostWithPagin)
+	console.log("getAllPostWithPagin: ", getAllPostWithPagin)
 
 	const findPostByBlogId = getAllPostWithPagin[0]
-	console.log("findPostByBlogId: ", findPostByBlogId)
 	const totalCount = getAllPostWithPagin[1]
-	const postId = findPostByBlogId[0].id
-
-    const pagesCount: number = Math.ceil(totalCount / +pageSize);
-
+	const pagesCount: number = Math.ceil(totalCount / +pageSize);
     const result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,
       page: +pageNumber,
@@ -156,7 +153,7 @@ export class PostsQueryRepository {
 		if(userId) {
 			const userLike = await this.LikeForPostRepository
 				.createQueryBuilder()
-				.where("userId = :userId AND postId = :postId", {userId, postId})
+				.where("userId = :userId AND postId = :postId", {userId})
 				.getOne()
 
 			myStatus = userLike ? (userLike.myStatus as LikeStatusEnum) : LikeStatusEnum.None
@@ -172,17 +169,17 @@ export class PostsQueryRepository {
 		}
       ))
     };
-	console.log("result: ", result)
+	// console.log("result: ", result)
     return result;
   }
 
   async getPostById(
     postId: string,
   ): Promise<PostsViewModel | boolean> {
-	const post = await this.postRepositor
-		.createQueryBuilder("p")
+	const post = await this.postRepository
+		.createQueryBuilder()
 		.select()
-		.where("p.id = :id", {id: postId})
+		.where("id = :id", {id: postId})
 		.getOne()
 		
 	if(!post) return false

@@ -46,6 +46,8 @@ export class BlogsQueryRepositoryForSA {
   async findBlogById(
     blogId: string,
   ): Promise<BlogsViewTypeWithUserId | null> {
+	// console.log("try")
+	console.log("blogId: ", blogId)
 	const findBlogId = await this.blogsRepository
 		.createQueryBuilder()
 		.select()

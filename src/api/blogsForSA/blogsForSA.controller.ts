@@ -56,7 +56,7 @@ export class BlogsControllerForSA {
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForSA)
   async deleteBlogsById(
-	@Param() id: string ,
+	@Param('id') id: string,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string,
 	) {

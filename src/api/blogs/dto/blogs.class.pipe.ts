@@ -28,6 +28,5 @@ function IsCustomString() {
 
 export class inputModelClass {
 	@IsUUID()
-	// @IsNumber()
 	blogId: string
 }

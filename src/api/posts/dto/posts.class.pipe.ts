@@ -62,7 +62,6 @@ export class inputModelPostClass {
 
   export class InputModelClassPostId {
 	@IsUUID()
-	// @IsNumber()
 	postId: string
   }
 

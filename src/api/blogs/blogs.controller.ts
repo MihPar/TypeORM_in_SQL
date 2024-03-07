@@ -39,7 +39,6 @@ export class BlogsController {
 	//   console.log("getAllBlogs: ", getAllBlogs)
     return getAllBlogs;
   }
-
   
   @Get(':blogId/posts')
   @HttpCode(200)

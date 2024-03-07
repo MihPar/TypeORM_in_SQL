@@ -28,10 +28,10 @@ export class Posts {
 	@CreateDateColumn()
 	createdAt: Date
 
-	@Column({nullable: true})
+	@Column({nullable: true, default: 0})
 	likesCount: number
 
-	@Column({nullable: true})
+	@Column({nullable: true, default: 0})
 	dislikesCount: number
 
 	@Column()

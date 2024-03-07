@@ -1,7 +1,7 @@
 import "reflect-metadata"
 import { Injectable } from '@nestjs/common';
-import { EntityManager, Repository } from "typeorm";
-import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 import { UserViewType } from './user.type';
 import { PaginationType } from "../../types/pagination.types";
 import { User } from "./entities/user.entity";
