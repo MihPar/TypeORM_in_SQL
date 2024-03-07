@@ -30,7 +30,7 @@ export class LikesRepository {
     	return true
 	}
 
-	async findLikeByPostId(postId: number, userId: number): Promise<LikeForPost | null> {
+	async findLikeByPostId(postId: string, userId: string): Promise<LikeForPost | null> {
 		const findLikes = await this.likeForPostRepository
 			.createQueryBuilder('lp')
 			.select()
@@ -41,7 +41,7 @@ export class LikesRepository {
 		return findLikes
 	}
 
-	async saveLikeForPost(postId: number, userId: number, likeStatus: string, login: string): Promise<void> {
+	async saveLikeForPost(postId: string, userId: string, likeStatus: string, login: string): Promise<void> {
 		
 		const saveLikeForPost = await this.likeForPostRepository
 			.createQueryBuilder("lp")
@@ -51,7 +51,7 @@ export class LikesRepository {
 		return
 	}
 
-	async updateLikeStatusForPost(postId: number, likeStatus: string, userId: number) {
+	async updateLikeStatusForPost(postId: string, likeStatus: string, userId: string) {
 		const addedAt = new Date().toISOString()
 		const updatelikeStatus = await this.likeForPostRepository
 			.createQueryBuilder('lfp')

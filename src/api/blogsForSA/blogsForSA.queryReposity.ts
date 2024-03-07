@@ -44,7 +44,7 @@ export class BlogsQueryRepositoryForSA {
   }
 
   async findBlogById(
-    blogId: number,
+    blogId: string,
   ): Promise<BlogsViewTypeWithUserId | null> {
 	const findBlogId = await this.blogsRepository
 		.createQueryBuilder()
@@ -55,7 +55,7 @@ export class BlogsQueryRepositoryForSA {
     return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
   }
 
-  async deletedBlog(id: number): Promise<boolean | null> {
+  async deletedBlog(id: string): Promise<boolean | null> {
 	const deleteBlog = await this.blogsRepository
 		.createQueryBuilder()
 		.delete()

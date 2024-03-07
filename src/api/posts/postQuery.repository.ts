@@ -17,8 +17,8 @@ export class PostsQueryRepository {
 	) {}
 
   async findPostsById(
-    postId: number,
-    userId?: number | null,
+    postId: string,
+    userId?: string | null,
   ): Promise<PostsViewModel | null> {
 
 	const findPostByBlogId = await this.postRepositor
@@ -121,8 +121,8 @@ export class PostsQueryRepository {
     pageSize: string,
     sortBy: string,
     sortDirection: string,
-    blogId: number,
-	userId: number | null
+    blogId: string,
+	userId: string | null
   )
   : Promise<PaginationType<PostsViewModel>> 
   {
@@ -177,7 +177,7 @@ export class PostsQueryRepository {
   }
 
   async getPostById(
-    postId: number,
+    postId: string,
   ): Promise<PostsViewModel | boolean> {
 	const post = await this.postRepositor
 		.createQueryBuilder("p")

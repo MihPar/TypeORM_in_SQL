@@ -21,7 +21,7 @@ export class BlogsRepositoryForSA {
   }
 
   async updateBlogById(
-    blogId: number,
+    blogId: string,
     name: string,
     description: string,
     websiteUrl: string,

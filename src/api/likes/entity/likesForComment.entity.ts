@@ -3,14 +3,14 @@ import { Comments } from "../../comment/entity/comment.entity";
 
 @Entity()
 export class LikeForComment {
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 
 	@Column()
 	myStatus: string
 
 	@Column()
-	commentId: number
+	commentId: string
 
 	@ManyToOne(() => Comments, c => c.LikeForComment)
 	comment: Comments

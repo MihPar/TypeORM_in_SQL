@@ -51,7 +51,7 @@ const totalCount = await this.blogsRepository
   // 	return blog
   //   }
 
-  async findBlogById(blogId: number): Promise<BlogsViewType | null> {
+  async findBlogById(blogId: string): Promise<BlogsViewType | null> {
 	const findBlogById = await this.blogsRepository
 		.createQueryBuilder()
 		.select()

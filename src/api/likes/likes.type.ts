@@ -9,7 +9,7 @@ export interface LikesInfoViewModel {
 
 export type NewestLikesType = {
     addedAt: string,
-    userId: number,
+    userId: string,
     login: string,
 }
 
@@ -27,6 +27,6 @@ export type likeInfoType = {
 export type LikesType = {
 	myStatus: LikeStatusEnum
     addedAt: string,
-    userId: number,
+    userId: string,
     login: string,
 }

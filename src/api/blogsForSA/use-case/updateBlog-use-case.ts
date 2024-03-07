@@ -4,7 +4,7 @@ import { BlogsRepositoryForSA } from "../blogsForSA.repository";
 
 export class UpdateBlogForSACommand {
 	constructor(
-		public blogId: number,
+		public blogId: string,
 		public inputDateMode: bodyBlogsModel,
 	) {}
 }

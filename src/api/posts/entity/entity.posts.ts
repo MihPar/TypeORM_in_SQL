@@ -10,8 +10,8 @@ import { Comments } from "../../comment/entity/comment.entity";
 
 @Entity()
 export class Posts {
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 
 	@Column()
 	title: string
@@ -35,7 +35,7 @@ export class Posts {
 	dislikesCount: number
 
 	@Column()
-	blogId: number
+	blogId: string
 
 	@ManyToOne(() => Blogs, b => b.post)
 	blog: Blogs

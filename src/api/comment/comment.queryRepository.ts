@@ -45,12 +45,12 @@ export class CommentQueryRepository {
 //   }
 
   async findCommentsByPostId(
-    postId: number,
+    postId: string,
     pageNumber: string,
     pageSize: string,
     sortBy: string,
     sortDirection: string,
-    userId: number | null,
+    userId: string | null,
   ): Promise<PaginationType<CommentViewModel> | null> {
 	const queryFindComment = await this.commentRepository
 		.createQueryBuilder('c')

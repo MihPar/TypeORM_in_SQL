@@ -14,5 +14,5 @@ export type BlogsViewType = {
 	websiteUrl: string
 	createdAt: Date
 	isMembership: boolean
-	userId: number
+	userId: string
   };

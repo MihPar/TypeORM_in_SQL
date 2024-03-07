@@ -39,7 +39,7 @@ export class PostsRepository {
     }
   }
 
-  async updatePost(newPost: Posts, id: number): Promise<Posts> {
+  async updatePost(newPost: Posts, id: string): Promise<Posts> {
 	const updatePost = await this.postsRepository
 		.createQueryBuilder("p")
 		.update()
@@ -59,8 +59,8 @@ export class PostsRepository {
   }
 
   async deletedPostByIdWithBlogId(
-    id: number,
-    blogId: number
+    id: string,
+    blogId: string
   ): Promise<boolean> {
 	const deleted = await this.postsRepository
 		.createQueryBuilder("p")
@@ -81,7 +81,7 @@ export class PostsRepository {
     return true;
   }
 
-  async increase(postId: number, likeStatus: string): Promise<boolean> {
+  async increase(postId: string, likeStatus: string): Promise<boolean> {
     if (likeStatus === LikeStatusEnum.None) {
 		return true
     } else if (likeStatus === "Dislike") {
@@ -104,7 +104,7 @@ export class PostsRepository {
   return  true
   	}
 }
-  async decrease(postId: number, likeStatus: string) {
+  async decrease(postId: string, likeStatus: string) {
     if (likeStatus === LikeStatusEnum.None) {
       return true
     } else if (likeStatus === "Dislike") {
@@ -142,7 +142,7 @@ export class PostsRepository {
 //     }
 //   }
 
-  async findNewestLike(id: number): Promise<LikeForPost> {
+  async findNewestLike(id: string): Promise<LikeForPost> {
     try {
 		const findLike = await this.likeForPostRepository
 			.createQueryBuilder("lfp")
@@ -157,7 +157,7 @@ export class PostsRepository {
     }
   }
 
-  async findPostByIdAndBlogId(id: number, blogId: number) {
+  async findPostByIdAndBlogId(id: string, blogId: string) {
 	const findPostById = await this.postsRepository
 		.createQueryBuilder("p")
 		.select()

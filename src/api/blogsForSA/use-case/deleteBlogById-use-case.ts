@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BlogsQueryRepositoryForSA } from '../blogsForSA.queryReposity';
 
 export class DeleteBlogByIdForSACommnad {
-  constructor(public id: number) {}
+  constructor(public id: string) {}
 }
 @CommandHandler(DeleteBlogByIdForSACommnad)
 export class DeleteBlogByIdForSAUseCase implements ICommandHandler<DeleteBlogByIdForSACommnad> {

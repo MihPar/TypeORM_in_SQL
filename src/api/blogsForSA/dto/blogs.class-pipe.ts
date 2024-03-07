@@ -27,23 +27,23 @@ function IsCustomString() {
 }
 
 export class inputModelClass {
-	// @IsString()
-	// @Trim()
-	// @IsUUID()
-	@IsNumber()
-	blogId: number
+	@IsString()
+	@Trim()
+	@IsUUID()
+	// @IsNumber()
+	blogId: string
 }
 
 export class inputModelUpdataPost {
-	// @IsString()
-	// @Trim()
-	// @IsUUID()
-	@IsNumber()
-	blogId: number
+	@IsString()
+	@Trim()
+	@IsUUID()
+	// @IsNumber()
+	blogId: string
 
-	// @IsString()
-	// @Trim()
-	// @IsUUID()
-	@IsNumber()
-	postId: number
+	@IsString()
+	@Trim()
+	@IsUUID()
+	// @IsNumber()
+	postId: string
 }

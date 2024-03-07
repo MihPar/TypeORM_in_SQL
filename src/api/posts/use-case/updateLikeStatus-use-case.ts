@@ -9,8 +9,8 @@ import { User } from '../../users/entities/user.entity';
 export class UpdateLikeStatusCommand {
 	constructor(
 		public status: InputModelLikeStatusClass,
-		public postId: number, 
-		public userId: number | null,
+		public postId: string, 
+		public userId: string | null,
 		public user: User
 	) {}
 }

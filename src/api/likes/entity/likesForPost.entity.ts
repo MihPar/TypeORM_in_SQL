@@ -5,8 +5,8 @@ import { User } from "../../users/entities/user.entity";
 
 @Entity()
 export class LikeForPost {
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 
 	@Column()
 	myStatus: string
@@ -18,7 +18,7 @@ export class LikeForPost {
 	user: User
 
 	@Column()
-	userId: number
+	userId: string
 
 	@Column()
 	login: string
@@ -27,6 +27,6 @@ export class LikeForPost {
 	post: Posts
 
 	@Column()
-	postId: number
+	postId: string
 
 }

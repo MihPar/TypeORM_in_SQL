@@ -5,8 +5,8 @@ import { Posts } from "../../posts/entity/entity.posts";
 
 @Entity()
 export class Comments {
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 
 	@Column()
 	content: string
@@ -15,7 +15,7 @@ export class Comments {
 	createdAt: Date
 
 	@Column()
-	userId: number
+	userId: string
 
 	@Column()
 	userLogin: string
@@ -27,7 +27,7 @@ export class Comments {
 	dislikesCount: number
 
 	@Column()
-	postId: number
+	postId: string
 
 	@ManyToOne(() => Posts, p => p.comment)
 	post: Posts

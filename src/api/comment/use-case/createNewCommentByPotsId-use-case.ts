@@ -10,7 +10,7 @@ import { Comments } from "../entity/comment.entity";
 
 export class CreateNewCommentByPostIdCommnad {
   constructor(
-    public postId: number,
+    public postId: string,
     public inputModelContent: InputModelContentePostClass,
     public user: User,
   ) {}
@@ -30,7 +30,7 @@ export class CreateNewCommentByPostIdUseCase
     const newComment: Comments = new Comments()
       newComment.content = command.inputModelContent.content,
       newComment.postId = command.postId,
-      newComment.userId = Number(userId), 
+      newComment.userId = userId, 
 	  newComment.userLogin = userLogin
 
 	  const createNewComment: Comments | null =

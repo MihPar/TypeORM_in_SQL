@@ -45,7 +45,7 @@ export class PostController {
 	@Param() dto: InputModelClassPostId, 
 	@Body() status: InputModelLikeStatusClass,
 	@UserDecorator() user: User,
-    @UserIdDecorator() userId: number | null,
+    @UserIdDecorator() userId: string | null,
 	) {
 	const commnad = new UpdateLikeStatusCommand(status, dto.postId, userId, user)
 	const result = await this.commandBus.execute(commnad)
@@ -58,7 +58,7 @@ export class PostController {
   @UseGuards(CheckRefreshTokenForGet)
   async getCommentByPostId(
     @Param() dto: InputModelClassPostId, 
-    @UserIdDecorator() userId: number | null,
+    @UserIdDecorator() userId: string | null,
     @UserDecorator() user: User,
     @Query()
     query: {
@@ -90,7 +90,7 @@ export class PostController {
 	@Param() dto: InputModelClassPostId, 
 	@Body() inputModelContent: InputModelContentePostClass,
   	@UserDecorator() user: User,
-	@UserIdDecorator() userId: number | null
+	@UserIdDecorator() userId: string | null
 	) {
     const post: PostsViewModel | boolean = await this.postsQueryRepository.getPostById(dto.postId)
     if (!post) throw new NotFoundException('Blogs by id not found 404')
@@ -124,16 +124,16 @@ export class PostController {
   }
 
 
-  @Get(':id')
+  @Get(':blogId')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostById(
-    @Param('id', ParseArrayPipe) id: number, 
-	@UserIdDecorator() userId: number | null,
+    @Param() dto: InputModelClassPostId, 
+	@UserIdDecorator() userId: string | null,
 	@UserDecorator() user: User
   ) {
     const getPostById: PostsViewModel | null =
-      await this.postsQueryRepository.findPostsById(id, userId);
+      await this.postsQueryRepository.findPostsById(dto.postId, userId);
     if (!getPostById) {
       throw new NotFoundException('Post by id not found');
     }

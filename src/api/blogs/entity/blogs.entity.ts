@@ -6,8 +6,8 @@ import { User } from "../../users/entities/user.entity";
 
 @Entity()
 export class Blogs {
-	@PrimaryGeneratedColumn()
-	id: number
+	@PrimaryGeneratedColumn("uuid")
+	id: string
 	
 	@Column()
 	name: string
@@ -28,14 +28,14 @@ export class Blogs {
 	user: User
 
 	@Column({nullable: true})
-	userId: number
+	userId: string
 
 	@OneToMany(() => Posts, p => p.blog)
 	post: Posts[]
 
 	static createNewBlogForSA(inputBlog: Blogs) {
 		return {
-			id: inputBlog.id.toString(),
+			id: inputBlog.id,
 			name: inputBlog.name,
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,
@@ -57,7 +57,7 @@ export class Blogs {
 
 	static getBlogsViewModel(inputBlog: Blogs) {
 		return {
-			id: inputBlog.id.toString(),
+			id: inputBlog.id,
 			name: inputBlog.name,
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,

@@ -33,20 +33,20 @@ export class BlogsControllerForSA {
 	protected commandBus: CommandBus
   ) {}
 
-  @Put(':id')
+  @Put(':blogId')
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForSA)
   async updateBlogsById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param() dto: inputModelClass,
     @Body() inputDateMode: bodyBlogsModel,
 	@UserDecorator() user: User,
-	@UserIdDecorator() userId: number,
+	@UserIdDecorator() userId: string,
   ): Promise<boolean> {
-	const isExistBlog = await this.blogsQueryRepositoryForSA.findBlogById(id)
+	const isExistBlog = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId)
 	if(!isExistBlog) throw new NotFoundException("404")
 
 	if(userId !== isExistBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
-	const command = new UpdateBlogForSACommand(id, inputDateMode)
+	const command = new UpdateBlogForSACommand(dto.blogId, inputDateMode)
 	const isUpdateBlog: boolean = await this.commandBus.execute(command)
     if (!isUpdateBlog) throw new NotFoundException('Blogs by id not found 404');
 	return true
@@ -56,9 +56,9 @@ export class BlogsControllerForSA {
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForSA)
   async deleteBlogsById(
-	@Param('id', ParseIntPipe) id: number,
+	@Param() id: string ,
 	@UserDecorator() user: User,
-	@UserIdDecorator() userId: number,
+	@UserIdDecorator() userId: string,
 	) {
 	const isExistBlog = await this.blogsQueryRepositoryForSA.findBlogById(id)
 	if(!isExistBlog) throw new NotFoundException("404")
@@ -105,31 +105,31 @@ export class BlogsControllerForSA {
   }
 
   @HttpCode(201)
-  @Post(':id/posts')
+  @Post(':blogId/posts')
   @UseGuards(CheckRefreshTokenForSA)
   async createPostByBlogId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param() dto: inputModelClass,
     @Body() inputDataModel: bodyPostsModelClass,
-	@UserIdDecorator() userId: number,
+	@UserIdDecorator() userId: string,
   ) {
-    const findBlog: BlogsViewTypeWithUserId | null = await this.blogsQueryRepositoryForSA.findBlogById(id)
+    const findBlog: BlogsViewTypeWithUserId | null = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId)
     if(!findBlog) throw new NotFoundException("404")
 	// console.log("findBlog: ", findBlog)
 	if(userId !== findBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
-	const command = new CreateNewPostForBlogCommand( id, inputDataModel, findBlog.name, userId)
+	const command = new CreateNewPostForBlogCommand(dto.blogId, inputDataModel, findBlog.name, userId)
 	const createNewPost: Posts | null = await this.commandBus.execute(command)
 	// console.log("createNewPost: ", createNewPost)
     if (!createNewPost) throw new NotFoundException('Blogs by id not found 404');
     return createNewPost;
   }
   
-  @Get(':id/posts')
+  @Get(':blogId/posts')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForSA)
   async getPostsByBlogId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param() dto: inputModelClass,
 	@UserDecorator() user: User,
-	@UserIdDecorator() userId: number | null,
+	@UserIdDecorator() userId: string | null,
     @Query()
     query: {
       pageNumber: string;
@@ -138,7 +138,7 @@ export class BlogsControllerForSA {
       sortDirection: string;
     },
   ) {
-    const blog = await this.blogsQueryRepositoryForSA.findBlogById(id);
+    const blog = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId);
     if(!blog) throw new NotFoundException("404")
 	if(userId !== blog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
     const getPosts: PaginationType<PostsViewModel> =
@@ -147,7 +147,7 @@ export class BlogsControllerForSA {
         query.pageSize || '10',
         query.sortBy || 'createdAt',
         query.sortDirection || 'desc',
-        id,
+        dto.blogId,
 		userId
       );
     if (!getPosts) throw new NotFoundException('Blogs by id not found');
@@ -160,7 +160,7 @@ export class BlogsControllerForSA {
   async updatePostByIdWithModel(
 	@Param() dto: inputModelUpdataPost, 
 	@Body() inputModel: bodyPostsModelClass,
-	@UserIdDecorator() userId: number | null) {
+	@UserIdDecorator() userId: string | null) {
 
 	const blog = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId);
 	if(!blog) throw new NotFoundException("404")
@@ -179,7 +179,7 @@ export class BlogsControllerForSA {
   @UseGuards(CheckRefreshTokenForSA)
   async deletePostByIdWithBlogId(
 	@Param() dto: inputModelUpdataPost, 
-	@UserIdDecorator() userId: number | null
+	@UserIdDecorator() userId: string | null
 	) {
 	const blog = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId);
 	if(!blog) throw new NotFoundException("404")

@@ -9,10 +9,10 @@ import { Posts } from '../../posts/entity/entity.posts';
 
 export class CreateNewPostForBlogCommand {
   constructor(
-	public blogId: number,
+	public blogId: string,
     public inputDataModel: bodyPostsModelClass,
 	public blogName: string,
-	public userId: number
+	public userId: string
   ) {}
 }
 
@@ -34,7 +34,7 @@ export class CreateNewPostForBlogUseCase
       0, 0
 
 	  const createPost: any = await this.postsRepository.createNewPosts(newPost)
-	  console.log("createPost: ", createPost)
+	//   console.log("createPost: ", createPost)
 	if (!createPost) return null;
 	return Posts.getPostsViewModelForSA(createPost)
   }

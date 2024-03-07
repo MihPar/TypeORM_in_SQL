@@ -45,9 +45,9 @@ export class BlogsController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostsByBlogId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param() dto: inputModelClass,
 	@UserDecorator() user: User,
-	@UserIdDecorator() userId: number | null,
+	@UserIdDecorator() userId: string | null,
     @Query()
 		query: {
 		pageNumber: string;
@@ -61,7 +61,7 @@ export class BlogsController {
 	query.sortBy = query.sortBy || 'createdAt'
 	query.sortDirection = query.sortDirection || "desc"
 
-    const blog = await this.blogsQueryRepository.findBlogById(id);
+    const blog = await this.blogsQueryRepository.findBlogById(dto.blogId);
     if (!blog) throw new NotFoundException('Blogs by id not found');
     const getPosts =
       await this.postsQueryRepository.findPostsByBlogsId(
@@ -69,20 +69,20 @@ export class BlogsController {
         query.pageSize,
         query.sortBy,
         query.sortDirection,
-        id,
+        dto.blogId,
 		userId
       );
     if (!getPosts) throw new NotFoundException('Blogs by id not found');
     return getPosts;
   }
 
-  @Get(':id')
+  @Get(':blogId')
   @HttpCode(200)
   async getBlogsById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param() dto: inputModelClass,
   ): Promise<BlogsViewType | null> {
     const blogById: BlogsViewType | null =
-      await this.blogsQueryRepository.findBlogById(id);
+      await this.blogsQueryRepository.findBlogById(dto.blogId);
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');
     return blogById;
   }

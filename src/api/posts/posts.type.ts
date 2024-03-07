@@ -5,7 +5,7 @@ export type PostsViewModel = {
 	title: string;
 	shortDescription: string;
 	content: string;
-	blogId: number;
+	blogId: string;
 	blogName: string;
 	createdAt: Date;
 	extendedLikesInfo: LikesInfoViewModel,

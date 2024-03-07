@@ -2,7 +2,7 @@ import { likeInfoType } from "../../api/likes/likes.type"
 import { LikeStatusEnum } from "../likes/likes.emun"
 
 export type CommentViewModel = {
-	id: number
+	id: string
 	content: string
 	commentatorInfo: CommentatorInfoType
 	createdAt: Date
@@ -11,7 +11,7 @@ export type CommentViewModel = {
 
 
 export type CommentatorInfoType = {
-	userId: number;
+	userId: string;
 	userLogin: string;
   };
 
