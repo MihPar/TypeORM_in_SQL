@@ -34,6 +34,7 @@ export class CreateNewPostForBlogUseCase
       0, 0
 
 	  const createPost: any = await this.postsRepository.createNewPosts(newPost)
+	  console.log("createPost: ", createPost)
 	if (!createPost) return null;
 	return Posts.getPostsViewModelForSA(createPost)
   }

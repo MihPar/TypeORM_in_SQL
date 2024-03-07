@@ -22,9 +22,9 @@ export class PostsQueryRepository {
   ): Promise<PostsViewModel | null> {
 
 	const findPostByBlogId = await this.postRepositor
-		.createQueryBuilder("p")
+		.createQueryBuilder()
 		.select()
-		.where("p.id = :id", {id: postId})
+		.where("id = :id", {id: postId})
 		.getOne()
 	
 	const newestLikesQuery = await this.LikeForPostRepository
@@ -126,18 +126,23 @@ export class PostsQueryRepository {
   )
   : Promise<PaginationType<PostsViewModel>> 
   {
-
-	const getJointPostWithLikes = await this.postRepositor
-		.createQueryBuilder("p")
-		.select("p.*")
-		.where("p.blogId = :blogId", {blogId})
-		.orderBy(`"p"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
+// console.log("blogId: ", blogId)
+	const getAllPostWithPagin = await this.postRepositor
+		.createQueryBuilder()
+		.select()
+		.where("id = :blogId", {blogId})
+		.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getManyAndCount()
+		// .getMany()
 
-	const findPostByBlogId = getJointPostWithLikes[0]
-	const totalCount = getJointPostWithLikes[1]
+		console.log("getAllPostWithPagin: ", getAllPostWithPagin)
+
+	const findPostByBlogId = getAllPostWithPagin[0]
+	console.log("findPostByBlogId: ", findPostByBlogId)
+	const totalCount = getAllPostWithPagin[1]
+	const postId = findPostByBlogId[0].id
 
     const pagesCount: number = Math.ceil(totalCount / +pageSize);
 
@@ -150,8 +155,8 @@ export class PostsQueryRepository {
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
 			const userLike = await this.LikeForPostRepository
-				.createQueryBuilder("lfp")
-				.where("lfp.userId = :userId", {userId})
+				.createQueryBuilder()
+				.where("userId = :userId AND postId = :postId", {userId, postId})
 				.getOne()
 
 			myStatus = userLike ? (userLike.myStatus as LikeStatusEnum) : LikeStatusEnum.None

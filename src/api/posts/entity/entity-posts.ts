@@ -28,10 +28,10 @@ export class Posts {
 	@CreateDateColumn()
 	createdAt: Date
 
-	@Column()
+	@Column({nullable: true})
 	likesCount: number
 
-	@Column()
+	@Column({nullable: true})
 	dislikesCount: number
 
 	@Column()
@@ -55,7 +55,7 @@ export class Posts {
 	static getPostsViewModelSAMyOwnStatus(post: Posts,
 		newestLikes: any[], myOwnStatus: LikeStatusEnum): PostsViewModel {
 		return {
-		  id: post.id,
+		  id: post.id.toString(),
 		  title: post.title,
 		  shortDescription: post.shortDescription,
 		  content: post.content,
@@ -78,7 +78,7 @@ export class Posts {
 		newestLikes?: NewestLikesType[]
 		): PostsViewModel {
 			return {
-			  id: post.id,
+			  id: post.id.toString(),
 			  title: post.title,
 			  shortDescription: post.shortDescription,
 			  content: post.content,

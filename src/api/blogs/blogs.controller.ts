@@ -45,7 +45,7 @@ export class BlogsController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostsByBlogId(
-    @Param() dto: inputModelClass,
+    @Param('id', ParseIntPipe) id: number,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: number | null,
     @Query()
@@ -61,7 +61,7 @@ export class BlogsController {
 	query.sortBy = query.sortBy || 'createdAt'
 	query.sortDirection = query.sortDirection || "desc"
 
-    const blog = await this.blogsQueryRepository.findBlogById(dto.blogId);
+    const blog = await this.blogsQueryRepository.findBlogById(id);
     if (!blog) throw new NotFoundException('Blogs by id not found');
     const getPosts =
       await this.postsQueryRepository.findPostsByBlogsId(
@@ -69,7 +69,7 @@ export class BlogsController {
         query.pageSize,
         query.sortBy,
         query.sortDirection,
-        dto.blogId,
+        id,
 		userId
       );
     if (!getPosts) throw new NotFoundException('Blogs by id not found');

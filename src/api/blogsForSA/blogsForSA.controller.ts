@@ -105,27 +105,29 @@ export class BlogsControllerForSA {
   }
 
   @HttpCode(201)
-  @Post(':blogId/posts')
+  @Post(':id/posts')
   @UseGuards(CheckRefreshTokenForSA)
   async createPostByBlogId(
-    @Param() dto: inputModelClass,
+    @Param('id', ParseIntPipe) id: number,
     @Body() inputDataModel: bodyPostsModelClass,
 	@UserIdDecorator() userId: number,
   ) {
-    const findBlog: BlogsViewTypeWithUserId | null = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId)
+    const findBlog: BlogsViewTypeWithUserId | null = await this.blogsQueryRepositoryForSA.findBlogById(id)
     if(!findBlog) throw new NotFoundException("404")
+	// console.log("findBlog: ", findBlog)
 	if(userId !== findBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
-	const command = new CreateNewPostForBlogCommand( dto.blogId, inputDataModel, findBlog.name, userId)
+	const command = new CreateNewPostForBlogCommand( id, inputDataModel, findBlog.name, userId)
 	const createNewPost: Posts | null = await this.commandBus.execute(command)
+	// console.log("createNewPost: ", createNewPost)
     if (!createNewPost) throw new NotFoundException('Blogs by id not found 404');
     return createNewPost;
   }
   
-  @Get(':blogId/posts')
+  @Get(':id/posts')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForSA)
   async getPostsByBlogId(
-    @Param() dto: inputModelClass,
+    @Param('id', ParseIntPipe) id: number,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: number | null,
     @Query()
@@ -136,7 +138,7 @@ export class BlogsControllerForSA {
       sortDirection: string;
     },
   ) {
-    const blog = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId);
+    const blog = await this.blogsQueryRepositoryForSA.findBlogById(id);
     if(!blog) throw new NotFoundException("404")
 	if(userId !== blog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
     const getPosts: PaginationType<PostsViewModel> =
@@ -145,7 +147,7 @@ export class BlogsControllerForSA {
         query.pageSize || '10',
         query.sortBy || 'createdAt',
         query.sortDirection || 'desc',
-        dto.blogId,
+        id,
 		userId
       );
     if (!getPosts) throw new NotFoundException('Blogs by id not found');

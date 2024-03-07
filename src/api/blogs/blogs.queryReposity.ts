@@ -20,18 +20,18 @@ export class BlogsQueryRepository {
   ): Promise<PaginationType<BlogsViewType>> {
 
 	const findAllBlogs = await this.blogsRepository
-		.createQueryBuilder("b")
+		.createQueryBuilder()
 		.select()
-		.where("b.name ILIKE :name", {name: `%${searchNameTerm}%`})
-		.orderBy(`"b"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
+		.where("name ILIKE :name", {name: `%${searchNameTerm}%`})
+		.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getMany()
 
 	
 const totalCount = await this.blogsRepository
-	.createQueryBuilder("b")
-	.where("b.name ILIKE :name", {name: `%${searchNameTerm}%`})
+	.createQueryBuilder()
+	.where("name ILIKE :name", {name: `%${searchNameTerm}%`})
 	.getCount()
     
     const pagesCount: number = Math.ceil(totalCount / +pageSize);
@@ -53,9 +53,9 @@ const totalCount = await this.blogsRepository
 
   async findBlogById(blogId: number): Promise<BlogsViewType | null> {
 	const findBlogById = await this.blogsRepository
-		.createQueryBuilder("b")
+		.createQueryBuilder()
 		.select()
-		.where("b.id = :id", {id: blogId})
+		.where("id = :id", {id: blogId})
 		.getOne()
   	return findBlogById ? Blogs.createNewBlogForSA(findBlogById) : null;
     }

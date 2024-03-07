@@ -16,22 +16,22 @@ export class PostsRepository {
 
   async createNewPosts(newPost: Posts) {
     try {
-		const createNewPost = await this.postsRepository
-			.createQueryBuilder()
-			.insert()
-			.into(Posts)
-			.values([
-				{
-				blogId: newPost.blogId,
-				title: newPost.title,
-				shortDescription: newPost.shortDescription,
-				content: newPost.content,
-				blogName: newPost.blogName,
-				likesCount: newPost.likesCount,
-				dislikesCount: newPost.dislikesCount
-			}
-		])
-			.execute()
+		const createNewPost = await this.postsRepository.save(newPost)
+		// 	.createQueryBuilder()
+		// 	.insert()
+		// 	.into(Posts)
+		// 	.values([
+		// 		{
+		// 		blogId: newPost.blogId,
+		// 		title: newPost.title,
+		// 		shortDescription: newPost.shortDescription,
+		// 		content: newPost.content,
+		// 		blogName: newPost.blogName,
+		// 		likesCount: newPost.likesCount,
+		// 		dislikesCount: newPost.dislikesCount
+		// 	}
+		// ])
+		// 	.execute()
       return createNewPost;
     } catch (error) {
       console.log(error, "error in create post");

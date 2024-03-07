@@ -5,6 +5,7 @@ import {
   HttpCode,
   NotFoundException,
   Param,
+  ParseArrayPipe,
   Post,
   Put,
   Query,
@@ -123,16 +124,16 @@ export class PostController {
   }
 
 
-  @Get(':postId')
+  @Get(':id')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostById(
-    @Param() dto: InputModelClassPostId, 
+    @Param('id', ParseArrayPipe) id: number, 
 	@UserIdDecorator() userId: number | null,
 	@UserDecorator() user: User
   ) {
     const getPostById: PostsViewModel | null =
-      await this.postsQueryRepository.findPostsById(dto.postId, userId);
+      await this.postsQueryRepository.findPostsById(id, userId);
     if (!getPostById) {
       throw new NotFoundException('Post by id not found');
     }

@@ -1,8 +1,7 @@
-import { BlogsRepository } from './../blogs/blogs.repository';
 import { Injectable } from "@nestjs/common";
 import { PaginationType } from "../../types/pagination.types";
-import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
-import { DataSource, Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 import { BlogsViewType, BlogsViewTypeWithUserId } from "../blogs/blogs.type";
 import { Blogs } from "../blogs/entity/blogs.entity";
 
@@ -21,10 +20,10 @@ export class BlogsQueryRepositoryForSA {
   ): Promise<PaginationType<BlogsViewType>> {
 
 	const findBlogs = await this.blogsRepository
-		.createQueryBuilder("b")
+		.createQueryBuilder()
 		.select()
-		.where("b.name = :name", {name: `%${searchNameTerm}%`})
-		.orderBy(`"b".${sortBy}`, `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`)
+		.where("name = :name", {name: `%${searchNameTerm}%`})
+		.orderBy(`${sortBy}`, `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getManyAndCount()
@@ -48,9 +47,9 @@ export class BlogsQueryRepositoryForSA {
     blogId: number,
   ): Promise<BlogsViewTypeWithUserId | null> {
 	const findBlogId = await this.blogsRepository
-		.createQueryBuilder("b")
+		.createQueryBuilder()
 		.select()
-		.where("b.id = :id", {id: blogId})
+		.where("id = :id", {id: blogId})
 		.getOne()
 	// console.log("findBlogId: ", findBlogId)
     return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
