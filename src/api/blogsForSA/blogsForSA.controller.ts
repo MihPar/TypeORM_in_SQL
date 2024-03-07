@@ -163,11 +163,13 @@ export class BlogsControllerForSA {
 	const blog = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId);
 	if(!blog) throw new NotFoundException("404")
 	const findPost = await this.postsQueryRepository.findPostsById(dto.postId)
+// console.log({findPost_repo: findPost})
 	if(!findPost) throw new NotFoundException("404")
 	if(userId !== blog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 
     const command = new UpdateExistingPostByIdWithBlogIdCommand(dto, inputModel)
 	const updateExistingPost = await this.commandBus.execute(command)
+	// console.log("updateExistingPost: ", updateExistingPost)
 	if(!updateExistingPost) throw new NotFoundException("Post not find")
 	return 
   }

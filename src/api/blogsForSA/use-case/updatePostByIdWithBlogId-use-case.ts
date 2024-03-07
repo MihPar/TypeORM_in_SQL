@@ -20,14 +20,14 @@ export class UpdateExistingPostByIdWithBlogIdUseCase
   constructor(
 	protected postsRepository: PostsRepository
   ) {}
-  async execute(command: UpdateExistingPostByIdWithBlogIdCommand): Promise<boolean | null> {
+  async execute(command: UpdateExistingPostByIdWithBlogIdCommand): Promise<PostsViewModel | null> {
 	const findPostById: Posts = await this.postsRepository.findPostByIdAndBlogId(command.dto.postId, command.dto.blogId)
 	if(!findPostById) return null
-	const findNewestLike: LikeForPost = await this.postsRepository.findNewestLike(command.dto.postId)
+	const findNewestLike: any = await this.postsRepository.findNewestLike(command.dto.postId)
 	const newPost = Posts.updatePresentPost(findPostById, command.inputModel)
     const updateExistingPost: Posts = await this.postsRepository.updatePost(newPost, command.dto.postId)
 	if(!updateExistingPost) return null
-	return true
-	// return Posts.getPostsViewModelForSA(updateExistingPost, findNewestLike);
+	
+	return Posts.getPostsViewModelForSA(updateExistingPost, findNewestLike);
   }
 }

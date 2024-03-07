@@ -26,7 +26,6 @@ export class PostsQueryRepository {
 		.select()
 		.where("id = :id", {id: postId})
 		.getOne()
-	// console.log({findPostByBlogId_repo: findPostByBlogId})
 	
 	const newestLikesQuery = await this.LikeForPostRepository
 		.createQueryBuilder()

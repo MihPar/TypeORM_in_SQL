@@ -55,7 +55,13 @@ export class PostsRepository {
 		.where("id = :id", {id})
 		.execute()
 
-    return updatePost.raw[0]
+		const getUpdatedPost = await this.postsRepository
+			.createQueryBuilder()
+			.select()
+			.where("id = :id", {id})
+			.getOne()
+
+    return getUpdatedPost
   }
 
   async deletedPostByIdWithBlogId(
@@ -142,16 +148,15 @@ export class PostsRepository {
 //     }
 //   }
 
-  async findNewestLike(id: string): Promise<LikeForPost> {
+  async findNewestLike(postId: string) {
     try {
-		const findLike = await this.likeForPostRepository
-			.createQueryBuilder("lfp")
+		const findLikes = await this.likeForPostRepository
+			.createQueryBuilder()
 			.select()
-			.where("lfp.id = :id and lfp.myStatus = :myStatus", {id, myStatus: 'Like'})
-			.limit(3)
-			.getOne()
+			.where(`"postId" = :id`, {postId})
+			.getMany()
 
-      return findLike;
+      return findLikes;
     } catch (erro) {
       return null;
     }
@@ -159,9 +164,9 @@ export class PostsRepository {
 
   async findPostByIdAndBlogId(id: string, blogId: string) {
 	const findPostById = await this.postsRepository
-		.createQueryBuilder("p")
+		.createQueryBuilder()
 		.select()
-		.where("p.id = :id and p.blogId = :blogId", {id, blogId})
+		.where(`id = :id and "blogId" = :blogId`, {id, blogId})
 		.getOne()
 
     return findPostById;

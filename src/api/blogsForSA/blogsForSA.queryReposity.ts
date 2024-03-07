@@ -51,6 +51,7 @@ export class BlogsQueryRepositoryForSA {
 		.select()
 		.where("id = :id", {id: blogId})
 		.getOne()
+		// console.log("Blogs.getBlogsViewModel(findBlogId): ", Blogs.getBlogsViewModel(findBlogId))
     return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
   }
 
