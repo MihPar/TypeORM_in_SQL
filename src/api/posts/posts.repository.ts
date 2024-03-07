@@ -3,9 +3,9 @@ import { LikeStatusEnum } from '../../api/likes/likes.emun';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { NewestLikesClass } from '../likes/likes.class';
-import { Posts } from './entity/entity-posts';
+import { Posts } from './entity/entity.posts';
 import { PostsViewModel } from './posts.type';
-import { LikeForPost } from '../likes/entity/likesForPost-entity';
+import { LikeForPost } from '../likes/entity/likesForPost.entity';
 
 @Injectable()
 export class PostsRepository {

@@ -3,15 +3,15 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../users/entities/user.entity";
 import { Device } from "../security-devices/entities/security-device.entity";
 import { CqrsModule } from "@nestjs/cqrs";
-import { LikeForPost } from "./entity/likesForPost-entity";
+import { LikeForPost } from "./entity/likesForPost.entity";
 import { LikesRepository } from "./likes.repository";
 import { PostsRepository } from "../posts/posts.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
 import { BlogsQueryRepository } from "../blogs/blogs.queryReposity";
 import { CommentQueryRepository } from "../comment/comment.queryRepository";
 import { UpdateLikeStatusForPostUseCase } from "../posts/use-case/updateLikeStatus-use-case";
-import { Posts } from "../posts/entity/entity-posts";
-import { LikeForComment } from "./entity/likesForComment-entity";
+import { Posts } from "../posts/entity/entity.posts";
+import { LikeForComment } from "./entity/likesForComment.entity";
 import { Comments } from "../comment/entity/comment.entity";
 import { Blogs } from "../blogs/entity/blogs.entity";
 

@@ -1,9 +1,9 @@
-import { LikeForPost } from './../likes/entity/likesForPost-entity';
+import { LikeForPost } from '../likes/entity/likesForPost.entity';
 import { Injectable } from "@nestjs/common";
 import { PaginationType } from "../../types/pagination.types";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Posts } from "./entity/entity-posts";
+import { Posts } from "./entity/entity.posts";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { PostsViewModel } from "./posts.type";
 import { Comments } from "../comment/entity/comment.entity";

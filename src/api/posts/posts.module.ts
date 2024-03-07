@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Posts } from "./entity/entity-posts";
+import { Posts } from "./entity/entity.posts";
 import { User } from "../users/entities/user.entity";
 import { Device } from "../security-devices/entities/security-device.entity";
 import { CqrsModule } from "@nestjs/cqrs";
@@ -12,8 +12,8 @@ import { PostsQueryRepository } from "./postQuery.repository";
 import { BlogsQueryRepository } from "../blogs/blogs.queryReposity";
 import { CommentQueryRepository } from "../comment/comment.queryRepository";
 import { LikesRepository } from "../likes/likes.repository";
-import { LikeForPost } from "../likes/entity/likesForPost-entity";
-import { LikeForComment } from "../likes/entity/likesForComment-entity";
+import { LikeForPost } from "../likes/entity/likesForPost.entity";
+import { LikeForComment } from "../likes/entity/likesForComment.entity";
 import { Comments } from "../comment/entity/comment.entity";
 import { BlogsRepository } from "../blogs/blogs.repository";
 import { Blogs } from "../blogs/entity/blogs.entity";

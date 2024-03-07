@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
-import { LikeForComment } from "../../likes/entity/likesForComment-entity";
-import { Posts } from "../../posts/entity/entity-posts";
+import { LikeForComment } from "../../likes/entity/likesForComment.entity";
+import { Posts } from "../../posts/entity/entity.posts";
 
 @Entity()
 export class Comments {

@@ -17,7 +17,7 @@ import { CheckRefreshTokenForSA } from './guards/bearer.authGetComment';
 import { DeleteBlogByIdForSACommnad } from './use-case/deleteBlogById-use-case';
 import { BlogsViewType, BlogsViewTypeWithUserId } from '../blogs/blogs.type';
 import { User } from '../users/entities/user.entity';
-import { Posts } from '../posts/entity/entity-posts';
+import { Posts } from '../posts/entity/entity.posts';
 import { PostsViewModel } from '../posts/posts.type';
 import { PostsRepository } from '../posts/posts.repository';
 

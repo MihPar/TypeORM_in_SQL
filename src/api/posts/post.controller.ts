@@ -26,7 +26,7 @@ import { User } from '../users/entities/user.entity';
 import { UpdateLikeStatusCommand } from './use-case/updateLikeStatus-use-case';
 import { CommentViewModel, CommentViewType } from '../comment/comment.type';
 import { CreateNewCommentByPostIdCommnad } from '../comment/use-case/createNewCommentByPotsId-use-case';
-import { Posts } from './entity/entity-posts';
+import { Posts } from './entity/entity.posts';
 
 // @SkipThrottle()
 @Controller('posts')

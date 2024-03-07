@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Posts } from "../posts/entity/entity-posts";
-import { LikeForPost } from './entity/likesForPost-entity';
-import { LikeForComment } from './entity/likesForComment-entity';
+import { Posts } from "../posts/entity/entity.posts";
+import { LikeForPost } from './entity/likesForPost.entity';
+import { LikeForComment } from './entity/likesForComment.entity';
 
 @Injectable()
 export class LikesRepository {

@@ -45,9 +45,9 @@ import { CreateNewPostForBlogUseCase } from './use-case/createNewPostForBlog-use
 import { LikesRepository } from '../likes/likes.repository';
 import { UpdateExistingPostByIdWithBlogIdUseCase } from './use-case/updatePostByIdWithBlogId-use-case';
 import { DeletePostByIdCommandUseCase } from './use-case/deletPostById-use-case';
-import { Posts } from '../posts/entity/entity-posts';
-import { LikeForComment } from '../likes/entity/likesForComment-entity';
-import { LikeForPost } from '../likes/entity/likesForPost-entity';
+import { Posts } from '../posts/entity/entity.posts';
+import { LikeForComment } from '../likes/entity/likesForComment.entity';
+import { LikeForPost } from '../likes/entity/likesForPost.entity';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { Comments } from '../comment/entity/comment.entity';

@@ -13,15 +13,15 @@ import { UsersQueryRepository } from '../users/users.queryRepository';
 import { DeviceQueryRepository } from '../security-devices/security-deviceQuery.repository';
 import { DeleteAllPostsUseCase } from '../posts/use-case/deleteAllPosts-use-case';
 import { PostsRepository } from '../posts/posts.repository';
-import { Posts } from '../posts/entity/entity-posts';
+import { Posts } from '../posts/entity/entity.posts';
 import { DeleteAllBlogsUseCase } from '../blogs/use-case/deletAllBlogs-use-case';
 import { DeleteAllBlogsForSAUseCase } from '../blogsForSA/use-case/deletAllBlogs-use-case';
 import { DeleteAllCommentLikesUseCase } from '../likes/use-case/deleteAllCommentLikes-use-case copy';
 import { LikesRepository } from '../likes/likes.repository';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { BlogsRepositoryForSA } from '../blogsForSA/blogsForSA.repository';
-import { LikeForPost } from '../likes/entity/likesForPost-entity';
-import { LikeForComment } from '../likes/entity/likesForComment-entity';
+import { LikeForPost } from '../likes/entity/likesForPost.entity';
+import { LikeForComment } from '../likes/entity/likesForComment.entity';
 import { Blogs } from '../blogs/entity/blogs.entity';
 
 const useCase = [

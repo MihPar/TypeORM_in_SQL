@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserViewType } from "../user.type";
 import { Device } from "../../security-devices/entities/security-device.entity";
-import { LikeForPost } from "../../likes/entity/likesForPost-entity";
+import { LikeForPost } from "../../likes/entity/likesForPost.entity";
 import { Blogs } from "../../blogs/entity/blogs.entity";
-import { Posts } from "../../posts/entity/entity-posts";
+import { Posts } from "../../posts/entity/entity.posts";
 import { Comments } from "../../comment/entity/comment.entity";
 
 @Entity()

@@ -1,4 +1,4 @@
-import { LikeForComment } from './entity/likesForComment-entity';
+import { LikeForComment } from './entity/likesForComment.entity';
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../users/entities/user.entity";

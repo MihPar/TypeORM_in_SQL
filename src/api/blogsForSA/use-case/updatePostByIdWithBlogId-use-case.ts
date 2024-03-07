@@ -3,8 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostsViewModel } from '../../posts/posts.type';
 import { bodyPostsModelClass } from '../../posts/dto/posts.class.pipe';
 import { inputModelUpdataPost } from '../dto/blogs.class-pipe';
-import { Posts } from '../../posts/entity/entity-posts';
-import { LikeForPost } from '../../likes/entity/likesForPost-entity';
+import { Posts } from '../../posts/entity/entity.posts';
+import { LikeForPost } from '../../likes/entity/likesForPost.entity';
 
 export class UpdateExistingPostByIdWithBlogIdCommand {
   constructor(

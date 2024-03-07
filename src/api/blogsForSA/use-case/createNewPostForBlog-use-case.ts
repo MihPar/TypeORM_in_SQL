@@ -5,7 +5,7 @@ import { LikesRepository } from '../../likes/likes.repository';
 import { bodyPostsModelClass } from '../../posts/dto/posts.class.pipe';
 import { LikeStatusEnum } from '../../likes/likes.emun';
 import { NewestLikesClass } from '../../likes/likes.class';
-import { Posts } from '../../posts/entity/entity-posts';
+import { Posts } from '../../posts/entity/entity.posts';
 
 export class CreateNewPostForBlogCommand {
   constructor(

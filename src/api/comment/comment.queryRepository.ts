@@ -7,7 +7,7 @@ import { CommentClass } from './comment.class';
 import { LikeStatusEnum } from '../likes/likes.emun';
 import { Comments } from './entity/comment.entity';
 import { Repository } from 'typeorm';
-import { LikeForComment } from '../likes/entity/likesForComment-entity';
+import { LikeForComment } from '../likes/entity/likesForComment.entity';
 
 @Injectable()
 export class CommentQueryRepository {

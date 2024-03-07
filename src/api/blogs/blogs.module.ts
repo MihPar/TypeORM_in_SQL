@@ -17,14 +17,14 @@ import { CreateNewBlogForSAUseCase } from '../blogsForSA/use-case/createNewBlog-
 import { CreateNewPostForBlogUseCase } from '../blogsForSA/use-case/createNewPostForBlog-use-case';
 import { UpdateExistingPostByIdWithBlogIdUseCase } from '../blogsForSA/use-case/updatePostByIdWithBlogId-use-case';
 import { DeletePostByIdCommandUseCase } from '../blogsForSA/use-case/deletPostById-use-case';
-import { LikeForPost } from '../likes/entity/likesForPost-entity';
+import { LikeForPost } from '../likes/entity/likesForPost.entity';
 import { DeleteAllBlogsUseCase } from './use-case/deletAllBlogs-use-case';
 import { DeleteAllBlogsForSAUseCase } from '../blogsForSA/use-case/deletAllBlogs-use-case';
 import { LikesRepository } from '../likes/likes.repository';
 import { BlogsRepository } from './blogs.repository';
-import { Posts } from '../posts/entity/entity-posts';
+import { Posts } from '../posts/entity/entity.posts';
 import { Comments } from '../comment/entity/comment.entity';
-import { LikeForComment } from '../likes/entity/likesForComment-entity';
+import { LikeForComment } from '../likes/entity/likesForComment.entity';
 import { BlogsController } from './blogs.controller';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';

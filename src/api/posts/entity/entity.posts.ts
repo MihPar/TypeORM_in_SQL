@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { LikeForPost } from "../../likes/entity/likesForPost-entity";
+import { LikeForPost } from "../../likes/entity/likesForPost.entity";
 import { Blogs } from "../../blogs/entity/blogs.entity";
 import { LikeStatusEnum } from "../../likes/likes.emun";
 import { PostsViewModel } from "../posts.type";
