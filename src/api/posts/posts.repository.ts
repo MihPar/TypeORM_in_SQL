@@ -41,7 +41,7 @@ export class PostsRepository {
 
   async updatePost(newPost: Posts, id: string): Promise<Posts> {
 	const updatePost = await this.postsRepository
-		.createQueryBuilder("p")
+		.createQueryBuilder()
 		.update()
 		.set({
 			blogId: newPost.blogId,
@@ -52,7 +52,7 @@ export class PostsRepository {
 			likesCount: newPost.likesCount,
 			dislikesCount: newPost.dislikesCount,
 		})
-		.where("p.id = :id", {id})
+		.where("id = :id", {id})
 		.execute()
 
     return updatePost.raw[0]
@@ -63,9 +63,9 @@ export class PostsRepository {
     blogId: string
   ): Promise<boolean> {
 	const deleted = await this.postsRepository
-		.createQueryBuilder("p")
+		.createQueryBuilder()
 		.delete()
-		.where("p.id = :id and p.blogId = :blogId", {id, blogId})
+		.where(`"id" = :id and "blogId" = :blogId`, {id, blogId})
 		.execute()
 		
     if (!deleted) return false;

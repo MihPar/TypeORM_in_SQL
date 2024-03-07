@@ -137,7 +137,7 @@ export class PostController {
     if (!getPostById) {
       throw new NotFoundException('Post by id not found');
     }
-	console.log({getPostById_repo: getPostById})
+	// console.log({getPostById_repo: getPostById})
     return getPostById;
   }
 }

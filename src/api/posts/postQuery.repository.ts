@@ -26,7 +26,7 @@ export class PostsQueryRepository {
 		.select()
 		.where("id = :id", {id: postId})
 		.getOne()
-	console.log({findPostByBlogId_repo: findPostByBlogId})
+	// console.log({findPostByBlogId_repo: findPostByBlogId})
 	
 	const newestLikesQuery = await this.LikeForPostRepository
 		.createQueryBuilder()
@@ -61,9 +61,9 @@ export class PostsQueryRepository {
   ): Promise<PaginationType<PostsViewModel>> {
 
 	const getPosts = await this.postRepository
-		.createQueryBuilder('p')
+		.createQueryBuilder()
 		.select()
-		.orderBy(`'p'.${sortBy}`, `${sortDirection.toUpperCase()}` === 'DESC' ? 'DESC' : 'ASC')
+		.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getManyAndCount()
@@ -73,22 +73,6 @@ export class PostsQueryRepository {
 	const totalCount = getPosts[1]
 	const pagesCount: number = Math.ceil(+totalCount / +pageSize);
 
-	// const newestLikesQuery = `
-	// 		select *
-	// 			from public."PostLikes" as pl
-	// 			left join public."Users" as u
-	// 			on pl."userId" = u."id"
-	// 				where "postId" = $1 and "myStatus" = 'Like'
-	// 				order by "addedAt" desc
-	// 				limit 3 
-	// 	`;
-
-	
-	// const LikesQuery = `
-	// 		select *
-	// 			from public."PostLikes" 
-	// 				where "postId" = $1 and "userId" = $2
-	// 	`;
     let result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,
       page: +pageNumber,
@@ -99,18 +83,18 @@ export class PostsQueryRepository {
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
 			const allLikesUser = await this.LikeForPostRepository
-				.createQueryBuilder('lfp')
+				.createQueryBuilder()
 				.select()
-				.where("lfp.postId = :postId AND lfp.userId = :userId", {postId, userId})
+				.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
 				.getMany()
 			myStatus = allLikesUser ? (allLikesUser[0].myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
 		const newestLikesQuery = await this.LikeForPostRepository
 			.createQueryBuilder('lfp')
 			.select()
-			.leftJoinAndSelect('lfp', 'u', "lfp.postId = :postId AND lfp.userId = :userId", {postId, userId})
-			.where("lfp.postId = :postId AND lfp.myStatus = :myStatus", {postId, myStatus: "Like"})
-			.orderBy("lfp.addedAt", 'DESC')
+			.leftJoinAndSelect('lfp', 'u', `"lfp"."userId" = :userId`, {userId})
+			.where(`"lfp"."postId" = :postId AND "lfp"."myStatus" = :myStatus`, {postId, myStatus: "Like"})
+			.orderBy(`"lfp"."addedAt"`, 'DESC')
 			.limit(3)
 			.getMany()
 
@@ -131,17 +115,17 @@ export class PostsQueryRepository {
   ): Promise<PaginationType<PostsViewModel>> {
 	const getAllPostWithPagin = await this.postRepository
 		.createQueryBuilder()
-		// .select()
-		.where("id = :blogId", {blogId})
+		.select()
+		.where(`"blogId" = :blogId`, {blogId})
 		.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getManyAndCount()
 
-	console.log("getAllPostWithPagin: ", getAllPostWithPagin)
-
 	const findPostByBlogId = getAllPostWithPagin[0]
 	const totalCount = getAllPostWithPagin[1]
+	const postId = findPostByBlogId[0].id
+
 	const pagesCount: number = Math.ceil(totalCount / +pageSize);
     const result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,
@@ -153,15 +137,15 @@ export class PostsQueryRepository {
 		if(userId) {
 			const userLike = await this.LikeForPostRepository
 				.createQueryBuilder()
-				.where("userId = :userId AND postId = :postId", {userId})
+				.where(`"userId" = :userId AND "postId" = :postId`, {userId, postId})
 				.getOne()
 
 			myStatus = userLike ? (userLike.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
 		const newestLikes = await this.LikeForPostRepository
-			.createQueryBuilder("lfp")
-			.where("lfp.userId = :userId AND lfp.myStatus = myStatus", {userId, myStaus: "Like"})
-			.orderBy("lfp.addedAt", "DESC")
+			.createQueryBuilder()
+			.where(`"userId" = :userId AND "myStatus" = :myStatus`, {userId, myStatus: "Like"})
+			.orderBy(`"addedAt"`, "DESC")
 			.limit(3)
 			.getMany()
 		
@@ -169,7 +153,6 @@ export class PostsQueryRepository {
 		}
       ))
     };
-	// console.log("result: ", result)
     return result;
   }
 

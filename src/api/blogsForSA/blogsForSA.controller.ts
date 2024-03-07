@@ -1,5 +1,5 @@
 import { CommandBus } from '@nestjs/cqrs';
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, ParseIntPipe, Post, Put, Query, UseGuards, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { bodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
 import {BlogsRepositoryForSA } from "./blogsForSA.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
@@ -114,7 +114,6 @@ export class BlogsControllerForSA {
   ) {
     const findBlog: BlogsViewTypeWithUserId | null = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId)
     if(!findBlog) throw new NotFoundException("404")
-	// console.log("findBlog: ", findBlog)
 	if(userId !== findBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 	const command = new CreateNewPostForBlogCommand(dto.blogId, inputDataModel, findBlog.name, userId)
 	const createNewPost: Posts | null = await this.commandBus.execute(command)
@@ -128,7 +127,6 @@ export class BlogsControllerForSA {
   @UseGuards(CheckRefreshTokenForSA)
   async getPostsByBlogId(
     @Param() dto: inputModelClass,
-	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string | null,
     @Query()
     query: {
