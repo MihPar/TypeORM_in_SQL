@@ -63,38 +63,71 @@ export class LikesRepository {
 		return updatelikeStatus
 	}
 
-	// async findLikeByCommentIdBy(commentId: string, userId: string): Promise<LikeComment | null>  {
-	// 	const commentLikesQuery = `
-	// 		SELECT *
-	// 			FROM public."CommentLikes"
-	// 				WHERE "commentId" = $1 AND "userId" = $2
-	// 	`
-	// 	const findLike = (await this.dataSource.query(commentLikesQuery, [commentId, userId]))[0]
-	// 	if(!findLike) return null
-	// 	return findLike
-	// }
+	async findLikeByCommentIdBy(commentId: string, userId: string): Promise<LikeForComment | null>  {
+		// const findLikeByUserAndByCommentId = await this.likeForCommentRepository
+		// 	.createQueryBuilder()
+		// 	.select()
+		// 	.where(`"id" = :id AND "userId": userId`, {id: commentId, userId})
+		// 	.getOne()
 
-	// async saveLikeForComment(commentId: string, userId: string, likeStatus: string) {
-	// 	const createAddedAt = new Date().toISOString()
-	// 	const query = `
-	// 		INSERT INTO public."CommentLikes"("myStatus", "addedAt", "commentId", "userId")
-	// 			VALUES ($1, $2, $3, $4)
-	// 			RETURNING *
-	// 	`;
-	// 	const createLikeStatus = (await this.dataSource.query(query, [likeStatus, createAddedAt, commentId, userId]))[0]
-	// 	return createLikeStatus.id
-	// }
+		const findLikeByUserAndByCommentId = await this.likeForCommentRepository
+			.findOne({where: {
+				id: commentId,
+				userId
+			}})
 
-	// async updateLikeStatusForComment(commentId: string, userId: string, likeStatus: string){
-	// 	const createAddedAt = new Date().toISOString()
-	// 	const query = `
-	// 		UPDATE public."CommentLikes"
-	// 			SET "myStatus"=$1, "addedAt"=$2
-	// 			WHERE "commentId" = $3 AND "userId" = $4
-	// 	`;
-	// 	const updateLikeStatus = (await this.dataSource.query(query, [likeStatus, createAddedAt, commentId, userId]))[0]
-	// 	return updateLikeStatus
-	// }
+		if(!findLikeByUserAndByCommentId) return null
+		return findLikeByUserAndByCommentId
+	}
+
+	async saveLikeForComment(commentId: string, userId: string, likeStatus: string) {
+		const newDate = new Date()
+
+		/** firstCase **/
+		// const newLikeForComment = new LikeForComment()
+		// newLikeForComment.commentId = commentId
+		// newLikeForComment.userId = userId
+		// newLikeForComment.myStatus = likeStatus
+		// newLikeForComment.addedAt = new Date()
+		// const createLikeStatus = await this.likeForCommentRepository.save(newLikeForComment)
+
+		/** secondCase **/
+		// const createLikeStatus = await this.likeForCommentRepository
+		// 	.insert({
+		// 		commentId: commentId,
+		// 		userId: userId,
+		// 		myStatus: likeStatus,
+		// 		addedAt: newDate
+		// 	})
+
+		/** thirdCase **/
+		const createLikeStatus = await this.likeForCommentRepository
+			.createQueryBuilder()
+			.insert()
+			.values([{
+				commentId,
+				userId,
+				myStatus: likeStatus,
+				addedAt: newDate
+			}])
+			.execute()
+		// return createLikeStatus
+		return true
+	}
+
+	async updateLikeStatusForComment(commentId: string, userId: string, likeStatus: string){
+		const createAddedAt = new Date().toISOString()
+		const updateLikeStatus = await this.likeForCommentRepository
+			.update({commentId, userId}, {myStatus: likeStatus, addedAt: createAddedAt})
+		// const updateLikeStatus = await this.likeForCommentRepository
+		// 	.createQueryBuilder()
+		// 	.update()
+		// 	.set({myStatus: likeStatus, addedAt: createAddedAt})
+		// 	.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
+		// 	.execute()
+
+		return updateLikeStatus
+	}
 
 	// async getNewLike(postId: string, blogId: string) {
 	// 	const NewestLikesQuery = `

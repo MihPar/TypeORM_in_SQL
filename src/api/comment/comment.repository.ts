@@ -1,12 +1,14 @@
+import { Post } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { CommentClass } from "./comment.class";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { Comments } from "./entity/comment.entity";
+import { LikeForComment } from "../likes/entity/likesForComment.entity";
 
 export class CommentRepository {
 	constructor(
-		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>
+		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
 	) {}
 
 	// async deleteAllComments() {
@@ -15,78 +17,98 @@ export class CommentRepository {
 	// }
 
 
-	// async increase(commentId: string, likeStatus: string, userId: string){
+	async increase(commentId: string, likeStatus: string) {
+		if(likeStatus === LikeStatusEnum.None) {
+			return true
+		} else if (likeStatus === LikeStatusEnum.Dislike) {
+			const incDislike = await this.commentsRepository
+				.increment({id: commentId}, "dislikesCount", new Comments().likesCount + 1)
+		} else {
+			const incLike = await this.commentsRepository
+				.increment({id: commentId}, "likesCount", new Comments().dislikesCount + 1)
+		}
+	}
+ 	// async increase(commentId: string, likeStatus: string, userId: string){
 	// 	if(likeStatus === LikeStatusEnum.None) {
 	// 		return true
 	// 	} else if(likeStatus === "Dislike") {
-	// 		const updateLikeCountQuery = `
-	// 			UPDATE public."Comments"
-	// 				SET "dislikesCount"="dislikesCount" + 1
-	// 				WHERE "id" = $1
-	// 		`
-	// 	const updateLikecount = (await this.dataSource.query(updateLikeCountQuery, [commentId]))[0]
+	// 		const updateLikecount = await this.commentsRepository
+	// 			.createQueryBuilder()
+	// 			.update()
+	// 			.set({
+	// 				dislikesCount: new Comments().likesCount + 1 
+	// 			})
+	// 			.where('id = :commentId', {commentId})
+	// 			.execute()
+
 	// 	if(!updateLikecount) return false
 	// 	return true
 	// 	} else {
-	// 		const updatelikeCountQuery = `
-	// 			UPDATE public."Comments"
-	// 				SET "likesCount"="likesCount" + 1
-	// 				WHERE "id" = $1
-	// 		`
-	// 		const updatelikeCount = (await this.dataSource.query(updatelikeCountQuery, [commentId]))[0]
+	// 		const updatelikeCount = await this.commentsRepository
+	// 			.createQueryBuilder()
+	// 			.update()
+	// 			.set({
+	// 				likesCount: new Comments().likesCount + 1
+	// 			})
+	// 			.where("id = :commentId", {commentId})
+	// 			.execute()
+
 	// 	if(!updatelikeCount) return false
 	// 		return true
 	// 	} 
 	// }
 
-	// async decrease(commentId: string, likeStatus: string, userId: string){
-	// 	if(likeStatus === LikeStatusEnum.None) {
-	// 		return true
-	// 	} else if(likeStatus === 'Dislike') {
-	// 		const updateLikeCountQuery = `
-	// 			UPDATE public."Comments"
-	// 				SET "dislikesCount"="dislikesCount" - 1
-	// 				WHERE "id" = $1
-	// 		`
-	// 		const updateLikeCount = (await this.dataSource.query(updateLikeCountQuery, [commentId]))[0]
-	// 		if(!updateLikeCount) return false
-	// 			return true
-	// 	} else {
-	// 		const updateLikeCountQuery = `
-	// 			UPDATE public."Comments"
-	// 				SET "likesCount"="likesCount" - 1
-	// 				WHERE "id" = $1
-	// 		`
-	// 		const updateLikeCount = (await this.dataSource.query(updateLikeCountQuery, [commentId]))[0]
-	// 		if(!updateLikeCount) return false
-	// 			return true
-	// 	} 
-		
-	// }
+	async decrease(commentId: string, likeStatus: string){
+		if(likeStatus === LikeStatusEnum.None) {
+			return true
+		} else if(likeStatus === LikeStatusEnum.Dislike) {
+			const updateLikeCount = await this.commentsRepository
+				.createQueryBuilder()
+				.update()
+				.set({dislikesCount: new Comments().dislikesCount - 1})
+				.where("id = :commentId", {commentId})
+				.execute()
 
-	// async updateComment(commentId: string, content: string): Promise<boolean> {
-	// 	const query = `
-	// 		UPDATE public."Comments"
-	// 			SET "content" = $1
-	// 			WHERE "id" = $2
-	// 	`
-	// 	const updateOne = (await this.dataSource.query(query, [content, commentId]))[0]
-	// 	if(!updateOne) return false
-	// 	return true
-	//   }
+				if(!updateLikeCount) return false
+				return true
+		} else {
+			const updateLikeCount = await this.commentsRepository
+				.createQueryBuilder()
+				.update()
+				.set({dislikesCount: new Comments().likesCount - 1})
+				.where("id = :commentId", {commentId})
+				.execute()
 
-	//   async deleteCommentByCommentId(commentId: string): Promise<boolean> {
-	// 	try {
-	// 		const query = `
-	// 			DELETE FROM public."Comments"
-	// 				WHERE "id" = $1
-	// 		`
-	// 	  const deleteComment = await this.dataSource.query(query, [commentId])
-	// 	  return true
-	// 	} catch (err) {
-	// 	  return false; 
-	// 	}
-	//   }
+			if(!updateLikeCount) return false
+				return true
+		} 
+	}
+
+	async updateComment(commentId: string, content: string): Promise<boolean> {
+		const updateOne = await this.commentsRepository
+			.createQueryBuilder()
+			.update()
+			.set({content})
+			.where(`"commentId" = :commentId`, {commentId})
+			.execute()
+
+			if(!updateOne) return false
+		return true
+	  }
+
+	  async deleteCommentByCommentId(commentId: string): Promise<boolean> {
+		try {
+			const deleteComment = await this.commentsRepository
+				.createQueryBuilder()
+				.delete()
+				.where("id = :commentId", {commentId})
+				.execute()
+
+				return true
+		} catch (err) {
+		  return false; 
+		}
+	  }
 
 	  async createNewCommentPostId(newComment: Comments): Promise<Comments | null> {
 		try {

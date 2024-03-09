@@ -47,20 +47,22 @@ export class BlogsQueryRepositoryForSA {
     blogId: string,
   ): Promise<BlogsViewTypeWithUserId | null> {
 	const findBlogId = await this.blogsRepository
-		.createQueryBuilder()
-		.select()
-		.where("id = :id", {id: blogId})
-		.getOne()
-		// console.log("Blogs.getBlogsViewModel(findBlogId): ", Blogs.getBlogsViewModel(findBlogId))
+		// .findOne({where: {id: blogId}})
+		.findOneBy({id: blogId})
+		// .createQueryBuilder()
+		// .select()
+		// .where("id = :id", {id: blogId})
+		// .getOne()
     return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
   }
 
   async deletedBlog(id: string): Promise<boolean | null> {
 	const deleteBlog = await this.blogsRepository
-		.createQueryBuilder()
-		.delete()
-		.where("id = :id", {id})
-		.execute()
+		.delete({id})
+		// .createQueryBuilder()
+		// .delete()
+		// .where("id = :id", {id})
+		// .execute()
 		
     if(!deleteBlog) return null
 	return true

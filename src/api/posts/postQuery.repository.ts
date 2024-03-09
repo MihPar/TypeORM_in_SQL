@@ -71,7 +71,7 @@ export class PostsQueryRepository {
 	const postId = allPosts[0].id
 	const totalCount = getPosts[1]
 	const pagesCount: number = Math.ceil(+totalCount / +pageSize);
-
+// console.log({totalCount: totalCount})
     let result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,
       page: +pageNumber,
@@ -88,14 +88,26 @@ export class PostsQueryRepository {
 				.getMany()
 			myStatus = allLikesUser ? (allLikesUser[0].myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
+
 		const newestLikesQuery = await this.LikeForPostRepository
-			.createQueryBuilder('lfp')
-			.select()
-			.leftJoinAndSelect('lfp', 'u', `"lfp"."userId" = :userId`, {userId})
-			.where(`"lfp"."postId" = :postId AND "lfp"."myStatus" = :myStatus`, {postId, myStatus: "Like"})
-			.orderBy(`"lfp"."addedAt"`, 'DESC')
-			.limit(3)
-			.getMany()
+			.find({where: {
+				postId,
+				userId,
+				myStatus: "LIke",
+			},
+			order: {
+				addedAt: "DESC"
+			},
+			take: 3,
+		})
+			// console.log({newestLikesQuery: newestLikesQuery})
+			// .createQueryBuilder("lfp")
+			// .select()
+			// .leftJoinAndSelect('lfp', 'u', `"lfp.userId" = :userId`, {userId})
+			// .where(`"postId" = :postId AND "myStatus" = :myStatus`, {postId, myStatus: "Like"})
+			// .orderBy(`"addedAt"`, 'DESC')
+			// .limit(3)
+			// .getMany()
 
           return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus);
         })

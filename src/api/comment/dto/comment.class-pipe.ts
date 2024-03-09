@@ -21,9 +21,9 @@ export class updateLikeDto{
 }
 
   export class inputModelCommentId {
-	// @IsUUID()
-	@IsNumber()
-	commentId: number
+	@IsUUID()
+	// @IsNumber()
+	commentId: string
   }
 
   export class InputModelContent {

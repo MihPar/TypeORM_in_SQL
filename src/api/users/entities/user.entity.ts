@@ -1,3 +1,4 @@
+import { LikeForComment } from './../../likes/entity/likesForComment.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { UserViewType } from "../user.type";
 import { Device } from "../../security-devices/entities/security-device.entity";
@@ -52,7 +53,13 @@ export class User {
 
 	@OneToMany(() => Device, d => d.user, { onDelete: "CASCADE" })
 	device: Device[]
+
+	@OneToMany(() => LikeForComment, c => c.user)
+	likeForComment: LikeForComment
 	
+	@Column()
+	LikeForComment: string
+
   static getViewUser(user: User): UserViewType {
     return {
       id: user.id,

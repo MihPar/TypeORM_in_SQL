@@ -13,6 +13,7 @@ import { BlogsModule } from './api/blogs/blogs.module';
 import { LikeForPostModule } from './api/likes/likesForPost.module';
 import { LikeForCommentModue } from './api/likes/likesForComment.module';
 import { BlogsForSAModule } from './api/blogsForSA/blogsForSA.module';
+import { CommentsModule } from './api/comment/comments.module';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { BlogsForSAModule } from './api/blogsForSA/blogsForSA.module';
 	BlogsModule,
 	LikeForPostModule,
 	LikeForCommentModue,
-	BlogsForSAModule
+	BlogsForSAModule,
+	CommentsModule
   ]
 })
 export class AppModule {}
