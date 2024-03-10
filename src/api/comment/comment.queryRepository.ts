@@ -21,24 +21,24 @@ export class CommentQueryRepository {
     userId: string | null,
   ): Promise<CommentViewModel | null> {
     try {
-		const query = `
-			select *
-				from public."Comments"
-				where "id" = $1
-		`
-   const findCommentById = (await this.dataSource.query(query, [commentId]))[0]
-   const commentsLikeQuery = `
-		select *
-			from public."CommentLikes"
-			where "commentId" = $1 and "userId" = $2
-   `
+		const findCommentById = await this.commentRepository
+			.createQueryBuilder()
+			.select()
+			.where("id = :commentId", {commentId})
+			.getOne()
+	
    let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
-			const commentLikeStatus = (await this.dataSource.query(commentsLikeQuery, [commentId, userId]))[0]
+			const commentLikeStatus = await this.likeForCommentRepository
+				.createQueryBuilder()
+				.select()
+				.where(`"commentId" = :commentId AND "userId = :userId`, {commentId, userId})
+				.getOne()
 			myStatus = commentLikeStatus ? (commentLikeStatus.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
-	const viewModelComment = {...findCommentById, commentatorInfo: {userId: findCommentById.userId, userLogin: findCommentById.userLogin}}
-      return commentDBToView(viewModelComment, myStatus);
+	// const viewModelComment = {...findCommentById, commentatorInfo: {userId: findCommentById.userId, userLogin: findCommentById.userLogin}}
+    //   return commentDBToView(viewModelComment, myStatus);
+	return commentDBToView(findCommentById, myStatus);
     } catch (e) {
       return null;
     }

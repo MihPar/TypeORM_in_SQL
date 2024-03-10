@@ -33,6 +33,41 @@ export class BlogsControllerForSA {
 	protected commandBus: CommandBus
   ) {}
 
+  @Get()
+  @HttpCode(200)
+  async getBlogsWithPagin(
+    @Query()
+    query: {
+      searchNameTerm: string;
+      sortBy: string;
+      sortDirection: string;
+      pageNumber: string;
+      pageSize: string;
+    },
+  ) {
+    const getAllBlogs: PaginationType<BlogsViewType> =
+      await this.blogsQueryRepositoryForSA.findAllBlogs(
+        query.searchNameTerm,
+		(query.sortBy || 'createdAt'),
+		(query.sortDirection || 'desc'),
+        (query.pageNumber || '1'),
+        (query.pageSize || '10'),
+      );
+    return getAllBlogs;
+  }
+
+  @Post()
+  @HttpCode(201)
+  async createBlog(
+	@Body() inputDateModel: bodyBlogsModel,
+	@UserIdDecorator() userId: string,
+	) {
+	const command = new CreateNewBlogForSACommand(inputDateModel, userId)
+	const createBlog: BlogsViewType = await this.commandBus.execute(command)
+	// console.log("createBlog: ", createBlog)
+    return createBlog;
+  }
+
   @Put(':blogId')
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForSA)
@@ -67,41 +102,6 @@ export class BlogsControllerForSA {
     const isDeleted: boolean | null = await this.commandBus.execute(command);
     if (!isDeleted) throw new NotFoundException('Blogs by id not found 404');
     return isDeleted;
-  }
-
-  @Post()
-  @HttpCode(201)
-  async createBlog(
-	@Body() inputDateModel: bodyBlogsModel,
-	@UserIdDecorator() userId: string,
-	) {
-	const command = new CreateNewBlogForSACommand(inputDateModel, userId)
-	const createBlog: BlogsViewType = await this.commandBus.execute(command)
-	// console.log("createBlog: ", createBlog)
-    return createBlog;
-  }
-
-  @Get()
-  @HttpCode(200)
-  async getBlogsWithPagin(
-    @Query()
-    query: {
-      searchNameTerm: string;
-      sortBy: string;
-      sortDirection: string;
-      pageNumber: string;
-      pageSize: string;
-    },
-  ) {
-    const getAllBlogs: PaginationType<BlogsViewType> =
-      await this.blogsQueryRepositoryForSA.findAllBlogs(
-        query.searchNameTerm,
-		(query.sortBy || 'createdAt'),
-		(query.sortDirection || 'desc'),
-        (query.pageNumber || '1'),
-        (query.pageSize || '10'),
-      );
-    return getAllBlogs;
   }
 
   @HttpCode(201)

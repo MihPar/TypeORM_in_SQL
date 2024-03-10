@@ -36,7 +36,7 @@ export class updateLikeDto{
   }
 
   export class inputModelId {
-	// @IsUUID()
-	@IsNumber()
-	id: number
+	@IsUUID()
+	// @IsNumber()
+	id: string
   }

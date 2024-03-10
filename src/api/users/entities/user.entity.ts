@@ -57,7 +57,7 @@ export class User {
 	@OneToMany(() => LikeForComment, c => c.user)
 	likeForComment: LikeForComment
 	
-	@Column()
+	@Column({nullable: true, default: "None"})
 	LikeForComment: string
 
   static getViewUser(user: User): UserViewType {

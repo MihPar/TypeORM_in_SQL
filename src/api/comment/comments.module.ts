@@ -14,13 +14,16 @@ import { CommentRepository } from "./comment.repository";
 import { CheckRefreshTokenForComments } from "./use-case/bearer.authForComments";
 import { UpdateLikestatusForCommentUseCase } from "./use-case/updateLikeStatus-use-case";
 import { LikesRepository } from "../likes/likes.repository";
+import { CheckRefreshTokenForGet } from "../posts/guards/bearer.authGetComment";
+import { JwtService } from "@nestjs/jwt";
+import { UsersQueryRepository } from "../users/users.queryRepository";
 
 const useCase = [UpdateLikestatusForCommentUseCase]
-const guards = [CheckRefreshTokenForComments]
+const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGet]
 const adapter = []
-const repo = [CommentQueryRepository, CommentRepository, LikesRepository]
+const repo = [CommentQueryRepository, CommentRepository, LikesRepository, UsersQueryRepository]
 const manager = []
-const service = []
+const service = [JwtService]
 const validator = [];
 
 @Module({
@@ -28,7 +31,9 @@ const validator = [];
     TypeOrmModule.forFeature([
       Posts,
       LikeForComment,
+	  LikeForPost,
       Comments,
+	  User
     ]),
     CqrsModule,
   ],
