@@ -30,7 +30,6 @@ export class CheckRefreshTokenFor implements CanActivate {
 	}
     if (userId) {
       const user = await this.usersQueryRepository.findUserById(userId);
-	//   console.log("user: ", user)
       if (user) {
         req['user'] = user;
         return true

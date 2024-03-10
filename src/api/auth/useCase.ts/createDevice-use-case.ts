@@ -40,7 +40,6 @@ export class CreateDeviceUseCase implements ICommandHandler<CreateDeviceCommand>
 			device.lastActiveDate = new Date(date)
 			device.title = command.deviceName
 			device.userId = command.user.id
-			// console.log("userId: ", command.user.id)
 			
 			const createdDevice: boolean | null = await this.deviceRepository.createDevice(device);
 	

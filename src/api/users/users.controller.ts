@@ -47,7 +47,6 @@ export class UsersController {
 		query.searchLoginTerm,
 		query.searchEmailTerm
     );
-	// console.log('users: ', users)
 
 	return users
   }

@@ -53,10 +53,10 @@ export class CommentQueryRepository {
     userId: string | null,
   ): Promise<PaginationType<CommentViewModel> | null> {
 	const queryFindComment = await this.commentRepository
-		.createQueryBuilder('c')
+		.createQueryBuilder()
 		.select()
-		.where('c.postId = :postId', {postId})
-		.orderBy(`'c'.${sortBy}`, `${sortDirection.toUpperCase()}` === 'DESC' ? 'DESC' : 'ASC')
+		.where(`"postId" = :postId`, {postId})
+		.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`)
 		.limit(+pageSize)
 		.offset((+pageNumber - 1) * +pageSize)
 		.getManyAndCount()

@@ -14,16 +14,16 @@ export class LikesRepository {
 	) {}
 
 	async deletePostLikes() {
-		const deleteAllLikes = await this.likeForPostRepository
-			.createQueryBuilder('lfp')
+	 	await this.likeForPostRepository
+			.createQueryBuilder()
 			.delete()
 			.execute()
     	return true
 	}
 
 	async deleteCommentLikes() {
-		const deleteAllLikes = await this.likeForCommentRepository
-			.createQueryBuilder('lfc')
+		 await this.likeForCommentRepository
+			.createQueryBuilder()
 			.delete()
 			.execute()
 		

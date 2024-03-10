@@ -27,6 +27,7 @@ export class CreateNewCommentByPostIdUseCase
     const userLogin = command.user.login;
     if (!command.user.id) return null;
     const userId = command.user.id;
+
     const newComment: Comments = new Comments()
       newComment.content = command.inputModelContent.content,
       newComment.postId = command.postId,

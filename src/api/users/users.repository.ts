@@ -104,11 +104,8 @@ export class UsersRepository {
 		.select(["user"])
 		.where("user.id = :id", {id: userId})
 		.getOne()
-	// console.log("id: ", findUserById.id)
 
 	if(!findUserById) return false
-
-	// console.log("id: ", findUserById.id)
 
 	const deleteById = await this.userRepository
 		.createQueryBuilder("user")
@@ -116,7 +113,6 @@ export class UsersRepository {
 		.from(User)
 		.where("id = :id", {id: userId})
 		.execute()
-	// console.log("deleteById: ", deleteById)
     if (!deleteById) return false;
     return true;
   }

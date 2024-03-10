@@ -38,10 +38,7 @@ export class RegistrationUseCase
 	newUser.confirmationCode = uuidv4()
 	newUser.isConfirmed = false
 
-	// console.log("newUser: ", newUser)
-	
     const userId: any = await this.usersRepository.createUser(newUser);
-	// console.log("userId: ", userId)
     try {
       await this.emailManager.sendEamilConfirmationMessage(
         newUser.email,
@@ -51,7 +48,6 @@ export class RegistrationUseCase
       console.log(error, "error with send mail");
     }
     newUser.id = userId.generatedMaps[0].id;
-	// console.log("id: ",  newUser.id)
     return User.getViewUser(newUser);
   }
 }

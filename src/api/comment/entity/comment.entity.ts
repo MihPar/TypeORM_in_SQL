@@ -20,10 +20,10 @@ export class Comments {
 	@Column()
 	userLogin: string
 
-	@Column()
+	@Column({nullable: true, default: 0})
 	likesCount: number
 
-	@Column()
+	@Column({nullable: true, default: 0})
 	dislikesCount: number
 
 	@Column()

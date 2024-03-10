@@ -149,7 +149,6 @@ export class AuthController {
 		if (!req.headers.authorization) throw new UnauthorizedException('Not authorization 401')
 		const command = new GetUserIdByTokenCommand(req)
 		const findUserById: User = await this.commandBus.execute(command)
-		// console.log("findUserById: ", findUserById)
 		  return {
 			userId: findUserById.id.toString(),
 			email: findUserById.email,

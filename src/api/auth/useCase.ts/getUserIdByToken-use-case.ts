@@ -22,7 +22,6 @@ export class GetUserIdByTokenUseCase implements ICommandHandler<GetUserIdByToken
 	const token: string = command.req.headers.authorization!.split(" ")[1];
 	const payload = await this.jwtService.verifyAsync(token, {secret: process.env.JWT_SECRET!});
 	// const payload = await this.apiJwtService.refreshToken(token);
-	// console.log("payload: ", payload)
 	if (!payload) throw new UnauthorizedException('Not authorization 401')
 	const currentUser: User | null = await this.usersQueryRepository.findUserById(payload.userId)
 	if (!currentUser) throw new UnauthorizedException('Not authorization 401')

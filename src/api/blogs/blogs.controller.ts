@@ -36,7 +36,6 @@ export class BlogsController {
         (query.pageNumber || '1'),
         (query.pageSize || '10'),
       );
-	//   console.log("getAllBlogs: ", getAllBlogs)
     return getAllBlogs;
   }
   

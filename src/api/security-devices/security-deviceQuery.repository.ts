@@ -25,7 +25,6 @@ async findDeviceByDeviceId(deviceId: string) {
 		.select(["device"])
 		.where("device.id = :id", {id: deviceId})
 		.getOne()
-    // console.log("findDeviceById: ", findDeviceById)
 
     return findDeviceById ? {
       ip: findDeviceById.ip,

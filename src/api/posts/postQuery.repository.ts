@@ -71,7 +71,6 @@ export class PostsQueryRepository {
 	const postId = allPosts[0].id
 	const totalCount = getPosts[1]
 	const pagesCount: number = Math.ceil(+totalCount / +pageSize);
-// console.log({totalCount: totalCount})
     let result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,
       page: +pageNumber,
@@ -89,17 +88,17 @@ export class PostsQueryRepository {
 			myStatus = allLikesUser ? (allLikesUser[0].myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
 
-		const newestLikesQuery = await this.LikeForPostRepository
-			.find({where: {
-				postId,
-				userId,
-				myStatus: "LIke",
-			},
-			order: {
-				addedAt: "DESC"
-			},
-			take: 3,
-		})
+		const newestLikesQuery = await this.LikeForPostRepository.find({
+      where: {
+        postId,
+        userId,
+        myStatus: 'Like',
+      },
+      order: {
+        addedAt: 'DESC',
+      },
+      take: 3,
+    });
 			// console.log({newestLikesQuery: newestLikesQuery})
 			// .createQueryBuilder("lfp")
 			// .select()

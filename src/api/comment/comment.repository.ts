@@ -11,10 +11,13 @@ export class CommentRepository {
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
 	) {}
 
-	// async deleteAllComments() {
-	// 	const deletedAll = await this.dataSource.query(`delete from public."Comments"`);
-	// 	return true
-	// }
+	async deleteAllComments() {
+		const deleteAllComments = await this.commentsRepository
+			.createQueryBuilder()
+			.delete()
+			.execute()
+		    return true;
+	}
 
 
 	async increase(commentId: string, likeStatus: string) {
@@ -89,7 +92,7 @@ export class CommentRepository {
 			.createQueryBuilder()
 			.update()
 			.set({content})
-			.where(`"commentId" = :commentId`, {commentId})
+			.where(`id = :commentId`, {commentId})
 			.execute()
 
 			if(!updateOne) return false
@@ -98,7 +101,7 @@ export class CommentRepository {
 
 	  async deleteCommentByCommentId(commentId: string): Promise<boolean> {
 		try {
-			const deleteComment = await this.commentsRepository
+			await this.commentsRepository
 				.createQueryBuilder()
 				.delete()
 				.where("id = :commentId", {commentId})
@@ -112,23 +115,30 @@ export class CommentRepository {
 
 	  async createNewCommentPostId(newComment: Comments): Promise<Comments | null> {
 		try {
+			await this.commentsRepository
+				.createQueryBuilder('c')
+				.insert()
+				.values([
+					{
+						content: newComment.content,
+						userId: newComment.userId,
+						userLogin: newComment.userLogin,
+						postId: newComment.postId,
+						likesCount: newComment.likesCount,
+						dislikesCount: newComment.dislikesCount
+					},
+        		])
+				.execute()
 
-			const createComments = await this.commentsRepository
-        .createQueryBuilder('c')
-        .insert()
-        .values([
-          {
-            content: newComment.content,
-            userId: newComment.userId,
-            userLogin: newComment.userLogin,
-            postId: newComment.postId,
-			likesCount: newComment.likesCount,
-			dislikesCount: newComment.dislikesCount
-          },
-        ]);
-      if (!createComments) return null;
+				const findComment = await this.commentsRepository
+					.createQueryBuilder()
+					.select()
+					.where(`"userId" = :userId AND "postId" = :postId`, {userId: newComment.userId, postId: newComment.postId})
+					.getOne()
+
+      if (!findComment) return null;
 			// return {...createComments, commentatorInfo: {userId: createComments.userId, userLogin: createComments.userLogin}}
-			return createComments[0]
+			return findComment
 		} catch (error) {
 			console.log(error, 'error in create post');
 			return null;

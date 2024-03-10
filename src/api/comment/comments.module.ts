@@ -17,8 +17,11 @@ import { LikesRepository } from "../likes/likes.repository";
 import { CheckRefreshTokenForGet } from "../posts/guards/bearer.authGetComment";
 import { JwtService } from "@nestjs/jwt";
 import { UsersQueryRepository } from "../users/users.queryRepository";
+import { CreateNewCommentByPostIdUseCase } from "./use-case/createNewCommentByPotsId-use-case";
+import { DeleteAllCommentsUseCase } from "./use-case/deleteAllComments-use-case";
+import { UpdateCommentByCommentIdUseCase } from "./use-case/updateCommentByCommentId-use-case";
 
-const useCase = [UpdateLikestatusForCommentUseCase]
+const useCase = [UpdateLikestatusForCommentUseCase, CreateNewCommentByPostIdUseCase, DeleteAllCommentsUseCase, UpdateCommentByCommentIdUseCase]
 const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGet]
 const adapter = []
 const repo = [CommentQueryRepository, CommentRepository, LikesRepository, UsersQueryRepository]

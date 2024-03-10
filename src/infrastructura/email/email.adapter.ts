@@ -34,7 +34,6 @@ export class EmailAdapter {
 			pass: "ldhkcdcybmrbxaew",
 		  },
 		});
-		console.log("recoveryCode: ", code);
 		async function main() {
 		  const info = await transporter.sendMail({
 			from: "Mihail <mpara7274@gmail.com>", // sender address
