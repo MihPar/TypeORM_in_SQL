@@ -55,14 +55,23 @@ export class LikesRepository {
 
 	async updateLikeStatusForPost(postId: string, likeStatus: string, userId: string) {
 		const addedAt = new Date().toISOString()
-		const updatelikeStatus = await this.likeForPostRepository
-			.createQueryBuilder()
-			.update()
-			.set({myStatus: likeStatus, addedAt})
-			.where('postId = :postId AND userId = :userId', {postId, userId})
-			.execute()
+		await this.likeForPostRepository
+			.update({postId, userId}, {myStatus: likeStatus, addedAt})
+		// await this.likeForPostRepository
+		// 	.createQueryBuilder()
+		// 	.update()
+		// 	.set({myStatus: likeStatus, addedAt})
+		// 	.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
+		// 	.execute()
+
+		// 	const getLikeStatus = await this.likeForPostRepository
+		// 		.createQueryBuilder()
+		// 		.select()
+		// 		.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
+		// 		.getOne()
 		
-		return updatelikeStatus
+			// console.log({getLikeStatus: getLikeStatus})
+		return true
 	}
 
 	async findLikeByCommentIdBy(commentId: string, userId: string): Promise<LikeForComment | null>  {

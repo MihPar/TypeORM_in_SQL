@@ -96,7 +96,7 @@ export class PostsRepository {
 
 	  if(!updateLikesCountQuery) return false
 	  return  true
-    } else {
+    } else if(likeStatus === LikeStatusEnum.Like) {
 		const updateLikesCountQuery = await this.postsRepository
 			.increment({id: postId}, "likesCount", 1)
 
@@ -109,18 +109,36 @@ export class PostsRepository {
       return true
     } else if (likeStatus === LikeStatusEnum.Dislike) {
 		const updateLikesCountQuery = await this.postsRepository
-		.decrement({id: postId}, "dislikesCount", 0)
-
+		.decrement({id: postId}, "likesCount", 1)
   if(!updateLikesCountQuery) return false
   return  true
-    } else {
+    } else if(likeStatus === LikeStatusEnum.Like) {
 		const updateLikesCountQuery = await this.postsRepository
-		.decrement({id: postId}, "likesCount", 0)
+		.decrement({id: postId}, "dislikesCount", 1)
 
   if(!updateLikesCountQuery) return false
   return  true
 	}
   }
+
+async decreaseDislike(postId: string, likeStatus: string, userId: string) {
+    	await this.postsRepository.decrement({id: postId}, "dislikesCount", 1)
+	}
+
+async decreaseLike(postId: string, likeStatus: string, userId: string) {
+    	await this.postsRepository.decrement({id: postId}, "likesCount", 1)
+	}
+
+
+async increaseLike(postId: string, likeStatus: string, userId: string) {
+    	await this.postsRepository.increment({id: postId}, "likesCount", 1)
+	}
+
+async increaseDislike(postId: string, likeStatus: string, userId: string) {
+    	await this.postsRepository.increment({id: postId}, "dislikesCount", 1)
+	}
+
+
 
 //   async findPostByBlogId(blogId: string) {
 //     try {
