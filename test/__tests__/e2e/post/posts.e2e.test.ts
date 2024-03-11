@@ -111,14 +111,18 @@ describe('/posts', () => {
 
   it('POST -> /posts/:postId/comments: should create new comment; status 201; content: created comment; used additional methods: POST -> /blogs, POST -> /posts, GET -> /comments/:commentId;', async () => {
     const createUser = await request(server)
-      .post('/users')
+      .post('/sa/users')
       .auth('admin', 'qwerty')
       .send({
         login: 'Mickle',
         password: 'qwerty',
         email: 'mpara7472@gmail.com',
       });
-    expect(createUser.status).toBe(HTTP_STATUS.CREATED_201);
+	  console.log("createUser: ", createUser.body)
+    expect(createUser.status).toBe(HTTP_STATUS.CREATED_201)
+
+	console.log("createUser.body:",  createUser.body)
+
     expect(createUser.body).toEqual({
       id: expect.any(String),
       login: 'Mickle',
@@ -126,7 +130,6 @@ describe('/posts', () => {
       createdAt: expect.any(String),
     });
 
-	console.log("createUser.body:",  createUser.body)
 
     // const loginOrEmail = createUser.body.login;
     // const createAccessToken = await request(server).post('/auth/login').send({

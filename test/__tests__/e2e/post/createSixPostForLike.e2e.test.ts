@@ -4,7 +4,7 @@ import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "../../../../src/app.module";
 import { appSettings } from "../../../../src/setting";
-import { HTTP_STATUS } from "src/utils/utils";
+import { HTTP_STATUS } from "../../../../src/utils/utils";
 dotenv.config();
 
 
@@ -78,10 +78,10 @@ describe("/blogs", () => {
       blogName: string;
       createdAt: string;
     };
-    let id: string;
-    let token: string;
+    let postId1: string;
+    let tokenByUser1: string;
     let postData: PostType;
-    let blogName: string;
+    let blogNameAllPosts: string;
     let userLogin: string;
     let userId: string;
 	let blogIdAllPost: string
@@ -94,16 +94,13 @@ describe("/blogs", () => {
         email: "mpara7473@gmail.com",
       };
 
-	  const createUser = await request(app)
-        .post(`/users`)
+	  const createUser = await request(server)
+        .post(`/sa/users`)
         .auth("admin", "qwerty")
         .send(user);
 
 		userLogin = createUser.body.login;
-      userId = createUser.body.id;
-
-console.log("createUser: ", createUser.body.id)
-
+      	userId = createUser.body.id;
 
       expect(createUser.body).toStrictEqual({
         id: expect.any(String),
@@ -111,12 +108,12 @@ console.log("createUser: ", createUser.body.id)
         email: user.email,
         createdAt: expect.any(String),
       });
-      const createAccessToken = await request(app).post("/auth/login").send({
+      const createAccessToken = await request(server).post("/auth/login").send({
         loginOrEmail: user.login,
         password: user.password,
       });
 
-      token = createAccessToken.body.accessToken;
+      tokenByUser1 = createAccessToken.body.accessToken;
       expect(createAccessToken.status).toBe(HTTP_STATUS.OK_200);
       expect(createAccessToken.body).toEqual({
         accessToken: expect.any(String),
@@ -124,7 +121,7 @@ console.log("createUser: ", createUser.body.id)
 
 		/***************************** create user2 ********************************************/
 
-		const createUser2 = await request(app)
+		const createUser2 = await request(server)
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
@@ -133,14 +130,16 @@ console.log("createUser: ", createUser.body.id)
 			email: "1mpara7473@gmail.com",
 		  });
 
-		  const createAccessToken2 = await request(app).post("/auth/login").send({
+		  const createAccessToken2 = await request(server)
+		  .post("/auth/login")
+		  .send({
 			loginOrEmail: user.login,
 			password: user.password,
 		  });
 
 		/***************************** create user3 ********************************************/
 
-		const createUser3 = await request(app)
+		const createUser3 = await request(server)
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
@@ -149,14 +148,16 @@ console.log("createUser: ", createUser.body.id)
 			email: "1mpara7473@gmail.com",
 		  });
 
-		  const createAccessToken3 = await request(app).post("/auth/login").send({
+		  const createAccessToken3 = await request(server)
+		  .post("/auth/login")
+		  .send({
 			loginOrEmail: user.login,
 			password: user.password,
 		  });
 
-		/***************************** create user3 ********************************************/
+		/***************************** create user4 ********************************************/
 
-		const createUser4 = await request(app)
+		const createUser4 = await request(server)
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
@@ -165,14 +166,16 @@ console.log("createUser: ", createUser.body.id)
 			email: "1mpara7473@gmail.com",
 		  });
 
-		  const createAccessToken4 = await request(app).post("/auth/login").send({
+		  const createAccessToken4 = await request(server)
+		  .post("/auth/login")
+		  .send({
 			loginOrEmail: user.login,
 			password: user.password,
 		  });
 
-		/***************************** create user3 ********************************************/
+		/***************************** create user5 ********************************************/
 
-		const createUser5 = await request(app)
+		const createUser5 = await request(server)
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
@@ -181,14 +184,16 @@ console.log("createUser: ", createUser.body.id)
 			email: "1mpara7473@gmail.com",
 		  });
 
-		  const createAccessToken5 = await request(app).post("/auth/login").send({
+		  const createAccessToken5 = await request(server)
+		  .post("/auth/login")
+		  .send({
 			loginOrEmail: user.login,
 			password: user.password,
 		  });
 
-		/***************************** create user3 ********************************************/
+		/***************************** create user6 ********************************************/
 
-		const createUser6 = await request(app)
+		const createUser6 = await request(server)
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
@@ -197,48 +202,53 @@ console.log("createUser: ", createUser.body.id)
 			email: "1mpara7473@gmail.com",
 		  });
 
-		  const createAccessToken6 = await request(app).post("/auth/login").send({
+		  const createAccessToken6 = await request(server)
+		  .post("/auth/login")
+		  .send({
 			loginOrEmail: user.login,
 			password: user.password,
 		  });
 
-		/***************************** create blogs ********************************************/
+		/***************************** create blog ********************************************/
 
 
-      const createBlogs = await request(app)
-        .post("/blogs")
+      const createBlog = await request(server)
+        .post("/sa/blogs")
         .auth("admin", "qwerty")
         .send({
           name: "Mickle",
           description: "my description",
           websiteUrl: "https://learn.javascript.ru",
         });
-		blogIdAllPost = createBlogs.body.id
-      expect(createBlogs.status).toBe(HTTP_STATUS.CREATED_201);
-      expect(createBlogs.body).toEqual({
+
+
+      expect(createBlog.status).toBe(HTTP_STATUS.CREATED_201);
+      expect(createBlog.body).toEqual({
         id: expect.any(String),
         name: "Mickle",
         description: "my description",
         websiteUrl: "https://learn.javascript.ru",
         createdAt: expect.any(String),
-        isMembership: true,
+        isMembership: false,
       });
 
-      const blogId = createBlogs.body.id;
-      blogName = createBlogs.body.name;
+    //   const blogId = createBlog.body.id;
+	  blogIdAllPost = createBlog.body.id
+      blogNameAllPosts = createBlog.body.name;
 
-      const createPosts1 = await request(app)
-        .post("/posts")
+/*********************** create post ***********************************/
+
+      const createPosts1 = await request(server)
+        .post(`/sa/blogs/${blogIdAllPost}/posts`)
         .auth("admin", "qwerty")
         .send({
           title: "new title",
           shortDescription: "new shortDescription",
           content:
             "myContent I like javascript and I will be a developer in javascript, back end developer",
-          blogId: blogId,
         });
 
-      id = createPosts1.body.id;
+	  postId1 = createPosts1.body.id;
       postData = createPosts1.body;
       //   console.log(postData)
       expect(createPosts1.status).toBe(HTTP_STATUS.CREATED_201);
@@ -247,8 +257,8 @@ console.log("createUser: ", createUser.body.id)
         title: createPosts1.body.title,
         shortDescription: createPosts1.body.shortDescription,
         content: createPosts1.body.content,
-        blogId: blogId,
-        blogName: blogName,
+        blogId: blogIdAllPost,
+        blogName: blogNameAllPosts,
         createdAt: expect.any(String),
         extendedLikesInfo: {
           likesCount: 0,
@@ -264,173 +274,169 @@ console.log("createUser: ", createUser.body.id)
         },
       })
 
-	  const  createPosts2 = await request(app)
-        .post("/posts")
+
+	  const  createPosts2 = await request(server)
+        .post(`/sa/blogs/${blogIdAllPost}/posts`)
         .auth("admin", "qwerty")
         .send({
           title: "2new title",
           shortDescription: "2new shortDescription",
           content:
             "2myContent I like javascript and I will be a developer in javascript, back end developer",
-          blogId: blogId,
         })
 
-		const  createPosts3 = await request(app)
-        .post("/posts")
+		const  createPosts3 = await request(server)
+		.post(`/sa/blogs/${blogIdAllPost}/posts`)
         .auth("admin", "qwerty")
         .send({
           title: "3new title",
           shortDescription: "3new shortDescription",
           content:
             "3myContent I like javascript and I will be a developer in javascript, back end developer",
-          blogId: blogId,
         })
 
 
-		const  createPosts4 = await request(app)
-        .post("/posts")
+		const createPosts4 = await request(server)
+       .post(`/sa/blogs/${blogIdAllPost}/posts`)
         .auth("admin", "qwerty")
         .send({
           title: "4new title",
           shortDescription: "4new shortDescription",
           content:
             "4myContent I like javascript and I will be a developer in javascript, back end developer",
-          blogId: blogId,
         })
 
-		const  createPosts5 = await request(app)
-        .post("/posts")
+		const createPosts5 = await request(server)
+       	.post(`/sa/blogs/${blogIdAllPost}/posts`)
         .auth("admin", "qwerty")
         .send({
           title: "5new title",
           shortDescription: "5new shortDescription",
           content:
             "5myContent I like javascript and I will be a developer in javascript, back end developer",
-          blogId: blogId,
         })
 
-		const  createPosts6 = await request(app)
-        .post("/posts")
+		const createPosts6 = await request(server)
+		.post(`/sa/blogs/${blogIdAllPost}/posts`)
         .auth("admin", "qwerty")
         .send({
           title: "6new title",
           shortDescription: "6new shortDescription",
           content:
             "6myContent I like javascript and I will be a developer in javascript, back end developer",
-          blogId: blogId,
         })
 
 
 
 /************************************** create like **********************************************/
-		const createLikePost1User1 = await request(app)
-		.put(`/posts/${id}/like-status`)
-		.set("Authorization", `Bearer ${token}`)
+		const createLikePost1User1 = await request(server)
+		.put(`/posts/${postId1}/like-status`)
+		.set("Authorization", `Bearer ${tokenByUser1}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createLikePost1User2 = await request(app)
+		const createLikePost1User2 = await request(server)
+		.put(`/posts/${postId1}/like-status`)
+		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
+		.send({
+			"likeStatus": "Like"
+		})
+
+		const createLikePost2User2 = await request(server)
 		.put(`/posts/${createPosts2.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createLikePost2User2 = await request(app)
-		.put(`/posts/${createPosts2.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
-		.send({
-			"likeStatus": "Like"
-		})
-
-		const createdislikePost2User3 = await request(app)
+		const createdislikePost2User3 = await request(server)
 		.put(`/posts/${createPosts2.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createDislikePos3tUser1 = await request(app)
+		const createDislikePos3tUser1 = await request(server)
 		.put(`/posts/${createPosts3.body.id}/like-status`)
-		.set("Authorization", `Bearer ${token}`)
+		.set("Authorization", `Bearer ${tokenByUser1}`)
 		.send({
 			"likeStatus": "Dislike"
 		})
 
-		const createLikePost4User1 = await request(app)
+		const createLikePost4User1 = await request(server)
 		.put(`/posts/${createPosts4.body.id}/like-status`)
-		.set("Authorization", `Bearer ${token}`)
+		.set("Authorization", `Bearer ${tokenByUser1}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createLikePost4User4 = await request(app)
+		const createLikePost4User4 = await request(server)
 		.put(`/posts/${createPosts4.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken4.body.accessToken}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createLikePost4User2 = await request(app)
+		const createLikePost4User2 = await request(server)
 		.put(`/posts/${createPosts4.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createLikePost4User3 = await request(app)
+		const createLikePost4User3 = await request(server)
 		.put(`/posts/${createPosts4.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createLikePost5User2 = await request(app)
+		const createLikePost5User2 = await request(server)
 		.put(`/posts/${createPosts5.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createDislikePost5User3 = await request(app)
+		const createDislikePost5User3 = await request(server)
 		.put(`/posts/${createPosts5.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
 		.send({
 			"likeStatus": "Dislike"
 		})
 
-		const createLikePost6User1 = await request(app)
+		const createLikePost6User1 = await request(server)
 		.put(`/posts/${createPosts6.body.id}/like-status`)
-		.set("Authorization", `Bearer ${token}`)
+		.set("Authorization", `Bearer ${tokenByUser1}`)
 		.send({
 			"likeStatus": "Like"
 		})
 
-		const createDislikePost6User2 = await request(app)
+		const createDislikePost6User2 = await request(server)
 		.put(`/posts/${createPosts6.body.id}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
 		.send({
 			"likeStatus": "Dislike"
 		})
-
-
-     
     });
+
+	/************************** get the post **********************************/
+
 	it("get post by user1 => return 200 status code", async () => {
-        const getPostById1 = await request(app)
-          .get(`/posts/${id}`)
-          .set("Authorization", `Bearer ${token}`);
+        const getPostById1 = await request(server)
+          .get(`/posts`)
+          .set("Authorization", `Bearer ${tokenByUser1}`);
 
         console.log(getPostById1.body);
         expect(getPostById1.status).toBe(HTTP_STATUS.OK_200);
         expect(getPostById1.body).toStrictEqual({
-          id: id,
+          id: expect.any(String),
           title: postData.title,
           shortDescription: postData.shortDescription,
           content: postData.content,
-          blogId: postData.blogId,
-          blogName: blogName,
+          blogId: blogIdAllPost,
+          blogName: blogNameAllPosts,
           createdAt: expect.any(String),
           extendedLikesInfo: {
             likesCount: expect.any(Number),
@@ -449,14 +455,14 @@ console.log("createUser: ", createUser.body.id)
 	  it("get all post", async() => {
 		const getAllPosts = await request(app)
           .get(`/posts/`)
-          .set("Authorization", `Bearer ${token}`);
+          .set("Authorization", `Bearer ${tokenByUser1}`);
 
         console.log(getAllPosts.body);
         expect(getAllPosts.status).toBe(HTTP_STATUS.OK_200);
 
 		const getAllPostByBlogId = await request(app)
 		.get(`/blogs/${blogIdAllPost}/posts`)
-		.set("Authorization", `Bearer ${token}`);
+		.set("Authorization", `Bearer ${tokenByUser1}`);
 		expect(getAllPosts.body).toEqual(getAllPostByBlogId.body)
 	  })
   });

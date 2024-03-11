@@ -67,7 +67,7 @@ export class Posts {
 			  likesCount: post.likesCount, 
 			  myStatus: myOwnStatus || LikeStatusEnum.None,
 			  newestLikes: newestLikes ? newestLikes.map(l => ({
-				  addedAt: l.addedAt.toISOString(),
+				  addedAt: l.addedAt,
 				  userId: l.userId, 
 				  login: l.login,
 			  })) : []},

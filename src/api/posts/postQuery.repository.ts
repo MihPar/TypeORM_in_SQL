@@ -50,6 +50,7 @@ export class PostsQueryRepository {
 			
 			myStatus = likeQuery ? (likeQuery?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
+		// console.log(Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus))
     return findPostById ? Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus) : null
 
 	} catch(err) {
@@ -116,6 +117,7 @@ export class PostsQueryRepository {
 			// .orderBy(`"addedAt"`, 'DESC')
 			// .limit(3)
 			// .getMany()
+			// console.log(Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus))
 
           return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus);
         })
