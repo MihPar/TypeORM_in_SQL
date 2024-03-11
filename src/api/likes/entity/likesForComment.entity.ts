@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Comments } from "../../comment/entity/comment.entity";
 import { User } from "../../users/entities/user.entity";
+import { LikeStatusEnum } from "../likes.emun";
 
 @Entity()
 export class LikeForComment {
@@ -8,7 +9,7 @@ export class LikeForComment {
 	id: string
 
 	@Column()
-	myStatus: string
+	myStatus: LikeStatusEnum
 
 	@Column()
 	addedAt: Date

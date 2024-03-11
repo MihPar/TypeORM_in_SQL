@@ -34,6 +34,7 @@ export class CreateNewCommentByPostIdUseCase
       newComment.userId = userId, 
 	  newComment.userLogin = userLogin
 
+	//   console.log({newComment: nsewComment})
 	  const createNewComment: Comments | null =
       await this.commentRepository.createNewCommentPostId(newComment);
     if (!createNewComment) throw new NotFoundException("404");

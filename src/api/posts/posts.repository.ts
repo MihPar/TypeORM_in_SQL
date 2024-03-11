@@ -87,51 +87,39 @@ export class PostsRepository {
     return true;
   }
 
-  async increase(postId: string, likeStatus: string): Promise<boolean> {
+  async increase(postId: string, likeStatus: string, userId: string): Promise<boolean> {
     if (likeStatus === LikeStatusEnum.None) {
 		return true
-    } else if (likeStatus === "Dislike") {
+    } else if (likeStatus === LikeStatusEnum.Dislike) {
 		const updateLikesCountQuery = await this.postsRepository
-			.createQueryBuilder('p')
-			.update()
-			.set({dislikesCount: Number("dislikeCount" + 1)})
-			.where('p.id = :id', {id: postId})
+			.increment({id: postId}, "dislikesCount", 1)
 
 	  if(!updateLikesCountQuery) return false
 	  return  true
     } else {
 		const updateLikesCountQuery = await this.postsRepository
-		.createQueryBuilder('p')
-		.update()
-		.set({likesCount: Number("likeCount") + 1})
-		.where('p.id = :id', {id: postId})
+			.increment({id: postId}, "likesCount", 1)
 
-  if(!updateLikesCountQuery) return false
-  return  true
-  	}
+	if(!updateLikesCountQuery) return false
+		return  true
+	}
 }
-  async decrease(postId: string, likeStatus: string) {
+  async decrease(postId: string, likeStatus: string, userId: string) {
     if (likeStatus === LikeStatusEnum.None) {
       return true
-    } else if (likeStatus === "Dislike") {
+    } else if (likeStatus === LikeStatusEnum.Dislike) {
 		const updateLikesCountQuery = await this.postsRepository
-		.createQueryBuilder('p')
-		.update()
-		.set({dislikesCount: Number("dislikeCount") - 1})
-		.where('p.id = :id', {id: postId})
+		.decrement({id: postId}, "dislikesCount", 0)
 
   if(!updateLikesCountQuery) return false
   return  true
     } else {
 		const updateLikesCountQuery = await this.postsRepository
-		.createQueryBuilder('p')
-		.update()
-		.set({likesCount: Number("likeCount") - 1})
-		.where('p.id = :id', {id: postId})
+		.decrement({id: postId}, "likesCount", 0)
 
   if(!updateLikesCountQuery) return false
   return  true
-    }
+	}
   }
 
 //   async findPostByBlogId(blogId: string) {

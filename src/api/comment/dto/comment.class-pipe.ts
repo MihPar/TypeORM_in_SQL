@@ -11,7 +11,7 @@ const allowedValues = ['Like', 'Dislike', 'None']
 	@IsString()
 	@IsNotEmpty()
 	@Matches(new RegExp(`^(${allowedValues.join('|')})$`))
-	likeStatus: string
+	likeStatus: LikeStatusEnum
   }
 
 export class updateLikeDto{

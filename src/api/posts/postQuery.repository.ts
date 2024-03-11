@@ -21,30 +21,36 @@ export class PostsQueryRepository {
     userId?: string | null,
   ): Promise<PostsViewModel | null> {
 	try {
-		const findPostByBlogId = await this.postRepository
-		.createQueryBuilder()
-		.select()
-		.where("id = :id", {id: postId})
-		.getOne()
+		const findPostById = await this.postRepository
+			.createQueryBuilder()
+			.select()
+			.where("id = :id", {id: postId})
+			.getOne()
 	
 	const newestLikesQuery = await this.LikeForPostRepository
-		.createQueryBuilder()
-		.select()
-		.where(`"postId" = :postId AND "myStatus" = :myStatus`, {postId, myStatus: "Like"})
-		.orderBy(`"addedAt"`, "DESC")
-		.limit(3)
-		.execute()
+		.find({
+			where: {
+				postId: postId,
+				myStatus: "Like"
+			},
+			order: {
+				addedAt: "DESC"
+			},
+			take: 3
+		})
+
+		const likeQuery = await this.LikeForPostRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"postId" = :id AND "userId" = :userId`, {id: postId, userId})
+			.getOne()
 	
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
-			const likeQuery = await this.LikeForPostRepository
-				.createQueryBuilder()
-				.select()
-				.where(`"postId" = :id`, {id: postId})
-				.getOne()
-			myStatus = likeQuery ? (likeQuery.myStatus as LikeStatusEnum) : LikeStatusEnum.None
+			
+			myStatus = likeQuery ? (likeQuery?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
-    return findPostByBlogId ? Posts.getPostsViewModelSAMyOwnStatus(findPostByBlogId, newestLikesQuery, myStatus) : null
+    return findPostById ? Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus) : null
 
 	} catch(err) {
 		console.log({repo_err: err})
@@ -70,6 +76,8 @@ export class PostsQueryRepository {
 	const allPosts = getPosts[0]
 	const postId = allPosts[0].id
 	const totalCount = getPosts[1]
+
+	// console.log("postId: ", postId)
 	const pagesCount: number = Math.ceil(+totalCount / +pageSize);
     let result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,
@@ -85,13 +93,14 @@ export class PostsQueryRepository {
 				.select()
 				.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
 				.getMany()
-			myStatus = allLikesUser ? (allLikesUser[0].myStatus as LikeStatusEnum) : LikeStatusEnum.None
+			myStatus = allLikesUser ? (allLikesUser[0]?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
 
-		const newestLikesQuery = await this.LikeForPostRepository.find({
+	const newestLikesQuery = await this.LikeForPostRepository
+	.find({
       where: {
         postId,
-        userId,
+        // userId,
         myStatus: 'Like',
       },
       order: {

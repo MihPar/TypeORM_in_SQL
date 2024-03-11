@@ -25,13 +25,16 @@ export class CommentRepository {
 			return true
 		} else if (likeStatus === LikeStatusEnum.Dislike) {
 			const incDislike = await this.commentsRepository
-				.increment({id: commentId}, "dislikesCount", new Comments().likesCount + 1)
+				.increment({id: commentId}, "dislikesCount", 1)
 		} else {
 			const incLike = await this.commentsRepository
-				.increment({id: commentId}, "likesCount", new Comments().dislikesCount + 1)
+				.increment({id: commentId}, "likesCount", 1)
 		}
 	}
- 	// async increase(commentId: string, likeStatus: string, userId: string){
+
+ 	// async increase(commentId: string, likeStatus: string){
+	// 	let dislikesCount = 0
+	// 	let likesCount = 0
 	// 	if(likeStatus === LikeStatusEnum.None) {
 	// 		return true
 	// 	} else if(likeStatus === "Dislike") {
@@ -39,7 +42,7 @@ export class CommentRepository {
 	// 			.createQueryBuilder()
 	// 			.update()
 	// 			.set({
-	// 				dislikesCount: new Comments().likesCount + 1 
+	// 				dislikesCount: dislikesCount++
 	// 			})
 	// 			.where('id = :commentId', {commentId})
 	// 			.execute()
@@ -51,7 +54,7 @@ export class CommentRepository {
 	// 			.createQueryBuilder()
 	// 			.update()
 	// 			.set({
-	// 				likesCount: new Comments().likesCount + 1
+	// 				likesCount: likesCount++
 	// 			})
 	// 			.where("id = :commentId", {commentId})
 	// 			.execute()
@@ -66,21 +69,23 @@ export class CommentRepository {
 			return true
 		} else if(likeStatus === LikeStatusEnum.Dislike) {
 			const updateLikeCount = await this.commentsRepository
-				.createQueryBuilder()
-				.update()
-				.set({dislikesCount: new Comments().dislikesCount - 1})
-				.where("id = :commentId", {commentId})
-				.execute()
+				.decrement({id: commentId}, "dislikesCount", 0)
+				// .createQueryBuilder()
+				// .update()
+				// .set({dislikesCount: new Comments().dislikesCount - 1})
+				// .where("id = :commentId", {commentId})
+				// .execute()
 
 				if(!updateLikeCount) return false
 				return true
 		} else {
 			const updateLikeCount = await this.commentsRepository
-				.createQueryBuilder()
-				.update()
-				.set({dislikesCount: new Comments().likesCount - 1})
-				.where("id = :commentId", {commentId})
-				.execute()
+				.decrement({id: commentId}, "likesCount", 0)
+				// .createQueryBuilder()
+				// .update()
+				// .set({dislikesCount: new Comments().likesCount - 1})
+				// .where("id = :commentId", {commentId})
+				// .execute()
 
 			if(!updateLikeCount) return false
 				return true
@@ -115,30 +120,10 @@ export class CommentRepository {
 
 	  async createNewCommentPostId(newComment: Comments): Promise<Comments | null> {
 		try {
-			await this.commentsRepository
-				.createQueryBuilder('c')
-				.insert()
-				.values([
-					{
-						content: newComment.content,
-						userId: newComment.userId,
-						userLogin: newComment.userLogin,
-						postId: newComment.postId,
-						likesCount: newComment.likesCount,
-						dislikesCount: newComment.dislikesCount
-					},
-        		])
-				.execute()
-
-				const findComment = await this.commentsRepository
-					.createQueryBuilder()
-					.select()
-					.where(`"userId" = :userId AND "postId" = :postId`, {userId: newComment.userId, postId: newComment.postId})
-					.getOne()
-
-      if (!findComment) return null;
+			const newCom = await this.commentsRepository.save(newComment)
+      if (!newCom) return null;
 			// return {...createComments, commentatorInfo: {userId: createComments.userId, userLogin: createComments.userLogin}}
-			return findComment
+			return newCom
 		} catch (error) {
 			console.log(error, 'error in create post');
 			return null;

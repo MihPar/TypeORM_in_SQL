@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { Posts } from "../posts/entity/entity.posts";
 import { LikeForPost } from './entity/likesForPost.entity';
 import { LikeForComment } from './entity/likesForComment.entity';
+import { LikeStatusEnum } from "./likes.emun";
 
 @Injectable()
 export class LikesRepository {
@@ -32,32 +33,33 @@ export class LikesRepository {
 
 	async findLikeByPostId(postId: string, userId: string): Promise<LikeForPost | null> {
 		const findLikes = await this.likeForPostRepository
-			.createQueryBuilder('lp')
-			.select()
-			.where('lp.id = :id AND lp.userId = :userId', {id: postId, userId})
-			.getOne()
+			.findOne({where: {
+				postId: postId,
+				userId: userId
+			}})
 
-		if(!findLikes) return null
+			if(!findLikes) return null
 		return findLikes
 	}
 
 	async saveLikeForPost(postId: string, userId: string, likeStatus: string, login: string): Promise<void> {
-		
-		const saveLikeForPost = await this.likeForPostRepository
-			.createQueryBuilder("lp")
-			.insert()
-			.into(LikeForPost)
-			.values([{userId, postId, myStatus: likeStatus}])
+		const newLikeForPost = new LikeForPost()
+		newLikeForPost.myStatus = likeStatus
+		newLikeForPost.postId = postId,
+		newLikeForPost.userId = userId,
+		newLikeForPost.login = login
+
+		const saveLikeForPost = await this.likeForPostRepository.save(newLikeForPost)
 		return
 	}
 
 	async updateLikeStatusForPost(postId: string, likeStatus: string, userId: string) {
 		const addedAt = new Date().toISOString()
 		const updatelikeStatus = await this.likeForPostRepository
-			.createQueryBuilder('lfp')
+			.createQueryBuilder()
 			.update()
 			.set({myStatus: likeStatus, addedAt})
-			.where('lfp.postId = :postId AND lfp.userId = :userId', {postId, userId})
+			.where('postId = :postId AND userId = :userId', {postId, userId})
 			.execute()
 		
 		return updatelikeStatus
@@ -80,7 +82,7 @@ export class LikesRepository {
 		return findLikeByUserAndByCommentId
 	}
 
-	async saveLikeForComment(commentId: string, userId: string, likeStatus: string) {
+	async saveLikeForComment(commentId: string, userId: string, likeStatus: LikeStatusEnum) {
 		const newDate = new Date()
 
 		/** firstCase **/
@@ -115,7 +117,7 @@ export class LikesRepository {
 		return true
 	}
 
-	async updateLikeStatusForComment(commentId: string, userId: string, likeStatus: string){
+	async updateLikeStatusForComment(commentId: string, userId: string, likeStatus: LikeStatusEnum){
 		const createAddedAt = new Date().toISOString()
 		const updateLikeStatus = await this.likeForCommentRepository
 			.update({commentId, userId}, {myStatus: likeStatus, addedAt: createAddedAt})

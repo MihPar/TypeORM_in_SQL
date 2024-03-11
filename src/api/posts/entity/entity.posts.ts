@@ -69,7 +69,7 @@ export class Posts {
 			  newestLikes: newestLikes ? newestLikes.map(l => ({
 				  addedAt: l.addedAt,
 				  userId: l.userId, 
-				  login: l.userName,
+				  login: l.login,
 			  })) : []},
 		  };
 	  }

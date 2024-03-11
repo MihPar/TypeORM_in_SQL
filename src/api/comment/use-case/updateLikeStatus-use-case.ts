@@ -24,6 +24,7 @@ export class UpdateLikestatusForCommentUseCase implements ICommandHandler<Update
 
 	) {}
 	async execute(command: UpdateLikestatusCommand): Promise<boolean> {
+		console.log("try")
 		const findCommentById: Comments | null =
       await this.commentQueryRepository.findCommentByCommentId(command.id.commentId, command.userId);
     if (!findCommentById) throw new NotFoundException('404');

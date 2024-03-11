@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "../../posts/entity/entity.posts";
 import { LikeStatusEnum } from "../likes.emun";
 import { User } from "../../users/entities/user.entity";
@@ -11,8 +11,8 @@ export class LikeForPost {
 	@Column()
 	myStatus: string
 
-	@Column()
-	addedAt: string
+	@CreateDateColumn()
+	addedAt: Date
 
 	@ManyToOne(() => User, u => u.likeForPost)
 	user: User

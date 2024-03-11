@@ -65,6 +65,8 @@ export class CommentQueryRepository {
 	const commentsByPostId = queryFindComment[0]
 	const commentId = queryFindComment[0][0].id
 
+	// console.log(queryFindComment[1])
+
 	// const query = `
 	// 	select *
 	// 		from "Posts" as p left join "Comments" as c
@@ -82,12 +84,12 @@ export class CommentQueryRepository {
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 			if (userId) {
 				const commentsLikeQuery = await this.likeForCommentRepository
-				.createQueryBuilder('lfc')
+				.createQueryBuilder()
 				.select()
-				.where('lfc.id = :id and lfc.userId = :userId', {id: commentId, userId})
+				.where(`"id" = :id and "userId" = :userId`, {id: commentId, userId})
 				.getMany()
 			myStatus = commentsLikeQuery
-				? (commentsLikeQuery[0].myStatus as LikeStatusEnum)
+				? (commentsLikeQuery[0]?.myStatus as LikeStatusEnum)
 				: LikeStatusEnum.None;
 			}
     const distracrure = {

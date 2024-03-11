@@ -20,6 +20,7 @@ import { Blogs } from "../blogs/entity/blogs.entity";
 import { JwtService } from "@nestjs/jwt";
 import { UsersQueryRepository } from "../users/users.queryRepository";
 import { PostController } from "./post.controller";
+import { CheckRefreshTokenForGet } from "./guards/bearer.authGetComment";
 
 const userCase = [
 	DeleteAllPostsUseCase,
@@ -35,7 +36,7 @@ const repo = [
 	BlogsRepository,
 	UsersQueryRepository
 ];
-const userGuard = [CheckRefreshTokenForPost]
+const userGuard = [CheckRefreshTokenForPost, CheckRefreshTokenForGet]
 const adapter = [];
 const manager = [];
 const service = [JwtService];

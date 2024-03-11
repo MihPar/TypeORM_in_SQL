@@ -1,270 +1,272 @@
-// import { HTTP_STATUS } from './../../../../src/utils/utils';
-// import request from 'supertest';
-// import dotenv from 'dotenv';
-// import { INestApplication } from '@nestjs/common';
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { appSettings } from '../../../../setting';
-// import { PostsViewModel } from '../../../../src/api/posts/posts.type';
-// import { AppModule } from '../../../../app.module';
-// dotenv.config();
+import { HTTP_STATUS } from './../../../../src/utils/utils';
+import request from 'supertest';
+import dotenv from 'dotenv';
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { appSettings } from '../../../../src/setting';
+import { AppModule } from '../../../../src/app.module';
+import { PostsViewModel } from '../../../../src/api/posts/posts.type';
+dotenv.config();
 
-// export function createErrorsMessageTest(fields: string[]) {
-//   const errorsMessages: any = [];
-//   for (const field of fields) {
-//     errorsMessages.push({
-//       message: expect.any(String),
-//       field: field ?? expect.any(String),
-//     });
-//   }
-//   return { errorsMessages: errorsMessages };
-// }
+export function createErrorsMessageTest(fields: string[]) {
+  const errorsMessages: any = [];
+  for (const field of fields) {
+    errorsMessages.push({
+      message: expect.any(String),
+      field: field ?? expect.any(String),
+    });
+  }
+  return { errorsMessages: errorsMessages };
+}
 
-// describe('/posts', () => {
-//   let app: INestApplication;
-//   let server: any;
-//   beforeAll(async () => {
-//     const moduleFixture: TestingModule = await Test.createTestingModule({
-//       imports: [AppModule],
-//     }).compile();
+describe('/posts', () => {
+  let app: INestApplication;
+  let server: any;
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
 
-//     app = moduleFixture.createNestApplication();
-//     appSettings(app);
+    app = moduleFixture.createNestApplication();
+    appSettings(app);
 
-//     await app.init();
-//     server = app.getHttpServer();
+    await app.init();
+    server = app.getHttpServer();
 
-//     const wipeAllRes = await request(server).delete('/testing/all-data');
-//     expect(wipeAllRes.status).toBe(HTTP_STATUS.NO_CONTENT_204);
+    const wipeAllRes = await request(server).delete('/testing/all-data');
+    expect(wipeAllRes.status).toBe(HTTP_STATUS.NO_CONTENT_204);
 
-//     const getPosts = await request(server).get('/posts');
-//     expect(getPosts.status).toBe(HTTP_STATUS.OK_200);
-//     expect(getPosts.body.items).toHaveLength(0);
-//   });
+    // const getPosts = await request(server).get('/posts');
+    // expect(getPosts.status).toBe(HTTP_STATUS.OK_200);
+    // expect(getPosts.body.items).toHaveLength(0);
+  });
 
-//   afterAll(async () => {
-//     await app.close();
-//   });
+  afterAll(async () => {
+    await app.close();
+  });
 
-//   afterAll((done) => {
-//     done();
-//   });
+  afterAll((done) => {
+    done();
+  });
 
-//   const blogsValidationErrRes = {
-//     errorsMessages: expect.arrayContaining([
-//       {
-//         message: expect.any(String),
-//         field: 'name',
-//       },
-//       {
-//         message: expect.any(String),
-//         field: 'description',
-//       },
-//       {
-//         message: expect.any(String),
-//         field: 'websiteUrl',
-//       },
-//     ]),
-//   };
+  const blogsValidationErrRes = {
+    errorsMessages: expect.arrayContaining([
+      {
+        message: expect.any(String),
+        field: 'name',
+      },
+      {
+        message: expect.any(String),
+        field: 'description',
+      },
+      {
+        message: expect.any(String),
+        field: 'websiteUrl',
+      },
+    ]),
+  };
 
-//   const blogsValidationErrResId = {
-//     errorsMessages: expect.arrayContaining([
-//       {
-//         message: expect.any(String),
-//         field: 'id',
-//       },
-//     ]),
-//   };
+  const blogsValidationErrResId = {
+    errorsMessages: expect.arrayContaining([
+      {
+        message: expect.any(String),
+        field: 'id',
+      },
+    ]),
+  };
 
-//   const postsValidationErrResPost = {
-//     errorsMessages: expect.arrayContaining([
-//       {
-//         message: expect.any(String),
-//         field: 'title',
-//       },
-//       {
-//         message: expect.any(String),
-//         field: 'shortDescription',
-//       },
-//       {
-//         message: expect.any(String),
-//         field: 'content',
-//       },
-//       {
-//         message: expect.any(String),
-//         field: 'blogId',
-//       },
-//     ]),
-//   };
+  const postsValidationErrResPost = {
+    errorsMessages: expect.arrayContaining([
+      {
+        message: expect.any(String),
+        field: 'title',
+      },
+      {
+        message: expect.any(String),
+        field: 'shortDescription',
+      },
+      {
+        message: expect.any(String),
+        field: 'content',
+      },
+      {
+        message: expect.any(String),
+        field: 'blogId',
+      },
+    ]),
+  };
 
-//   //   beforeEach(async() => {
-//   // 	const wipeAllRes = await request(app).delete('/testing/all-data').send()
-//   // })
+  //   beforeEach(async() => {
+  // 	const wipeAllRes = await request(app).delete('/testing/all-data').send()
+  // })
 
-//   type token = {
-//     accessToken: string;
-//   };
-//   let firstPost: PostsViewModel;
-//   let createAccessTokenBody: token;
-//   let userId: string;
-//   let login: string;
-//   let postId1: string;
+  type token = {
+    accessToken: string;
+  };
+  let firstPost: PostsViewModel;
+  let createAccessTokenBody: token;
+  let userId: string;
+  let login: string;
+  let postId1: string;
 
-//   it('POST -> /posts/:postId/comments: should create new comment; status 201; content: created comment; used additional methods: POST -> /blogs, POST -> /posts, GET -> /comments/:commentId;', async () => {
-//     const createUser = await request(server)
-//       .post('/users')
-//       .auth('admin', 'qwerty')
-//       .send({
-//         login: 'Mickle',
-//         password: 'qwerty',
-//         email: 'mpara7472@gmail.com',
-//       });
-//     expect(createUser.status).toBe(HTTP_STATUS.CREATED_201);
-//     expect(createUser.body).toEqual({
-//       id: expect.any(String),
-//       login: 'Mickle',
-//       email: 'mpara7472@gmail.com',
-//       createdAt: expect.any(String),
-//     });
+  it('POST -> /posts/:postId/comments: should create new comment; status 201; content: created comment; used additional methods: POST -> /blogs, POST -> /posts, GET -> /comments/:commentId;', async () => {
+    const createUser = await request(server)
+      .post('/users')
+      .auth('admin', 'qwerty')
+      .send({
+        login: 'Mickle',
+        password: 'qwerty',
+        email: 'mpara7472@gmail.com',
+      });
+    expect(createUser.status).toBe(HTTP_STATUS.CREATED_201);
+    expect(createUser.body).toEqual({
+      id: expect.any(String),
+      login: 'Mickle',
+      email: 'mpara7472@gmail.com',
+      createdAt: expect.any(String),
+    });
 
-//     const loginOrEmail = createUser.body.login;
-//     const createAccessToken = await request(server).post('/auth/login').send({
-//       loginOrEmail: loginOrEmail,
-//       password: 'qwerty',
-//     });
+	console.log("createUser.body:",  createUser.body)
 
-//     createAccessTokenBody = createAccessToken.body;
+    // const loginOrEmail = createUser.body.login;
+    // const createAccessToken = await request(server).post('/auth/login').send({
+    //   loginOrEmail: loginOrEmail,
+    //   password: 'qwerty',
+    // });
 
-//     expect(createAccessToken.status).toBe(HTTP_STATUS.OK_200);
-//     expect(createAccessToken.body).toEqual({
-//       accessToken: expect.any(String),
-//     });
+    // createAccessTokenBody = createAccessToken.body;
 
-//     const createBlogs = await request(server)
-//       .post('/blogs')
-//       .auth('admin', 'qwerty')
-//       .send({
-//         name: 'Mickle',
-//         description: 'my description',
-//         websiteUrl: 'https://learn.javascript.ru',
-//       });
-//     expect(createBlogs.status).toBe(HTTP_STATUS.CREATED_201);
-//     expect(createBlogs.body).toEqual({
-//       id: expect.any(String),
-//       name: 'Mickle',
-//       description: 'my description',
-//       websiteUrl: 'https://learn.javascript.ru',
-//       createdAt: expect.any(String),
-//       isMembership: false,
-//     });
+    // expect(createAccessToken.status).toBe(HTTP_STATUS.OK_200);
+    // expect(createAccessToken.body).toEqual({
+    //   accessToken: expect.any(String),
+    // });
 
-//     const blogId = createBlogs.body.id;
-//     const blogName = createBlogs.body.name;
+    // const createBlogs = await request(server)
+    //   .post('/blogs')
+    //   .auth('admin', 'qwerty')
+    //   .send({
+    //     name: 'Mickle',
+    //     description: 'my description',
+    //     websiteUrl: 'https://learn.javascript.ru',
+    //   });
+    // expect(createBlogs.status).toBe(HTTP_STATUS.CREATED_201);
+    // expect(createBlogs.body).toEqual({
+    //   id: expect.any(String),
+    //   name: 'Mickle',
+    //   description: 'my description',
+    //   websiteUrl: 'https://learn.javascript.ru',
+    //   createdAt: expect.any(String),
+    //   isMembership: false,
+    // });
 
-//     const createPosts = await request(server)
-//       .post('/posts')
-//       .auth('admin', 'qwerty')
-//       .send({
-//         title: 'new title',
-//         shortDescription: 'new shortDescription',
-//         content:
-//           'myContent I like javascript and I will be a developer in javascript, back end developer',
-//         blogId: blogId,
-//       });
-//     postId1 = createPosts.body.id;
-//     //   console.log("postId1: " , postId1 )
-//     // console.log(createPosts.body)
-//     expect(createPosts.status).toBe(HTTP_STATUS.CREATED_201);
-//     expect(createPosts.body).toEqual({
-//       id: expect.any(String),
-//       title: 'new title',
-//       shortDescription: 'new shortDescription',
-//       content:
-//         'myContent I like javascript and I will be a developer in javascript, back end developer',
-//       blogId: blogId,
-//       blogName: blogName,
-//       createdAt: expect.any(String),
-//       extendedLikesInfo: {
-//         likesCount: 0,
-//         dislikesCount: 0,
-//         myStatus: 'None',
-//         newestLikes: [
-//           //   {
-//           // 	"addedAt": expect.any(String),
-//           // 	"userId": userId,
-//           // 	"login": login
-//           //   }
-//         ],
-//       },
-//     });
+    // const blogId = createBlogs.body.id;
+    // const blogName = createBlogs.body.name;
 
-//     firstPost = createPosts.body;
+    // const createPosts = await request(server)
+    //   .post('/posts')
+    //   .auth('admin', 'qwerty')
+    //   .send({
+    //     title: 'new title',
+    //     shortDescription: 'new shortDescription',
+    //     content:
+    //       'myContent I like javascript and I will be a developer in javascript, back end developer',
+    //     blogId: blogId,
+    //   });
+    // postId1 = createPosts.body.id;
+    // //   console.log("postId1: " , postId1 )
+    // // console.log(createPosts.body)
+    // expect(createPosts.status).toBe(HTTP_STATUS.CREATED_201);
+    // expect(createPosts.body).toEqual({
+    //   id: expect.any(String),
+    //   title: 'new title',
+    //   shortDescription: 'new shortDescription',
+    //   content:
+    //     'myContent I like javascript and I will be a developer in javascript, back end developer',
+    //   blogId: blogId,
+    //   blogName: blogName,
+    //   createdAt: expect.any(String),
+    //   extendedLikesInfo: {
+    //     likesCount: 0,
+    //     dislikesCount: 0,
+    //     myStatus: 'None',
+    //     newestLikes: [
+    //       //   {
+    //       // 	"addedAt": expect.any(String),
+    //       // 	"userId": userId,
+    //       // 	"login": login
+    //       //   }
+    //     ],
+    //   },
+    // });
 
-//     const postId = createPosts.body.id;
-//     userId = createUser.body.id;
-//     login = createUser.body.login;
+    // firstPost = createPosts.body;
 
-//     /*************************** create comment by postId *****************************/
+    // const postId = createPosts.body.id;
+    // userId = createUser.body.id;
+    // login = createUser.body.login;
 
-//     const createCommentPostByPostId = await request(server)
-//       .post(`/posts/${postId1}/comments`)
-//       .set('Authorization', `Bearer ${createAccessToken.body.accessToken}`)
-//       .send({
-//         content:
-//           'My profession is a programmer, I work in javascript and I work for back end developer',
-//       });
+    // /*************************** create comment by postId *****************************/
 
-//     //   console.log('postId1: ', postId1)
+    // const createCommentPostByPostId = await request(server)
+    //   .post(`/posts/${postId1}/comments`)
+    //   .set('Authorization', `Bearer ${createAccessToken.body.accessToken}`)
+    //   .send({
+    //     content:
+    //       'My profession is a programmer, I work in javascript and I work for back end developer',
+    //   });
 
-//     expect(createCommentPostByPostId.status).toBe(HTTP_STATUS.CREATED_201);
-//     expect(createCommentPostByPostId.body).toEqual({
-//       id: expect.any(String),
-//       content: expect.any(String),
-//       commentatorInfo: {
-//         userId: userId,
-//         userLogin: login,
-//       },
-//       createdAt: expect.any(String),
-//       likesInfo: {
-//         likesCount: 0,
-//         dislikesCount: 0,
-//         myStatus: 'None',
-//       },
-//     });
+    // //   console.log('postId1: ', postId1)
 
-//     const createCommentWithIncorrectData = await request(server)
-//       .post(`/posts/${postId}/comments`)
-//       .set('Authorization', `Bearer ${createAccessToken.body.accessToken}`)
-//       .send({ content: "dkdk" });
-//     expect(createCommentWithIncorrectData.status).toBe(
-//       HTTP_STATUS.BAD_REQUEST_400,
-//     );
-//     expect(createCommentWithIncorrectData.body).toStrictEqual(
-//       createErrorsMessageTest(['content']),
-//     );
+    // expect(createCommentPostByPostId.status).toBe(HTTP_STATUS.CREATED_201);
+    // expect(createCommentPostByPostId.body).toEqual({
+    //   id: expect.any(String),
+    //   content: expect.any(String),
+    //   commentatorInfo: {
+    //     userId: userId,
+    //     userLogin: login,
+    //   },
+    //   createdAt: expect.any(String),
+    //   likesInfo: {
+    //     likesCount: 0,
+    //     dislikesCount: 0,
+    //     myStatus: 'None',
+    //   },
+    // });
 
-//     /*************************** get comment by postId *****************************/
+    // const createCommentWithIncorrectData = await request(server)
+    //   .post(`/posts/${postId}/comments`)
+    //   .set('Authorization', `Bearer ${createAccessToken.body.accessToken}`)
+    //   .send({ content: "dkdk" });
+    // expect(createCommentWithIncorrectData.status).toBe(
+    //   HTTP_STATUS.BAD_REQUEST_400,
+    // );
+    // expect(createCommentWithIncorrectData.body).toStrictEqual(
+    //   createErrorsMessageTest(['content']),
+    // );
 
-//     const id = createCommentPostByPostId.body.id;
-//     const getComment = await request(server)
-//       .get(`/comments/${id}`)
-//       .set('Authorization', `Bearer ${createAccessToken.body.accessToken}`);
-//     // console.log('getComment.body: ', getComment.body);
-//     expect(getComment.status).toBe(HTTP_STATUS.OK_200);
-//     expect(getComment.body).toEqual({
-//       id: id,
-//       content: expect.any(String),
-//       commentatorInfo: {
-//         userId: userId,
-//         userLogin: login,
-//       },
-//       createdAt: expect.any(String),
-//       likesInfo: {
-//         likesCount: 0,
-//         dislikesCount: 0,
-//         myStatus: 'None',
-//       },
-//     });
-//   });
+    // /*************************** get comment by postId *****************************/
+
+    // const id = createCommentPostByPostId.body.id;
+    // const getComment = await request(server)
+    //   .get(`/comments/${id}`)
+    //   .set('Authorization', `Bearer ${createAccessToken.body.accessToken}`);
+    // // console.log('getComment.body: ', getComment.body);
+    // expect(getComment.status).toBe(HTTP_STATUS.OK_200);
+    // expect(getComment.body).toEqual({
+    //   id: id,
+    //   content: expect.any(String),
+    //   commentatorInfo: {
+    //     userId: userId,
+    //     userLogin: login,
+    //   },
+    //   createdAt: expect.any(String),
+    //   likesInfo: {
+    //     likesCount: 0,
+    //     dislikesCount: 0,
+    //     myStatus: 'None',
+    //   },
+    // });
+  });
 
 //   it('PUT -> `/posts/:postId/like-status` shoukd return status 204 if created like status', async () => {
 //     const makeLikeDislike = await request(server)
@@ -606,7 +608,7 @@
 
 //         createCommentByPostId = createCommentPostByPostId.body;
 //     	content = createCommentByPostId.content
-//     	createdAt = createCommentByPostId.createdAt
+//     	// createdAt = createCommentByPostId.createdAt
 //         expect(createCommentPostByPostId.status).toBe(HTTP_STATUS.CREATED_201);
 //         expect(createCommentByPostId).toEqual({
 //           id: expect.any(String),
@@ -808,4 +810,4 @@
 //     	.auth("admin", "qwerty")
 //     	expect(deletePostById.status).toBe(HTTP_STATUS.NOT_FOUND_404)
 //       })
-//   });
+  });
