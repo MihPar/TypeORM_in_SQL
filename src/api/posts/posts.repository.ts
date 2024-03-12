@@ -177,7 +177,7 @@ async increaseDislike(postId: string, likeStatus: string, userId: string) {
 		const findLikes = await this.likeForPostRepository
 			.createQueryBuilder()
 			.select()
-			.where(`"postId" = :id`, {postId})
+			.where(`"postId" = :id`, {id: postId})
 			.getMany()
 
       return findLikes;

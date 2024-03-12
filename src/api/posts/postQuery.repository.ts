@@ -26,7 +26,7 @@ export class PostsQueryRepository {
 			.select()
 			.where("id = :id", {id: postId})
 			.getOne()
-	
+			
 	const newestLikesQuery = await this.LikeForPostRepository
 		.find({
 			where: {
@@ -42,7 +42,7 @@ export class PostsQueryRepository {
 		const likeQuery = await this.LikeForPostRepository
 			.createQueryBuilder()
 			.select()
-			.where(`"postId" = :id AND "userId" = :userId`, {id: postId, userId})
+			.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
 			.getOne()
 	
 		let myStatus: LikeStatusEnum = LikeStatusEnum.None;

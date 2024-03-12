@@ -40,14 +40,6 @@ export class UpdateLikeStatusForPostUseCase implements ICommandHandler<UpdateLik
 		return true
 	} 
 	
-	// if(findLike.myStatus === LikeStatusEnum.Like && command.status.likeStatus === LikeStatusEnum.Like) {
-	// 	return 
-	// }
-
-	// if(findLike.myStatus === LikeStatusEnum.Dislike && command.status.likeStatus === LikeStatusEnum.Dislike) {
-	// 	return 
-	// }
-
 	if(findLike.myStatus === 'Dislike' && command.status.likeStatus === 'None'){
 		await this.likesRepository.updateLikeStatusForPost(command.postId, command.status.likeStatus, userId)
 		const decreaseLikeCount = await this.postsRepository.decreaseDislike(command.postId, findLike.myStatus, userId)
