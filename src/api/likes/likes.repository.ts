@@ -33,11 +33,15 @@ export class LikesRepository {
 
 	async findLikeByPostId(postId: string, userId: string): Promise<LikeForPost | null> {
 		const findLikes = await this.likeForPostRepository
-			.findOne({where: {
-				postId: postId,
-				userId: userId
-			}})
-
+			.createQueryBuilder()
+			.select()
+			.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
+			.getOne()
+			// .findOne({where: {
+			// 	postId: postId,
+			// 	userId: userId
+			// }})
+// console.log("findLikes: ", findLikes)
 			if(!findLikes) return null
 		return findLikes
 	}
@@ -50,27 +54,34 @@ export class LikesRepository {
 		newLikeForPost.login = login
 
 		const saveLikeForPost = await this.likeForPostRepository.save(newLikeForPost)
+		// console.log({newLikeForPost: newLikeForPost})
+		// const getPost = await this.likeForPostRepository
+		// 	.findOne({where: {
+		// 		postId: postId,
+		// 		userId: userId
+		// 	}})
+		// 	console.log("getPost: ", getPost)
 		return
 	}
 
 	async updateLikeStatusForPost(postId: string, likeStatus: string, userId: string) {
-		const addedAt = new Date().toISOString()
-		await this.likeForPostRepository
-			.update({postId, userId}, {myStatus: likeStatus, addedAt})
-		// await this.likeForPostRepository
-		// 	.createQueryBuilder()
-		// 	.update()
-		// 	.set({myStatus: likeStatus, addedAt})
-		// 	.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
-		// 	.execute()
+		// const addedAt = new Date().toISOString()
+		const result = await this.likeForPostRepository
+			// .update({postId, userId}, {myStatus: likeStatus, addedAt})
+			.createQueryBuilder()
+			.update()
+			.set({myStatus: likeStatus})
+			.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
+			.execute()
 
-		// 	const getLikeStatus = await this.likeForPostRepository
-		// 		.createQueryBuilder()
-		// 		.select()
-		// 		.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
-		// 		.getOne()
+			// const getLikeStatus = await this.likeForPostRepository
+			// 	.createQueryBuilder()
+			// 	.select()
+			// 	.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
+			// 	.getOne()
 		
 			// console.log({getLikeStatus: getLikeStatus})
+
 		return true
 	}
 

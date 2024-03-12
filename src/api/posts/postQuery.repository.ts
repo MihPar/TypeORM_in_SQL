@@ -92,23 +92,16 @@ export class PostsQueryRepository {
 			const allLikesUser = await this.LikeForPostRepository
 				.createQueryBuilder()
 				.select()
-				.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
+				.where(`"postId" = :postId AND "userId" = :userId`, {postId: post.id, userId})
 				.getMany()
 			myStatus = allLikesUser ? (allLikesUser[0]?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
 
 	const newestLikesQuery = await this.LikeForPostRepository
-	.find({
-      where: {
-        postId,
-        // userId,
-        myStatus: 'Like',
-      },
-      order: {
-        addedAt: 'DESC',
-      },
-      take: 3,
-    });
+		.find({where: {postId: post.id, myStatus: 'Like'},
+				order: {addedAt: 'DESC'},
+				take: 3,
+    		});
 			// console.log({newestLikesQuery: newestLikesQuery})
 			// .createQueryBuilder("lfp")
 			// .select()

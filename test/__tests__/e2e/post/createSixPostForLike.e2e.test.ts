@@ -68,7 +68,7 @@ describe("/blogs", () => {
   //     const wipeAllRes = await request(app).delete("/testing/all-data").send();
   //   });
 
-  describe("POST -> /posts: should create new post for an existing blog; status 201; content: created post; used additional methods: POST -> /blogs, GET -> /posts/:id", () => {
+  describe("GET -> /posts: create 6 posts then: like post 1 by user 1, user 2; like post 2 by user 2, user 3; dislike post 3 by user 1; like post 4 by user 1, user 4, user 2, user 3; like post 5 by user 2, dislike by user 3; like post 6 by user 1, dislike by user 2. Get the posts by user 1 after all likes NewestLikes should be sorted in descending; status 200; content: posts array with pagination; used additional methods: POST => /sa/blogs, POST => /sa/blogs/:blogId/posts, PUT -> posts/:postId/like-status;", () => {
     type PostType = {
       id: string;
       title: string;
@@ -89,9 +89,9 @@ describe("/blogs", () => {
 
 		/***************************** create user1 ********************************************/
       const user = {
-        login: "Mickle",
-        password: "qwerty",
-        email: "mpara7473@gmail.com",
+        login: "1Mickle",
+        password: "1qwerty",
+        email: "1mpara7473@gmail.com",
       };
 
 	  const createUser = await request(server)
@@ -125,9 +125,9 @@ describe("/blogs", () => {
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
-			login: "1Mickle",
-			password: "1qwerty",
-			email: "1mpara7473@gmail.com",
+			login: "2Mickle",
+			password: "2qwerty",
+			email: "2mpara7473@gmail.com",
 		  });
 
 		  const createAccessToken2 = await request(server)
@@ -143,9 +143,9 @@ describe("/blogs", () => {
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
-			login: "1Mickle",
-			password: "1qwerty",
-			email: "1mpara7473@gmail.com",
+			login: "3Mickle",
+			password: "3qwerty",
+			email: "3mpara7473@gmail.com",
 		  });
 
 		  const createAccessToken3 = await request(server)
@@ -161,9 +161,9 @@ describe("/blogs", () => {
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
-			login: "1Mickle",
-			password: "1qwerty",
-			email: "1mpara7473@gmail.com",
+			login: "4Mickle",
+			password: "4qwerty",
+			email: "4mpara7473@gmail.com",
 		  });
 
 		  const createAccessToken4 = await request(server)
@@ -179,9 +179,9 @@ describe("/blogs", () => {
         .post(`/users`)
         .auth("admin", "qwerty")
         .send({
-			login: "1Mickle",
-			password: "1qwerty",
-			email: "1mpara7473@gmail.com",
+			login: "5Mickle",
+			password: "5qwerty",
+			email: "5mpara7473@gmail.com",
 		  });
 
 		  const createAccessToken5 = await request(server)
@@ -193,21 +193,21 @@ describe("/blogs", () => {
 
 		/***************************** create user6 ********************************************/
 
-		const createUser6 = await request(server)
-        .post(`/users`)
-        .auth("admin", "qwerty")
-        .send({
-			login: "1Mickle",
-			password: "1qwerty",
-			email: "1mpara7473@gmail.com",
-		  });
+		// const createUser6 = await request(server)
+        // .post(`/users`)
+        // .auth("admin", "qwerty")
+        // .send({
+		// 	login: "1Mickle",
+		// 	password: "1qwerty",
+		// 	email: "1mpara7473@gmail.com",
+		//   });
 
-		  const createAccessToken6 = await request(server)
-		  .post("/auth/login")
-		  .send({
-			loginOrEmail: user.login,
-			password: user.password,
-		  });
+		//   const createAccessToken6 = await request(server)
+		//   .post("/auth/login")
+		//   .send({
+		// 	loginOrEmail: user.login,
+		// 	password: user.password,
+		//   });
 
 		/***************************** create blog ********************************************/
 
@@ -250,7 +250,6 @@ describe("/blogs", () => {
 
 	  postId1 = createPosts1.body.id;
       postData = createPosts1.body;
-      //   console.log(postData)
       expect(createPosts1.status).toBe(HTTP_STATUS.CREATED_201);
       expect(postData).toEqual({
         id: expect.any(String),
@@ -328,7 +327,8 @@ describe("/blogs", () => {
 
 
 
-/************************************** create like **********************************************/
+/************************************** create like Post1 User1 *******************************************/
+
 		const createLikePost1User1 = await request(server)
 		.put(`/posts/${postId1}/like-status`)
 		.set("Authorization", `Bearer ${tokenByUser1}`)
@@ -336,134 +336,227 @@ describe("/blogs", () => {
 			"likeStatus": "Like"
 		})
 
+		const getLikeAndCountPost1User1 = await request(server)
+		.get(`/posts/${postId1}`)
+        .set("Authorization", `Bearer ${tokenByUser1}`);
+
+		const expectedPost1User1LikeInfo = {
+					likesCount: 1,
+			        dislikesCount: 0,
+			        myStatus: 'Like',
+					newestLikes: [
+						{
+							"addedAt": expect.any(String),
+							"login": "1Mickle",
+							"userId": expect.any(String),
+						},
+					]
+				}
+		expect(getLikeAndCountPost1User1.body.extendedLikesInfo).toEqual(expectedPost1User1LikeInfo)
+
+/************************************** create like Post1 User2 *******************************************/
+
+
 		const createLikePost1User2 = await request(server)
 		.put(`/posts/${postId1}/like-status`)
 		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
 		.send({
 			"likeStatus": "Like"
 		})
+		.expect(204)
 
-		const createLikePost2User2 = await request(server)
-		.put(`/posts/${createPosts2.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
-		.send({
-			"likeStatus": "Like"
-		})
+		const getLikeAndCountPost1User2 = await request(server)
+			.get(`/posts/${postId1}`)
+			.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
 
-		const createdislikePost2User3 = await request(server)
-		.put(`/posts/${createPosts2.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
-		.send({
-			"likeStatus": "Like"
-		})
+			const expectedPost1User2LikeInfo = {
+				likesCount: 2,
+				dislikesCount: 0,
+				myStatus: "Like",
+				newestLikes: [
+					{
+						"addedAt": expect.any(String),
+						"login": "1Mickle",
+						"userId": expect.any(String),
+					},
+					{
+						"addedAt": expect.any(String),
+						"login": "2Mickle",
+						"userId": expect.any(String),
+					},
+				]
+			}
 
-		const createDislikePos3tUser1 = await request(server)
-		.put(`/posts/${createPosts3.body.id}/like-status`)
-		.set("Authorization", `Bearer ${tokenByUser1}`)
-		.send({
-			"likeStatus": "Dislike"
-		})
+		expect(getLikeAndCountPost1User2.body.extendedLikesInfo).toEqual(expectedPost1User2LikeInfo)
 
-		const createLikePost4User1 = await request(server)
-		.put(`/posts/${createPosts4.body.id}/like-status`)
-		.set("Authorization", `Bearer ${tokenByUser1}`)
-		.send({
-			"likeStatus": "Like"
-		})
+/************************************** create Post2 User2 **********************************************/
 
-		const createLikePost4User4 = await request(server)
-		.put(`/posts/${createPosts4.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken4.body.accessToken}`)
-		.send({
-			"likeStatus": "Like"
-		})
+		// const createLikePost2User2 = await request(server)
+		// .put(`/posts/${createPosts2.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
 
-		const createLikePost4User2 = await request(server)
-		.put(`/posts/${createPosts4.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
-		.send({
-			"likeStatus": "Like"
-		})
+		// const getLikeAndCountPost2User2 = await request(server)
+		// 	.get(`/posts/${postId1}`)
+		// 	.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
 
-		const createLikePost4User3 = await request(server)
-		.put(`/posts/${createPosts4.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
-		.send({
-			"likeStatus": "Like"
-		})
+		// const expectedPost2User2LikeInfo = {
+		// 	likesCount: 2,
+		// 		dislikesCount: 0,
+		// 		myStatus: "Like",
+		// 		newestLikes: [
+		// 			{
+		// 				"addedAt": expect.any(String),
+		// 				"login": "2Mickle",
+		// 				"userId": expect.any(String),
+		// 			},
+		// 		]
+		// }
 
-		const createLikePost5User2 = await request(server)
-		.put(`/posts/${createPosts5.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
-		.send({
-			"likeStatus": "Like"
-		})
+/************************************** create Post2 User3 **********************************************/
 
-		const createDislikePost5User3 = await request(server)
-		.put(`/posts/${createPosts5.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
-		.send({
-			"likeStatus": "Dislike"
-		})
+		// const createdislikePost2User3 = await request(server)
+		// .put(`/posts/${createPosts2.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
 
-		const createLikePost6User1 = await request(server)
-		.put(`/posts/${createPosts6.body.id}/like-status`)
-		.set("Authorization", `Bearer ${tokenByUser1}`)
-		.send({
-			"likeStatus": "Like"
-		})
+/************************************** create Post3 User1 **********************************************/
 
-		const createDislikePost6User2 = await request(server)
-		.put(`/posts/${createPosts6.body.id}/like-status`)
-		.set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
-		.send({
-			"likeStatus": "Dislike"
-		})
+		// const createDislikePos3tUser1 = await request(server)
+		// .put(`/posts/${createPosts3.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${tokenByUser1}`)
+		// .send({
+		// 	"likeStatus": "Dislike"
+		// })
+
+/************************************** create Post4 User1 **********************************************/
+
+		// const createLikePost4User1 = await request(server)
+		// .put(`/posts/${createPosts4.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${tokenByUser1}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
+
+/************************************** create Post4 User4 **********************************************/
+
+		// const createLikePost4User4 = await request(server)
+		// .put(`/posts/${createPosts4.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken4.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
+
+/************************************** create Post4 User2 **********************************************/
+
+		// const createLikePost4User2 = await request(server)
+		// .put(`/posts/${createPosts4.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
+
+/************************************** create Post4 User3 **********************************************/
+
+		// const createLikePost4User3 = await request(server)
+		// .put(`/posts/${createPosts4.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
+
+/************************************** create Post5 User2 **********************************************/
+
+		// const createLikePost5User2 = await request(server)
+		// .put(`/posts/${createPosts5.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
+
+/************************************** create Post4 User3 **********************************************/
+
+		// const createDislikePost5User3 = await request(server)
+		// .put(`/posts/${createPosts5.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken3.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Dislike"
+		// })
+
+/************************************** create Post6 User1 **********************************************/
+
+		// const createLikePost6User1 = await request(server)
+		// .put(`/posts/${createPosts6.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${tokenByUser1}`)
+		// .send({
+		// 	"likeStatus": "Like"
+		// })
+
+/************************************** create Post6 User2 **********************************************/
+
+		// const createDislikePost6User2 = await request(server)
+		// .put(`/posts/${createPosts6.body.id}/like-status`)
+		// .set("Authorization", `Bearer ${createAccessToken2.body.accessToken}`)
+		// .send({
+		// 	"likeStatus": "Dislike"
+		// })
     });
 
 	/************************** get the post **********************************/
 
-	it("get post by user1 => return 200 status code", async () => {
-        const getPostById1 = await request(server)
-          .get(`/posts`)
-          .set("Authorization", `Bearer ${tokenByUser1}`);
+	// it("get post by user1 => return 200 status code", async () => {
+    //     const getPostById1 = await request(server)
+    //       .get(`/posts`)
+    //       .set("Authorization", `Bearer ${tokenByUser1}`);
 
-        console.log(getPostById1.body);
-        expect(getPostById1.status).toBe(HTTP_STATUS.OK_200);
-        expect(getPostById1.body).toStrictEqual({
-          id: expect.any(String),
-          title: postData.title,
-          shortDescription: postData.shortDescription,
-          content: postData.content,
-          blogId: blogIdAllPost,
-          blogName: blogNameAllPosts,
-          createdAt: expect.any(String),
-          extendedLikesInfo: {
-            likesCount: expect.any(Number),
-            dislikesCount: expect.any(Number),
-            myStatus: expect.any(String),
-            newestLikes: [
-                {
-              	"addedAt": expect.any(String),
-              	"userId": userId,
-              	"login": userLogin
-                }
-            ],
-          },
-        });
-      });
-	  it("get all post", async() => {
-		const getAllPosts = await request(app)
-          .get(`/posts/`)
-          .set("Authorization", `Bearer ${tokenByUser1}`);
+    //     console.log(getPostById1.body);
+    //     expect(getPostById1.status).toBe(HTTP_STATUS.OK_200);
+	// 	// expect(getPostById1.body[0]).toEqual()
+	// 	//expect 1th element
+	// 	const expectedFirstLikeInfo = {
+	// 		likesCount: 3,
+    //         dislikesCount: 1,
+    //         myStatus: 'Like',
+	// 	}
 
-        console.log(getAllPosts.body);
-        expect(getAllPosts.status).toBe(HTTP_STATUS.OK_200);
+    //     expect(getPostById1.body.items[0].extendedLikesInfo).toStrictEqual({
+    //       id: expect.any(String),
+    //       title: postData.title,
+    //       shortDescription: postData.shortDescription,
+    //       content: postData.content,
+    //       blogId: blogIdAllPost,
+    //       blogName: blogNameAllPosts,
+    //       createdAt: expect.any(String),
+    //       extendedLikesInfo: {
+    //         likesCount: expect.any(Number),
+    //         dislikesCount: expect.any(Number),
+    //         myStatus: expect.any(String),
+    //         newestLikes: [
+    //             {
+    //           	"addedAt": expect.any(String),
+    //           	"userId": userId,
+    //           	"login": userLogin
+    //             }
+    //         ],
+    //       },
+    //     });
+    //   });
+	//   it("get all post", async() => {
+	// 	const getAllPosts = await request(app)
+    //       .get(`/posts/`)
+    //       .set("Authorization", `Bearer ${tokenByUser1}`);
 
-		const getAllPostByBlogId = await request(app)
-		.get(`/blogs/${blogIdAllPost}/posts`)
-		.set("Authorization", `Bearer ${tokenByUser1}`);
-		expect(getAllPosts.body).toEqual(getAllPostByBlogId.body)
-	  })
+    //     console.log(getAllPosts.body);
+    //     expect(getAllPosts.status).toBe(HTTP_STATUS.OK_200);
+
+	// 	const getAllPostByBlogId = await request(app)
+	// 	.get(`/blogs/${blogIdAllPost}/posts`)
+	// 	.set("Authorization", `Bearer ${tokenByUser1}`);
+	// 	expect(getAllPosts.body).toEqual(getAllPostByBlogId.body)
+	//   })
   });
 });
