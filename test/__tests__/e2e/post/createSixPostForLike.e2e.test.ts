@@ -191,23 +191,6 @@ describe("/blogs", () => {
 			password: user.password,
 		  });
 
-		/***************************** create user6 ********************************************/
-
-		// const createUser6 = await request(server)
-        // .post(`/users`)
-        // .auth("admin", "qwerty")
-        // .send({
-		// 	login: "1Mickle",
-		// 	password: "1qwerty",
-		// 	email: "1mpara7473@gmail.com",
-		//   });
-
-		//   const createAccessToken6 = await request(server)
-		//   .post("/auth/login")
-		//   .send({
-		// 	loginOrEmail: user.login,
-		// 	password: user.password,
-		//   });
 
 		/***************************** create blog ********************************************/
 
@@ -545,18 +528,51 @@ describe("/blogs", () => {
     //       },
     //     });
     //   });
-	//   it("get all post", async() => {
-	// 	const getAllPosts = await request(app)
-    //       .get(`/posts/`)
-    //       .set("Authorization", `Bearer ${tokenByUser1}`);
 
-    //     console.log(getAllPosts.body);
-    //     expect(getAllPosts.status).toBe(HTTP_STATUS.OK_200);
+	/**************************** get all posts **************************/
 
-	// 	const getAllPostByBlogId = await request(app)
-	// 	.get(`/blogs/${blogIdAllPost}/posts`)
-	// 	.set("Authorization", `Bearer ${tokenByUser1}`);
-	// 	expect(getAllPosts.body).toEqual(getAllPostByBlogId.body)
-	//   })
+	  it("get all post", async() => {
+		const getAllPostsByBlogId = await request(server)
+          .get(`/sa/blogs/${blogIdAllPost}/posts`)
+		  .set("admin", "querty")
+        //   .set("Authorization", `Bearer ${tokenByUser1}`);
+
+        console.log(getAllPostsByBlogId.body);
+        expect(getAllPostsByBlogId.status).toBe(HTTP_STATUS.OK_200);
+		expect(getAllPostsByBlogId.body).toEqual({
+			          pagesCount: 1,
+			          page: 1,
+			          pageSize: 10,
+			          totalCount: 1,
+			          items: [
+			            {
+			              id: expect.any(String),
+			              title: expect.any(String),
+			              shortDescription: expect.any(String),
+			              content: expect.any(String),
+			              blogId: blogIdAllPost,
+			              blogName: blogNameAllPosts,
+			              createdAt: expect.any(String),
+						  "extendedLikesInfo": {
+							"likesCount": 0,
+							"dislikesCount": 0,
+							"myStatus": "None",
+							"newestLikes": [
+							//   {
+							// 	"addedAt": expect.any(String),
+							// 	"userId": userId,
+							// 	"login": login
+							//   }
+							]
+						  }
+			            },
+			          ],
+			        })
+
+		// const getAllPostByBlogId = await request(app)
+		// .get(`/blogs/${blogIdAllPost}/posts`)
+		// .set("Authorization", `Bearer ${tokenByUser1}`);
+		// expect(getAllPosts.body).toEqual(getAllPostByBlogId.body)
+	  })
   });
 });

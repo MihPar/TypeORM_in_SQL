@@ -65,7 +65,6 @@ export class CommentQueryRepository {
 	const commentsByPostId = queryFindComment[0]
 	const commentId = queryFindComment[0][0].id
 
-	// console.log(queryFindComment[1])
 
 	// const query = `
 	// 	select *

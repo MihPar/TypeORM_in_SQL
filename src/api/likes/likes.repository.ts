@@ -41,7 +41,6 @@ export class LikesRepository {
 			// 	postId: postId,
 			// 	userId: userId
 			// }})
-// console.log("findLikes: ", findLikes)
 			if(!findLikes) return null
 		return findLikes
 	}
