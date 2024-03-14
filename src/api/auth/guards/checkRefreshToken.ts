@@ -1,5 +1,3 @@
-// import dotenv from 'dotenv';
-// dotenv.config();
 import { JwtService } from '@nestjs/jwt';
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
