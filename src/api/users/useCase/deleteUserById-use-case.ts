@@ -1,18 +1,18 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UsersRepository } from '../users.repository';
 
-export class DeleteUserByIdCommnad {
+export class DeleteUserByIdCommand {
   constructor(public userId: string) {}
 }
-@CommandHandler(DeleteUserByIdCommnad)
+@CommandHandler(DeleteUserByIdCommand)
 export class DeleteUserByIdUseCase
-  implements ICommandHandler<DeleteUserByIdCommnad>
+  implements ICommandHandler<DeleteUserByIdCommand>
 {
   constructor(protected readonly usersRepository: UsersRepository) {}
-  async execute(command: DeleteUserByIdCommnad): Promise<boolean> {
-    const deletedUser: boolean = await this.usersRepository.deleteById(
+  async execute(command: DeleteUserByIdCommand): Promise<boolean> {
+    const isDeletedUser: boolean = await this.usersRepository.deleteById(
       command.userId,
     );
-    return deletedUser;
+    return isDeletedUser;
   }
 }

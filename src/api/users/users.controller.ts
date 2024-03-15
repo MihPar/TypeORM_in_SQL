@@ -1,14 +1,15 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Query, UseFilters, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Query, UseFilters, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthBasic } from './gards/basic.auth';
-import { DeleteUserByIdCommnad } from './useCase/deleteUserById-use-case';
+import { DeleteUserByIdCommand } from './useCase/deleteUserById-use-case';
 import { InputDataReqClass } from '../auth/dto/auth.class.pipe';
 import { RegistrationCommand } from './useCase/registration-use-case';
 import { CreateNewUserCommand } from './useCase/createNewUser-use-case';
-import { dtoType } from './user.class';
+import { DtoType } from './user.class';
 import { SkipThrottle } from '@nestjs/throttler';
 import { UsersQueryRepository } from './users.queryRepository';
 import { HttpExceptionFilter } from '../../infrastructura/exceptionFilters.ts/exceptionFilter';
+import { UserViewType } from './user.type';
 
 // @SkipThrottle()
 @UseGuards(AuthBasic)
@@ -20,7 +21,7 @@ export class UsersController {
 	) {}
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getAllUsers(
     @Query()
     query: {
@@ -51,23 +52,23 @@ export class UsersController {
 	return users
   }
 
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseFilters(new HttpExceptionFilter())
   async createUser(@Body() inputDataReq: InputDataReqClass) {
 	const command = new CreateNewUserCommand(inputDataReq)
-	const createUser = await this.commandBus.execute(command)
-	if(!createUser) throw new BadRequestException("400")
-	return createUser
+	const createdUser = await this.commandBus.execute<CreateNewUserCommand, UserViewType | null>(command)
+	if(!createdUser) throw new BadRequestException("400")
+	return createdUser
   }
 
   @Delete(':id')
-  @HttpCode(204)
-  async deleteUserById(@Param() dto: dtoType) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteUserById(@Param() dto: DtoType) {
 	if(!dto.id) throw new NotFoundException("Blogs by id not found 404")
-	const command = new DeleteUserByIdCommnad(dto.id)
-	const deleteUserById = await this.commandBus.execute(command)
-	if (!deleteUserById) throw new NotFoundException("Blogs by id not found 404")
-	return deleteUserById
+	const command = new DeleteUserByIdCommand(dto.id)
+	const isDeletedUser = await this.commandBus.execute<DeleteUserByIdCommand, boolean>(command)
+	if (!isDeletedUser) throw new NotFoundException("Blogs by id not found 404")
+	return isDeletedUser
   }
 }

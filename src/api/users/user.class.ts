@@ -41,7 +41,7 @@ export class InputModelClassCreateBody {
   email: string;
 }
 
-export class dtoType {
+export class DtoType {
 	@IsString()
 	@Trim()
 	@IsUUID()

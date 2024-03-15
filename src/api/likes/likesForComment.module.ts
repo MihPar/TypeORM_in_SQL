@@ -1,5 +1,5 @@
 import { LikeForComment } from './entity/likesForComment.entity';
-import { Module, Post } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../users/entities/user.entity";
 import { Device } from "../security-devices/entities/security-device.entity";

@@ -11,7 +11,7 @@ import { RegistrationEmailResendingUseCase } from './useCase/registrationEmailRe
 import { Device } from '../security-devices/entities/security-device.entity';
 import { UsersRepository } from './users.repository';
 import { UsersQueryRepository } from './users.queryRepository';
-import { CommandBus, CqrsModule } from '@nestjs/cqrs';
+import { CqrsModule } from '@nestjs/cqrs';
 import { PayloadAdapter } from '../auth/adapter/payload.adapter';
 import { GenerateHashAdapter } from '../auth/adapter/generateHashAdapter';
 import { JwtService } from '@nestjs/jwt';

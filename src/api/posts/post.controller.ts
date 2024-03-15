@@ -5,7 +5,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseArrayPipe,
   Post,
   Put,
   Query,
@@ -24,9 +23,8 @@ import { CommentQueryRepository } from '../comment/comment.queryRepository';
 import { InputModelLikeStatusClass } from '../comment/dto/comment.class-pipe';
 import { User } from '../users/entities/user.entity';
 import { UpdateLikeStatusCommand } from './use-case/updateLikeStatus-use-case';
-import { CommentViewModel, CommentViewType } from '../comment/comment.type';
+import { CommentViewModel } from '../comment/comment.type';
 import { CreateNewCommentByPostIdCommnad } from '../comment/use-case/createNewCommentByPotsId-use-case';
-import { Posts } from './entity/entity.posts';
 
 // @SkipThrottle()
 @Controller('posts')

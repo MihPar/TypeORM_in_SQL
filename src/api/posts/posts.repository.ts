@@ -17,21 +17,6 @@ export class PostsRepository {
   async createNewPosts(newPost: Posts) {
     try {
 		const createNewPost = await this.postsRepository.save(newPost)
-		// 	.createQueryBuilder()
-		// 	.insert()
-		// 	.into(Posts)
-		// 	.values([
-		// 		{
-		// 		blogId: newPost.blogId,
-		// 		title: newPost.title,
-		// 		shortDescription: newPost.shortDescription,
-		// 		content: newPost.content,
-		// 		blogName: newPost.blogName,
-		// 		likesCount: newPost.likesCount,
-		// 		dislikesCount: newPost.dislikesCount
-		// 	}
-		// ])
-		// 	.execute()
       return createNewPost;
     } catch (error) {
       console.log(error, "error in create post");
@@ -91,31 +76,13 @@ export class PostsRepository {
     if (likeStatus === LikeStatusEnum.None) {
 		return true
     } else if (likeStatus === LikeStatusEnum.Dislike) {
-		// const getCount = await this.postsRepository
-		// 	.createQueryBuilder()
-		// 	.select()
-		// 	.where(`id = :postId`, {postId})
-		// 	.getOne()
-
 		const updateLikesCountQuery = await this.postsRepository
-			// .createQueryBuilder()
-			// .update()
-			// .set({dislikesCount: getCount.dislikesCount++})
 			.increment({id: postId}, "dislikesCount", 1)
 
 	  if(!updateLikesCountQuery) return false
 	  return  true
     } else if(likeStatus === LikeStatusEnum.Like) {
-		// const getCount = await this.postsRepository
-		// 	.createQueryBuilder()
-		// 	.select()
-		// 	.where(`id = :postId`, {postId})
-		// 	.getOne()
-			
 		const updateLikesCountQuery = await this.postsRepository
-			// .createQueryBuilder()
-			// .update()
-			// .set({dislikesCount: getCount.likesCount++})
 			.increment({id: postId}, "likesCount", 1)
 
 	if(!updateLikesCountQuery) return false

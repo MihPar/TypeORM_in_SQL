@@ -37,10 +37,6 @@ export class LikesRepository {
 			.select()
 			.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
 			.getOne()
-			// .findOne({where: {
-			// 	postId: postId,
-			// 	userId: userId
-			// }})
 			if(!findLikes) return null
 		return findLikes
 	}
@@ -53,18 +49,10 @@ export class LikesRepository {
 		newLikeForPost.login = login
 
 		const saveLikeForPost = await this.likeForPostRepository.save(newLikeForPost)
-		// console.log({newLikeForPost: newLikeForPost})
-		// const getPost = await this.likeForPostRepository
-		// 	.findOne({where: {
-		// 		postId: postId,
-		// 		userId: userId
-		// 	}})
-		// 	console.log("getPost: ", getPost)
 		return
 	}
 
 	async updateLikeStatusForPost(postId: string, likeStatus: string, userId: string) {
-		// const addedAt = new Date().toISOString()
 		const result = await this.likeForPostRepository
 			// .update({postId, userId}, {myStatus: likeStatus, addedAt})
 			.createQueryBuilder()
@@ -73,29 +61,15 @@ export class LikesRepository {
 			.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
 			.execute()
 
-			// const getLikeStatus = await this.likeForPostRepository
-			// 	.createQueryBuilder()
-			// 	.select()
-			// 	.where(`"postId" = :postId AND "userId" = :userId`, {postId, userId})
-			// 	.getOne()
-		
-			// console.log({getLikeStatus: getLikeStatus})
-
 		return true
 	}
 
 	async findLikeByCommentIdBy(commentId: string, userId: string): Promise<LikeForComment | null>  {
-		// const findLikeByUserAndByCommentId = await this.likeForCommentRepository
-		// 	.createQueryBuilder()
-		// 	.select()
-		// 	.where(`"id" = :id AND "userId": userId`, {id: commentId, userId})
-		// 	.getOne()
-
 		const findLikeByUserAndByCommentId = await this.likeForCommentRepository
-			.findOne({where: {
-				id: commentId,
-				userId
-			}})
+			.createQueryBuilder()
+			.select()
+			.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
+			.getOne()
 
 		if(!findLikeByUserAndByCommentId) return null
 		return findLikeByUserAndByCommentId
@@ -105,12 +79,14 @@ export class LikesRepository {
 		const newDate = new Date()
 
 		/** firstCase **/
-		// const newLikeForComment = new LikeForComment()
-		// newLikeForComment.commentId = commentId
-		// newLikeForComment.userId = userId
-		// newLikeForComment.myStatus = likeStatus
-		// newLikeForComment.addedAt = new Date()
-		// const createLikeStatus = await this.likeForCommentRepository.save(newLikeForComment)
+		const newLikeForComment = new LikeForComment()
+		newLikeForComment.commentId = commentId
+		newLikeForComment.userId = userId
+		newLikeForComment.myStatus = likeStatus
+		newLikeForComment.addedAt = new Date()
+		const createLikeStatus = await this.likeForCommentRepository.save(newLikeForComment)
+
+		// console.log("newLikeForComment: ", newLikeForComment)
 
 		/** secondCase **/
 		// const createLikeStatus = await this.likeForCommentRepository
@@ -122,30 +98,29 @@ export class LikesRepository {
 		// 	})
 
 		/** thirdCase **/
-		const createLikeStatus = await this.likeForCommentRepository
-			.createQueryBuilder()
-			.insert()
-			.values([{
-				commentId,
-				userId,
-				myStatus: likeStatus,
-				addedAt: newDate
-			}])
-			.execute()
-		// return createLikeStatus
-		return true
+		// const createLikeStatus = await this.likeForCommentRepository
+		// 	.createQueryBuilder()
+		// 	.insert()
+		// 	.values([{
+		// 		commentId,
+		// 		userId,
+		// 		myStatus: likeStatus,
+		// 		addedAt: newDate
+		// 	}])
+		// 	.execute()
+		return
 	}
 
 	async updateLikeStatusForComment(commentId: string, userId: string, likeStatus: LikeStatusEnum){
 		const createAddedAt = new Date().toISOString()
-		const updateLikeStatus = await this.likeForCommentRepository
-			.update({commentId, userId}, {myStatus: likeStatus, addedAt: createAddedAt})
 		// const updateLikeStatus = await this.likeForCommentRepository
-		// 	.createQueryBuilder()
-		// 	.update()
-		// 	.set({myStatus: likeStatus, addedAt: createAddedAt})
-		// 	.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
-		// 	.execute()
+			// .update({commentId, userId}, {myStatus: likeStatus, addedAt: createAddedAt})
+		const updateLikeStatus = await this.likeForCommentRepository
+			.createQueryBuilder()
+			.update()
+			.set({myStatus: likeStatus, addedAt: createAddedAt})
+			.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
+			.execute()
 
 		return updateLikeStatus
 	}

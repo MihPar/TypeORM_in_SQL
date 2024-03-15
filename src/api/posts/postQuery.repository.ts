@@ -50,7 +50,6 @@ export class PostsQueryRepository {
 			
 			myStatus = likeQuery ? (likeQuery?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
-		// console.log(Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus))
     return findPostById ? Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus) : null
 
 	} catch(err) {
@@ -77,8 +76,6 @@ export class PostsQueryRepository {
 	const allPosts = getPosts[0]
 	const postId = allPosts[0].id
 	const totalCount = getPosts[1]
-
-	// console.log("postId: ", postId)
 	const pagesCount: number = Math.ceil(+totalCount / +pageSize);
     let result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,
@@ -102,16 +99,6 @@ export class PostsQueryRepository {
 				order: {addedAt: 'DESC'},
 				take: 3,
     		});
-			// console.log({newestLikesQuery: newestLikesQuery})
-			// .createQueryBuilder("lfp")
-			// .select()
-			// .leftJoinAndSelect('lfp', 'u', `"lfp.userId" = :userId`, {userId})
-			// .where(`"postId" = :postId AND "myStatus" = :myStatus`, {postId, myStatus: "Like"})
-			// .orderBy(`"addedAt"`, 'DESC')
-			// .limit(3)
-			// .getMany()
-			// console.log(Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus))
-
           return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus);
         })
       ),
@@ -138,8 +125,6 @@ export class PostsQueryRepository {
 
 	const findPostByBlogId = getAllPostWithPagin[0]
 	const totalCount = getAllPostWithPagin[1]
-	// const postId = findPostByBlogId[0].id
-
 	const pagesCount: number = Math.ceil(totalCount / +pageSize);
     const result: PaginationType<PostsViewModel> = {
       pagesCount: pagesCount,

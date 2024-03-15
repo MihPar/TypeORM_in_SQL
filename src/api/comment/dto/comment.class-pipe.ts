@@ -22,7 +22,6 @@ export class updateLikeDto{
 
   export class inputModelCommentId {
 	@IsUUID()
-	// @IsNumber()
 	commentId: string
   }
 
@@ -37,6 +36,5 @@ export class updateLikeDto{
 
   export class inputModelId {
 	@IsUUID()
-	// @IsNumber()
 	id: string
   }

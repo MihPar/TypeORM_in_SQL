@@ -10,7 +10,7 @@ import { Comments } from "../entity/comment.entity";
 export class UpdateLikestatusCommand {
 	constructor(
 		public status: InputModelLikeStatusClass,
-		public id: inputModelCommentId,
+		public id: string,
 		public userId: string
 	) {}
 }
@@ -25,37 +25,44 @@ export class UpdateLikestatusForCommentUseCase implements ICommandHandler<Update
 	) {}
 	async execute(command: UpdateLikestatusCommand): Promise<boolean> {
 		const findCommentById: Comments | null =
-      await this.commentQueryRepository.findCommentByCommentId(command.id.commentId, command.userId);
+      await this.commentQueryRepository.findCommentByCommentId(command.id, command.userId);
     if (!findCommentById) throw new NotFoundException('404');
-		const findLike = await this.likesRepository.findLikeByCommentIdBy(command.id.commentId, command.userId)
+		const findLike = await this.likesRepository.findLikeByCommentIdBy(command.id, command.userId)
+		// console.log("findLike: ", findLike)
 	if(!findLike) {
-		await this.likesRepository.saveLikeForComment(command.id.commentId, command.userId, command.status.likeStatus)
-		const resultCheckLikeOrDislike = await this.commentRepositoriy.increase(command.id.commentId, command.status.likeStatus)
+		await this.likesRepository.saveLikeForComment(command.id, command.userId, command.status.likeStatus)
+		const resultCheckLikeOrDislike = await this.commentRepositoriy.increase(command.id, command.status.likeStatus)
 		return true
 	} 
 	
-	if((findLike.myStatus === 'Dislike' || findLike.myStatus === 'Like') && command.status.likeStatus === 'None'){
-		await this.likesRepository.updateLikeStatusForComment(command.id.commentId, command.userId, command.status.likeStatus)
-		const resultCheckListOrDislike = await this.commentRepositoriy.decrease(command.id.commentId, findLike.myStatus)
+	if(findLike.myStatus === 'Dislike' && command.status.likeStatus === 'None') {
+		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
+		const resultCheckListOrDislike = await this.commentRepositoriy.decreaseDislike(command.id, findLike.myStatus)
+		return true
+	}
+
+	if(findLike.myStatus === 'Like' && command.status.likeStatus === "None") {
+		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
+		const resultCheckListOrDislike = await this.commentRepositoriy.decreaseLike(command.id, findLike.myStatus)
 		return true
 	}
 
 	if(findLike.myStatus === 'None' && (command.status.likeStatus === 'Dislike' || command.status.likeStatus === 'Like')) {
-		await this.likesRepository.updateLikeStatusForComment(command.id.commentId, command.userId, command.status.likeStatus)
-		const resultCheckListOrDislike = await this.commentRepositoriy.increase(command.id.commentId, command.status.likeStatus)
+		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
+		const resultCheckListOrDislike = await this.commentRepositoriy.increase(command.id, command.status.likeStatus)
 		return true
 	}
 
 	if(findLike.myStatus === 'Dislike' && command.status.likeStatus === 'Like') {
-		await this.likesRepository.updateLikeStatusForComment(command.id.commentId, command.userId, command.status.likeStatus)
-		const changeDislikeOnLike = await this.commentRepositoriy.increase(command.id.commentId, command.status.likeStatus)
-		const changeLikeOnDislike = await this.commentRepositoriy.decrease(command.id.commentId, findLike.myStatus)
+		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
+		const increaseLikeCount = await this.commentRepositoriy.increaseLike(command.id, command.status.likeStatus)
+		const decreaseDislikeCount = await this.commentRepositoriy.decreaseDislike(command.id, findLike.myStatus)
 		return true
 	}
 	if(findLike.myStatus === 'Like' && command.status.likeStatus === 'Dislike') {
-		await this.likesRepository.updateLikeStatusForComment(command.id.commentId, command.userId, command.status.likeStatus)
-		const changeLikeOnDislike = await this.commentRepositoriy.decrease(command.id.commentId, findLike.myStatus)
-		const changeDislikeOnLike = await this.commentRepositoriy.increase(command.id.commentId, command.status.likeStatus)
+		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
+		const decreaseLikeCount = await this.commentRepositoriy.decreaseLike(command.id, findLike.myStatus)
+		const increaseDislikeCount = await this.commentRepositoriy.increaseDislike(command.id, command.status.likeStatus)
 		return true
 	}
 	return true

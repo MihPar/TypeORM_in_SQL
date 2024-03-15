@@ -98,7 +98,7 @@ export class UsersRepository {
     return true;
   }
 
-  async deleteById(userId: string) {
+  async deleteById(userId: string): Promise<boolean> {
 	const findUserById: User | null = await this.userRepository
 		.createQueryBuilder("user")
 		.select(["user"])

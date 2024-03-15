@@ -31,7 +31,6 @@ describe("/blogs", () => {
 	  }).compile();
   
 	  app = moduleFixture.createNestApplication();
-	  appSettings(app);
   
 	  await app.init();
 	  server = app.getHttpServer();
@@ -85,6 +84,7 @@ describe("/blogs", () => {
     let userLogin: string;
     let userId: string;
 	let blogIdAllPost: string
+
     it("create new user, create blog, create post => return 201 status code", async () => {
 
 		/***************************** create user1 ********************************************/
@@ -108,7 +108,9 @@ describe("/blogs", () => {
         email: user.email,
         createdAt: expect.any(String),
       });
-      const createAccessToken = await request(server).post("/auth/login").send({
+      const createAccessToken = await request(server)
+	  .post("/auth/login")
+	  .send({
         loginOrEmail: user.login,
         password: user.password,
       });

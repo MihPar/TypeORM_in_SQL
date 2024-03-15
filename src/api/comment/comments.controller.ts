@@ -27,11 +27,11 @@ export class CommentsController {
   @UseGuards(CheckRefreshTokenForComments)
   async updateByCommentIdLikeStatus(
     @Body() status: InputModelLikeStatusClass,
-    @Param() id: inputModelCommentId,
+    @Param() dto: inputModelCommentId,
     @UserDecorator() user: User,
     @UserIdDecorator() userId: string,
   ) {
-	const command = new UpdateLikestatusCommand(status, id, userId)
+	const command = new UpdateLikestatusCommand(status, dto.commentId, userId)
 	const updateLikeStatus = await this.commandBus.execute(command)
 	if (!updateLikeStatus) throw new NotFoundException('404')
 	return 
@@ -42,11 +42,11 @@ export class CommentsController {
   @UseGuards(CheckRefreshTokenForComments)
   async updataCommetById(
 	@Param() id: inputModelCommentId, 
-	@Body(new ValidationPipe({ validateCustomDecorators: true })) dto: InputModelContent,
+	@Body() dto: InputModelContent,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string,
 	) {
-    const isExistComment: Comments | null = await this.commentQueryRepository.findCommentByCommentId(id.commentId, userId);
+    const isExistComment: Comments | null = await this.commentQueryRepository.findCommentByCommentId(id.commentId);
     if (!isExistComment) throw new NotFoundException('404');
     if (userId !== isExistComment.userId) { throw new ForbiddenException("403")}
 	const command = new UpdateCommentByCommentIdCommand(id.commentId, dto)
@@ -82,6 +82,7 @@ export class CommentsController {
     const getCommentById: CommentViewModel | null =
       await this.commentQueryRepository.findCommentById(dto.id, userId);
     if (!getCommentById) throw new NotFoundException('Blogs by id not found');
+	console.log("getCommentById: ", getCommentById)
     return getCommentById;
   }
 }
