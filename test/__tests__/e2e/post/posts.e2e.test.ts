@@ -5,7 +5,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { appSettings } from '../../../../src/setting';
 import { AppModule } from '../../../../src/app.module';
-import { PostsViewModel } from '../../../../src/api/posts/posts.type';
+import { PostsViewModel } from '../../../../src/posts/posts.type';
 dotenv.config();
 
 export function createErrorsMessageTest(fields: string[]) {

@@ -1,10 +1,10 @@
 import request from 'supertest';
-import { InputModelClassCreateBody } from '../api/users/user.class';
-import { Posts } from '../api/posts/entity/entity.posts';
-import { LikeStatusEnum } from '../api/likes/likes.emun';
-import { PostsViewModel } from '../api/posts/posts.type';
-import { CommentViewModel } from '../api/comment/comment.type';
-import { Comments } from '../api/comment/entity/comment.entity';
+import { InputModelClassCreateBody } from '../users/user.class';
+import { Posts } from '../posts/entity/entity.posts';
+import { LikeStatusEnum } from '../likes/likes.emun';
+import { PostsViewModel } from '../posts/posts.type';
+import { CommentViewModel } from '../comment/comment.type';
+import { Comments } from '../comment/entity/comment.entity';
 
 export const commentDBToView = (
   item: Comments, 

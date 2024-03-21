@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { HTTP_STATUS } from "../../../src/utils/utils";
-import { CommentViewModel } from "../../../src/api/comment/comment.type";
+import { CommentViewModel } from "../../../src/comment/comment.type";
 import { AppModule } from "../../../src/app.module";
 import { appSettings } from "../../../src/setting";
 dotenv.config();

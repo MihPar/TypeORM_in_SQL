@@ -4,7 +4,7 @@ import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "../../../../src/app.module";
 import { appSettings } from "../../../../src/setting";
-import { UserViewType } from "../../../../src/api/users/user.type";
+import { UserViewType } from "../../../../src/users/user.type";
 import { HTTP_STATUS } from "src/utils/utils";
 dotenv.config();
 

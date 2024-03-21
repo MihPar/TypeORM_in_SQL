@@ -2,9 +2,9 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { INestApplication } from "@nestjs/common";
-import { SecurityDevicesModule } from "../../src/api/security-devices/security-devices.module";
-import { AuthModule } from "../../src/api/auth/auth.module";
-import { UsersModule } from "../../src/api/users/users.module";
+import { SecurityDevicesModule } from "../../src/security-devices/security-devices.module";
+import { AuthModule } from "../../src/auth/auth.module";
+import { UsersModule } from "../../src/users/users.module";
 import { DatabaseConfig } from '../../src/infrastructura/config/db.config';
 let app: INestApplication;
 

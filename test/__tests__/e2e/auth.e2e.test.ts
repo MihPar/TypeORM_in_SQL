@@ -2,10 +2,10 @@ import request from "supertest";
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 import { HttpStatus, INestApplication } from "@nestjs/common";
-import { UserViewType } from "../../../src/api/users/user.type";
+import { UserViewType } from "../../../src/users/user.type";
 import { Test, TestingModule } from "@nestjs/testing";
 import { appSettings } from "../../../src/setting";
-import { NewPasswordUseCase } from "../../../src/api/auth/useCase.ts/createNewPassword-use-case";
+import { NewPasswordUseCase } from "../../../src/auth/useCase.ts/createNewPassword-use-case";
 import { AppModule } from "../../../src/app.module";
 import { aDescribe } from "src/helpers/helpers";
 

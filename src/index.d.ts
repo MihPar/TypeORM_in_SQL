@@ -1,4 +1,4 @@
-import { UserClass } from "./api/users/user.class";
+import { UserClass } from "./users/user.class";
 
 declare global {
 	namespace Express {

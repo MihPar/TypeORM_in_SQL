@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { CreateUserDto } from '../../src/api/users/dto/create-user.dto';
+import { CreateUserDto } from '../../src/users/dto/create-user.dto';
 import { getAppAndCleanDB } from './test-utils';
 import request from 'supertest';
   

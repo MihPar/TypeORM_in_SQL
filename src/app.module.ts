@@ -1,20 +1,21 @@
 import databaseConf, { DatabaseConfig } from './infrastructura/config/db.config';
 import { Module } from '@nestjs/common';
-import { AuthModule } from './api/auth/auth.module';
-import { DeletedModule } from './api/deleted/deleteAll.module';
+import { AuthModule } from './auth/auth.module';
+import { DeletedModule } from './deleted/deleteAll.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SecurityDevicesModule } from './api/security-devices/security-devices.module';
-import { UsersModule } from './api/users/users.module';
+import { SecurityDevicesModule } from './security-devices/security-devices.module';
+import { UsersModule } from './users/users.module';
 import { ApiConfigService } from './infrastructura/config/configService';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { PostsModule } from './api/posts/posts.module';
-import { BlogsModule } from './api/blogs/blogs.module';
-import { LikeForPostModule } from './api/likes/likesForPost.module';
-import { LikeForCommentModue } from './api/likes/likesForComment.module';
-import { BlogsForSAModule } from './api/blogsForSA/blogsForSA.module';
-import { CommentsModule } from './api/comment/comments.module';
-import { QuestionModule } from './api/question/question.module';
+import { PostsModule } from './posts/posts.module';
+import { BlogsModule } from './blogs/blogs.module';
+import { LikeForPostModule } from './likes/likesForPost.module';
+import { LikeForCommentModue } from './likes/likesForComment.module';
+import { BlogsForSAModule } from './blogsForSA/blogsForSA.module';
+import { CommentsModule } from './comment/comments.module';
+import { QuestionModule } from './question/question.module';
+import { PairQuizGameModule } from './pairQuizGame/pair-quiz-game.module';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { QuestionModule } from './api/question/question.module';
 	LikeForCommentModue,
 	BlogsForSAModule,
 	CommentsModule,
-	QuestionModule
+	QuestionModule,
+	PairQuizGameModule
   ]
 })
 export class AppModule {}
