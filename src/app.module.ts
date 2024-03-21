@@ -27,12 +27,8 @@ import { CommentsModule } from './api/comment/comments.module';
 	// 	limit: 5,
 	//   }]),
 	TypeOrmModule.forRootAsync({
-		useFactory(
-			config: ConfigService<DatabaseConfig>,
-			) {
-			return config.get('database', {
-				infer: true
-			})
+		useFactory(config: ConfigService<DatabaseConfig>) {
+			return config.get('database', {infer: true})
 		},
 		inject: [
 			ConfigService,

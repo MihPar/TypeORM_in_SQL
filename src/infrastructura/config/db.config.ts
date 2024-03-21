@@ -13,6 +13,6 @@ export default (): DatabaseConfig => ({
     autoLoadEntities: true,
     // namingStrategy: new PluralNamingStrategy(),
     // logging: ['query'],
-    synchronize: true,
+    synchronize: false,
   },
 });

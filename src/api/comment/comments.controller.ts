@@ -75,12 +75,12 @@ export class CommentsController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getCommentById(
-    @Param() dto: inputModelId,
+    @Param() Dto: inputModelId,
     @UserDecorator() user: User,
     @UserIdDecorator() userId: string | null,
   ) {
     const getCommentById: CommentViewModel | null =
-      await this.commentQueryRepository.findCommentById(dto.id, userId);
+      await this.commentQueryRepository.findCommentById(Dto.id, userId);
     if (!getCommentById) throw new NotFoundException('Blogs by id not found');
 	console.log("getCommentById: ", getCommentById)
     return getCommentById;
