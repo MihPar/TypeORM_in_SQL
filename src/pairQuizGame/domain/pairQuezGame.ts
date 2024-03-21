@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { PendingSecondPlayer } from "../infrastructure/enum/enumPendingPlayer";
 
 @Entity()
 export class PairQuizGame {
@@ -12,9 +13,15 @@ export class PairQuizGame {
 	secondPlayerId: string
 
 	@Column()
-	status: 
+	status: PendingSecondPlayer
+
+	@CreateDateColumn()
+	pairCreatedDate: Date
+
+	@CreateDateColumn()
+	startGemeDate: Date
+
+	@CreateDateColumn()
+	finishGameDate: Date
 }
 
-export enum PendingSecondPlayer {
-	PendingSecondPlayer = "PendingSecondPlayer"
-}

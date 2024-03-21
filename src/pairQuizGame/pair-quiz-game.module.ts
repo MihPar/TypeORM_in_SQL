@@ -3,9 +3,10 @@ import { PairQuizGameService } from './application/pair-quiz-game.service';
 import { PairQuizGameController } from './api/pair-quiz-game.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
+import { PairQuizGame } from './domain/pairQuezGame';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([PairQuizGame]), CqrsModule],
   controllers: [PairQuizGameController],
   providers: [PairQuizGameService],
 })

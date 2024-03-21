@@ -16,6 +16,7 @@ import { BlogsForSAModule } from './blogsForSA/blogsForSA.module';
 import { CommentsModule } from './comment/comments.module';
 import { QuestionModule } from './question/question.module';
 import { PairQuizGameModule } from './pairQuizGame/pair-quiz-game.module';
+import { PairQuizGameProgressModule } from './pairQuizGameProgress/pair-quiz-game-progress.module';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { PairQuizGameModule } from './pairQuizGame/pair-quiz-game.module';
 	BlogsForSAModule,
 	CommentsModule,
 	QuestionModule,
-	PairQuizGameModule
+	PairQuizGameModule,
+	PairQuizGameProgressModule
   ]
 })
 export class AppModule {}
