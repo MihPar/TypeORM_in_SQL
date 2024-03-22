@@ -4,10 +4,14 @@ import { PairQuizGameController } from './api/pair-quiz-game.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { PairQuizGame } from './domain/pairQuezGame';
+import { BearerTokenPairQuizGame } from './guards/bearerTokenPairQuizGame';
+
+const guards = [BearerTokenPairQuizGame]
+const services = [PairQuizGameService]
 
 @Module({
   imports: [TypeOrmModule.forFeature([PairQuizGame]), CqrsModule],
   controllers: [PairQuizGameController],
-  providers: [PairQuizGameService],
+  providers: [...services, ...guards],
 })
 export class PairQuizGameModule {}

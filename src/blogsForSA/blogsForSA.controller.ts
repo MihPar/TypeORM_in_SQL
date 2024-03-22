@@ -1,5 +1,5 @@
 import { CommandBus } from '@nestjs/cqrs';
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { bodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
 import {BlogsRepositoryForSA } from "./blogsForSA.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
@@ -103,7 +103,7 @@ export class BlogsControllerForSA {
     return isDeleted;
   }
 
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   @Post(':blogId/posts')
   @UseGuards(CheckRefreshTokenForSA)
   async createPostByBlogId(

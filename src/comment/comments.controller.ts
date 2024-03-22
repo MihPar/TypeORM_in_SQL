@@ -7,7 +7,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { UserDecorator, UserIdDecorator } from '../users/infrastructure/decorators/decorator.user';
 import { CommentClass } from './comment.class';
 import { CheckRefreshTokenForGet } from '../blogs/use-case/bearer.authGetComment';
-import { CheckRefreshTokenForComments } from './use-case/bearer.authForComments';
+import { CheckRefreshTokenForComments } from './guards/bearer.authForComments';
 import { User } from '../users/entities/user.entity';
 import { UpdateLikestatusCommand } from './use-case/updateLikeStatus-use-case';
 import { Comments } from './entity/comment.entity';

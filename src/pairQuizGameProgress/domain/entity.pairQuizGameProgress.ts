@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { PendingSecondPlayer } from "../../pairQuizGame/infrastructure/enum/enumPendingPlayer";
+import { AnswerStatus } from "../../pairQuizGame/infrastructure/enum/enumPendingPlayer";
 
 @Entity()
 export class PairQuizGameProgress {
@@ -22,7 +22,7 @@ export class PairQuizGameProgress {
 	addedAt: Date
 
 	@Column()
-	answerStatus: PendingSecondPlayer
+	answerStatus: AnswerStatus
 
 	@Column({default: 0})
 	score: number

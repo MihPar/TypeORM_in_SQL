@@ -11,7 +11,7 @@ import { Comments } from "./entity/comment.entity";
 import { CommentsController } from "./comments.controller";
 import { CommentQueryRepository } from "./comment.queryRepository";
 import { CommentRepository } from "./comment.repository";
-import { CheckRefreshTokenForComments } from "./use-case/bearer.authForComments";
+import { CheckRefreshTokenForComments } from "./guards/bearer.authForComments";
 import { UpdateLikestatusForCommentUseCase } from "./use-case/updateLikeStatus-use-case";
 import { LikesRepository } from "../likes/likes.repository";
 import { CheckRefreshTokenForGet } from "../posts/guards/bearer.authGetComment";

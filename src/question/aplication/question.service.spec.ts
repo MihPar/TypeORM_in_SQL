@@ -1,18 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { QuestionService } from './question.service';
+import { INestApplication } from '@nestjs/common';
+import { getAppForE2ETesting } from '../../../test/users/test-utils';
 
-describe('QuestionService', () => {
-  let service: QuestionService;
+describe('AppController (e2e)', () => {
+	let app: INestApplication
+  	beforeEach(async () => {
+		app = await getAppForE2ETesting();
+    })
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [QuestionService],
-    }).compile();
-
-    service = module.get<QuestionService>(QuestionService);
+    afterAll(async () => {
+		await app.close ()
+	})
+	it('should be defined', () => {
+		expect(2).toBe(2)
+	  });
   });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});

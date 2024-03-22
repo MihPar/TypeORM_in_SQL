@@ -5,7 +5,7 @@ import { User } from "../users/entities/user.entity";
 import { Device } from "../security-devices/entities/security-device.entity";
 import { CqrsModule } from "@nestjs/cqrs";
 import { LikesRepository } from './likes.repository';
-import { CheckRefreshTokenForComments } from '../comment/use-case/bearer.authForComments';
+import { CheckRefreshTokenForComments } from '../comment/guards/bearer.authForComments';
 import { UpdateLikestatusForCommentUseCase } from '../comment/use-case/updateLikeStatus-use-case';
 import { CommentRepository } from '../comment/comment.repository';
 import { CommentQueryRepository } from '../comment/comment.queryRepository';
