@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { GameStatus } from "../infrastructure/enum/enumPendingPlayer";
+import { GameStatus } from "../enum/enumPendingPlayer";
 
 @Entity()
 export class PairQuizGame {

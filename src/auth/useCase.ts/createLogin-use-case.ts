@@ -1,9 +1,8 @@
 import bcrypt  from 'bcrypt';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { UsersQueryRepository } from "../../../api/users/users.queryRepository";
 import { InputDataModelClassAuth } from '../dto/auth.class.pipe';
-import { v4 as uuidv4 } from 'uuid'; 
 import { User } from '../../users/entities/user.entity';
+import { UsersQueryRepository } from '../../users/users.queryRepository';
 
 export class CreateLoginCommand {
 	constructor(

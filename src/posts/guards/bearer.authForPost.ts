@@ -8,7 +8,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { UsersQueryRepository } from '../../../api/users/users.queryRepository';
+import { UsersQueryRepository } from '../../users/users.queryRepository';
 
 @Injectable()
 export class CheckRefreshTokenForPost implements CanActivate {

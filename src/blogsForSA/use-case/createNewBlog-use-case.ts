@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { bodyBlogsModel } from "../dto/blogs.class-pipe";
 import { BlogsRepositoryForSA } from "../blogsForSA.repository";
 import { BlogsViewType } from "../../blogs/blogs.type";
 import { Blogs } from "../../blogs/entity/blogs.entity";
+import { BodyBlogsModel } from "../dto/blogs.class-pipe";
 
 export class CreateNewBlogForSACommand {
 	constructor(
-		public inputDateModel: bodyBlogsModel,
+		public inputDateModel: BodyBlogsModel,
 		public userId: string
 	) {}
 }

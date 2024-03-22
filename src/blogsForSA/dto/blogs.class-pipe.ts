@@ -8,7 +8,7 @@ function IsCustomString() {
 	return applyDecorators(IsString(), Trim(), IsNotEmpty())
 }
 
-  export class bodyBlogsModel {
+  export class BodyBlogsModel {
 	@IsString() 
 	@Trim() 
 	@IsNotEmpty()

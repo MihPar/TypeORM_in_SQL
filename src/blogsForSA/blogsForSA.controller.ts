@@ -1,6 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import { bodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
+import { BodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
 import {BlogsRepositoryForSA } from "./blogsForSA.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
 import { PaginationType } from "../types/pagination.types";
@@ -34,7 +34,7 @@ export class BlogsControllerForSA {
   ) {}
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getBlogsWithPagin(
     @Query()
     query: {
@@ -57,22 +57,22 @@ export class BlogsControllerForSA {
   }
 
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   async createBlog(
-	@Body() inputDateModel: bodyBlogsModel,
+	@Body() inputDateModel: BodyBlogsModel,
 	@UserIdDecorator() userId: string,
 	) {
 	const command = new CreateNewBlogForSACommand(inputDateModel, userId)
-	const createBlog: BlogsViewType = await this.commandBus.execute(command)
+	const createBlog: BlogsViewType | null = await this.commandBus.execute<CreateNewBlogForSACommand, BlogsViewType | null>(command)
     return createBlog;
   }
 
   @Put(':blogId')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(CheckRefreshTokenForSA)
   async updateBlogsById(
     @Param() dto: inputModelClass,
-    @Body() inputDateMode: bodyBlogsModel,
+    @Body() inputDateMode: BodyBlogsModel,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string,
   ): Promise<boolean> {
@@ -81,13 +81,13 @@ export class BlogsControllerForSA {
 
 	if(userId !== isExistBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 	const command = new UpdateBlogForSACommand(dto.blogId, inputDateMode)
-	const isUpdateBlog: boolean = await this.commandBus.execute(command)
+	const isUpdateBlog: boolean = await this.commandBus.execute<UpdateBlogForSACommand, boolean>(command)
     if (!isUpdateBlog) throw new NotFoundException('Blogs by id not found 404');
 	return true
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.CREATED)
   @UseGuards(CheckRefreshTokenForSA)
   async deleteBlogsById(
 	@Param('id') id: string,
@@ -98,7 +98,7 @@ export class BlogsControllerForSA {
 	if(!isExistBlog) throw new NotFoundException("404")
 	if(userId !== isExistBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 	const command = new DeleteBlogByIdForSACommnad(id)
-    const isDeleted: boolean | null = await this.commandBus.execute(command);
+    const isDeleted: boolean | null = await this.commandBus.execute<DeleteBlogByIdForSACommnad, boolean | null>(command);
     if (!isDeleted) throw new NotFoundException('Blogs by id not found 404');
     return isDeleted;
   }
@@ -110,18 +110,18 @@ export class BlogsControllerForSA {
     @Param() dto: inputModelClass,
     @Body() inputDataModel: bodyPostsModelClass,
 	@UserIdDecorator() userId: string,
-  ) {
+  ): Promise<Posts | null> {
     const findBlog: BlogsViewTypeWithUserId | null = await this.blogsQueryRepositoryForSA.findBlogById(dto.blogId)
     if(!findBlog) throw new NotFoundException("404")
 	if(userId !== findBlog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 	const command = new CreateNewPostForBlogCommand(dto.blogId, inputDataModel, findBlog.name, userId)
-	const createNewPost: Posts | null = await this.commandBus.execute(command)
+	const createNewPost: Posts | null = await this.commandBus.execute<CreateNewPostForBlogCommand, Posts | null>(command)
     if (!createNewPost) throw new NotFoundException('Blogs by id not found 404');
     return createNewPost;
   }
   
   @Get(':blogId/posts')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(CheckRefreshTokenForSA)
   async getPostsByBlogId(
     @Param() dto: inputModelClass,
@@ -151,7 +151,7 @@ export class BlogsControllerForSA {
   }
 
   @Put(':blogId/posts/:postId')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(CheckRefreshTokenForSA)
   async updatePostByIdWithModel(
 	@Param() dto: inputModelUpdataPost, 
@@ -165,13 +165,13 @@ export class BlogsControllerForSA {
 	if(userId !== blog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 
     const command = new UpdateExistingPostByIdWithBlogIdCommand(dto, inputModel)
-	const updateExistingPost = await this.commandBus.execute(command)
+	const updateExistingPost: PostsViewModel | null = await this.commandBus.execute<UpdateExistingPostByIdWithBlogIdCommand, PostsViewModel | null>(command)
 	if(!updateExistingPost) throw new NotFoundException("Post not find")
 	return 
   }
 
   @Delete(':blogId/posts/:postId')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(CheckRefreshTokenForSA)
   async deletePostByIdWithBlogId(
 	@Param() dto: inputModelUpdataPost, 
@@ -183,7 +183,7 @@ export class BlogsControllerForSA {
 	if(!findPost) throw new NotFoundException("404")
 	if(userId !== blog.userId) throw new ForbiddenException("This user does not have access in blog, 403")
 	const command = new DeletePostByIdCommand(dto)
-	const deletePostById = await this.commandBus.execute(command)
+	const deletePostById: Promise<any> = await this.commandBus.execute<DeletePostByIdCommand, any>(command)
 	if(!deletePostById) throw new NotFoundException("Post not find")
   }
 }

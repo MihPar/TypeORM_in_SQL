@@ -42,15 +42,15 @@ export class CommentsController {
   @UseGuards(CheckRefreshTokenForComments)
   async updataCommetById(
 	@Param() id: inputModelCommentId, 
-	@Body() dto: InputModelContent,
+	@Body() Dto: InputModelContent,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string,
 	) {
     const isExistComment: Comments | null = await this.commentQueryRepository.findCommentByCommentId(id.commentId);
     if (!isExistComment) throw new NotFoundException('404');
     if (userId !== isExistComment.userId) { throw new ForbiddenException("403")}
-	const command = new UpdateCommentByCommentIdCommand(id.commentId, dto)
-	const updateComment: boolean = await this.commandBus.execute(command)
+	const command = new UpdateCommentByCommentIdCommand(id.commentId, Dto)
+	const updateComment: boolean = await this.commandBus.execute<UpdateCommentByCommentIdCommand, boolean>(command)
     if (!updateComment) throw new NotFoundException('404');
 	return
   }
@@ -59,14 +59,14 @@ export class CommentsController {
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForComments)
   async deleteCommentById(
-	@Param() dto: inputModelCommentId,
+	@Param() Dto: inputModelCommentId,
 	@UserIdDecorator() userId: string
 	) {
-    const isExistComment = await this.commentQueryRepository.findCommentByCommentId(dto.commentId);
+    const isExistComment = await this.commentQueryRepository.findCommentByCommentId(Dto.commentId);
     if (!isExistComment) throw new NotFoundException("404")
     if (userId !== isExistComment.userId) { throw new ForbiddenException("403")}
     const deleteCommentById: boolean =
-      await this.commentRepository.deleteCommentByCommentId(dto.commentId);
+      await this.commentRepository.deleteCommentByCommentId(Dto.commentId);
     if (!deleteCommentById) throw new NotFoundException('404');
 	return 
   }

@@ -1,6 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { getAppForE2ETesting } from '../../../test/users/test-utils';
 
+jest.setTimeout(1000)
+
 describe('AppController (e2e)', () => {
 	let app: INestApplication
   	beforeEach(async () => {

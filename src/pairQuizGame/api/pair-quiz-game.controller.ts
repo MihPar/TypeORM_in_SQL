@@ -2,16 +2,25 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode
 import { PairQuizGameService } from '../application/pair-quiz-game.service';
 import { CreatePairQuizGameDto } from '../dto/create-pair-quiz-game.dto';
 import { UpdatePairQuizGameDto } from '../dto/update-pair-quiz-game.dto';
+import { BearerTokenPairQuizGame } from '../guards/bearerTokenPairQuizGame';
+import { UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
+import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
 
 @Controller('pair-quiz-game/pairs')
 export class PairQuizGameController {
-  constructor(private readonly pairQuizGameService: PairQuizGameService) {}
+  constructor(
+	private readonly pairQuizGameService: PairQuizGameService,
+	protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository
+	) {}
   
   @HttpCode(HttpStatus.CREATED)
   @Get('my-current')
-  @UseGuards()
-  async getCurenctUnFinishedGame() {
-    
+  @UseGuards(BearerTokenPairQuizGame)
+  async getCurenctUnFinishedGame(
+	@UserIdDecorator() userId: string,
+  ) {
+    const getCurrentUnFindshedGameOfUser = await this.pairQuezGameQueryRepository.getCurrentUnFinGame()
+	return getCurrentUnFindshedGameOfUser
   }
 
   @Get(':id')
