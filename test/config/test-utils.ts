@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { INestApplication } from "@nestjs/common";
 import { DataSource } from 'typeorm';
 import { AppModule } from '../../src/app.module';
-import { configApp } from '../config/config.app';
+import { configApp } from './config.app';
 let app: INestApplication;
 
 // export const getAppAndCleanDB = async () => {
@@ -30,7 +30,7 @@ let app: INestApplication;
 //     app = moduleFixture.createNestApplication();
 //     await app.init();
 
-async function truncateDBTables (
+export async function truncateDBTables (
 	app: INestApplication, 
 	dbOwnerUserName: string,
 ) {
@@ -59,6 +59,6 @@ export const getAppForE2ETesting = async () => {
 	const app = appModule.createNestApplication()
 	configApp (app); // todo: , {swagger: false} await app.initO;
 	await app.init()
-	await truncateDBTables (app, 'nodejs')
+	await truncateDBTables(app, 'nodejs')
 	return app;
 	};

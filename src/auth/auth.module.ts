@@ -32,8 +32,8 @@ import { CustomLoginvalidation } from './adapter/customLoginValidator';
 import { CustomEmailvalidation } from './adapter/customEmailValidatro';
 import { EmailAdapter } from './adapter/email.adapter';
 import { EmailManager } from './adapter/email.manager';
-import { ApiJwtService } from '../infrastructura/jwt/jwt.service';
-import { ApiConfigService } from '../infrastructura/config/configService';
+import { ApiJwtService } from './adapter/jwt/jwt.service';
+import { ApiConfigService } from '../config/configService';
 
 const guards = [
   CheckRefreshTokenFor,

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { UsersQueryRepository } from '../../users/users.queryRepository';
-import { ApiJwtService } from '../../infrastructura/jwt/jwt.service';
+import { ApiJwtService } from '../adapter/jwt/jwt.service';
 // dotenv.config();
 
 @Injectable()

@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Request } from "express";
-import { ApiJwtService } from "../../infrastructura/jwt/jwt.service";
+import { ApiJwtService } from "../adapter/jwt/jwt.service";
 import { User } from "../../users/entities/user.entity";
 import { UsersQueryRepository } from '../../users/users.queryRepository';
 export class GetUserIdByTokenCommand {

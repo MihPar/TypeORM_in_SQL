@@ -8,7 +8,7 @@ import { CreateNewUserCommand } from './useCase/createNewUser-use-case';
 import { DtoType } from './user.class';
 import { SkipThrottle } from '@nestjs/throttler';
 import { UsersQueryRepository } from './users.queryRepository';
-import { HttpExceptionFilter } from '../infrastructura/exceptionFilters.ts/exceptionFilter';
+import { HttpExceptionFilter } from '../exeption/exceptionFilter';
 import { UserViewType } from './user.type';
 
 // @SkipThrottle()

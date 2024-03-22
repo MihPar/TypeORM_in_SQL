@@ -1,4 +1,4 @@
-import { ResultCode } from "../infrastructura/enum/enumExeptionType";
+import { ResultCode } from "../enum/enumExeptionType";
 
 export type exceptionObjectType = {
   message: string;

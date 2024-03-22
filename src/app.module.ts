@@ -1,4 +1,4 @@
-import databaseConf, { DatabaseConfig } from './infrastructura/config/db.config';
+import databaseConf, { DatabaseConfig } from './config/db.config';
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { DeletedModule } from './deleted/deleteAll.module';
@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
 import { UsersModule } from './users/users.module';
-import { ApiConfigService } from './infrastructura/config/configService';
+import { ApiConfigService } from './config/configService';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PostsModule } from './posts/posts.module';
 import { BlogsModule } from './blogs/blogs.module';

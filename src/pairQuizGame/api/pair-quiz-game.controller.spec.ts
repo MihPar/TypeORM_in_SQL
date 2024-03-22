@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { getAppForE2ETesting } from '../../../test/users/test-utils';
+import { getAppForE2ETesting } from '../../../test/config/test-utils';
 
 jest.setTimeout(1000)
 

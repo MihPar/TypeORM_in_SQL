@@ -1,6 +1,6 @@
+import { getAppForE2ETesting } from './../config/test-utils';
 import { INestApplication } from '@nestjs/common';
 import { CreateUserDto } from '../../src/users/dto/create-user.dto';
-import { getAppAndCleanDB } from './test-utils';
 import request from 'supertest';
   
 
@@ -11,14 +11,12 @@ describe('Users - /users (e2e)', () => {
   })
 
   let app: INestApplication;
-
   beforeAll(async () => {
-	app = await getAppAndCleanDB()
+	app = await getAppForE2ETesting()
   })
   let newUser1
   let newUser2
   let newUser3
-  let newUser4
 
   it('Create uesr1 [POST /users]', () => {
     return request(app.getHttpServer())
