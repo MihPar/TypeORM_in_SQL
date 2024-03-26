@@ -24,9 +24,6 @@ export class Question {
 	@ManyToMany(() => PairQuizGame, g => g.question)
 	games: PairQuizGame[]
 
-	// @Column({nullable: true})
-	// questionGameid: string
-
 	static createQuestion(item: Question) {
 		return {
 			id: item.id,
