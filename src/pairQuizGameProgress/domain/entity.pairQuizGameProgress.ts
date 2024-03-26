@@ -1,6 +1,8 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AnswerStatus } from "../../pairQuizGame/enum/enumPendingPlayer";
 import { Question } from "../../question/domain/entity.question";
+import { User } from "../../users/entities/user.entity";
+import { GameQuestion } from "./entity.gameQuestion";
 
 @Entity()
 export class PairQuizGameProgress {
@@ -10,11 +12,14 @@ export class PairQuizGameProgress {
 	@Column()
 	gameId: string
 
+	@ManyToOne(() => User, u => u.progress)
+	user: User
+
 	@Column()
 	userId: string
 
-	@OneToMany(() => Question, q => q.id)
-	question: Question
+	@OneToMany(() => GameQuestion, q => q.progress)
+	gameQuestion: GameQuestion
 
 	@Column()
 	questionId: string

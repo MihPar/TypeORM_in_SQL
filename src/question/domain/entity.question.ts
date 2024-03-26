@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { GameQuestion } from "../../pairQuizGameProgress/domain/entity.gameQuestion";
 
 @Entity()
 export class Question {
@@ -19,6 +20,9 @@ export class Question {
 
 	@Column({nullable: true})
 	updatedAt: Date
+
+	@OneToOne(() => GameQuestion, q => q.question)
+	questionGame: GameQuestion
 
 	static createQuestion(item: Question) {
 		return {
