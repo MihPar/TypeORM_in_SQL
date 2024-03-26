@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { GameQuestion } from "../../pairQuizGameProgress/domain/entity.gameQuestion";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 
 @Entity()
 export class Question {
@@ -21,8 +21,11 @@ export class Question {
 	@Column({nullable: true})
 	updatedAt: Date
 
-	@OneToOne(() => GameQuestion, q => q.question)
-	questionGame: GameQuestion
+	@ManyToMany(() => PairQuizGame, g => g.question)
+	games: PairQuizGame[]
+
+	// @Column({nullable: true})
+	// questionGameid: string
 
 	static createQuestion(item: Question) {
 		return {

@@ -8,9 +8,12 @@ export class PairQuezGameQueryRepository {
 	constructor(
 		@InjectRepository(PairQuizGame) protected readonly pairQuezGame: Repository<PairQuizGame>
 	) {}
-	async getCurrentUnFinGame() {
+	async getCurrentUnFinGame(userId) {
 		const getCurrentUnFinGame = await this.pairQuezGame
 			.createQueryBuilder()
 			.select()
+			.where(`userId = :userId`, {userId})
 	}
+
+	async getGameById(id: string, userId: string) {}
 }

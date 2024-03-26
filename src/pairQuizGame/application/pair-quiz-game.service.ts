@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePairQuizGameDto } from '../dto/create-pair-quiz-game.dto';
+import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
 import { UpdatePairQuizGameDto } from '../dto/update-pair-quiz-game.dto';
 
 @Injectable()

@@ -12,7 +12,7 @@ export class classCreateQuestionUseCase
 {
   constructor(protected readonly questionRepository: QuestionRepository) {}
 
-  async execute(command: CreateQuestionCommand): Promise<Question | null> {
+  async execute(command: CreateQuestionCommand): Promise<any> {
 	const createDate = new Date()
     const question = new Question();
     question.body = command.body;
