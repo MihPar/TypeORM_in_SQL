@@ -24,18 +24,6 @@ export class PairQuizGameProgressFirstPlayer {
 	@Column()
 	userId: string
 
-	// @OneToMany(() => GameQuestion, q => q.progress)
-	// gameQuestion: GameQuestion
-
-	// @Column()
-	// questionId: string
-
-	// @Column()
-	// questionNumber: string
-
-	// @CreateDateColumn()
-	// addedAt: Date
-
 	@Column()
 	answerStatus: AnswerStatus
 

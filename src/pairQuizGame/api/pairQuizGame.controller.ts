@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, UseGuards, NotFoundException } from '@nestjs/common';
-import { PairQuizGameService } from '../application/pair-quiz-game.service';
 import { BearerTokenPairQuizGame } from '../guards/bearerTokenPairQuizGame';
 import { UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
 import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
@@ -7,11 +6,11 @@ import { CommandBus } from '@nestjs/cqrs';
 import { CreateOrConnectGameCommand } from '../useCase/createOrConnection-use-case';
 import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
+import { QuestionTypeModel } from '../type/typeViewModel';
 
 @Controller('pair-quiz-game/pairs')
 export class PairQuizGameController {
   constructor(
-	private readonly pairQuizGameService: PairQuizGameService,
 	protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
 	protected readonly commandBus: CommandBus
 	) {}
@@ -42,7 +41,7 @@ export class PairQuizGameController {
   @UseGuards(BearerTokenPairQuizGame)
   async createOrConnectionGame(
 	@UserIdDecorator() userId: string
-  ) {
+  ): Promise<QuestionTypeModel> {
 	const command = new CreateOrConnectGameCommand(userId)
 	const createOrConnection = await this.commandBus.execute(command)
 	if(!createOrConnection) throw new NotFoundException('404')

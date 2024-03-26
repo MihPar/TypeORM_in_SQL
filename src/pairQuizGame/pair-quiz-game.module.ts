@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { PairQuizGameService } from './application/pair-quiz-game.service';
 import { PairQuizGameController } from './api/pairQuizGame.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -12,7 +11,7 @@ import { User } from '../users/entities/user.entity';
 import { PairQuezGameQueryRepository } from './infrastructure/pairQuizGameQueryRepository';
 
 const guards = [BearerTokenPairQuizGame]
-const services = [PairQuizGameService, JwtService]
+const services = [JwtService]
 const repo = [UsersQueryRepository, UsersRepository, PairQuezGameQueryRepository]
 @Module({
   imports: [TypeOrmModule.forFeature([PairQuizGame, User]), CqrsModule],

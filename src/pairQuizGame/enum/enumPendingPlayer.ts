@@ -1,9 +1,9 @@
-export enum AnswerStatus {
+export enum AnswerStatusEnum {
 	Correct = 'Correct',
 	InCorrect = 'InCorrect'
 }
 
-export enum GameStatus {
+export enum GameStatusEnum {
 	PendingSecondPlayer = 'PendingSecondPlayer',
 	Active = 'Active',
 	Finished = 'Finished§'
