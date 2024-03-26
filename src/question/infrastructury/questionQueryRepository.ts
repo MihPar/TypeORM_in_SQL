@@ -20,7 +20,10 @@ export class QuestionQueryRepository {
 		const getAllQuestions = await this.question
 			.createQueryBuilder()
 			.select()
-			.where(`body ILIKE :bodySearchTerm AND published ILIKE :publishedStatus`, {bodySearchTerm: `${bodySearchTerm}`, publishedStatus: `${publishedStatus}`})
+			.where(
+				`body ILIKE :bodySearchTerm AND published ILIKE :publishedStatus`, 
+				{bodySearchTerm: `%${bodySearchTerm}%`, publishedStatus: `%${publishedStatus}%`}
+			)
 			.orderBy(`${sortBy}`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)
@@ -41,9 +44,7 @@ export class QuestionQueryRepository {
 			items: getAllQuestions.map((question: Question): QuestionType => ({
 				id: question.id,
 				body: question.body,
-				correctAnswers: [
-					question.currentAnswers
-				],
+				correctAnswers: question.correctAnswers,
 				published: question.published,
 				createdAt: question.createdAt,
 				updatedAt: question.updatedAt,

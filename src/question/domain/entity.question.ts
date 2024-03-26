@@ -8,15 +8,26 @@ export class Question {
 	@Column()
 	body: string
 
-	@Column()
-	currentAnswers: string
+	@Column({nullable: true})
+	correctAnswers: string[]
 
 	@Column()
 	published: boolean
 
-	@CreateDateColumn()
+	@Column({nullable: true})
 	createdAt: Date
 
-	@UpdateDateColumn()
+	@Column({nullable: true})
 	updatedAt: Date
+
+	static createQuestion(item: Question) {
+		return {
+			id: item.id,
+			body: item.body,
+			correctAnswers: item.correctAnswers,
+			published: item.published,
+			createdAt: item.createdAt,
+			updatedAt: item.updatedAt
+		}
+	}
 }

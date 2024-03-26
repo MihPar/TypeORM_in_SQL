@@ -59,10 +59,6 @@ export class BlogsQueryRepositoryForSA {
   async deletedBlog(id: string): Promise<boolean | null> {
 	const deleteBlog = await this.blogsRepository
 		.delete({id})
-		// .createQueryBuilder()
-		// .delete()
-		// .where("id = :id", {id})
-		// .execute()
 		
     if(!deleteBlog) return null
 	return true
