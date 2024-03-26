@@ -9,7 +9,7 @@ export class Question {
 	@Column()
 	body: string
 
-	@Column({nullable: true})
+	@Column()
 	correctAnswers: string[]
 
 	@Column()

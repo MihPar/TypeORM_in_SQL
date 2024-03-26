@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { AnswerStatus } from "../../pairQuizGame/enum/enumPendingPlayer";
 import { Question } from "../../question/domain/entity.question";
 import { User } from "../../users/entities/user.entity";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
+import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
 
 @Entity()
 export class PairQuizGameProgressSecondPlayer {
@@ -22,7 +22,7 @@ export class PairQuizGameProgressSecondPlayer {
 	userSecondPlyerId: string
 
 	@Column()
-	answerStatus: AnswerStatus
+	answerStatus: AnswerStatusEnum
 
 	@Column({default: 0})
 	score: number
