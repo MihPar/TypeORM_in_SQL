@@ -15,6 +15,8 @@ export class PairQuizGameRepository {
 		@InjectRepository(PairQuizGameProgressSecondPlayer) protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressFirstPlayer>
 	) {}
 	async connectionOrCreatePairQuizGame(userId: string) {
-		const 
+		const createOrConnect = await this.pairQuizGame
+			.createQueryBuilder()
+			.leftJoinAndSelect()
 	}
 }
