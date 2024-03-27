@@ -16,4 +16,10 @@ export class PairQuezGameQueryRepository {
 	}
 
 	async getGameById(id: string, userId: string) {}
+
+	async getUnfinishedGame(userId: string) {}
+
+	async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string) {}
+
+	async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string) {}
 }

@@ -19,4 +19,8 @@ export class PairQuizGameRepository {
 			.createQueryBuilder()
 			.leftJoinAndSelect()
 	}
+
+	async createAnswer(answer: string) {}
+
+	async sendAnswerFirstPlayer(gameId, ) {}
 }
