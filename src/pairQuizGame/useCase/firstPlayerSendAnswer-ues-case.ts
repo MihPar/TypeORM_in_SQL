@@ -4,6 +4,8 @@ import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { ForbiddenException } from "@nestjs/common";
 import { QuestionQueryRepository } from "../../question/infrastructury/questionQueryRepository";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
+import { ChangeAnswerStatusFirstPlayerCommand } from "./changeAnswerStatusFirstPlayer-use-case";
+import { CangeStatusToFinishedCommand } from "./changeStatusToFinished-use-case";
 
 export class FirstPlayerSendAnswerCommand {
 	constructor(
@@ -29,7 +31,7 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 			const gameQuestion: Question = gameQuestions[questionNumber]
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.id)
 
-			if(!question.correctAnswers.includes(inputAnswer)) {
+			if(question!.correctAnswers.includes(inputAnswer)) {
 				const answer = Answer.createAnswer(question!.id, AnswerStatusEnum.Correct)
 				await this.pairQuizGameRepository.createAnswer(answer)
 				await this.pairQuizGameRepository.sendAnswerFirstPlayer(
@@ -41,8 +43,29 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 					},
 					"+1"
 					)
-					const command = new ChangeAnswerStatusFirstPlayerCommand(gameId, gameQuestions)
-					await this.commandBus.execute(command)
+					const ChangeAnswerStatusCommand = new ChangeAnswerStatusFirstPlayerCommand(gameId, gameQuestions)
+					await this.commandBus.execute(commandChangeAnswerStatus)
+
+					const changeStatusToFinishedCommand = new CangeStatusToFinishedCommand(gameId, gameQuestions)
+					await this.commandBus.execute(changeStatusToFinishedCommand)
+
+					return {
+						questionId: answer.questionId,
+						answerStatus: answer.answerStatus,
+						addedAt: answer.addedAt
+					}
+			} else if(!question!.correctAnswers.includes(inputAnswer)) {
+				const answer = Answer.createAnswer(question!.id, AnswerStatusEnum.InCorrect)
+				await this.pairQuizGameRepository.createAnswer(answer)
+				await this.pairQuizGameRepository.sendAnswerFirstPlayer(
+					command.gameId,
+					{
+						questionId: answer.questionId,
+						answerStatus: answer.answerStatus,
+						addedAt: answer.addedAt
+					},
+					"-0"
+					)
 			}
 		}
 	}

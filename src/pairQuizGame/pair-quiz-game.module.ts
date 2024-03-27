@@ -12,11 +12,15 @@ import { PairQuezGameQueryRepository } from './infrastructure/pairQuizGameQueryR
 import { FirstPlayerSendAnswerUseCase } from './useCase/firstPlayerSendAnswer-ues-case';
 import { CreateOrConnectGameUseCase } from './useCase/createOrConnection-use-case';
 import { ChangeAnswerStatusFirstPlayerUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
+import { CangeStatusToFinishedUseCase } from './useCase/changeStatusToFinished-use-case';
+import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
+import { ChangeAnswerStatusSecondPlayerUseCase } from './useCase/changeAnswerStatusSecondPlayer-use-case';
 
 const guards = [BearerTokenPairQuizGame]
 const services = [JwtService]
 const repo = [UsersQueryRepository, UsersRepository, PairQuezGameQueryRepository]
-const useCase = [FirstPlayerSendAnswerUseCase, CreateOrConnectGameUseCase, ChangeAnswerStatusFirstPlayerUseCase]
+const useCase = [FirstPlayerSendAnswerUseCase, SecondPlayerSendAnswerUseCase, CreateOrConnectGameUseCase, ChangeAnswerStatusFirstPlayerUseCase, CangeStatusToFinishedUseCase, ChangeAnswerStatusSecondPlayerUseCase
+]
 @Module({
   imports: [TypeOrmModule.forFeature([PairQuizGame, User]), CqrsModule],
   controllers: [PairQuizGameController],
