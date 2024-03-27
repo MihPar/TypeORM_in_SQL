@@ -22,7 +22,9 @@ export class PairQuizGameRepository {
 
 	async createAnswer(answer: string) {}
 
-	async sendAnswerFirstPlayer(gameId, {questionId, answerStatus, addedAt}, "-0") {}
-	async sendAnswerSecondPlayer(gameId, {questionId, answerStatus, addedAt}, "-0") {}
+	async sendAnswerFirstPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
+	async sendAnswerSecondPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
+
+	async setFinishAnswerDateFirstPlayer(gameId: string) {}
 
 }

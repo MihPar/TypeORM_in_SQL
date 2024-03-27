@@ -4,6 +4,8 @@ import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { QuestionQueryRepository } from "../../question/infrastructury/questionQueryRepository";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { ForbiddenException } from "@nestjs/common";
+import { ChangeAnswerStatusSecondPlayerCommand } from "./changeAnswerStatusSecondPlayer-use-case";
+import { CangeStatusToFinishedCommand } from "./changeStatusToFinished-use-case";
 
 export class SecondPlayerSendAnswerCommand {
 	constructor(

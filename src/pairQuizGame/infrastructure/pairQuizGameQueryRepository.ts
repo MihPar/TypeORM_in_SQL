@@ -22,4 +22,6 @@ export class PairQuezGameQueryRepository {
 	async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string) {}
 
 	async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string) {}
+
+	async getFirstPlayerByGameId(gameId: string) {}
 }
