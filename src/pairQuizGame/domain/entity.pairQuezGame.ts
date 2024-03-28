@@ -15,25 +15,25 @@ export class PairQuizGame {
 	@Column()
 	firstPlayerId: string
 
-	@OneToOne(() => PairQuizGameProgressSecondPlayer, spp => spp.game)
+	@OneToOne(() => PairQuizGameProgressSecondPlayer, spp => spp.game, {nullable: true})
 	secondPlayerProgress: PairQuizGameProgressSecondPlayer
 
-	@Column()
+	@Column({nullable: true})
 	secondPlayerId: string
 
 	@Column()
 	status: GameStatusEnum
 
-	@CreateDateColumn()
+	@CreateDateColumn({nullable: true})
 	pairCreatedDate: Date
 
-	@CreateDateColumn()
+	@CreateDateColumn({nullable: true})
 	startGameDate: Date
 
-	@CreateDateColumn()
+	@CreateDateColumn({nullable: true})
 	finishGameDate: Date
 
-	@ManyToMany(() => Question, q => q.games)
+	@ManyToMany(() => Question, q => q.games, {nullable: true})
 	@JoinTable()
 	question: Question[]
 }

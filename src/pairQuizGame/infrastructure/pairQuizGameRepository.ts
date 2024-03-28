@@ -5,26 +5,66 @@ import { Repository } from "typeorm";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 import { PairQuizGameProgressSecondPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer";
+import { GameStatusEnum } from "../enum/enumPendingPlayer";
 
 @Injectable()
 export class PairQuizGameRepository {
-	constructor(
-		@InjectRepository(Question) protected readonly question: Repository<Question>,
-		@InjectRepository(PairQuizGame) protected readonly pairQuizGame: Repository<PairQuizGame>,
-		@InjectRepository(PairQuizGameProgressFirstPlayer) protected readonly pairQuizGameProgressFirstPlayer: Repository<PairQuizGameProgressFirstPlayer>,
-		@InjectRepository(PairQuizGameProgressSecondPlayer) protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressFirstPlayer>
-	) {}
-	async connectionOrCreatePairQuizGame(userId: string) {
-		const createOrConnect = await this.pairQuizGame
-			.createQueryBuilder()
-			.leftJoinAndSelect()
-	}
+  constructor(
+    @InjectRepository(Question)
+    protected readonly question: Repository<Question>,
+    @InjectRepository(PairQuizGame)
+    protected readonly pairQuizGame: Repository<PairQuizGame>,
+    @InjectRepository(PairQuizGameProgressFirstPlayer)
+    protected readonly pairQuizGameProgressFirstPlayer: Repository<PairQuizGameProgressFirstPlayer>,
+    @InjectRepository(PairQuizGameProgressSecondPlayer)
+    protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressFirstPlayer>,
+  ) {}
 
-	async createAnswer(answer: string) {}
+  async foundGame(status: string): Promise<PairQuizGame | null> {
+    const foundQuizGame = await this.pairQuizGame
+      .createQueryBuilder()
+      .select()
+      .where(`'status' = :status`, { status })
+      .getOne();
 
-	async sendAnswerFirstPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
-	async sendAnswerSecondPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
+    if (!foundQuizGame) return null;
+    return foundQuizGame;
+  }
 
-	async setFinishAnswerDateFirstPlayer(gameId: string) {}
+  async createNewGame(newQuizGame: PairQuizGame) {
+    const createNewQuizGame = await this.pairQuizGame.save(newQuizGame);
+    return createNewQuizGame;
+  }
 
+  async changeStatusQuizGame(game: PairQuizGame): Promise<PairQuizGame | null> {
+    const changeStatusQuizGameOnActive = await this.pairQuizGame.save(game)
+	  if(!changeStatusQuizGameOnActive) return null
+	  return changeStatusQuizGameOnActive
+  }
+
+  async getFiveQuestions(boolean: boolean): Promise<Question[] | null> {
+	const getQuestionForQuizGame = await this.question
+		.createQueryBuilder()
+		.select()
+		.where(`'published' = :boolean`, {boolean})
+		.orderBy("RANDOM()")
+		.limit(5)
+		.getMany()
+
+		if(!getQuestionForQuizGame) return null
+		return getQuestionForQuizGame
+  }
+
+  // async connectionOrCreatePairQuizGame(userId: string) {
+  // 	const createOrConnect = await this.pairQuizGame
+  // 		.createQueryBuilder()
+  // 		.leftJoinAndSelect()
+  // }
+
+  // async createAnswer(answer: string) {}
+
+  // async sendAnswerFirstPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
+  // async sendAnswerSecondPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
+
+  // async setFinishAnswerDateFirstPlayer(gameId: string) {}
 }

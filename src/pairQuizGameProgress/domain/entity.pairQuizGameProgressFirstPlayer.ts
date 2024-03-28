@@ -19,9 +19,6 @@ export class PairQuizGameProgressFirstPlayer {
 	userFirstPlyer: User
 
 	@Column()
-	userFirstPlyerId: string
-
-	@Column()
 	userId: string
 
 	@Column()
