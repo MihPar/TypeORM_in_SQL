@@ -7,6 +7,7 @@ import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { v4 as uuidv4 } from "uuid";
 import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 import { PairQuizGameProgressRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressRepository";
+import { UsersQueryRepository } from "../../users/users.queryRepository";
 
 export class CreateOrConnectGameCommand {
 	constructor(
@@ -18,7 +19,8 @@ export class CreateOrConnectGameCommand {
 export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConnectGameCommand> {
 	constructor(
 		protected readonly pairQuizGameRepository: PairQuizGameRepository,
-		protected readonly pairQuizGameProgressRepository: PairQuizGameProgressRepository
+		protected readonly pairQuizGameProgressRepository: PairQuizGameProgressRepository,
+		protected readonly usersQueryRepository: UsersQueryRepository
 	) {}
 	async execute(command: CreateOrConnectGameCommand): Promise<QuestionTypeModel> {
 		
@@ -32,6 +34,8 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 		//когда нашлось 2 игрока делаешь запрос на questions( где published === true) и достаешь 5 вопросов которые published в рандомном порядке(посмотреть в sql функцию в рандомном порядке)
 
 		const foundQuizGame = await this.pairQuizGameRepository.foundGame(GameStatusEnum.PendingSecondPlayer)
+		const getLoginOfUser = await this.usersQueryRepository.findUserById(command.userId)
+		const login = getLoginOfUser.login
 		if(!foundQuizGame) {
 
 			/*** create progress first player ****/
@@ -51,24 +55,23 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			const createNewQuizGame = await this.pairQuizGameRepository.createNewGame(newQuizGame)
 			//static medoth
 			/******* to return view model creating new quiz game for first player **********/
-			return createNewQuizGame
+			const published = true
+			const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(published)
+
+			return PairQuizGame.quizGameViewModel(createNewQuizGame, login, getFiveQuestionsQuizGame, saveProgressFirstPlayer)
 		} else {
 			//progress for secondPlayer
 
 			foundQuizGame.secondPlayerId = command.userId
 			foundQuizGame.startGameDate = new Date()
 			const published = true
-const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(published)
+			const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(published)
 			foundQuizGame.question = getFiveQuestionsQuizGame
 			
 			const toAddSecondPlayer = await this.pairQuizGameRepository.changeStatusQuizGame(foundQuizGame)
 
 			// static method
-			
-			return {
-				id: foundQuizGame.id,
-
-			}
+			return PairQuizGame.quizGameViewModel(foundQuizGame, login, getFiveQuestionsQuizGame)
 		}
 		
 

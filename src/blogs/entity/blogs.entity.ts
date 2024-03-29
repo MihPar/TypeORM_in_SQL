@@ -46,12 +46,12 @@ export class Blogs {
 
 	static getBlogViewModel(item ): BlogsViewType {
 			return {
-			id: item.id,
-			name: item.name,
-			description: item.description,
-			websiteUrl: item.websiteUrl,
-			createdAt: item.createdAt,
-			isMembership: item.isMembership
+				id: item.id,
+				name: item.name,
+				description: item.description,
+				websiteUrl: item.websiteUrl,
+				createdAt: item.createdAt,
+				isMembership: item.isMembership
 			}
 	}
 

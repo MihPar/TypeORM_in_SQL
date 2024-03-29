@@ -3,22 +3,22 @@ import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer"
 export type QuestionTypeModel = {
   id: string
   firstPlayerProgress: PlayerModel
-  secondPlayerProgress: PlayerModel,
-  questions: QuestionType[],
-  status: GameStatusEnum,
-  pairCreatedDate: Date,
-  startGameDate: Date,
+  secondPlayerProgress: PlayerModel
+  questions: QuestionType[]
+  status: GameStatusEnum
+  pairCreatedDate: Date
+  startGameDate: Date
   finishGameDate: Date
 }
 
 export type PlayerModel = {
-	answers: AnswerType[],
-	player: Player,
+	answers: AnswerType[]
+	player: Player
 	score: number
 }
 
 export type AnswerType = {
-    questionId: string,
+    questionId: string
     answerStatus: AnswerStatusEnum,
     addedAt: Date
 }
