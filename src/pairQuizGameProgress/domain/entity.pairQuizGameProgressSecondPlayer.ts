@@ -19,6 +19,12 @@ export class PairQuizGameProgressSecondPlayer {
 	userSecondPlyer: User
 
 	@Column()
+	questionId: string
+
+	@Column()
+	addedAt: Date
+
+	@Column()
 	userSecondPlyerId: string
 
 	@Column()
@@ -29,4 +35,7 @@ export class PairQuizGameProgressSecondPlayer {
 
 	@Column({default: 0})
 	bonus_score: number
+
+	// @OneToMany(() => AnswersSecondPlayer, a => a.progress)
+	// answers: AnswersSecondPlayer
 }

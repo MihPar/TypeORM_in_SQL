@@ -21,7 +21,16 @@ export class PairQuizGameProgressFirstPlayer {
 	@Column()
 	userId: string
 
+	@OneToMany(() => Question, q => q.progress)
+	question: Question[]
+
 	@Column()
+	questionId: string
+
+	@Column()
+	addedAt: Date
+
+	@Column({nullable: true})
 	answerStatus: AnswerStatusEnum
 
 	@Column({default: 0})
@@ -29,4 +38,7 @@ export class PairQuizGameProgressFirstPlayer {
 
 	@Column({default: 0})
 	bonus_score: number
+
+	// @OneToMany(() => AnswersFirstPlayer, a => a.progress)
+	// answers: AnswersFirstPlayer[]
 }

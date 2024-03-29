@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
+import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 
 @Entity()
 export class Question {
@@ -23,6 +24,9 @@ export class Question {
 
 	@ManyToMany(() => PairQuizGame, g => g.question)
 	games: PairQuizGame[]
+
+	@ManyToOne(() => PairQuizGameProgressFirstPlayer, p => p.question)
+	progress: PairQuizGameProgressFirstPlayer
 
 	static createQuestion(item: Question) {
 		return {

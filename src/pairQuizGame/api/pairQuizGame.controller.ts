@@ -5,13 +5,16 @@ import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQuery
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOrConnectGameCommand } from '../useCase/createOrConnection-use-case';
 import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
-import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
-import { QuestionTypeModel } from '../type/typeViewModel';
+// import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
+import { GameTypeModel } from '../type/typeViewModel';
+import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
+import { GameStatusEnum } from '../enum/enumPendingPlayer';
 
 @Controller('pair-quiz-game/pairs')
 export class PairQuizGameController {
   constructor(
 	protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
+	protected readonly pairQuizGameRepository: PairQuizGameRepository,
 	protected readonly commandBus: CommandBus
 	) {}
   
@@ -21,8 +24,7 @@ export class PairQuizGameController {
   async getCurenctUnFinishedGame(
 	@UserIdDecorator() userId: string,
   ) {
-    const getCurrentUnFindshedGameOfUser = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId)
-	return getCurrentUnFindshedGameOfUser
+	const foundGameByUserId = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(GameStatusEnum.Active, userId)
   }
 
   @Get(':id')
@@ -31,8 +33,9 @@ export class PairQuizGameController {
   async getGameById(
 	@Param('id') id: string,
 	@UserIdDecorator() userId: string
-	) {
-		const getGameById = await this.pairQuezGameQueryRepository.getGameById(id,userId)
+	): Promise<GameTypeModel | null> {
+		const getGameById = await this.pairQuezGameQueryRepository.getGameById(id, userId)
+		if(!getGameById) throw new NotFoundException('404')
 		return getGameById
   }
 
@@ -41,23 +44,23 @@ export class PairQuizGameController {
   @UseGuards(BearerTokenPairQuizGame)
   async createOrConnectionGame(
 	@UserIdDecorator() userId: string
-  ): Promise<QuestionTypeModel> {
+  ): Promise<GameTypeModel> {
 	const command = new CreateOrConnectGameCommand(userId)
 	const createOrConnection = await this.commandBus.execute(command)
 	if(!createOrConnection) throw new NotFoundException('404')
 	return createOrConnection
   }
 
-  @Post('my-current/answers')
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(BearerTokenPairQuizGame)
-  async sendAnswer(
-	@Body() DTO: CreatePairQuizGameDto,
-	@UserIdDecorator() userId: string
-	) {
-	const command = new SendAnswerCommand(DTO,userId)
-	const createSendAnswer = await this.commandBus.execute(command)
-	return createSendAnswer
-  }
+//   @Post('my-current/answers')
+//   @HttpCode(HttpStatus.OK)
+//   @UseGuards(BearerTokenPairQuizGame)
+//   async sendAnswer(
+// 	@Body() DTO: CreatePairQuizGameDto,
+// 	@UserIdDecorator() userId: string
+// 	) {
+// 	const command = new SendAnswerCommand(DTO,userId)
+// 	const createSendAnswer = await this.commandBus.execute(command)
+// 	return createSendAnswer
+//   }
 
 }

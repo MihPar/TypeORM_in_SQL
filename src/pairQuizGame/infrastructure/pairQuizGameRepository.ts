@@ -20,7 +20,24 @@ export class PairQuizGameRepository {
     protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressFirstPlayer>,
   ) {}
 
-  async foundGame(status: string): Promise<PairQuizGame | null> {
+  async foundGameByUserIdAndStatus(status: GameStatusEnum, userId: string): Promise<boolean> {
+	const foundGameByUserId = await this.pairQuizGame.find({
+		relations: {
+			firstPlayerProgress: true
+		},
+		where: {
+			status,
+			firstPlayerProgress: {
+				userId
+			}
+		}
+	})
+
+	if(!foundGameByUserId) return false
+	return true
+  }
+
+  async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {
     const foundQuizGame = await this.pairQuizGame
       .createQueryBuilder()
       .select()
@@ -36,11 +53,11 @@ export class PairQuizGameRepository {
     return createNewQuizGame;
   }
 
-  async changeStatusQuizGame(game: PairQuizGame): Promise<PairQuizGame | null> {
-    const changeStatusQuizGameOnActive = await this.pairQuizGame.save(game)
-	  if(!changeStatusQuizGameOnActive) return null
-	  return changeStatusQuizGameOnActive
-  }
+//   async changeStatusQuizGame(game: PairQuizGame): Promise<PairQuizGame | null> {
+//     const changeStatusQuizGameOnActive = await this.pairQuizGame.save(game)
+// 	  if(!changeStatusQuizGameOnActive) return null
+// 	  return changeStatusQuizGameOnActive
+//   }
 
   async getFiveQuestions(boolean: boolean): Promise<Question[] | null> {
 	const getQuestionForQuizGame = await this.question

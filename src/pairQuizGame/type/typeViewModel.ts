@@ -1,6 +1,6 @@
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer"
 
-export type QuestionTypeModel = {
+export type GameTypeModel = {
   id: string
   firstPlayerProgress: PlayerModel
   secondPlayerProgress: PlayerModel
