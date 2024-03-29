@@ -33,7 +33,7 @@ export class QuestionController {
 			pageSize: string
 		}
   ) {
-		query.bodySearchTerm = query.bodySearchTerm || "bodySearchTerm" 
+		query.bodySearchTerm = query.bodySearchTerm || "" 
 		query.pageNumber = query.pageNumber || "1"
 		query.pageSize = query.pageSize || "10"
 		query.publishedStatus = query.publishedStatus || "all"
@@ -42,11 +42,11 @@ export class QuestionController {
 		
 	const getAllQuestion = await this.questionQueryRepository.findAllQuestions(
 		query.bodySearchTerm,
-		query.pageNumber,
-		query.pageSize,
 		query.publishedStatus,
 		query.sortBy,
-		query.sortDirection
+		query.sortDirection,
+		query.pageNumber,
+		query.pageSize,
 		)
 	return getAllQuestion
   }
@@ -57,6 +57,7 @@ export class QuestionController {
   async createQuestion(@Body() createQuestBody: AnswerAndBodyClass) {
 	const command = new CreateQuestionCommand(createQuestBody.body, createQuestBody.correctAnswers)
 	const createQuestion = await this.commandBus.execute<CreateQuestionCommand | Question | null>(command)
+	// console.log("createQuestion: ", createQuestion)
     return createQuestion
   }
 
@@ -75,7 +76,8 @@ export class QuestionController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateQuestion(
 	@Body() DTO: AnswerAndBodyClass,
-    @Param('id') id: string) {
+    @Param('id') id: string
+	) {
 	const findQuestionById = await this.questionRepository.getQuestion(id)
 	if(!findQuestionById) throw new NotFoundException('404')
 
@@ -84,7 +86,7 @@ export class QuestionController {
 	return updateQuestionById
   }
 
-  @Put('publish')
+  @Put(':id/publish')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updatePublishQuestion(@Body() DTO: PublishClass, @Param('id') id: string): Promise<boolean | null> {
 	const findQuestionById = await this.questionRepository.getQuestion(id)

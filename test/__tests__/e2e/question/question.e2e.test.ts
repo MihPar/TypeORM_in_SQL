@@ -41,6 +41,11 @@ describe('/blogs', () => {
 		correctAnswers: string[]
 	}
 
+	let updateBody: {
+		body: string,
+		correctAnswers: string[]
+	}
+
     it('create question', async () => {
       question = [
         'What is your name',
@@ -60,6 +65,18 @@ describe('/blogs', () => {
           'programmer',
           'JS',
           'Nest.js',
+        ],
+      };
+
+	  updateBody = {
+        body: 'Question chapt_2',
+        correctAnswers: [
+          'Mickle1',
+          '251',
+          'Mexico1',
+          'programmer1',
+          'JS1',
+          'Nest.js1',
         ],
       };
       const create = await request(server)
@@ -90,13 +107,13 @@ describe('/blogs', () => {
 			.get('/sa/quiz/questions')
 			.auth('admin', 'qwerty')
 
-			expect(getAllQuestions.body).toBe(HttpStatus.CREATED)
+			expect(getAllQuestions.status).toBe(HttpStatus.OK)
 
-			expect(getAllQuestions.body.items.id).toEqual(id)
-			expect(getAllQuestions.body.items.body).toEqual(body)
-			expect(getAllQuestions.body.items.correctAnswers).toEqual(correctAnswers)
-			expect(getAllQuestions.body.items.createdAt).toEqual(createdAt)
-			expect(getAllQuestions.body.items.updatedAt).toEqual(updatedAt)
+			expect(getAllQuestions.body.items[0].id).toEqual(id)
+			expect(getAllQuestions.body.items[0].body).toEqual(body)
+			expect(getAllQuestions.body.items[0].correctAnswers).toEqual(correctAnswers)
+			expect(getAllQuestions.body.items[0].createdAt).toEqual(createdAt)
+			expect(getAllQuestions.body.items[0].updatedAt).toEqual(updatedAt)
 	})
 
 	it('delete question by id', async() => {
@@ -104,16 +121,16 @@ describe('/blogs', () => {
 			.delete(`/sa/quiz/questions/${id}`)
 			.auth('admin', 'qwerty')
 
-		expect(deleteQuestionById.body).toBe(HttpStatus.NO_CONTENT)
+		expect(deleteQuestionById.status).toBe(HttpStatus.NO_CONTENT)
 	})
 
 	it('Update question', async () => {
 		const updateQuestion = await request(server)
 			.put(`/sa/quiz/questions/${id}`)
 			.auth('admin', 'qwerty')
-			.send(requestBody)
+			.send(updateBody)
 
-		expect(updateQuestion.body).toBe(HttpStatus.NO_CONTENT)
+		expect(updateQuestion.status).toBe(HttpStatus.NO_CONTENT)
 	})
 
 	it('Published question', async() => {

@@ -5,3 +5,5 @@ module.exports = {
 	testTimeout: 1000000,
 	testRegex: '.e2e.test.ts$'
 };
+
+// yarn test:e2e question.e2e.test.ts

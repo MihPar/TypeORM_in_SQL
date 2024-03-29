@@ -7,8 +7,7 @@ import { AnswerAndBodyClass } from '../dto/question.dto';
 @Injectable()
 export class QuestionRepository {
   constructor(
-    @InjectRepository(Question)
-    protected readonly question: Repository<Question>,
+    @InjectRepository(Question) protected readonly question: Repository<Question>,
   ) {}
 
   async createQuestion(question: Question): Promise<Question | null> {
@@ -25,8 +24,10 @@ export class QuestionRepository {
 	const findQuestion = await this.question
 		.createQueryBuilder()
 		.select()
-		.where(`id = :questionId`, {questionId})
+		.where(`id = :id`, {id: questionId})
 		.getOne()
+
+		// console.log("findQuestion: ", findQuestion)
 	if(!findQuestion) return null
 		return findQuestion
   }
@@ -43,6 +44,7 @@ export class QuestionRepository {
   }
 
   async udpatedQuestionById(DTO: AnswerAndBodyClass, id: string): Promise<boolean | null> {
+	console.log("try")
 	const updateQuestionById = await this.question
 		.createQueryBuilder()
 		.update()

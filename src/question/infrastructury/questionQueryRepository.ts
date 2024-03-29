@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Question } from "../domain/entity.question";
 import { Repository } from "typeorm";
 import { QuestionType } from "../question.type";
+import { PaginationType } from "../../types/pagination.types";
 
 @Injectable()
 export class QuestionQueryRepository {
@@ -16,25 +17,35 @@ export class QuestionQueryRepository {
 		sortDirection: string,
 		pageNumber: string,
 		pageSize: string,
-	) {
-		const getAllQuestions = await this.question
+	): Promise<PaginationType<QuestionType>> {
+
+		const getAllQuestionsQuery =  this.question
 			.createQueryBuilder()
 			.select()
-			.where(
-				`body ILIKE :bodySearchTerm AND published ILIKE :publishedStatus`, 
-				{bodySearchTerm: `%${bodySearchTerm}%`, publishedStatus: `%${publishedStatus}%`}
-			)
-			.orderBy(`${sortBy}`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
+			.where(`body ILIKE :bodySearchTerm`, {bodySearchTerm: `%${bodySearchTerm}%`})
+			.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)
-			.getMany()
 
-		const getTotalCountAllQuestons = await this.question
-			.createQueryBuilder()
-			.where(`body ILIKE :bodySearchTerm AND published ILIKE :publishedStatus`, {bodySearchTerm: `${bodySearchTerm}`, publishedStatus: `${publishedStatus}`})
-			.getCount()
+if (publishedStatus !== 'all') {
+  getAllQuestionsQuery.andWhere(`published = :publishedStatus`, {
+    publishedStatus: publishedStatus === 'published' ? true : false,
+  });
+}
+const getAllQuestions = await getAllQuestionsQuery.getMany();
 
-		const pageCount = Math.ceil(getTotalCountAllQuestons/+pageSize)
+const getTotalCountAllQuestonsQuery = this.question
+  .createQueryBuilder()
+  .where(`body ILIKE :bodySearchTerm`, { bodySearchTerm: `${bodySearchTerm}` });
+
+if (publishedStatus !== 'all') {
+	getTotalCountAllQuestonsQuery.andWhere(`published = :publishedStatus`, {
+    publishedStatus: publishedStatus === 'published' ? true : false,
+  });
+}
+const getTotalCountAllQuestons = await getTotalCountAllQuestonsQuery.getCount();
+
+const pageCount = Math.ceil(getTotalCountAllQuestons / +pageSize);
 
 		return {
 			pagesCount: pageCount,
