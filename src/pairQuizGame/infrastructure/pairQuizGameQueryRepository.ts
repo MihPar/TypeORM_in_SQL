@@ -12,50 +12,51 @@ export class PairQuezGameQueryRepository {
 		@InjectRepository(PairQuizGame) protected readonly pairQuezGame: Repository<PairQuizGame>,
 		protected readonly usersQueryRepository: UsersQueryRepository
 	) {}
-	async getCurrentUnFinGame(status: GameStatusEnum, userId: string): Promise<GameTypeModel> {
-		const currentUnFinishedGame = await this.pairQuezGame.find({
-			relations: {
-				firstPlayerProgress: true,
-				secondPlayerProgress: true,
-				question: true
-			},
-			where: {
-				status,
-				id: userId
-			}
-		})
-		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(currentUnFinishedGame.secondPlayerProgress.userSecondPlyerId)
-		const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(userId)
-		const loginFirstPlayer = getLoginFirstPlayer.login
-		const loginSecondPlayer = getLoginSecondPlayer.login
+	// async getCurrentUnFinGame(status: GameStatusEnum, userId: string): Promise<GameTypeModel> {
+	// 	const currentUnFinishedGame = await this.pairQuezGame.find({
+	// 		relations: {
+	// 			firstPlayerProgress: true,
+	// 			secondPlayerProgress: true,
+	// 			question: true
+	// 		},
+	// 		where: {
+	// 			status,
+	// 			id: userId
+	// 		}
+	// 	})
 
-		return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, getLoginFirstPlayer, getLoginSecondPlayer)
-	}
+	// 	const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(currentUnFinishedGame.secondPlayerProgress.userSecondPlyerId)
+	// 	const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(userId)
+	// 	const loginFirstPlayer = getLoginFirstPlayer.login
+	// 	const loginSecondPlayer = getLoginSecondPlayer.login
 
-	async getGameById(id: string, userId: string): Promise<GameTypeModel | null> {
-		const getGame = await this.pairQuezGame.find({
-			relations: {
-				firstPlayerProgress: true,
-				secondPlayerProgress: true,
-				question: true
-			},
-			where: {
-				id
-			}
-		})
-		if(!getGame) return null
-		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(getGame.secondPlayerProgress.userSecondPlyerId)
-		const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(userId)
-		const loginFirstPlayer = getLoginFirstPlayer.login
-		const loginSecondPlayer = getLoginSecondPlayer.login
-		return PairQuizGame.getGameById(getGame, loginFirstPlayer, loginSecondPlayer)
-	}
+	// 	return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, getLoginFirstPlayer, getLoginSecondPlayer)
+	// }
 
-	async getUnfinishedGame(userId: string) {}
+	// async getGameById(id: string, userId: string): Promise<GameTypeModel | null> {
+	// 	const getGame = await this.pairQuezGame.find({
+	// 		relations: {
+	// 			firstPlayerProgress: true,
+	// 			secondPlayerProgress: true,
+	// 			question: true
+	// 		},
+	// 		where: {
+	// 			id
+	// 		}
+	// 	})
+	// 	if(!getGame) return null
+	// 	const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(getGame.secondPlayerProgress.userSecondPlyerId)
+	// 	const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(userId)
+	// 	const loginFirstPlayer = getLoginFirstPlayer.login
+	// 	const loginSecondPlayer = getLoginSecondPlayer.login
+	// 	return PairQuizGame.getGameById(getGame, loginFirstPlayer, loginSecondPlayer)
+	// }
 
-	async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string) {}
+	// async getUnfinishedGame(userId: string) {}
 
-	async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string) {}
+	// async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string) {}
 
-	async getFirstPlayerByGameId(gameId: string) {}
+	// async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string) {}
+
+	// async getFirstPlayerByGameId(gameId: string) {}
 }

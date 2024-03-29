@@ -13,31 +13,31 @@ import { GameStatusEnum } from '../enum/enumPendingPlayer';
 @Controller('pair-quiz-game/pairs')
 export class PairQuizGameController {
   constructor(
-	protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
-	protected readonly pairQuizGameRepository: PairQuizGameRepository,
+	// protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
+	// protected readonly pairQuizGameRepository: PairQuizGameRepository,
 	protected readonly commandBus: CommandBus
 	) {}
   
-  @Get('my-current')
-  @HttpCode(HttpStatus.CREATED)
-  @UseGuards(BearerTokenPairQuizGame)
-  async getCurenctUnFinishedGame(
-	@UserIdDecorator() userId: string,
-  ) {
-	const foundGameByUserId = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(GameStatusEnum.Active, userId)
-  }
+//   @Get('my-current')
+//   @HttpCode(HttpStatus.CREATED)
+//   @UseGuards(BearerTokenPairQuizGame)
+//   async getCurenctUnFinishedGame(
+// 	@UserIdDecorator() userId: string,
+//   ) {
+// 	const foundGameByUserId = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(GameStatusEnum.Active, userId)
+//   }
 
-  @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(BearerTokenPairQuizGame)
-  async getGameById(
-	@Param('id') id: string,
-	@UserIdDecorator() userId: string
-	): Promise<GameTypeModel | null> {
-		const getGameById = await this.pairQuezGameQueryRepository.getGameById(id, userId)
-		if(!getGameById) throw new NotFoundException('404')
-		return getGameById
-  }
+//   @Get(':id')
+//   @HttpCode(HttpStatus.OK)
+//   @UseGuards(BearerTokenPairQuizGame)
+//   async getGameById(
+// 	@Param('id') id: string,
+// 	@UserIdDecorator() userId: string
+// 	): Promise<GameTypeModel | null> {
+// 		const getGameById = await this.pairQuezGameQueryRepository.getGameById(id, userId)
+// 		if(!getGameById) throw new NotFoundException('404')
+// 		return getGameById
+//   }
 
   @Post('connect')
   @HttpCode(HttpStatus.OK)

@@ -1,6 +1,9 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
+import { PairQuizGameProgressSecondPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer";
+import { AnswersFirstPlayer } from "../../pairQuizGameProgress/domain/entity.answersFirstPlayer";
+import { AnswersSecondPlayer } from "../../pairQuizGameProgress/domain/entity.answersSecondPlayer";
 
 @Entity()
 export class Question {
@@ -10,7 +13,7 @@ export class Question {
 	@Column()
 	body: string
 
-	@Column()
+	@Column("varchar", {array: true, nullable: false, default : []})
 	correctAnswers: string[]
 
 	@Column()
@@ -26,7 +29,16 @@ export class Question {
 	games: PairQuizGame[]
 
 	@ManyToOne(() => PairQuizGameProgressFirstPlayer, p => p.question)
-	progress: PairQuizGameProgressFirstPlayer
+	progressFirstPlayer: PairQuizGameProgressFirstPlayer
+
+	@ManyToOne(() => PairQuizGameProgressSecondPlayer, p => p.question)
+	progressSecondPlayer: PairQuizGameProgressSecondPlayer
+
+	@OneToMany(() => AnswersFirstPlayer, a => a.question)
+	answersFirstPlayer: AnswersFirstPlayer
+
+	@OneToMany(() => AnswersSecondPlayer, a => a.question)
+	answersSecondPlayer: AnswersSecondPlayer
 
 	static createQuestion(item: Question) {
 		return {

@@ -1,14 +1,18 @@
-// import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-// import { PairQuizGameProgressSecondPlayer } from "./entity.pairQuizGameProgressSecondPlayer";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { PairQuizGameProgressSecondPlayer } from "./entity.pairQuizGameProgressSecondPlayer";
+import { Question } from "../../question/domain/entity.question";
 
-// @Entity()
-// export class AnswersSecondPlayer {
-// 	@PrimaryGeneratedColumn()
-// 	id: string
+@Entity()
+export class AnswersSecondPlayer {
+	@PrimaryGeneratedColumn()
+	id: string
 
-// 	@ManyToOne(() => PairQuizGameProgressSecondPlayer, p => p.answers)
-// 	progress: PairQuizGameProgressSecondPlayer
+	@ManyToOne(() => PairQuizGameProgressSecondPlayer, p => p.answers)
+	progress: PairQuizGameProgressSecondPlayer
 
-// 	@Column({nullable: true})
-// 	answers: string[]
-// }
+	@ManyToOne(() => Question, p => p.answersSecondPlayer)
+	question: Question
+
+	@Column({nullable: true})
+	answers: string
+}

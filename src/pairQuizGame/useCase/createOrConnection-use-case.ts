@@ -67,7 +67,6 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			progressSecondPlayer.userSecondPlyerId = command.userId
 			progressSecondPlayer.answerStatus = AnswerStatusEnum.Correct
 			const saveProgressSecondPlayer = await this.pairQuizGameProgressRepository.createProgressForSecondPlayer(progressSecondPlayer)
-
 			
 			foundQuizGame.secondPlayerId = command.userId
 			foundQuizGame.startGameDate = new Date()
@@ -80,7 +79,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			/****** to get array of answers ********/
 
 			// static method
-			return PairQuizGame.quizGameViewModelForFoundPair(foundQuizGame, progressSecondPlayer, login, getFiveQuestionsQuizGame[0])
+			return PairQuizGame.quizGameViewModelForFoundPair(foundQuizGame, progressSecondPlayer, login, getFiveQuestionsQuizGame)
 		}
 	}
 }

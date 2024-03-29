@@ -7,7 +7,8 @@ import { PairQuizGameProgressSecondPlayer } from "../domain/entity.pairQuizGameP
 @Injectable()
 export class PairQuizGameProgressRepository {
 	constructor(
-		@InjectRepository(PairQuizGameProgressFirstPlayer) protected readonly pairQuizGameProgressFirstPlayer: Repository<PairQuizGameProgressFirstPlayer>
+		@InjectRepository(PairQuizGameProgressFirstPlayer) protected readonly pairQuizGameProgressFirstPlayer: Repository<PairQuizGameProgressFirstPlayer>,
+		@InjectRepository(PairQuizGameProgressSecondPlayer) protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressSecondPlayer>
 	) {}
 	async createProgress(progressFirstPlayer: PairQuizGameProgressFirstPlayer) {
 		const createProgressFirstPlayer = await this.pairQuizGameProgressFirstPlayer.save(progressFirstPlayer)
@@ -15,7 +16,7 @@ export class PairQuizGameProgressRepository {
 	}
 
 	async createProgressForSecondPlayer(progressSecondPlayer: PairQuizGameProgressSecondPlayer) {
-		const createProgressSecondPlayer = await this.pairQuizGameProgressFirstPlayer.save(progressSecondPlayer)
+		const createProgressSecondPlayer = await this.pairQuizGameProgressSecondPlayer.save(progressSecondPlayer)
 		return createProgressSecondPlayer
 	}
 

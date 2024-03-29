@@ -15,7 +15,6 @@ import { updateQuestionPublishCommand } from '../useCases/updateQuestionPublishe
 @UseGuards(AuthBasic)
 export class QuestionController {
   constructor(
-	private readonly questionService: QuestionService,
 	private readonly questionQueryRepository: QuestionQueryRepository,
 	private readonly questionRepository: QuestionRepository,
 	private readonly commandBus: CommandBus

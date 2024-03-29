@@ -3,6 +3,7 @@ import { Question } from "../../question/domain/entity.question";
 import { User } from "../../users/entities/user.entity";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
+import { AnswersFirstPlayer } from "./entity.answersFirstPlayer";
 
 @Entity()
 export class PairQuizGameProgressFirstPlayer {
@@ -21,7 +22,7 @@ export class PairQuizGameProgressFirstPlayer {
 	@Column()
 	userId: string
 
-	@OneToMany(() => Question, q => q.progress)
+	@OneToMany(() => Question, q => q.progressFirstPlayer)
 	question: Question[]
 
 	@Column()
@@ -39,6 +40,6 @@ export class PairQuizGameProgressFirstPlayer {
 	@Column({default: 0})
 	bonus_score: number
 
-	// @OneToMany(() => AnswersFirstPlayer, a => a.progress)
-	// answers: AnswersFirstPlayer[]
+	@OneToMany(() => AnswersFirstPlayer, a => a.progress)
+	answers: AnswersFirstPlayer[]
 }

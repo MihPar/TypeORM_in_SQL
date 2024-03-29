@@ -20,21 +20,33 @@ export class PairQuizGameRepository {
     protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressFirstPlayer>,
   ) {}
 
-  async foundGameByUserIdAndStatus(status: GameStatusEnum, userId: string): Promise<boolean> {
-	const foundGameByUserId = await this.pairQuizGame.find({
-		relations: {
-			firstPlayerProgress: true
-		},
-		where: {
-			status,
-			firstPlayerProgress: {
-				userId
-			}
-		}
-	})
+  async foundGameByUserIdAndStatus(
+    status: GameStatusEnum,
+    userId: string,
+  ): Promise<boolean> {
+    const foundGameByUserId = await this.pairQuizGame.find({
+      relations: {
+        firstPlayerProgress: true,
+        secondPlayerProgress: true,
+      },
+      where: [
+        {
+          status,
+          firstPlayerProgress: {
+            userId,
+          },
+        },
+        {
+          status,
+          secondPlayerProgress: {
+            userId,
+          },
+        },
+      ],
+    });
 
-	if(!foundGameByUserId) return false
-	return true
+    if (!foundGameByUserId) return false;
+    return true;
   }
 
   async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {
@@ -53,23 +65,23 @@ export class PairQuizGameRepository {
     return createNewQuizGame;
   }
 
-//   async changeStatusQuizGame(game: PairQuizGame): Promise<PairQuizGame | null> {
-//     const changeStatusQuizGameOnActive = await this.pairQuizGame.save(game)
-// 	  if(!changeStatusQuizGameOnActive) return null
-// 	  return changeStatusQuizGameOnActive
-//   }
+  //   async changeStatusQuizGame(game: PairQuizGame): Promise<PairQuizGame | null> {
+  //     const changeStatusQuizGameOnActive = await this.pairQuizGame.save(game)
+  // 	  if(!changeStatusQuizGameOnActive) return null
+  // 	  return changeStatusQuizGameOnActive
+  //   }
 
   async getFiveQuestions(boolean: boolean): Promise<Question[] | null> {
-	const getQuestionForQuizGame = await this.question
-		.createQueryBuilder()
-		.select()
-		.where(`'published' = :boolean`, {boolean})
-		.orderBy("RANDOM()")
-		.limit(5)
-		.getMany()
+    const getQuestionForQuizGame = await this.question
+      .createQueryBuilder()
+      .select()
+      .where(`'published' = :boolean`, { boolean })
+      .orderBy('RANDOM()')
+      .limit(5)
+      .getMany();
 
-		if(!getQuestionForQuizGame) return null
-		return getQuestionForQuizGame
+    if (!getQuestionForQuizGame) return null;
+    return getQuestionForQuizGame;
   }
 
   // async connectionOrCreatePairQuizGame(userId: string) {
