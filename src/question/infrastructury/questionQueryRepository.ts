@@ -64,4 +64,12 @@ const pageCount = Math.ceil(getTotalCountAllQuestons / +pageSize);
 	}
 
 	async getQuestionById(gameQuestionId) {}
+
+	async deleteAllQuestions() {
+		await this.question
+			.createQueryBuilder()
+			.delete()
+			.execute()
+		return true
+	}
 }

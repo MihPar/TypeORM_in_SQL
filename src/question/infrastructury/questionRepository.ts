@@ -20,14 +20,14 @@ export class QuestionRepository {
 	}
   }
 
-  async getQuestion(questionId: string) {
+  async getQuestion(questionId: string): Promise<Question | null> {
 	const findQuestion = await this.question
 		.createQueryBuilder()
 		.select()
 		.where(`id = :id`, {id: questionId})
 		.getOne()
 
-		// console.log("findQuestion: ", findQuestion)
+		console.log("findQuestion: ", findQuestion)
 	if(!findQuestion) return null
 		return findQuestion
   }
@@ -48,7 +48,7 @@ export class QuestionRepository {
 	const updateQuestionById = await this.question
 		.createQueryBuilder()
 		.update()
-		.set({body: DTO.body, correctAnswers: DTO.correctAnswers})
+		.set({body: DTO.body, correctAnswers: DTO.correctAnswers, updatedAt: new Date()})
 		.where(`id = :id`, {id})
 		.execute()
 

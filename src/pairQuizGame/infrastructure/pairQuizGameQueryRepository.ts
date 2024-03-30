@@ -12,7 +12,14 @@ export class PairQuezGameQueryRepository {
 		@InjectRepository(PairQuizGame) protected readonly pairQuezGame: Repository<PairQuizGame>,
 		protected readonly usersQueryRepository: UsersQueryRepository
 	) {}
-	// async getCurrentUnFinGame(status: GameStatusEnum, userId: string): Promise<GameTypeModel> {
+	async deleteAllPairQuizGame() {
+		await this.pairQuezGame
+			.createQueryBuilder()
+			.delete()
+			.execute()
+			return true
+	} 
+		// async getCurrentUnFinGame(status: GameStatusEnum, userId: string): Promise<GameTypeModel> {
 	// 	const currentUnFinishedGame = await this.pairQuezGame.find({
 	// 		relations: {
 	// 			firstPlayerProgress: true,

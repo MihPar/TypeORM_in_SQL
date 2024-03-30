@@ -139,7 +139,7 @@ describe('/blogs', () => {
 			.auth('admin', 'qwerty')
 			.send({published: true})
 		
-		expect(updatePublishedQuestion.body).toBe(HttpStatus.NO_CONTENT)
+		expect(updatePublishedQuestion.status).toBe(HttpStatus.NO_CONTENT)
 	})
   });
 });

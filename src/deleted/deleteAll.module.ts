@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { TestingService } from './testing.service';
 import { TestingController } from './deleteAll.controller';
 import { CommandBus, CqrsModule } from '@nestjs/cqrs';
 import { DeleteAllDevicesUseCase } from '../security-devices/useCase/deleteAllDevices-use-case';
@@ -23,6 +22,15 @@ import { BlogsRepositoryForSA } from '../blogsForSA/blogsForSA.repository';
 import { LikeForPost } from '../likes/entity/likesForPost.entity';
 import { LikeForComment } from '../likes/entity/likesForComment.entity';
 import { Blogs } from '../blogs/entity/blogs.entity';
+import { DeleteAllPairQuizGameUseCase } from '../pairQuizGame/useCase/deleteAllPairQuizGamep-use-case';
+import { PairQuizGame } from '../pairQuizGame/domain/entity.pairQuezGame';
+import { PairQuezGameQueryRepository } from '../pairQuizGame/infrastructure/pairQuizGameQueryRepository';
+import { DeleteAllAnswersFirstPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllAnswersFirstPlayer';
+import { PairQuizGameProgressQueryRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
+import { DeleteAllAnswersSecondPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllAnswersSecondPlayer';
+import { DeleteAllPairQuizGameProgressFirstPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
+import { DeleteAllPairQuizGameProgressSecondPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressSecondPlayer';
+import { DeleteAllQuestionUseCase } from '../question/useCases/deleteAllQuestions-use-case';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -31,9 +39,14 @@ const useCase = [
   DeleteAllPostsUseCase,
   DeleteAllBlogsUseCase,
   DeleteAllBlogsForSAUseCase,
+  DeleteAllPairQuizGameUseCase,
+  DeleteAllAnswersFirstPlayerUseCase,
+  DeleteAllAnswersSecondPlayerUseCase,
+  DeleteAllPairQuizGameProgressFirstPlayerUseCase,
+  DeleteAllPairQuizGameProgressSecondPlayerUseCase,
+  DeleteAllQuestionUseCase
 ];
 
-const service = [TestingService];
 const repo = [
   DeviceRepository,
   UsersRepository,
@@ -43,12 +56,14 @@ const repo = [
   LikesRepository,
   BlogsRepository,
   BlogsRepositoryForSA,
+  PairQuezGameQueryRepository,
+  PairQuizGameProgressQueryRepository
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame]), CqrsModule],
   controllers: [TestingController],
-  providers: [...useCase, ...service, ...repo],
+  providers: [...useCase, ...repo],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]
 })
 export class DeletedModule {}

@@ -9,6 +9,12 @@ import { DeleteAllBlogsForSACommnad } from '../blogsForSA/use-case/deletAllBlogs
 import { DeleteAllCommentLikesCommand } from '../likes/use-case/deleteAllCommentLikes-use-case copy';
 import { DeleteAllPostLikesCommand } from '../likes/use-case/deleteAllPostLikes-use-case';
 import { DeleteAllCommentsCommand } from '../comment/use-case/deleteAllComments-use-case';
+import { DeleteAllPairQuizGameCommnad } from '../pairQuizGame/useCase/deleteAllPairQuizGamep-use-case';
+import { DeleteAllAnswersFirstPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllAnswersFirstPlayer';
+import { DeleteAllAnswersSecondPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllAnswersSecondPlayer';
+import { DeleteAllPairQuizGameProgressFirstPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
+import { DeleteAllPairQuizGameProgressSecondPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressSecondPlayer';
+import { DeleteAllQuestionCommand } from '../question/useCases/deleteAllQuestions-use-case';
 
 // @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
@@ -29,5 +35,11 @@ export class TestingController {
     await this.commandBus.execute(new DeleteAllBlogsCommnad())
     await this.commandBus.execute(new DeleteAllBlogsForSACommnad())
     await this.commandBus.execute(new DeleteAllUsersCommnad())
+	await this.commandBus.execute(new DeleteAllPairQuizGameCommnad())
+	await this.commandBus.execute(new DeleteAllAnswersFirstPlayerCommand())
+	await this.commandBus.execute(new DeleteAllAnswersSecondPlayerCommand())
+	await this.commandBus.execute(new DeleteAllPairQuizGameProgressFirstPlayerCommand())
+	await this.commandBus.execute(new DeleteAllPairQuizGameProgressSecondPlayerCommand())
+	await this.commandBus.execute(new DeleteAllQuestionCommand())
   }
 }
