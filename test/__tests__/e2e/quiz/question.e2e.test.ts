@@ -68,17 +68,7 @@ describe('/blogs', () => {
         ],
       };
 
-	  updateBody = {
-        body: 'Question chapt_2',
-        correctAnswers: [
-          'Mickle1',
-          '251',
-          'Mexico1',
-          'programmer1',
-          'JS1',
-          'Nest.js1',
-        ],
-      };
+	  
       const create = await request(server)
         .post('/sa/quiz/questions')
         .auth('admin', 'qwerty')
@@ -116,15 +106,18 @@ describe('/blogs', () => {
 			expect(getAllQuestions.body.items[0].updatedAt).toEqual(updatedAt)
 	})
 
-	it('delete question by id', async() => {
-		const deleteQuestionById = await request(server)
-			.delete(`/sa/quiz/questions/${id}`)
-			.auth('admin', 'qwerty')
-
-		expect(deleteQuestionById.status).toBe(HttpStatus.NO_CONTENT)
-	})
-
 	it('Update question', async () => {
+		updateBody = {
+			body: 'Question chapt_2',
+			correctAnswers: [
+			  'Mickle1',
+			  '251',
+			  'Mexico1',
+			  'programmer1',
+			  'JS1',
+			  'Nest.js1',
+			],
+		  };
 		const updateQuestion = await request(server)
 			.put(`/sa/quiz/questions/${id}`)
 			.auth('admin', 'qwerty')
@@ -141,5 +134,14 @@ describe('/blogs', () => {
 		
 		expect(updatePublishedQuestion.status).toBe(HttpStatus.NO_CONTENT)
 	})
+
+	it('delete question by id', async() => {
+		const deleteQuestionById = await request(server)
+			.delete(`/sa/quiz/questions/${id}`)
+			.auth('admin', 'qwerty')
+
+		expect(deleteQuestionById.status).toBe(HttpStatus.NO_CONTENT)
+	})
+
   });
 });

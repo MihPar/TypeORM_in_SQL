@@ -22,12 +22,16 @@ export class QuestionRepository {
 
   async getQuestion(questionId: string): Promise<Question | null> {
 	const findQuestion = await this.question
+	// .find({
+	// 	where: {
+	// 		id: questionId
+	// 	}
+	// })
 		.createQueryBuilder()
 		.select()
 		.where(`id = :id`, {id: questionId})
 		.getOne()
 
-		console.log("findQuestion: ", findQuestion)
 	if(!findQuestion) return null
 		return findQuestion
   }
@@ -44,7 +48,6 @@ export class QuestionRepository {
   }
 
   async udpatedQuestionById(DTO: AnswerAndBodyClass, id: string): Promise<boolean | null> {
-	console.log("try")
 	const updateQuestionById = await this.question
 		.createQueryBuilder()
 		.update()

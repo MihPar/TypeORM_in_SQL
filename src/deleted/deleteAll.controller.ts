@@ -25,7 +25,7 @@ export class TestingController {
 
   @Delete()
   @HttpCode(204)
-  @SkipThrottle({default: true})
+//   @SkipThrottle({default: true})
   async remove() {
     await this.commandBus.execute(new DeleteAllDevicesCommnad())
     await this.commandBus.execute(new DeleteAllCommentLikesCommand())

@@ -22,7 +22,9 @@ export class Question {
 	@Column({nullable: true})
 	createdAt: Date
 
-	@Column({nullable: true})
+	@Column({
+		nullable: true
+	})
 	updatedAt: Date
 
 	@ManyToMany(() => PairQuizGame, g => g.question)

@@ -77,14 +77,11 @@ export class QuestionController {
   async updateQuestion(
 	@Body() DTO: AnswerAndBodyClass,
     @Param('id') id: string
-	): Promise<boolean> {
+	): Promise<boolean | null> {
 	const findQuestionById = await this.questionRepository.getQuestion(id)
-	console.log("id: ", id)
-// console.log('82: ', findQuestionById)
 	if(!findQuestionById) throw new NotFoundException('404')
-// console.log('84: ', findQuestionById)
 	const command = new UpdateQuestionCommand(id, DTO)
-	const updateQuestionById = await this.commandBus.execute<UpdateQuestionCommand | null>(command)
+	const updateQuestionById = await this.commandBus.execute<UpdateQuestionCommand | boolean | null>(command)
 	return updateQuestionById
   }
 

@@ -1,4 +1,4 @@
-import { IsString, MaxLength, MinLength } from "class-validator"
+import { IsArray, IsBoolean, IsString, MaxLength, MinLength } from "class-validator"
 
 export class AnswerAndBodyClass {
 	@IsString()
@@ -6,11 +6,12 @@ export class AnswerAndBodyClass {
 	@MaxLength(500)
 	body: string
 
-	@IsString()
+	@IsArray()
 	correctAnswers: string[]
 }
 
 
 export class PublishClass {
+	@IsBoolean()
 	published: boolean
 }

@@ -32,27 +32,27 @@ if (publishedStatus !== 'all') {
     publishedStatus: publishedStatus === 'published' ? true : false,
   });
 }
-const getAllQuestions = await getAllQuestionsQuery.getMany();
+const getAllQuestions = await getAllQuestionsQuery.getManyAndCount();
 
-const getTotalCountAllQuestonsQuery = this.question
-  .createQueryBuilder()
-  .where(`body ILIKE :bodySearchTerm`, { bodySearchTerm: `${bodySearchTerm}` });
+// const getTotalCountAllQuestonsQuery = this.question
+//   .createQueryBuilder()
+//   .where(`body ILIKE :bodySearchTerm`, { bodySearchTerm: `${bodySearchTerm}` });
 
-if (publishedStatus !== 'all') {
-	getTotalCountAllQuestonsQuery.andWhere(`published = :publishedStatus`, {
-    publishedStatus: publishedStatus === 'published' ? true : false,
-  });
-}
-const getTotalCountAllQuestons = await getTotalCountAllQuestonsQuery.getCount();
+// if (publishedStatus !== 'all') {
+// 	getTotalCountAllQuestonsQuery.andWhere(`published = :publishedStatus`, {
+//     publishedStatus: publishedStatus === 'published' ? true : false,
+//   });
+// }
+// const getTotalCountAllQuestons = await getTotalCountAllQuestonsQuery.getCount();
 
-const pageCount = Math.ceil(getTotalCountAllQuestons / +pageSize);
-
+// const pageCount = Math.ceil(getTotalCountAllQuestons / +pageSize);
+const pageCount = Math.ceil(getAllQuestions[1]/ +pageSize);
 		return {
 			pagesCount: pageCount,
 			page: +pageNumber,
 			pageSize: +pageSize,
-			totalCount: getTotalCountAllQuestons,
-			items: getAllQuestions.map((question: Question): QuestionType => ({
+			totalCount: +getAllQuestions[1],
+			items: getAllQuestions[0].map((question: Question): QuestionType => ({
 				id: question.id,
 				body: question.body,
 				correctAnswers: question.correctAnswers,

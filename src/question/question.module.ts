@@ -10,10 +10,11 @@ import { classCreateQuestionUseCase } from './useCases/createQuestion-use-case';
 import { QuestionRepository } from './infrastructury/questionRepository';
 import { DeletedQuestionUseCase } from './useCases/deletedQuestion-use-case';
 import { UpdateQuestionUseCase } from './useCases/updateQuestion-use-case';
+import { updateQuestionPublishUseCase } from './useCases/updateQuestionPublished';
 
 const repo = [QuestionQueryRepository, QuestionRepository]
 const service = [QuestionService, JwtService]
-const useCase = [classCreateQuestionUseCase, DeletedQuestionUseCase, UpdateQuestionUseCase]
+const useCase = [classCreateQuestionUseCase, DeletedQuestionUseCase, UpdateQuestionUseCase, updateQuestionPublishUseCase]
 
 @Module({
   imports: [TypeOrmModule.forFeature([Question]), CqrsModule],

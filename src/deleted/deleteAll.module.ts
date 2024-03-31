@@ -31,6 +31,13 @@ import { DeleteAllAnswersSecondPlayerUseCase } from '../pairQuizGameProgress/use
 import { DeleteAllPairQuizGameProgressFirstPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
 import { DeleteAllPairQuizGameProgressSecondPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressSecondPlayer';
 import { DeleteAllQuestionUseCase } from '../question/useCases/deleteAllQuestions-use-case';
+import { QuestionQueryRepository } from '../question/infrastructury/questionQueryRepository';
+import { QuestionRepository } from '../question/infrastructury/questionRepository';
+import { Question } from '../question/domain/entity.question';
+import { AnswersFirstPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
+import { AnswersSecondPlayer } from '../pairQuizGameProgress/domain/entity.answersSecondPlayer';
+import { PairQuizGameProgressFirstPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
+import { PairQuizGameProgressSecondPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -44,7 +51,9 @@ const useCase = [
   DeleteAllAnswersSecondPlayerUseCase,
   DeleteAllPairQuizGameProgressFirstPlayerUseCase,
   DeleteAllPairQuizGameProgressSecondPlayerUseCase,
-  DeleteAllQuestionUseCase
+  DeleteAllQuestionUseCase,
+  QuestionQueryRepository,
+  QuestionRepository
 ];
 
 const repo = [
@@ -57,11 +66,11 @@ const repo = [
   BlogsRepository,
   BlogsRepositoryForSA,
   PairQuezGameQueryRepository,
-  PairQuizGameProgressQueryRepository
+  PairQuizGameProgressQueryRepository,
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersFirstPlayer, AnswersSecondPlayer, PairQuizGameProgressFirstPlayer, PairQuizGameProgressSecondPlayer]), CqrsModule],
   controllers: [TestingController],
   providers: [...useCase, ...repo],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]
