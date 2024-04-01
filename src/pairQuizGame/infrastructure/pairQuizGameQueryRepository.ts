@@ -5,12 +5,14 @@ import { Repository } from "typeorm";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
 import { GameTypeModel } from "../type/typeViewModel";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
+import { PairQuizGameRepository } from "./pairQuizGameRepository";
 
 @Injectable()
 export class PairQuezGameQueryRepository {
 	constructor(
 		@InjectRepository(PairQuizGame) protected readonly pairQuezGame: Repository<PairQuizGame>,
-		protected readonly usersQueryRepository: UsersQueryRepository
+		protected readonly usersQueryRepository: UsersQueryRepository,
+		protected readonly pairQuizGameRepository: PairQuizGameRepository
 	) {}
 	async deleteAllPairQuizGame() {
 		await this.pairQuezGame
@@ -19,45 +21,41 @@ export class PairQuezGameQueryRepository {
 			.execute()
 			return true
 	} 
-		// async getCurrentUnFinGame(status: GameStatusEnum, userId: string): Promise<GameTypeModel> {
-	// 	const currentUnFinishedGame = await this.pairQuezGame.find({
-	// 		relations: {
-	// 			firstPlayerProgress: true,
-	// 			secondPlayerProgress: true,
-	// 			question: true
-	// 		},
-	// 		where: {
-	// 			status,
-	// 			id: userId
-	// 		}
-	// 	})
+	async getCurrentUnFinGame(status: GameStatusEnum, userId?: string): Promise<GameTypeModel | null> {
+		const currentUnFinishedGame = await this.pairQuezGame
+			.createQueryBuilder()
+			.select()
+			.where(`status = :status`, {status})
+			.getOne()
 
-	// 	const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(currentUnFinishedGame.secondPlayerProgress.userSecondPlyerId)
-	// 	const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(userId)
-	// 	const loginFirstPlayer = getLoginFirstPlayer.login
-	// 	const loginSecondPlayer = getLoginSecondPlayer.login
+		if(!currentUnFinishedGame) return null
 
-	// 	return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, getLoginFirstPlayer, getLoginSecondPlayer)
-	// }
+		const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(currentUnFinishedGame.firstPlayerProgressId)
+		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(currentUnFinishedGame.secondPlayerProgressId)
+		
+		const loginFirstPlayer = getLoginFirstPlayer.login
+		const loginSecondPlayer = getLoginSecondPlayer.login
 
-	// async getGameById(id: string, userId: string): Promise<GameTypeModel | null> {
-	// 	const getGame = await this.pairQuezGame.find({
-	// 		relations: {
-	// 			firstPlayerProgress: true,
-	// 			secondPlayerProgress: true,
-	// 			question: true
-	// 		},
-	// 		where: {
-	// 			id
-	// 		}
-	// 	})
-	// 	if(!getGame) return null
-	// 	const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(getGame.secondPlayerProgress.userSecondPlyerId)
-	// 	const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(userId)
-	// 	const loginFirstPlayer = getLoginFirstPlayer.login
-	// 	const loginSecondPlayer = getLoginSecondPlayer.login
-	// 	return PairQuizGame.getGameById(getGame, loginFirstPlayer, loginSecondPlayer)
-	// }
+		const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(true)
+
+		return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
+	}
+
+	async getGameById(id: string): Promise<GameTypeModel | null> {
+		const getGameById = await this.pairQuezGame.findOneBy({id, status: GameStatusEnum.Active})
+		if(!getGameById) return null
+		
+		const getLoginFirstPlayer = await this.usersQueryRepository.findUserById(getGameById.firstPlayerProgress.userFirstPlyerId)
+
+		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(getGameById.secondPlayerProgress.userSecondPlyerId)
+
+		const loginFirstPlayer = getLoginFirstPlayer.login
+		const loginSecondPlayer = getLoginSecondPlayer.login
+
+		const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(true)
+
+		return PairQuizGame.getGameById(getGameById, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
+	}
 
 	// async getUnfinishedGame(userId: string) {}
 

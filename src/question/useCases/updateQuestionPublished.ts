@@ -14,8 +14,9 @@ export class updateQuestionPublishUseCase implements ICommandHandler<updateQuest
 	constructor(
 		protected readonly questionRepository: QuestionRepository
 	) {}
-	async execute(command: updateQuestionPublishCommand): Promise<boolean | null> {
+	async execute(command: updateQuestionPublishCommand): Promise<boolean> {
 		const updateQuestionPublidhed = await this.questionRepository.updatePublished(command.id, command.DTO.published)
+		// if(!updateQuestionPublidhed) return null
 		return true
 	}
 }

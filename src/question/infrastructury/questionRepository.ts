@@ -59,15 +59,15 @@ export class QuestionRepository {
 		return true
   }
 
-  async updatePublished(id: string, published: boolean): Promise<boolean | null> {
+  async updatePublished(id: string, published: boolean): Promise<boolean> {
 	const updatePublished = await this.question
 		.createQueryBuilder()
 		.update()
-		.set({published: published})
+		.set({published: published, updatedAt: new Date()})
 		.where(`id = :id`, {id})
 		.execute()
 
-		if(!updatePublished) return null
+		// if(!updatePublished) return null
 		return true
   }
 }

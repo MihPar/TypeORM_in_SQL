@@ -10,6 +10,8 @@ import { DeletedQuestionCommand } from '../useCases/deletedQuestion-use-case';
 import { Question } from '../domain/entity.question';
 import { UpdateQuestionCommand } from '../useCases/updateQuestion-use-case';
 import { updateQuestionPublishCommand } from '../useCases/updateQuestionPublished';
+import { QuestionType } from '../question.type';
+import { PaginationType } from '../../types/pagination.types';
 
 @Controller('sa/quiz/questions')
 @UseGuards(AuthBasic)
@@ -32,7 +34,7 @@ export class QuestionController {
 			pageNumber: string
 			pageSize: string
 		}
-  ) {
+  ):Promise<PaginationType<QuestionType>> {
 		query.bodySearchTerm = query.bodySearchTerm || "" 
 		query.pageNumber = query.pageNumber || "1"
 		query.pageSize = query.pageSize || "10"
@@ -48,6 +50,7 @@ export class QuestionController {
 		query.pageNumber,
 		query.pageSize,
 		)
+	// console.log("getAllQuestion: ", getAllQuestion)
 	return getAllQuestion
   }
 
@@ -87,12 +90,15 @@ export class QuestionController {
 
   @Put(':id/publish')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updatePublishQuestion(@Body() DTO: PublishClass, @Param('id') id: string): Promise<boolean | null> {
+  async updatePublishQuestion(@Body() DTO: PublishClass, @Param('id') id: string): Promise<boolean> {
 	const findQuestionById = await this.questionRepository.getQuestion(id)
 	if(!findQuestionById) throw new NotFoundException('404')
 
 	const command = new updateQuestionPublishCommand(id, DTO)
-	const updateQuestionPublished = await this.commandBus.execute<updateQuestionPublishCommand | boolean | null>(command)
-	return updateQuestionPublished
+	const updateQuestionPublished = await this.commandBus.execute<updateQuestionPublishCommand | boolean>(command)
+	// console.log("updateQuestionPublished: ", updateQuestionPublished)
+	// if(!updateQuestionPublished) throw new NotFoundException('404')
+	return true
+	// return updateQuestionPublished
   }
 }

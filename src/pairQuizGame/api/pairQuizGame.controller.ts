@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, UseGuards, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, UseGuards, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { BearerTokenPairQuizGame } from '../guards/bearerTokenPairQuizGame';
 import { UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
 import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
@@ -9,37 +9,41 @@ import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
 import { GameTypeModel } from '../type/typeViewModel';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
+import { PairQuizGame } from '../domain/entity.pairQuezGame';
 
-@Controller('pair-quiz-game/pairs')
+@Controller('pair-game-quiz/pairs')
 export class PairQuizGameController {
   constructor(
-	// protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
+	protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
 	// protected readonly pairQuizGameRepository: PairQuizGameRepository,
 	protected readonly commandBus: CommandBus
 	) {}
   
-//   @Get('my-current')
-//   @HttpCode(HttpStatus.CREATED)
-//   @UseGuards(BearerTokenPairQuizGame)
-//   async getCurenctUnFinishedGame(
-// 	@UserIdDecorator() userId: string,
-//   ) {
-// 	const foundGameByUserId = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(GameStatusEnum.Active, userId)
-//   }
+  @Get('my-current')
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(BearerTokenPairQuizGame)
+  async getCurenctUnFinishedGame(
+	// @UserIdDecorator() userId: string,
+  ) {
+	const findUnfinishedUserGame = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(GameStatusEnum.Active)
+	if(!findUnfinishedUserGame) throw new NotFoundException('404')
+	return findUnfinishedUserGame
+  }
 
-//   @Get(':id')
-//   @HttpCode(HttpStatus.OK)
-//   @UseGuards(BearerTokenPairQuizGame)
-//   async getGameById(
-// 	@Param('id') id: string,
-// 	@UserIdDecorator() userId: string
-// 	): Promise<GameTypeModel | null> {
-// 		const getGameById = await this.pairQuezGameQueryRepository.getGameById(id, userId)
-// 		if(!getGameById) throw new NotFoundException('404')
-// 		return getGameById
-//   }
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(BearerTokenPairQuizGame)
+  async getGameById(
+	@Param('id') id: string,
+	@UserIdDecorator() userId: string
+	): Promise<GameTypeModel | null> {
+		const getGameById: GameTypeModel = await this.pairQuezGameQueryRepository.getGameById(id)
+		if(getGameById.firstPlayerProgress.player.id !== userId || getGameById.secondPlayerProgress.player.id !== userId) throw new ForbiddenException('403')
+		if(!getGameById) throw new NotFoundException('404')
+		return getGameById
+  }
 
-  @Post('connect')
+  @Post('connection')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async createOrConnectionGame(
@@ -47,7 +51,7 @@ export class PairQuizGameController {
   ): Promise<GameTypeModel> {
 	const command = new CreateOrConnectGameCommand(userId)
 	const createOrConnection = await this.commandBus.execute(command)
-	if(!createOrConnection) throw new NotFoundException('404')
+	// if(!createOrConnection) throw new NotFoundException('404')
 	return createOrConnection
   }
 

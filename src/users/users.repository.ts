@@ -119,9 +119,8 @@ export class UsersRepository {
 
   async deleteAllUsers() {
     await this.userRepository
-		.createQueryBuilder("user")
+		.createQueryBuilder()
 		.delete()
-		.from(User)
 		.execute()
     return true;
   }

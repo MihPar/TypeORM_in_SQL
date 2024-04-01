@@ -17,7 +17,7 @@ export class classCreateQuestionUseCase
     const question = new Question();
     question.body = command.body;
     question.correctAnswers = command.correctAnswers;
-    question.published = true;
+    question.published = false;
 	question.createdAt = createDate
 
     const createQuest: Question = await this.questionRepository.createQuestion(

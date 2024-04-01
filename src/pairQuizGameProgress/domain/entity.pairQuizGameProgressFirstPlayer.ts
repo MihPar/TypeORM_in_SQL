@@ -19,13 +19,13 @@ export class PairQuizGameProgressFirstPlayer {
 	@ManyToOne(() => User, u => u.progressFirstPlayer)
 	userFirstPlyer: User
 
-	@Column()
-	userId: string
+	@Column({nullable: true})
+	userFirstPlyerId: string
 
 	@OneToMany(() => Question, q => q.progressFirstPlayer)
 	question: Question[]
 
-	@Column()
+	@Column({nullable: true})
 	questionId: string
 
 	@Column()

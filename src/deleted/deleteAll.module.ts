@@ -38,6 +38,7 @@ import { AnswersFirstPlayer } from '../pairQuizGameProgress/domain/entity.answer
 import { AnswersSecondPlayer } from '../pairQuizGameProgress/domain/entity.answersSecondPlayer';
 import { PairQuizGameProgressFirstPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
 import { PairQuizGameProgressSecondPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer';
+import { PairQuizGameRepository } from '../pairQuizGame/infrastructure/pairQuizGameRepository';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -67,6 +68,7 @@ const repo = [
   BlogsRepositoryForSA,
   PairQuezGameQueryRepository,
   PairQuizGameProgressQueryRepository,
+  PairQuizGameRepository
 ];
 
 @Module({

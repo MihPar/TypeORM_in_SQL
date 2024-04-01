@@ -17,10 +17,9 @@ export class BearerTokenPairQuizGame implements CanActivate {
     protected jwtServise: JwtService,
     protected usersQueryRepository: UsersQueryRepository,
   ) {}
-	canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-		throw new Error('Method not implemented.');
-	}
-  async CanActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(
+	context: ExecutionContext
+	): Promise<boolean> {
     const req: Request = context.switchToHttp().getRequest();
     if (!req.headers.authorization) throw new UnauthorizedException('401');
     const token = req.headers.authorization.split(' ')[1];

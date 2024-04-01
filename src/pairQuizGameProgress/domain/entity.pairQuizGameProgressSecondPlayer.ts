@@ -19,22 +19,22 @@ export class PairQuizGameProgressSecondPlayer {
 	@ManyToOne(() => User, u => u.progressSecondPlayer)
 	userSecondPlyer: User
 
-	@Column()
-	userId: string
+	@Column({nullable: true})
+	userSecondPlyerId: string
+
+	// @Column({nullable: true})
+	// userId: string
 
 	@OneToMany(() => Question, q => q.progressSecondPlayer)
 	question: Question
 
-	@Column()
+	@Column({nullable: true})
 	questionId: string
 
 	@Column()
 	addedAt: Date
 
 	@Column({nullable: true})
-	userSecondPlyerId: string
-
-	@Column()
 	answerStatus: AnswerStatusEnum
 
 	@Column({default: 0})

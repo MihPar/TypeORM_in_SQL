@@ -47,12 +47,7 @@ export class BlogsQueryRepositoryForSA {
     blogId: string,
   ): Promise<BlogsViewTypeWithUserId | null> {
 	const findBlogId = await this.blogsRepository
-		// .findOne({where: {id: blogId}})
 		.findOneBy({id: blogId})
-		// .createQueryBuilder()
-		// .select()
-		// .where("id = :id", {id: blogId})
-		// .getOne()
     return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
   }
 

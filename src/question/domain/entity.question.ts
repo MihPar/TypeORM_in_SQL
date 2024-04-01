@@ -7,6 +7,9 @@ import { AnswersSecondPlayer } from "../../pairQuizGameProgress/domain/entity.an
 
 @Entity()
 export class Question {
+	map(arg0: (item: any) => { body: any; id: any; }): import("../../pairQuizGame/type/typeViewModel").QuestionType[] {
+		throw new Error("Method not implemented.");
+	}
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 
@@ -19,12 +22,10 @@ export class Question {
 	@Column()
 	published: boolean
 
-	@Column({nullable: true})
+	@Column()
 	createdAt: Date
 
-	@Column({
-		nullable: true
-	})
+	@Column({nullable: true})
 	updatedAt: Date
 
 	@ManyToMany(() => PairQuizGame, g => g.question)

@@ -57,10 +57,10 @@ export class User {
 	LikeForComment: string
 
 	@OneToMany(() => PairQuizGameProgressFirstPlayer, pqg => pqg.userFirstPlyer)
-	progressFirstPlayer: PairQuizGameProgressFirstPlayer
+	progressFirstPlayer: PairQuizGameProgressFirstPlayer[]
 
 	@OneToMany(() => PairQuizGameProgressSecondPlayer, pqg => pqg.userSecondPlyer)
-	progressSecondPlayer: PairQuizGameProgressSecondPlayer
+	progressSecondPlayer: PairQuizGameProgressSecondPlayer[]
 
   static getViewUser(user: User): UserViewType {
     return {

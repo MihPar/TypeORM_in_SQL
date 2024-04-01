@@ -67,9 +67,8 @@ describe('/blogs', () => {
 
 			  /***************** create new pair ***********************/
 			const connectOrCreatePair = await request(server)
-				.post('/pair-game-quiz/pair/connection')
+				.post('/pair-game-quiz/pairs/connection')
 				.set("Authorization", `Bearer ${tokenByUser}`)
-				.send(userId)
 
 				expect(connectOrCreatePair.status).toBe(HttpStatus.OK)
 

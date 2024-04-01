@@ -6,6 +6,7 @@ import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 import { PairQuizGameProgressSecondPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
+import { GameTypeModel } from "../type/typeViewModel";
 
 @Injectable()
 export class PairQuizGameRepository {
@@ -20,30 +21,13 @@ export class PairQuizGameRepository {
     protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressFirstPlayer>,
   ) {}
 
-  async foundGameByUserIdAndStatus(
-    status: GameStatusEnum,
-    userId: string,
-  ): Promise<boolean> {
-    const foundGameByUserId = await this.pairQuizGame.find({
-      relations: {
-        firstPlayerProgress: true,
-        secondPlayerProgress: true,
-      },
-      where: [
-        {
-          status,
-          firstPlayerProgress: {
-            userId,
-          },
-        },
-        {
-          status,
-          secondPlayerProgress: {
-            userId,
-          },
-        },
-      ],
-    });
+  async foundGameByUserIdAndStatus(userId: string): Promise<boolean> {
+    const foundGameByUserId = await this.pairQuizGame.findOneBy([
+      { firstPlayerProgressId: userId, status: GameStatusEnum.Active },
+	  { firstPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
+      { secondPlayerProgressId: userId, status: GameStatusEnum.Active },
+	  { secondPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
+    ]);
 
     if (!foundGameByUserId) return false;
     return true;
@@ -51,11 +35,11 @@ export class PairQuizGameRepository {
 
   async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {
     const foundQuizGame = await this.pairQuizGame
+      // .findOneBy({status: status})
       .createQueryBuilder()
       .select()
-      .where(`'status' = :status`, { status })
+      .where(`status = :status`, { status })
       .getOne();
-
     if (!foundQuizGame) return null;
     return foundQuizGame;
   }
@@ -64,6 +48,17 @@ export class PairQuizGameRepository {
     const createNewQuizGame = await this.pairQuizGame.save(newQuizGame);
     return createNewQuizGame;
   }
+
+  //   async updateNewQuizGame(saveProgressFirstPlayer: PairQuizGameProgressFirstPlayer, id: string): Promise<any> {
+  // 	const updateNewQuizGame = await this.pairQuizGame
+  // 		.createQueryBuilder()
+  // 		.update()
+  // 		.set({firstPlayerProgress: saveProgressFirstPlayer})
+  // 		.where(`id = :id`, {id})
+  // 		.execute()
+  // 		console.log("updateNewQuizGame: ", updateNewQuizGame)
+  // 		return updateNewQuizGame
+  //   }
 
   //   async changeStatusQuizGame(game: PairQuizGame): Promise<PairQuizGame | null> {
   //     const changeStatusQuizGameOnActive = await this.pairQuizGame.save(game)
