@@ -23,9 +23,9 @@ export class PairQuizGameController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(BearerTokenPairQuizGame)
   async getCurenctUnFinishedGame(
-	// @UserIdDecorator() userId: string,
+	@UserIdDecorator() userId: string,
   ) {
-	const findUnfinishedUserGame = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(GameStatusEnum.Active)
+	const findUnfinishedUserGame = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(GameStatusEnum.Active, userId)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
 	return findUnfinishedUserGame
   }
@@ -37,7 +37,8 @@ export class PairQuizGameController {
 	@Param('id') id: string,
 	@UserIdDecorator() userId: string
 	): Promise<GameTypeModel | null> {
-		const getGameById: GameTypeModel = await this.pairQuezGameQueryRepository.getGameById(id)
+		const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
+		console.log("getGameById: ", getGameById)
 		if(getGameById.firstPlayerProgress.player.id !== userId || getGameById.secondPlayerProgress.player.id !== userId) throw new ForbiddenException('403')
 		if(!getGameById) throw new NotFoundException('404')
 		return getGameById

@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToOne, Prim
 import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 import { PairQuizGameProgressSecondPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer";
 import { Question } from "../../question/domain/entity.question";
-import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
+import { GameStatusEnum } from "../enum/enumPendingPlayer";
 import { GameTypeModel } from "../type/typeViewModel";
 
 @Entity()
@@ -10,7 +10,7 @@ export class PairQuizGame {
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 
-	@OneToOne(() => PairQuizGameProgressFirstPlayer, fpp => fpp.game, {nullable: true})
+	@OneToOne(() => PairQuizGameProgressFirstPlayer, fpp => fpp.game)
 	firstPlayerProgress: PairQuizGameProgressFirstPlayer
 
 	@Column({nullable: true})
@@ -131,7 +131,8 @@ export class PairQuizGame {
 		}
 	}
 
-	static getGameById(getGame: PairQuizGame, loginFirstPlayer: string, loginSecondPlayer: string, getFiveQuestions: Question[]): GameTypeModel {
+	static getGameById(getGame: PairQuizGame, loginFirstPlayer: string, loginSecondPlayer: string | null, getFiveQuestions: Question[]): GameTypeModel {
+		console.log("getGame: ", getGame)
 		return {
 			id: getGame.id,
 			firstPlayerProgress: {

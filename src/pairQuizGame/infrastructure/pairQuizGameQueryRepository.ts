@@ -25,9 +25,11 @@ export class PairQuezGameQueryRepository {
 		const currentUnFinishedGame = await this.pairQuezGame
 			.createQueryBuilder()
 			.select()
-			.where(`status = :status`, {status})
+			.where(`status = :status AND "firstPlayerProgressId" = :userId`, {status, userId})
+			.orWhere(`status = :status AND "secondPlayerProgressId" = :userId`, {status, userId})
 			.getOne()
 
+			console.log("currentUnFinishedGame: ", currentUnFinishedGame)
 		if(!currentUnFinishedGame) return null
 
 		const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(currentUnFinishedGame.firstPlayerProgressId)
@@ -42,17 +44,26 @@ export class PairQuezGameQueryRepository {
 	}
 
 	async getGameById(id: string): Promise<GameTypeModel | null> {
-		const getGameById = await this.pairQuezGame.findOneBy({id, status: GameStatusEnum.Active})
-		if(!getGameById) return null
-		
-		const getLoginFirstPlayer = await this.usersQueryRepository.findUserById(getGameById.firstPlayerProgress.userFirstPlyerId)
+		const getGameById: PairQuizGame = await this.pairQuezGame
+			.findOneBy({id})
 
-		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(getGameById.secondPlayerProgress.userSecondPlyerId)
+			if(!getGameById) return null
+
+		// console.log("getGameById: ", getGameById)
+		
+		const getLoginFirstPlayer = await this.usersQueryRepository.findUserById(getGameById.firstPlayerProgressId)
+
+		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(getGameById.secondPlayerProgressId)
+
+		console.log("getLoginFirstPlayer: ", getLoginFirstPlayer)
+		console.log("getLoginSecondPlayer: ", getLoginSecondPlayer)
 
 		const loginFirstPlayer = getLoginFirstPlayer.login
-		const loginSecondPlayer = getLoginSecondPlayer.login
+		const loginSecondPlayer = getLoginSecondPlayer?.login
 
 		const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(true)
+
+		// const getQuestionId = await 
 
 		return PairQuizGame.getGameById(getGameById, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
 	}
