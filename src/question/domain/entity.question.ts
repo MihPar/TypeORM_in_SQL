@@ -7,9 +7,9 @@ import { AnswersSecondPlayer } from "../../pairQuizGameProgress/domain/entity.an
 
 @Entity()
 export class Question {
-	map(arg0: (item: any) => { body: any; id: any; }): import("../../pairQuizGame/type/typeViewModel").QuestionType[] {
-		throw new Error("Method not implemented.");
-	}
+	// map(arg0: (item: any) => { body: any; id: any; }): import("../../pairQuizGame/type/typeViewModel").QuestionType[] {
+	// 	throw new Error("Method not implemented.");
+	// }
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 

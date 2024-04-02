@@ -18,7 +18,7 @@ export class PairQuizGameRepository {
     @InjectRepository(PairQuizGameProgressFirstPlayer)
     protected readonly pairQuizGameProgressFirstPlayer: Repository<PairQuizGameProgressFirstPlayer>,
     @InjectRepository(PairQuizGameProgressSecondPlayer)
-    protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressFirstPlayer>,
+    protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressSecondPlayer>,
   ) {}
 
   async foundGameByUserIdAndStatus(userId: string): Promise<boolean> {
@@ -35,7 +35,21 @@ export class PairQuizGameRepository {
 
   async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {
     const foundQuizGame = await this.pairQuizGame
+		// .findOne({
+		// 	relations : {
+		// 		firstPlayerProgress : true,
+		// 		secondPlayerProgress : true,
+		// 	//   answersOfSecondUser :true,
+		// 	//   answersOfFirstUser : true
+		// 	},
+		// 	  where: {
+		// 		  status
+		// 	  }
+		//   })
       // .findOneBy({status: status})
+	//   .createQueryBuilder("game")
+    //   .leftJoinAndSelect("game.firstPlayerProgress", "firstPlayerProgress")
+    //   .leftJoinAndSelect("game.secondPlayerProgress", "secondPlayerProgress")
       .createQueryBuilder()
       .select()
       .where(`status = :status`, { status })
@@ -44,9 +58,15 @@ export class PairQuizGameRepository {
     return foundQuizGame;
   }
 
-  async createNewGame(newQuizGame: PairQuizGame) {
+  async createNewGame(newQuizGame: PairQuizGame): Promise<PairQuizGame> {
     const createNewQuizGame = await this.pairQuizGame.save(newQuizGame);
     return createNewQuizGame;
+  }
+
+  async updateExistingGame(game: PairQuizGame): Promise<PairQuizGame> {
+	console.log("try")
+	const updateGame = await this.pairQuizGame.save(game)
+		return updateGame
   }
 
   //   async updateNewQuizGame(saveProgressFirstPlayer: PairQuizGameProgressFirstPlayer, id: string): Promise<any> {

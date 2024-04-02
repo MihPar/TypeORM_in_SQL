@@ -21,6 +21,7 @@ import { PairQuizGameProgressSecondPlayer } from '../pairQuizGameProgress/domain
 import { PairQuizGameProgressRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressRepository';
 import { QuestionRepository } from '../question/infrastructury/questionRepository';
 import { Question } from '../question/domain/entity.question';
+import { PairQuizGameProgressQueryRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
 // import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
 // import { ChangeAnswerStatusSecondPlayerUseCase } from './useCase/changeAnswerStatusSecondPlayer-use-case';
 
@@ -32,7 +33,8 @@ const repo = [
   PairQuezGameQueryRepository,
   PairQuizGameRepository,
   PairQuizGameProgressRepository,
-  QuestionRepository
+  QuestionRepository,
+  PairQuizGameProgressQueryRepository
 ];
 const useCase = [
 //   FirstPlayerSendAnswerUseCase,

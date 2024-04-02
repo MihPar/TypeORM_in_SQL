@@ -25,7 +25,6 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 		protected readonly usersQueryRepository: UsersQueryRepository,
 	) {}
 	async execute(command: CreateOrConnectGameCommand): Promise<GameTypeModel> {
-		
 		const foundGameByUserId = await this.pairQuizGameRepository.foundGameByUserIdAndStatus(command.userId)
 		if(foundGameByUserId) throw new ForbiddenException('403')
 		
@@ -39,16 +38,20 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			newQuizGame.pairCreatedDate = new Date()
 			newQuizGame.question = null
 			newQuizGame.status = GameStatusEnum.PendingSecondPlayer
-			const createNewQuizGame = await this.pairQuizGameRepository.createNewGame(newQuizGame)
 
 			const progressFirstPlayer = new PairQuizGameProgressFirstPlayer()
 			progressFirstPlayer.userFirstPlyerId = command.userId
 			progressFirstPlayer.answerStatus = null
 			progressFirstPlayer.addedAt = new Date()
-			progressFirstPlayer.gameId = createNewQuizGame.id
 			progressFirstPlayer.answers = []
 
-			const saveProgressFirstPlayer = await this.pairQuizGameProgressRepository.createProgress(progressFirstPlayer)
+			newQuizGame.firstPlayerProgress = progressFirstPlayer
+			const createNewQuizGame = await this.pairQuizGameRepository.createNewGame(newQuizGame)
+			progressFirstPlayer.gameId = createNewQuizGame.id
+
+			console.log("createNewQuizGame: ", createNewQuizGame)
+
+			await this.pairQuizGameProgressRepository.createProgress(progressFirstPlayer)
 
 			return PairQuizGame.quizGameViewModelForFirstPlayer(createNewQuizGame, firstLogin, command.userId)
 		} else {
@@ -63,14 +66,26 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			progressSecondPlayer.answers = []
 
 			const saveProgressSecondPlayer = await this.pairQuizGameProgressRepository.createProgressForSecondPlayer(progressSecondPlayer)
+			console.log("saveProgressSecondPlayer: ", saveProgressSecondPlayer)
+
+			foundQuizGame.secondPlayerProgress = progressSecondPlayer
+			foundQuizGame.secondPlayerProgressId = saveProgressSecondPlayer.userSecondPlyerId
 
 			const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(true)
 			foundQuizGame.question = getFiveQuestionsQuizGame
 
-			const getLoginOfSecondPlayer = await this.usersQueryRepository.findUserById(foundQuizGame.firstPlayerProgressId)
-			const secondLogin = getLoginOfSecondPlayer.login
+console.log("1")
+			// const updateGame = await this.pairQuizGameRepository.updateExistingGame(foundQuizGame)
+			// console.log("updateGame: ", updateGame)
+console.log("2")
 
-			return PairQuizGame.quizGameViewModelForFoundPair(foundQuizGame, saveProgressSecondPlayer, firstLogin,secondLogin, getFiveQuestionsQuizGame, command.userId)
+			const getLoginOfSecondPlayer = await this.usersQueryRepository.findUserById(foundQuizGame.secondPlayerProgressId)
+			const secondLogin = getLoginOfSecondPlayer.login
+			// console.log(secondLogin)
+
+			console.log("quizGameModel: ", PairQuizGame.quizGameViewModelForFoundPair(foundQuizGame, saveProgressSecondPlayer, firstLogin,secondLogin, getFiveQuestionsQuizGame, command.userId))
+
+			return PairQuizGame.quizGameViewModelForFoundPair(foundQuizGame, progressSecondPlayer, firstLogin,secondLogin, getFiveQuestionsQuizGame, command.userId)
 		}
 	}
 }

@@ -38,7 +38,7 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string
 	): Promise<GameTypeModel | null> {
 		const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
-		console.log("getGameById: ", getGameById)
+		// console.log("getGameById: ", getGameById)
 		if(getGameById.firstPlayerProgress.player.id !== userId || getGameById.secondPlayerProgress.player.id !== userId) throw new ForbiddenException('403')
 		if(!getGameById) throw new NotFoundException('404')
 		return getGameById
@@ -52,7 +52,7 @@ export class PairQuizGameController {
   ): Promise<GameTypeModel> {
 	const command = new CreateOrConnectGameCommand(userId)
 	const createOrConnection = await this.commandBus.execute(command)
-	// if(!createOrConnection) throw new NotFoundException('404')
+	if(!createOrConnection) throw new NotFoundException('404')
 	return createOrConnection
   }
 

@@ -60,7 +60,7 @@ export class QuestionController {
   async createQuestion(@Body() createQuestBody: AnswerAndBodyClass) {
 	const command = new CreateQuestionCommand(createQuestBody.body, createQuestBody.correctAnswers)
 	const createQuestion = await this.commandBus.execute<CreateQuestionCommand | Question | null>(command)
-	// console.log("createQuestion: ", createQuestion)
+	console.log("createQuestion: ", createQuestion)
     return createQuestion
   }
 

@@ -48,4 +48,50 @@ export class PairQuizGameProgressQueryRepository {
 			return true
 	}
 
+	async getQuestionByIdForFirstPlayer(userId: string): Promise<PairQuizGameProgressFirstPlayer | null> {
+		const getQuestion = await this.pairQuizGameProgressFirstPlayer
+			.createQueryBuilder()
+			.select()
+			.where(`"userFirstPlyerId" = :userId`, {userId})
+			.getOne()
+
+			if(!getQuestion) return null
+			return getQuestion
+	}
+
+	async getQuestionByIdForSecondPlayer(userId: string): Promise<PairQuizGameProgressSecondPlayer | null> {
+		const getQuestion = await this.pairQuizGameProgressSecondPlayer
+			.createQueryBuilder()
+			.select()
+			.where(`"userSecondPlyerId" = :userId`, {userId})
+			.getOne()
+
+			if(!getQuestion) return null
+			return getQuestion
+	}
+
+	async findAnswerFirstPlayer(progressId: string): Promise<AnswersFirstPlayer | null> {
+		const getAnswer = await this.answersFirstPlayer
+			.createQueryBuilder()
+			.select()
+			.where(`"progressId" = :progressId`, {progressId})
+			.getOne()
+			// .getOne()
+
+			// console.log("getAnswer: ", getAnswer)
+
+			if(!getAnswer) return null
+			return getAnswer
+	}
+
+	async findAnswerSecondPlayer(progressId: string): Promise<AnswersSecondPlayer | null> {
+		const getAnswer = await this.answersSecondPlayer
+			.createQueryBuilder()
+			.select()
+			.where(`"progressId" = :progressId`, {progressId})
+			.getOne()
+
+			if(!getAnswer) return null
+			return getAnswer
+	}
 }
