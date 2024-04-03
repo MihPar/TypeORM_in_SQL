@@ -6,7 +6,6 @@ import { GameStatusEnum } from "../enum/enumPendingPlayer";
 import { GameTypeModel } from "../type/typeViewModel";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { PairQuizGameRepository } from "./pairQuizGameRepository";
-import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository";
 
 @Injectable()
@@ -43,7 +42,7 @@ export class PairQuezGameQueryRepository {
 
 		const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(true)
 
-		return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
+		// return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
 	}
 
 	async getGameById(id: string): Promise<GameTypeModel | null> {
@@ -77,7 +76,7 @@ export class PairQuezGameQueryRepository {
 
 		const getAnswerSecondPlayer = await this.pairQuizGameProgressQueryRepository.findAnswerSecondPlayer(getProgressForSecondPlayer?.id)
 
-		return PairQuizGame.getGameById(getGameById, loginFirstPlayer, loginSecondPlayer, getFiveQuestions, getProgressForFirstPlayer.questionId, getProgressForSecondPlayer?.questionId, getAnswerFirstPlayer?.answerStatus, getAnswerSecondPlayer?.answerStatus, getAnswerFirstPlayer?.addedAt, getAnswerSecondPlayer?.addedAt, getProgressForFirstPlayer.score, getProgressForSecondPlayer?.score)
+		return PairQuizGame.getGameById(getGameById, loginFirstPlayer, loginSecondPlayer, getFiveQuestions, getProgressForFirstPlayer.id, getProgressForSecondPlayer?.id, getAnswerFirstPlayer?.answerStatus, getAnswerSecondPlayer?.answerStatus, getAnswerFirstPlayer?.addedAt, getAnswerSecondPlayer?.addedAt, getProgressForFirstPlayer.score, getProgressForSecondPlayer?.score)
 	}
 
 	// async getUnfinishedGame(userId: string) {}

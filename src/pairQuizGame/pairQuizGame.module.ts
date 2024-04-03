@@ -14,14 +14,12 @@ import { CreateOrConnectGameUseCase } from './useCase/createOrConnection-use-cas
 import { ChangeAnswerStatusFirstPlayerUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
 import { CangeStatusToFinishedUseCase } from './useCase/changeStatusToFinished-use-case';
 import { PairQuizGameRepository } from './infrastructure/pairQuizGameRepository';
-import { AnswersFirstPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
-import { AnswersSecondPlayer } from '../pairQuizGameProgress/domain/entity.answersSecondPlayer';
-import { PairQuizGameProgressFirstPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
-import { PairQuizGameProgressSecondPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer';
 import { PairQuizGameProgressRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressRepository';
 import { QuestionRepository } from '../question/infrastructury/questionRepository';
 import { Question } from '../question/domain/entity.question';
 import { PairQuizGameProgressQueryRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
+import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
+import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
 // import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
 // import { ChangeAnswerStatusSecondPlayerUseCase } from './useCase/changeAnswerStatusSecondPlayer-use-case';
 
@@ -45,7 +43,7 @@ const useCase = [
 //   ChangeAnswerStatusSecondPlayerUseCase,
 ];
 @Module({
-  imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersFirstPlayer, AnswersSecondPlayer, PairQuizGameProgressFirstPlayer, PairQuizGameProgressSecondPlayer, Question]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question]), CqrsModule],
   controllers: [PairQuizGameController],
   providers: [...services, ...guards, ...repo, ...useCase],
 })

@@ -6,8 +6,7 @@ import { LikeForPost } from "../../likes/entity/likesForPost.entity";
 import { Blogs } from "../../blogs/entity/blogs.entity";
 import { Posts } from "../../posts/entity/entity.posts";
 import { Comments } from "../../comment/entity/comment.entity";
-import { PairQuizGameProgressFirstPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
-import { PairQuizGameProgressSecondPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer';
+import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
 
 @Entity()
 export class User {
@@ -56,11 +55,11 @@ export class User {
 	@Column({nullable: true, default: "None"})
 	LikeForComment: string
 
-	@OneToMany(() => PairQuizGameProgressFirstPlayer, pqg => pqg.userFirstPlyer)
-	progressFirstPlayer: PairQuizGameProgressFirstPlayer[]
+	@OneToMany(() => PairQuizGameProgressPlayer, pqg => pqg.user)
+	progressPlayer: PairQuizGameProgressPlayer[]
 
-	@OneToMany(() => PairQuizGameProgressSecondPlayer, pqg => pqg.userSecondPlyer)
-	progressSecondPlayer: PairQuizGameProgressSecondPlayer[]
+	// @OneToMany(() => PairQuizGameProgressSecondPlayer, pqg => pqg.userSecondPlyer)
+	// progressSecondPlayer: PairQuizGameProgressSecondPlayer[]
 
   static getViewUser(user: User): UserViewType {
     return {

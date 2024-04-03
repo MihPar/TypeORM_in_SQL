@@ -1,32 +1,30 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Question } from "../../question/domain/entity.question";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
-import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
-import { AnswersFirstPlayer } from "./entity.answersFirstPlayer";
+import { AnswersPlayer } from "./entity.answersFirstPlayer";
 
 @Entity()
-export class PairQuizGameProgressFirstPlayer {
+export class PairQuizGameProgressPlayer {
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 
-	@OneToOne(() => PairQuizGame, g => g.firstPlayerProgress)
-	game: PairQuizGame
+	// @OneToOne(() => PairQuizGame, g => g.firstPlayerProgress)
+	// game: PairQuizGame
 
 	@Column()
 	gameId: string
 
-	@ManyToOne(() => User, u => u.progressFirstPlayer)
-	userFirstPlyer: User
+	@ManyToOne(() => User, u => u.progressPlayer)
+	user: User
 
 	@Column({nullable: true})
-	userFirstPlyerId: string
+	userId: string
 
-	@OneToMany(() => Question, q => q.progressFirstPlayer)
-	question: Question[]
+	// @OneToMany(() => Question, q => q.progressFirstPlayer)
+	// question: Question[]
 
-	@Column({nullable: true})
-	questionId: string
+	// @Column({nullable: true})
+	// questionId: string
 
 	@Column()
 	addedAt: Date
@@ -40,6 +38,6 @@ export class PairQuizGameProgressFirstPlayer {
 	@Column({default: 0})
 	bonus_score: number
 
-	@OneToMany(() => AnswersFirstPlayer, a => a.progress)
-	answers: AnswersFirstPlayer[]
+	@OneToMany(() => AnswersPlayer, a => a.progress)
+	answers: AnswersPlayer[]
 }

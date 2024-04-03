@@ -34,11 +34,9 @@ import { DeleteAllQuestionUseCase } from '../question/useCases/deleteAllQuestion
 import { QuestionQueryRepository } from '../question/infrastructury/questionQueryRepository';
 import { QuestionRepository } from '../question/infrastructury/questionRepository';
 import { Question } from '../question/domain/entity.question';
-import { AnswersFirstPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
-import { AnswersSecondPlayer } from '../pairQuizGameProgress/domain/entity.answersSecondPlayer';
-import { PairQuizGameProgressFirstPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
-import { PairQuizGameProgressSecondPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer';
 import { PairQuizGameRepository } from '../pairQuizGame/infrastructure/pairQuizGameRepository';
+import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
+import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -72,7 +70,7 @@ const repo = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersFirstPlayer, AnswersSecondPlayer, PairQuizGameProgressFirstPlayer, PairQuizGameProgressSecondPlayer]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersPlayer, AnswersPlayer, PairQuizGameProgressPlayer, PairQuizGameProgressPlayer]), CqrsModule],
   controllers: [TestingController],
   providers: [...useCase, ...repo],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]

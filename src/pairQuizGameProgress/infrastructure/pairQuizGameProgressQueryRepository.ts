@@ -1,23 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { AnswersFirstPlayer } from "../domain/entity.answersFirstPlayer";
 import { Repository } from "typeorm";
-import { AnswersSecondPlayer } from "../domain/entity.answersSecondPlayer";
-import { PairQuizGameProgressFirstPlayer } from "../domain/entity.pairQuizGameProgressFirstPlayer";
-import { PairQuizGameProgressSecondPlayer } from "../domain/entity.pairQuizGameProgressSecondPlayer";
+import { AnswersPlayer } from "../domain/entity.answersFirstPlayer";
+import { PairQuizGameProgressPlayer } from "../domain/entity.pairQuizGameProgressFirstPlayer";
 
 @Injectable()
 export class PairQuizGameProgressQueryRepository {
 	constructor(
-		@InjectRepository(AnswersFirstPlayer) protected readonly answersFirstPlayer: Repository<AnswersFirstPlayer>,
-		@InjectRepository(AnswersSecondPlayer) protected readonly answersSecondPlayer: Repository<AnswersSecondPlayer>,
+		@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>,
+		
+		@InjectRepository(PairQuizGameProgressPlayer) protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
 
-		@InjectRepository(PairQuizGameProgressFirstPlayer) protected readonly pairQuizGameProgressFirstPlayer: Repository<PairQuizGameProgressFirstPlayer>,
-
-		@InjectRepository(PairQuizGameProgressSecondPlayer) protected readonly pairQuizGameProgressSecondPlayer: Repository<PairQuizGameProgressSecondPlayer>
 	) {}
 	async deleteAllAnswersFirstPlayer() {
-		await this.answersFirstPlayer
+		await this.answersPlayer
 			.createQueryBuilder()
 			.delete()
 			.execute()
@@ -25,7 +21,7 @@ export class PairQuizGameProgressQueryRepository {
 	}
 
 	async deleteAllAnswersSecondPlayer() {
-		await this.answersSecondPlayer
+		await this.answersPlayer
 			.createQueryBuilder()
 			.delete()
 			.execute()
@@ -33,7 +29,7 @@ export class PairQuizGameProgressQueryRepository {
 	}
 
 	async deleteAllPairQuizGameProgressFirstPlayerPlayer() {
-		await this.pairQuizGameProgressFirstPlayer
+		await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.delete()
 			.execute()
@@ -41,15 +37,15 @@ export class PairQuizGameProgressQueryRepository {
 	}
 
 	async deleteAllPairQuizGameProgressSecondPlayerPlayer() {
-		await this.pairQuizGameProgressSecondPlayer
+		await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.delete()
 			.execute()
 			return true
 	}
 
-	async getQuestionByIdForFirstPlayer(userId: string): Promise<PairQuizGameProgressFirstPlayer | null> {
-		const getQuestion = await this.pairQuizGameProgressFirstPlayer
+	async getQuestionByIdForFirstPlayer(userId: string): Promise<PairQuizGameProgressPlayer | null> {
+		const getQuestion = await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.select()
 			.where(`"userFirstPlyerId" = :userId`, {userId})
@@ -59,8 +55,8 @@ export class PairQuizGameProgressQueryRepository {
 			return getQuestion
 	}
 
-	async getQuestionByIdForSecondPlayer(userId: string): Promise<PairQuizGameProgressSecondPlayer | null> {
-		const getQuestion = await this.pairQuizGameProgressSecondPlayer
+	async getQuestionByIdForSecondPlayer(userId: string): Promise<PairQuizGameProgressPlayer | null> {
+		const getQuestion = await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.select()
 			.where(`"userSecondPlyerId" = :userId`, {userId})
@@ -70,8 +66,8 @@ export class PairQuizGameProgressQueryRepository {
 			return getQuestion
 	}
 
-	async findAnswerFirstPlayer(progressId: string): Promise<AnswersFirstPlayer | null> {
-		const getAnswer = await this.answersFirstPlayer
+	async findAnswerFirstPlayer(progressId: string): Promise<AnswersPlayer | null> {
+		const getAnswer = await this.answersPlayer
 			.createQueryBuilder()
 			.select()
 			.where(`"progressId" = :progressId`, {progressId})
@@ -84,8 +80,8 @@ export class PairQuizGameProgressQueryRepository {
 			return getAnswer
 	}
 
-	async findAnswerSecondPlayer(progressId: string): Promise<AnswersSecondPlayer | null> {
-		const getAnswer = await this.answersSecondPlayer
+	async findAnswerSecondPlayer(progressId: string): Promise<AnswersPlayer | null> {
+		const getAnswer = await this.answersPlayer
 			.createQueryBuilder()
 			.select()
 			.where(`"progressId" = :progressId`, {progressId})

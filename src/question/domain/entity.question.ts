@@ -1,9 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
-import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
-import { PairQuizGameProgressSecondPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer";
-import { AnswersFirstPlayer } from "../../pairQuizGameProgress/domain/entity.answersFirstPlayer";
-import { AnswersSecondPlayer } from "../../pairQuizGameProgress/domain/entity.answersSecondPlayer";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
+import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersFirstPlayer";
 
 @Entity()
 export class Question {
@@ -31,17 +29,17 @@ export class Question {
 	@ManyToMany(() => PairQuizGame, g => g.question)
 	games: PairQuizGame[]
 
-	@ManyToOne(() => PairQuizGameProgressFirstPlayer, p => p.question)
-	progressFirstPlayer: PairQuizGameProgressFirstPlayer
+	@ManyToOne(() => PairQuizGameProgressPlayer)
+	progressFirstPlayer: PairQuizGameProgressPlayer
 
-	@ManyToOne(() => PairQuizGameProgressSecondPlayer, p => p.question)
-	progressSecondPlayer: PairQuizGameProgressSecondPlayer
+	@ManyToOne(() => PairQuizGameProgressPlayer)
+	progressSecondPlayer: PairQuizGameProgressPlayer
 
-	@OneToMany(() => AnswersFirstPlayer, a => a.question)
-	answersFirstPlayer: AnswersFirstPlayer
+	@OneToMany(() => AnswersPlayer, a => a.question)
+	answersPlayer: AnswersPlayer
 
-	@OneToMany(() => AnswersSecondPlayer, a => a.question)
-	answersSecondPlayer: AnswersSecondPlayer
+	@OneToMany(() => AnswersPlayer, a => a.question)
+	answersSecondPlayer: AnswersPlayer
 
 	static createQuestion(item: Question) {
 		return {

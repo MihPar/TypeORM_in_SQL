@@ -1,6 +1,5 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { PairQuizGameProgressFirstPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
-import { PairQuizGameProgressSecondPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressSecondPlayer";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 import { Question } from "../../question/domain/entity.question";
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { GameTypeModel } from "../type/typeViewModel";
@@ -10,16 +9,16 @@ export class PairQuizGame {
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 
-	@OneToOne(() => PairQuizGameProgressFirstPlayer, fpp => fpp.game)
+	@OneToOne(() => PairQuizGameProgressPlayer)
 	@JoinColumn()
-	firstPlayerProgress: PairQuizGameProgressFirstPlayer
+	firstPlayerProgress: PairQuizGameProgressPlayer
 
 	@Column({nullable: true})
 	firstPlayerProgressId: string
 
-	@OneToOne(() => PairQuizGameProgressSecondPlayer, spp => spp.game, {nullable: true})
+	@OneToOne(() => PairQuizGameProgressPlayer, {nullable: true})
 	@JoinColumn()
-	secondPlayerProgress: PairQuizGameProgressSecondPlayer
+	secondPlayerProgress: PairQuizGameProgressPlayer
 
 	@Column({nullable: true})
 	secondPlayerProgressId: string
@@ -60,7 +59,7 @@ export class PairQuizGame {
 		}
 	}
 
-	static quizGameViewModelForFoundPair(foundQuizGame: PairQuizGame, progressSecondPlayer: PairQuizGameProgressSecondPlayer, firstLogin: string, secondlogin: string, getFiveQuestionsQuizGame: Question[], id: string): GameTypeModel {
+	static quizGameViewModelForFoundPair(foundQuizGame: PairQuizGame, progressSecondPlayer: PairQuizGameProgressPlayer, firstLogin: string, secondlogin: string, getFiveQuestionsQuizGame: Question[], id: string): GameTypeModel {
 		return {
 			id: foundQuizGame.id,
 			firstPlayerProgress: {
@@ -90,47 +89,47 @@ export class PairQuizGame {
 		}
 	}
 
-	static getUnfinishedGame(currentUnFinishedGame: PairQuizGame, loginFirstPlayer: string, loginSecondPlayer: string, getFiveQuestions: Question[]): GameTypeModel{
-		return {
-			id: currentUnFinishedGame.id,
-			firstPlayerProgress: {
-			  answers: [
-				{
-				  questionId: currentUnFinishedGame.firstPlayerProgress.questionId,
-				  answerStatus: currentUnFinishedGame.firstPlayerProgress.answerStatus,
-				  addedAt: currentUnFinishedGame.firstPlayerProgress.addedAt
-				}
-			  ],
-			  player: {
-				id: currentUnFinishedGame.firstPlayerProgressId,
-				login: loginFirstPlayer
-			  },
-			  score: currentUnFinishedGame.firstPlayerProgress.score
-			},
-			secondPlayerProgress: {
-			  answers: [
-				{
-				  questionId: currentUnFinishedGame.secondPlayerProgress.questionId,
-				  answerStatus: currentUnFinishedGame.secondPlayerProgress.answerStatus,
-				  addedAt: currentUnFinishedGame.secondPlayerProgress.addedAt
-				}
-			  ],
-			  player: {
-				id: currentUnFinishedGame.secondPlayerProgress.userSecondPlyerId,
-				login: loginSecondPlayer
-			  },
-			  score: currentUnFinishedGame.secondPlayerProgress.score
-			},
-			questions: getFiveQuestions.map(item => ({
-				  body: item.body,
-				  id: item.id,
-			})),
-			status: currentUnFinishedGame.status,
-			pairCreatedDate: currentUnFinishedGame.pairCreatedDate,
-			startGameDate: currentUnFinishedGame.startGameDate,
-			finishGameDate: currentUnFinishedGame.finishGameDate
-		}
-	}
+	// static getUnfinishedGame(currentUnFinishedGame: PairQuizGame, loginFirstPlayer: string, loginSecondPlayer: string, getFiveQuestions: Question[]): GameTypeModel{
+	// 	return {
+	// 		id: currentUnFinishedGame.id,
+	// 		firstPlayerProgress: {
+	// 		  answers: [
+	// 			{
+	// 			  questionId: currentUnFinishedGame.firstPlayerProgress.questionId,
+	// 			  answerStatus: currentUnFinishedGame.firstPlayerProgress.answerStatus,
+	// 			  addedAt: currentUnFinishedGame.firstPlayerProgress.addedAt
+	// 			}
+	// 		  ],
+	// 		  player: {
+	// 			id: currentUnFinishedGame.firstPlayerProgressId,
+	// 			login: loginFirstPlayer
+	// 		  },
+	// 		  score: currentUnFinishedGame.firstPlayerProgress.score
+	// 		},
+	// 		secondPlayerProgress: {
+	// 		  answers: [
+	// 			{
+	// 			  questionId: currentUnFinishedGame.secondPlayerProgress.questionId,
+	// 			  answerStatus: currentUnFinishedGame.secondPlayerProgress.answerStatus,
+	// 			  addedAt: currentUnFinishedGame.secondPlayerProgress.addedAt
+	// 			}
+	// 		  ],
+	// 		  player: {
+	// 			id: currentUnFinishedGame.secondPlayerProgress.userSecondPlyerId,
+	// 			login: loginSecondPlayer
+	// 		  },
+	// 		  score: currentUnFinishedGame.secondPlayerProgress.score
+	// 		},
+	// 		questions: getFiveQuestions.map(item => ({
+	// 			  body: item.body,
+	// 			  id: item.id,
+	// 		})),
+	// 		status: currentUnFinishedGame.status,
+	// 		pairCreatedDate: currentUnFinishedGame.pairCreatedDate,
+	// 		startGameDate: currentUnFinishedGame.startGameDate,
+	// 		finishGameDate: currentUnFinishedGame.finishGameDate
+	// 	}
+	// }
 
 	static getGameById(getGame: PairQuizGame, loginFirstPlayer: string, loginSecondPlayer: string | null, getFiveQuestions: Question[], getQuestionIdForFirstPlayer: string, getQuestionIdForSecondPlayer: string | null, statusFirstPlayer: AnswerStatusEnum, statusSecondPlayer: AnswerStatusEnum | null, addedAtFirstPlayer: Date, addedAtSecondPlaye: Date | null, scoreFirstPlayer: number, scoreSecondPlayer: number | null): GameTypeModel {
 		// console.log("getGame: ", getGame)
