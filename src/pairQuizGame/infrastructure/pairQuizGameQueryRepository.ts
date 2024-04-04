@@ -38,7 +38,6 @@ export class PairQuezGameQueryRepository {
       })
       .getOne();
 
-    console.log('currentUnFinishedGame: ', currentUnFinishedGame);
     if (!currentUnFinishedGame) return null;
 
     const getLoginFirstPlayer =

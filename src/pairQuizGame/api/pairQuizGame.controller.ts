@@ -42,7 +42,6 @@ export class PairQuizGameController {
 		console.log(userId, " userId from accessToken")
 		console.log(getGameById.firstPlayerProgress.player.id, " id of first player participating in game")
 		console.log(getGameById.secondPlayerProgress.player.id, " id of second player participating in game")
-		// console.log("getGameById: ", getGameById)
 		if(getGameById.firstPlayerProgress.player.id !== userId && getGameById.secondPlayerProgress.player.id !== userId) throw new ForbiddenException('403')
 		if(!getGameById) throw new NotFoundException('404')
 		return getGameById

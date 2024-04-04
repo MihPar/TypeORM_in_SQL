@@ -133,51 +133,6 @@ export class PairQuizGame {
 	// 	}
 	// }
 
-	static getGameById(getGame: PairQuizGame, loginFirstPlayer: string, loginSecondPlayer: string | null, getFiveQuestions: Question[], getQuestionIdForFirstPlayer: string, getQuestionIdForSecondPlayer: string | null, statusFirstPlayer: AnswerStatusEnum, statusSecondPlayer: AnswerStatusEnum | null, addedAtFirstPlayer: Date, addedAtSecondPlaye: Date | null, scoreFirstPlayer: number, scoreSecondPlayer: number | null): GameTypeModel {
-		// console.log("getGame: ", getGame)
-		return {
-			id: getGame.id,
-			firstPlayerProgress: {
-			  answers: [
-				{
-				  questionId: getQuestionIdForFirstPlayer,
-				  answerStatus: statusFirstPlayer,
-				  addedAt: addedAtFirstPlayer
-				}
-			  ],
-			  player: {
-				id: getGame.firstPlayerProgressId,
-				login: loginFirstPlayer
-			  },
-			  score: scoreFirstPlayer
-			},
-			secondPlayerProgress: {
-			  answers: [
-				{
-				  questionId: getQuestionIdForSecondPlayer,
-				  answerStatus: statusSecondPlayer,
-				  addedAt: addedAtSecondPlaye
-				}
-			  ],
-			  player: {
-				id: getGame?.secondPlayerProgressId,
-				login: loginSecondPlayer || null
-			  },
-			  score: scoreSecondPlayer || null
-			},
-			questions: getFiveQuestions.map(item => {
-				return {
-					id: item.id,
-					body: item.body
-				}
-			}),
-			status: getGame.status,
-			pairCreatedDate: getGame.pairCreatedDate,
-			startGameDate: getGame.startGameDate,
-			finishGameDate: getGame.finishGameDate
-		  }
-	}
-
 	static getViewModel(getGameById: PairQuizGame): GameTypeModel  {
 		console.log(getGameById, "game to view")
 		//throw new Error("Method not implemented.");
