@@ -88,12 +88,11 @@ export class PairQuizGameRepository {
 
   async createNewGame(newQuizGame: PairQuizGame): Promise<PairQuizGame> {
 
-    const createNewQuizGame = await this.pairQuizGame.save(newQuizGame);
+    const createNewQuizGame = await this.pairQuizGame.create({...newQuizGame});
     return createNewQuizGame;
   }
 
   async updateExistingGame(game: PairQuizGame): Promise<PairQuizGame> {
-	console.log("try")
 	const updateGame = await this.pairQuizGame.save(game)
 		return updateGame
   }

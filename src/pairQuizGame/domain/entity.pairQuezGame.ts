@@ -7,7 +7,6 @@ import { GameTypeModel } from "../type/typeViewModel";
 
 @Entity()
 export class PairQuizGame {
-	
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 
@@ -61,35 +60,35 @@ export class PairQuizGame {
 		}
 	}
 
-	static quizGameViewModelForFoundPair(foundQuizGame: PairQuizGame, progressSecondPlayer: PairQuizGameProgressPlayer, firstLogin: string, secondlogin: string, getFiveQuestionsQuizGame: Question[], id: string): GameTypeModel {
-		return {
-			id: foundQuizGame.id,
-			firstPlayerProgress: {
-				answers: [],
-				player: {
-					id: foundQuizGame.firstPlayerProgressId,
-					login: firstLogin
-				  },
-				  score: 0
-			},
-			secondPlayerProgress: { 
-				answers: [],
-			player: {
-				id,
-				login: secondlogin
-			  },
-			  score: progressSecondPlayer.score,
-			},
-			questions: getFiveQuestionsQuizGame.map(item => ({
-				  body: item.body,
-				  id: item.id,
-			})),
-			  status: GameStatusEnum.Active,
-			  pairCreatedDate: foundQuizGame.pairCreatedDate,
-			  startGameDate: foundQuizGame.startGameDate,
-			  finishGameDate: foundQuizGame.finishGameDate
-		}
-	}
+	// static quizGameViewModelForFoundPair(foundQuizGame: PairQuizGame, progressSecondPlayer: PairQuizGameProgressPlayer, firstLogin: string, secondlogin: string, getFiveQuestionsQuizGame: Question[], id: string): GameTypeModel {
+	// 	return {
+	// 		id: foundQuizGame.id,
+	// 		firstPlayerProgress: {
+	// 			answers: [],
+	// 			player: {
+	// 				id: foundQuizGame.firstPlayerProgressId,
+	// 				login: firstLogin
+	// 			  },
+	// 			  score: 0
+	// 		},
+	// 		secondPlayerProgress: { 
+	// 			answers: [],
+	// 		player: {
+	// 			id,
+	// 			login: secondlogin
+	// 		  },
+	// 		  score: progressSecondPlayer.score,
+	// 		},
+	// 		questions: getFiveQuestionsQuizGame.map(item => ({
+	// 			  body: item.body,
+	// 			  id: item.id,
+	// 		})),
+	// 		  status: GameStatusEnum.Active,
+	// 		  pairCreatedDate: foundQuizGame.pairCreatedDate,
+	// 		  startGameDate: foundQuizGame.startGameDate,
+	// 		  finishGameDate: foundQuizGame.finishGameDate
+	// 	}
+	// }
 
 	// static getUnfinishedGame(currentUnFinishedGame: PairQuizGame, loginFirstPlayer: string, loginSecondPlayer: string, getFiveQuestions: Question[]): GameTypeModel{
 	// 	return {
@@ -134,8 +133,6 @@ export class PairQuizGame {
 	// }
 
 	static getViewModel(getGameById: PairQuizGame): GameTypeModel  {
-		console.log(getGameById, "game to view")
-		//throw new Error("Method not implemented.");
 		return {
 			id: getGameById.id,
 			firstPlayerProgress: {

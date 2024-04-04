@@ -25,37 +25,34 @@ export class PairQuezGameQueryRepository {
     status: GameStatusEnum,
     userId?: string,
   ): Promise<GameTypeModel | null> {
-    const currentUnFinishedGame = await this.pairQuezGame
-      .createQueryBuilder()
-      .select()
-      .where(`status = :status AND "firstPlayerProgressId" = :userId`, {
-        status,
-        userId,
-      })
-      .orWhere(`status = :status AND "secondPlayerProgressId" = :userId`, {
-        status,
-        userId,
-      })
-      .getOne();
-
+    const currentUnFinishedGame = await this.pairQuezGame.findOne({
+		relations: {
+			firstPlayerProgress: {user: true, answers: {question: true}},
+			secondPlayerProgress: {user: true, answers: {question: true}}
+		},
+		where: [
+			{firstPlayerProgress: {user: {id: userId}}, status},
+			{secondPlayerProgress: {user: {id: userId}}, status}
+		]
+	})
     if (!currentUnFinishedGame) return null;
 
-    const getLoginFirstPlayer =
-      await await this.usersQueryRepository.findUserById(
-        currentUnFinishedGame.firstPlayerProgressId,
-      );
-    const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(
-      currentUnFinishedGame.secondPlayerProgressId,
-    );
+    // const getLoginFirstPlayer =
+    //   await await this.usersQueryRepository.findUserById(
+    //     currentUnFinishedGame.firstPlayerProgressId,
+    //   );
+    // const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(
+    //   currentUnFinishedGame.secondPlayerProgressId,
+    // );
 
-    const loginFirstPlayer = getLoginFirstPlayer.login;
-    const loginSecondPlayer = getLoginSecondPlayer.login;
+    // const loginFirstPlayer = getLoginFirstPlayer.login;
+    // const loginSecondPlayer = getLoginSecondPlayer.login;
 
-    const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(
-      true,
-    );
+    // const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(
+    //   true,
+    // );
 
-    // return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
+    return PairQuizGame.getViewModel(currentUnFinishedGame);
   }
 
   async getGameById(id: string): Promise<GameTypeModel | null> {

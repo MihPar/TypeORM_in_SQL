@@ -76,6 +76,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			foundQuizGame.question = getFiveQuestionsQuizGame
 
 			await this.pairQuizGameRepository.createNewGame(foundQuizGame)
+			console.log("foundQuizGame: ", foundQuizGame)
 
 			return PairQuizGame.getViewModel(foundQuizGame)
 		}
