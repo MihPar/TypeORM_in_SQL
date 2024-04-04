@@ -15,6 +15,9 @@ describe('/blogs', () => {
   
 	  await app.init();
 	  server = app.getHttpServer();
+
+	  const wipeAllRes = await request(server).delete("/testing/all-data").send();
+	  expect(wipeAllRes.status).toBe(HttpStatus.NO_CONTENT);
 	});
   
 	afterAll(async () => {
@@ -106,6 +109,7 @@ describe('/blogs', () => {
 				loginOrEmail: user2.login,
 				password: user2.password,
 			  });
+			  expect(createAccessToken2.body.accessToken).toEqual(expect.any(String))
 			  tokenByUser2 = createAccessToken2.body.accessToken;
 		})
 		
@@ -181,11 +185,13 @@ describe('/blogs', () => {
 			const createPair = await request(server)
 				.post('/pair-game-quiz/pairs/connection')
 				.set("Authorization", `Bearer ${tokenByUser}`)
+
 				expect(createPair.status).toBe(HttpStatus.OK)
 				gameId = createPair.body.id
 				expect(createPair.body.id).toEqual(expect.any(String))
+				console.log("createPair: ", createPair.body)
 
-				const connectPair = await request(server)
+			const connectPair = await request(server)
 				.post('/pair-game-quiz/pairs/connection')
 				.set("Authorization", `Bearer ${tokenByUser2}`)
 				expect(connectPair.status).toBe(HttpStatus.OK)
@@ -195,7 +201,7 @@ describe('/blogs', () => {
 		it("get game by id", async() => {
 			const getGameById = await request(server)
 				.get(`/pair-game-quiz/pairs/${gameId}`)
-				.set("Authorization", `Bearer${tokenByUser}`)
+				.set("Authorization", `Bearer ${tokenByUser}`)
 
 				expect(getGameById.status).toBe(HttpStatus.OK)
 		})

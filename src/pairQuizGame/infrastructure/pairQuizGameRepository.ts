@@ -17,20 +17,36 @@ export class PairQuizGameRepository {
     protected readonly PairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
   ) {}
 
-  async foundGameByUserIdAndStatus(userId: string): Promise<boolean> {
-    const foundGameByUserId = await this.pairQuizGame.findOneBy([
-      { firstPlayerProgressId: userId, status: GameStatusEnum.Active },
-	  { firstPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
-      { secondPlayerProgressId: userId, status: GameStatusEnum.Active },
-	  { secondPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
-    ]);
+  async foundGameByUserId(userId: string): Promise<boolean> {
+    // const foundGameByUserId = await this.pairQuizGame.findOneBy([
+    //   { firstPlayerProgressId: userId, status: GameStatusEnum.Active },
+	//   { firstPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
+    //   { secondPlayerProgressId: userId, status: GameStatusEnum.Active },
+	//   { secondPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
+    // ]);
 
+	const foundGameByUserId = await this.pairQuizGame.findOne({
+		relations: {
+			firstPlayerProgress: {
+				user: true
+			},
+			secondPlayerProgress: {
+				user: true
+			}
+		},
+		where: [
+			{firstPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.Active},
+			{firstPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.PendingSecondPlayer},
+			{secondPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.Active},
+			{secondPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.PendingSecondPlayer}
+		]
+	})
     if (!foundGameByUserId) return false;
     return true;
   }
 
   async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {
-    const foundQuizGame = await this.pairQuizGame
+    //const foundQuizGame = await this.pairQuizGame
 		// .findOne({
 		// 	relations : {
 		// 		firstPlayerProgress : true,
@@ -46,15 +62,32 @@ export class PairQuizGameRepository {
 	//   .createQueryBuilder("game")
     //   .leftJoinAndSelect("game.firstPlayerProgress", "firstPlayerProgress")
     //   .leftJoinAndSelect("game.secondPlayerProgress", "secondPlayerProgress")
-      .createQueryBuilder()
-      .select()
-      .where(`status = :status`, { status })
-      .getOne();
-    if (!foundQuizGame) return null;
-    return foundQuizGame;
+    //   .createQueryBuilder()
+    //   .select()
+    //   .where(`status = :status`, { status })
+    //   .getOne();
+    // if (!foundQuizGame) return null;
+    // return foundQuizGame;
+	return await this.pairQuizGame.findOne({
+		relations: {
+			firstPlayerProgress:{
+				user:true,
+				answers:{question: true }
+			},
+			secondPlayerProgress:{
+				user:true,
+				answers:{question: true }
+			},
+			question: true
+		}, 
+		where: {
+			status
+		}
+	})
   }
 
   async createNewGame(newQuizGame: PairQuizGame): Promise<PairQuizGame> {
+
     const createNewQuizGame = await this.pairQuizGame.save(newQuizGame);
     return createNewQuizGame;
   }

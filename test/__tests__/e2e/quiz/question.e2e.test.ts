@@ -15,6 +15,9 @@ describe('/blogs', () => {
 
     await app.init();
     server = app.getHttpServer();
+
+	const wipeAllRes = await request(server).delete("/testing/all-data").send();
+    expect(wipeAllRes.status).toBe(HttpStatus.NO_CONTENT);
   });
 
   afterAll(async () => {

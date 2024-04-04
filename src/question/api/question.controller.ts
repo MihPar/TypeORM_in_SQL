@@ -81,6 +81,7 @@ export class QuestionController {
 	@Body() DTO: AnswerAndBodyClass,
     @Param('id') id: string
 	): Promise<boolean | null> {
+		console.log(id, " id for question to find")
 	const findQuestionById = await this.questionRepository.getQuestion(id)
 	if(!findQuestionById) throw new NotFoundException('404')
 	const command = new UpdateQuestionCommand(id, DTO)
@@ -91,6 +92,7 @@ export class QuestionController {
   @Put(':id/publish')
   @HttpCode(HttpStatus.NO_CONTENT)
   async updatePublishQuestion(@Body() DTO: PublishClass, @Param('id') id: string): Promise<boolean> {
+	console.log("id: ", id)
 	const findQuestionById = await this.questionRepository.getQuestion(id)
 	if(!findQuestionById) throw new NotFoundException('404')
 

@@ -11,7 +11,7 @@ export class PairQuizGameProgressPlayer {
 	// @OneToOne(() => PairQuizGame, g => g.firstPlayerProgress)
 	// game: PairQuizGame
 
-	@Column()
+	@Column({nullable: true})
 	gameId: string
 
 	@ManyToOne(() => User, u => u.progressPlayer)

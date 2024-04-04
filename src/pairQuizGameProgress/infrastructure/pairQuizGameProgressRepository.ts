@@ -13,6 +13,15 @@ export class PairQuizGameProgressRepository {
 		return createProgressFirstPlayer
 	}
 
+	async updateProgressFirstPlayer(gameId: string) {
+		const updateProgress = await this.pairQuizGameProgressPlayer
+			.createQueryBuilder()
+			.update()
+			.set({gameId})
+			.execute()
+			return updateProgress
+	}
+
 	async createProgressForSecondPlayer(progressSecondPlayer: PairQuizGameProgressPlayer) {
 		const createProgressSecondPlayer = await this.pairQuizGameProgressPlayer.save(progressSecondPlayer)
 		return createProgressSecondPlayer

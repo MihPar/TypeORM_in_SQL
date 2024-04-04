@@ -10,80 +10,73 @@ import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/
 
 @Injectable()
 export class PairQuezGameQueryRepository {
-	constructor(
-		@InjectRepository(PairQuizGame) protected readonly pairQuezGame: Repository<PairQuizGame>,
-		protected readonly usersQueryRepository: UsersQueryRepository,
-		protected readonly pairQuizGameRepository: PairQuizGameRepository,
-		protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository
-	) {}
-	async deleteAllPairQuizGame() {
-		await this.pairQuezGame
-			.createQueryBuilder()
-			.delete()
-			.execute()
-			return true
-	} 
-	async getCurrentUnFinGame(status: GameStatusEnum, userId?: string): Promise<GameTypeModel | null> {
-		const currentUnFinishedGame = await this.pairQuezGame
-			.createQueryBuilder()
-			.select()
-			.where(`status = :status AND "firstPlayerProgressId" = :userId`, {status, userId})
-			.orWhere(`status = :status AND "secondPlayerProgressId" = :userId`, {status, userId})
-			.getOne()
+  constructor(
+    @InjectRepository(PairQuizGame)
+    protected readonly pairQuezGame: Repository<PairQuizGame>,
+    protected readonly usersQueryRepository: UsersQueryRepository,
+    protected readonly pairQuizGameRepository: PairQuizGameRepository,
+    protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
+  ) {}
+  async deleteAllPairQuizGame() {
+    await this.pairQuezGame.createQueryBuilder().delete().execute();
+    return true;
+  }
+  async getCurrentUnFinGame(
+    status: GameStatusEnum,
+    userId?: string,
+  ): Promise<GameTypeModel | null> {
+    const currentUnFinishedGame = await this.pairQuezGame
+      .createQueryBuilder()
+      .select()
+      .where(`status = :status AND "firstPlayerProgressId" = :userId`, {
+        status,
+        userId,
+      })
+      .orWhere(`status = :status AND "secondPlayerProgressId" = :userId`, {
+        status,
+        userId,
+      })
+      .getOne();
 
-			console.log("currentUnFinishedGame: ", currentUnFinishedGame)
-		if(!currentUnFinishedGame) return null
+    console.log('currentUnFinishedGame: ', currentUnFinishedGame);
+    if (!currentUnFinishedGame) return null;
 
-		const getLoginFirstPlayer = await await this.usersQueryRepository.findUserById(currentUnFinishedGame.firstPlayerProgressId)
-		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(currentUnFinishedGame.secondPlayerProgressId)
-		
-		const loginFirstPlayer = getLoginFirstPlayer.login
-		const loginSecondPlayer = getLoginSecondPlayer.login
+    const getLoginFirstPlayer =
+      await await this.usersQueryRepository.findUserById(
+        currentUnFinishedGame.firstPlayerProgressId,
+      );
+    const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(
+      currentUnFinishedGame.secondPlayerProgressId,
+    );
 
-		const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(true)
+    const loginFirstPlayer = getLoginFirstPlayer.login;
+    const loginSecondPlayer = getLoginSecondPlayer.login;
 
-		// return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
-	}
+    const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(
+      true,
+    );
 
-	async getGameById(id: string): Promise<GameTypeModel | null> {
-		// console.log("try")
-		const getGameById: PairQuizGame = await this.pairQuezGame.findOneBy({id})
+    // return PairQuizGame.getUnfinishedGame(currentUnFinishedGame, loginFirstPlayer, loginSecondPlayer, getFiveQuestions)
+  }
 
-			if(!getGameById) return null
+  async getGameById(id: string): Promise<GameTypeModel | null> {
+    const getGameById: PairQuizGame = await this.pairQuezGame.findOne({
+      relations: {
+        firstPlayerProgress: { user: true, answers: { question: true } },
+        secondPlayerProgress: { user: true, answers: { question: true } },
+        question: true,
+      },
+      where: { id },
+    });
+    if (!getGameById) return null;
+    return PairQuizGame.getViewModel(getGameById);
+  }
 
-		console.log("getGameById: ", getGameById)
-		
-		const getLoginFirstPlayer = await this.usersQueryRepository.findUserById(getGameById.firstPlayerProgressId)
+  // async getUnfinishedGame(userId: string) {}
 
-		const getLoginSecondPlayer = await this.usersQueryRepository.findUserById(getGameById.secondPlayerProgressId)
+  // async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string) {}
 
-		console.log("getGameById.secondPlayerProgressId: ", getGameById.secondPlayerProgressId)
-		console.log("getLoginFirstPlayer 61: ", getLoginFirstPlayer)
-		console.log("getLoginSecondPlayer 62: ", getLoginSecondPlayer)
+  // async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string) {}
 
-		const loginFirstPlayer = getLoginFirstPlayer.login
-		const loginSecondPlayer = getLoginSecondPlayer?.login
-
-		const getFiveQuestions = await this.pairQuizGameRepository.getFiveQuestions(true)
-
-		const getProgressForFirstPlayer = await this.pairQuizGameProgressQueryRepository.getQuestionByIdForFirstPlayer(getGameById.firstPlayerProgressId)
-
-		const getProgressForSecondPlayer = await this.pairQuizGameProgressQueryRepository.getQuestionByIdForSecondPlayer(getGameById.secondPlayerProgressId)
-
-		// console.log("getProgressForSecondPlayer: ", getProgressForSecondPlayer)
-
-		const getAnswerFirstPlayer = await this.pairQuizGameProgressQueryRepository.findAnswerFirstPlayer(getProgressForFirstPlayer.id)
-
-		const getAnswerSecondPlayer = await this.pairQuizGameProgressQueryRepository.findAnswerSecondPlayer(getProgressForSecondPlayer?.id)
-
-		return PairQuizGame.getGameById(getGameById, loginFirstPlayer, loginSecondPlayer, getFiveQuestions, getProgressForFirstPlayer.id, getProgressForSecondPlayer?.id, getAnswerFirstPlayer?.answerStatus, getAnswerSecondPlayer?.answerStatus, getAnswerFirstPlayer?.addedAt, getAnswerSecondPlayer?.addedAt, getProgressForFirstPlayer.score, getProgressForSecondPlayer?.score)
-	}
-
-	// async getUnfinishedGame(userId: string) {}
-
-	// async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string) {}
-
-	// async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string) {}
-
-	// async getFirstPlayerByGameId(gameId: string) {}
+  // async getFirstPlayerByGameId(gameId: string) {}
 }

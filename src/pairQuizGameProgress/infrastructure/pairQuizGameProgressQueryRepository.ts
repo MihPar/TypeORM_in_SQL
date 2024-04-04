@@ -28,7 +28,7 @@ export class PairQuizGameProgressQueryRepository {
 			return true
 	}
 
-	async deleteAllPairQuizGameProgressFirstPlayerPlayer() {
+	async deleteAllPairQuizGameProgressPlayerPlayer() {
 		await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.delete()
@@ -48,7 +48,7 @@ export class PairQuizGameProgressQueryRepository {
 		const getQuestion = await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.select()
-			.where(`"userFirstPlyerId" = :userId`, {userId})
+			.where(`"userId" = :userId`, {userId})
 			.getOne()
 
 			if(!getQuestion) return null
@@ -59,7 +59,7 @@ export class PairQuizGameProgressQueryRepository {
 		const getQuestion = await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.select()
-			.where(`"userSecondPlyerId" = :userId`, {userId})
+			.where(`"userId" = :userId`, {userId})
 			.getOne()
 
 			if(!getQuestion) return null

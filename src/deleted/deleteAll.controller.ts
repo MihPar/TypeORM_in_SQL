@@ -10,11 +10,9 @@ import { DeleteAllCommentLikesCommand } from '../likes/use-case/deleteAllComment
 import { DeleteAllPostLikesCommand } from '../likes/use-case/deleteAllPostLikes-use-case';
 import { DeleteAllCommentsCommand } from '../comment/use-case/deleteAllComments-use-case';
 import { DeleteAllPairQuizGameCommnad } from '../pairQuizGame/useCase/deleteAllPairQuizGamep-use-case';
-import { DeleteAllAnswersFirstPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllAnswersFirstPlayer';
-import { DeleteAllAnswersSecondPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllAnswersSecondPlayer';
-import { DeleteAllPairQuizGameProgressFirstPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
-import { DeleteAllPairQuizGameProgressSecondPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressSecondPlayer';
+import { DeleteAllAnswersPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllAnswersFirstPlayer';
 import { DeleteAllQuestionCommand } from '../question/useCases/deleteAllQuestions-use-case';
+import { DeleteAllPairQuizGameProgressPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
 
 // @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
@@ -27,12 +25,10 @@ export class TestingController {
   @HttpCode(204)
 //   @SkipThrottle({default: true})
   async remove() {
-	await this.commandBus.execute(new DeleteAllAnswersFirstPlayerCommand())
-	await this.commandBus.execute(new DeleteAllAnswersSecondPlayerCommand())
-	await this.commandBus.execute(new DeleteAllPairQuizGameProgressFirstPlayerCommand())
-	await this.commandBus.execute(new DeleteAllPairQuizGameProgressSecondPlayerCommand())
+	await this.commandBus.execute(new DeleteAllAnswersPlayerCommand())
 	await this.commandBus.execute(new DeleteAllQuestionCommand())
 	await this.commandBus.execute(new DeleteAllPairQuizGameCommnad())
+	await this.commandBus.execute(new DeleteAllPairQuizGameProgressPlayerCommand())
     await this.commandBus.execute(new DeleteAllDevicesCommnad())
     await this.commandBus.execute(new DeleteAllCommentLikesCommand())
     await this.commandBus.execute(new DeleteAllPostLikesCommand())
@@ -41,5 +37,6 @@ export class TestingController {
     await this.commandBus.execute(new DeleteAllBlogsCommnad())
     await this.commandBus.execute(new DeleteAllBlogsForSACommnad())
     await this.commandBus.execute(new DeleteAllUsersCommnad())
+
   }
 }

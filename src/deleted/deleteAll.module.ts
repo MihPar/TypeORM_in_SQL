@@ -25,10 +25,9 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { DeleteAllPairQuizGameUseCase } from '../pairQuizGame/useCase/deleteAllPairQuizGamep-use-case';
 import { PairQuizGame } from '../pairQuizGame/domain/entity.pairQuezGame';
 import { PairQuezGameQueryRepository } from '../pairQuizGame/infrastructure/pairQuizGameQueryRepository';
-import { DeleteAllAnswersFirstPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllAnswersFirstPlayer';
+import { DeleteAllAnswersPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllAnswersFirstPlayer';
 import { PairQuizGameProgressQueryRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
 import { DeleteAllAnswersSecondPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllAnswersSecondPlayer';
-import { DeleteAllPairQuizGameProgressFirstPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
 import { DeleteAllPairQuizGameProgressSecondPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressSecondPlayer';
 import { DeleteAllQuestionUseCase } from '../question/useCases/deleteAllQuestions-use-case';
 import { QuestionQueryRepository } from '../question/infrastructury/questionQueryRepository';
@@ -37,6 +36,7 @@ import { Question } from '../question/domain/entity.question';
 import { PairQuizGameRepository } from '../pairQuizGame/infrastructure/pairQuizGameRepository';
 import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
 import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
+import { DeleteAllPairQuizGameProgressPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -46,9 +46,9 @@ const useCase = [
   DeleteAllBlogsUseCase,
   DeleteAllBlogsForSAUseCase,
   DeleteAllPairQuizGameUseCase,
-  DeleteAllAnswersFirstPlayerUseCase,
+  DeleteAllAnswersPlayerUseCase,
   DeleteAllAnswersSecondPlayerUseCase,
-  DeleteAllPairQuizGameProgressFirstPlayerUseCase,
+  DeleteAllPairQuizGameProgressPlayerUseCase,
   DeleteAllPairQuizGameProgressSecondPlayerUseCase,
   DeleteAllQuestionUseCase,
   QuestionQueryRepository,

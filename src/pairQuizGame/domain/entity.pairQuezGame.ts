@@ -1,3 +1,4 @@
+import { AnswersPlayer } from './../../pairQuizGameProgress/domain/entity.answersFirstPlayer';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
 import { Question } from "../../question/domain/entity.question";
@@ -6,10 +7,11 @@ import { GameTypeModel } from "../type/typeViewModel";
 
 @Entity()
 export class PairQuizGame {
+	
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 
-	@OneToOne(() => PairQuizGameProgressPlayer)
+	@OneToOne(() => PairQuizGameProgressPlayer, {nullable: true})
 	@JoinColumn()
 	firstPlayerProgress: PairQuizGameProgressPlayer
 
@@ -175,5 +177,39 @@ export class PairQuizGame {
 			finishGameDate: getGame.finishGameDate
 		  }
 	}
-}
+
+	static getViewModel(getGameById: PairQuizGame): GameTypeModel  {
+		console.log(getGameById, "game to view")
+		//throw new Error("Method not implemented.");
+		return {
+			id: getGameById.id,
+			firstPlayerProgress: {
+			  answers: getGameById.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+			  player: {
+				id: getGameById.firstPlayerProgress.user.id,
+				login: getGameById.firstPlayerProgress.user.login
+			  },
+			  score: getGameById.firstPlayerProgress.score
+			},
+			secondPlayerProgress: getGameById.secondPlayerProgress ?  {
+				answers: getGameById.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+				player: {
+				  id: getGameById.secondPlayerProgress.user.id,
+				  login: getGameById.secondPlayerProgress.user.login
+				},
+				score: getGameById.secondPlayerProgress.score
+			} : null,
+			questions: getGameById.question.map(item => {
+				return {
+					id: item.id,
+					body: item.body
+				}
+			}),
+			status: getGameById.status,
+			pairCreatedDate: getGameById.pairCreatedDate,
+			startGameDate: getGameById.startGameDate,
+			finishGameDate: getGameById.finishGameDate
+		  }
+		}
+	}
 

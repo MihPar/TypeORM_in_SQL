@@ -1,16 +1,16 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { PairQuizGameProgressQueryRepository } from "../infrastructure/pairQuizGameProgressQueryRepository";
 
-export class DeleteAllPairQuizGameProgressFirstPlayerCommand {
+export class DeleteAllPairQuizGameProgressPlayerCommand {
 	constructor() {}
 }
 
-@CommandHandler(DeleteAllPairQuizGameProgressFirstPlayerCommand)
-export class DeleteAllPairQuizGameProgressFirstPlayerUseCase implements ICommandHandler<DeleteAllPairQuizGameProgressFirstPlayerCommand> {
+@CommandHandler(DeleteAllPairQuizGameProgressPlayerCommand)
+export class DeleteAllPairQuizGameProgressPlayerUseCase implements ICommandHandler<DeleteAllPairQuizGameProgressPlayerCommand> {
 	constructor(
 		protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository
 	) {}
-	async execute(command: DeleteAllPairQuizGameProgressFirstPlayerCommand): Promise<DeleteAllPairQuizGameProgressFirstPlayerCommand> {
-		return await this.pairQuizGameProgressQueryRepository.deleteAllPairQuizGameProgressFirstPlayerPlayer()
+	async execute(command: DeleteAllPairQuizGameProgressPlayerCommand): Promise<DeleteAllPairQuizGameProgressPlayerCommand> {
+		return await this.pairQuizGameProgressQueryRepository.deleteAllPairQuizGameProgressPlayerPlayer()
 	}
 }
