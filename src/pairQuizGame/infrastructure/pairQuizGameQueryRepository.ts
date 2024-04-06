@@ -7,12 +7,14 @@ import { GameTypeModel } from "../type/typeViewModel";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { PairQuizGameRepository } from "./pairQuizGameRepository";
 import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
+import { prototype } from "events";
 
 @Injectable()
 export class PairQuezGameQueryRepository {
   constructor(
-    @InjectRepository(PairQuizGame)
-    protected readonly pairQuezGame: Repository<PairQuizGame>,
+    @InjectRepository(PairQuizGame) protected readonly pairQuezGame: Repository<PairQuizGame>,
+	@InjectRepository(PairQuizGameProgressPlayer) protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
     protected readonly usersQueryRepository: UsersQueryRepository,
     protected readonly pairQuizGameRepository: PairQuizGameRepository,
     protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
@@ -68,11 +70,23 @@ export class PairQuezGameQueryRepository {
     return PairQuizGame.getViewModel(getGameById);
   }
 
-  // async getUnfinishedGame(userId: string) {}
+  async getUnfinishedGame(status: GameStatusEnum): Promise< PairQuizGame | null> {
+	const getGame = await this.pairQuezGame.findOneBy({status})
+	if(!getGame) return null
+	return getGame
+  }
 
-  // async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string) {}
+  async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string): Promise<PairQuizGameProgressPlayer | null> {
+	const getFirstPlayer = await this.pairQuizGameProgressPlayer.findOneBy({gameId, userId})
+	if(!getFirstPlayer) return null
+	return getFirstPlayer
+  }
 
-  // async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string) {}
+  async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string): Promise<PairQuizGameProgressPlayer | null> {
+	const getSecondPlayer = await this.pairQuizGameProgressPlayer.findOneBy({gameId, userId})
+	if(!getSecondPlayer) return null
+	return getSecondPlayer
+  }
 
   // async getFirstPlayerByGameId(gameId: string) {}
 }
