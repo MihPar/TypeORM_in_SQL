@@ -20,6 +20,7 @@ import { Question } from '../question/domain/entity.question';
 import { PairQuizGameProgressQueryRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
 import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
 import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
+import { SendAnswerUseCase } from './useCase/createSendAnswer-use-case copy';
 // import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
 // import { ChangeAnswerStatusSecondPlayerUseCase } from './useCase/changeAnswerStatusSecondPlayer-use-case';
 
@@ -40,6 +41,7 @@ const useCase = [
   CreateOrConnectGameUseCase,
   ChangeAnswerStatusFirstPlayerUseCase,
   CangeStatusToFinishedUseCase,
+  SendAnswerUseCase
 //   ChangeAnswerStatusSecondPlayerUseCase,
 ];
 @Module({

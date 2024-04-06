@@ -38,8 +38,8 @@ export class Question {
 	@OneToMany(() => AnswersPlayer, a => a.question)
 	answersPlayer: AnswersPlayer
 
-	@OneToMany(() => AnswersPlayer, a => a.question)
-	answersSecondPlayer: AnswersPlayer
+	// @OneToMany(() => AnswersPlayer, a => a.question)
+	// answersSecondPlayer: AnswersPlayer
 
 	static createQuestion(item: Question) {
 		return {

@@ -8,6 +8,7 @@ import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
 import { GameTypeModel } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
+import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
 
 @Controller('pair-game-quiz/pairs')
 export class PairQuizGameController {
@@ -56,16 +57,16 @@ export class PairQuizGameController {
 	return createOrConnection
   }
 
-//   @Post('my-current/answers')
-//   @HttpCode(HttpStatus.OK)
-//   @UseGuards(BearerTokenPairQuizGame)
-//   async sendAnswer(
-// 	@Body() DTO: CreatePairQuizGameDto,
-// 	@UserIdDecorator() userId: string
-// 	) {
-// 	const command = new SendAnswerCommand(DTO,userId)
-// 	const createSendAnswer = await this.commandBus.execute(command)
-// 	return createSendAnswer
-//   }
+  @Post('my-current/answers')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(BearerTokenPairQuizGame)
+  async sendAnswer(
+	@Body() DTO: CreatePairQuizGameDto,
+	@UserIdDecorator() userId: string
+	) {
+	const command = new SendAnswerCommand(DTO,userId)
+	const createSendAnswer = await this.commandBus.execute(command)
+	return createSendAnswer
+  }
 
 }

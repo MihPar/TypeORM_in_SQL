@@ -1,4 +1,3 @@
-// import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 // import { Question } from "../../question/domain/entity.question";
 // import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 // import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
