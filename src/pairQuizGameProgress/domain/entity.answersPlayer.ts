@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Question } from "../../question/domain/entity.question";
 import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
-import { PairQuizGameProgressPlayer } from "./entity.pairQuizGameProgressFirstPlayer";
+import { PairQuizGameProgressPlayer } from "./entity.pairQuizGameProgressPlayer";
 import { AnswerType } from "../../pairQuizGame/type/typeViewModel";
 
 @Entity()
@@ -19,7 +19,7 @@ export class AnswersPlayer {
 	question: Question
 
 	@Column({nullable: true})
-	answers: string
+	answer: string
 
 	@Column({nullable: false})
 	answerStatus : AnswerStatusEnum

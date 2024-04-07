@@ -6,14 +6,17 @@ import { QuestionQueryRepository } from "../../question/infrastructury/questionQ
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { ChangeAnswerStatusFirstPlayerCommand } from "./changeAnswerStatusFirstPlayer-use-case";
 import { CangeStatusToFinishedCommand } from "./changeStatusToFinished-use-case";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository";
 
 export class FirstPlayerSendAnswerCommand {
 	constructor(
-		firstPlayer: PairQuizGameProgressPlayer,
-		gameId: string,
-		gameQuestions: Question[],
-		inputAnswer: string
+		public firstPlayer: PairQuizGameProgressPlayer,
+		public gameId: string,
+		public gameQuestions: Question[],
+		public inputAnswer: string
 	) {}
 }
 
@@ -22,13 +25,15 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 	constructor(
 		protected readonly questionQueryRepository: QuestionQueryRepository,
 		protected readonly pairQuizGameRepository: PairQuizGameRepository,
+		protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
 		protected readonly commandBus: CommandBus
 	) {}
 	async execute(command: FirstPlayerSendAnswerCommand): Promise<any> {
-		if(firstPlayer.answer.length === gameQuestion.length) {
+		// const answerFirst = await this.pairQuizGameProgressQueryRepository.getAnswerFirstPlayer(command.firstPlayer, command.inputAnswer)
+		if(command.firstPlayer.answers.length === gameQuestion.length) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
-			const questionNumber: number = firstPlayer.answer.length
+			const questionNumber: number = command.firstPlayer.answers.length
 			const gameQuestion: Question = gameQuestions[questionNumber]
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.id)
 

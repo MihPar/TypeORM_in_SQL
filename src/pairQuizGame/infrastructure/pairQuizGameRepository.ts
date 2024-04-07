@@ -1,4 +1,4 @@
-import { PairQuizGameProgressPlayer } from './../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
+import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Question } from "../../question/domain/entity.question";
@@ -46,37 +46,15 @@ export class PairQuizGameRepository {
   }
 
   async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {
-    //const foundQuizGame = await this.pairQuizGame
-		// .findOne({
-		// 	relations : {
-		// 		firstPlayerProgress : true,
-		// 		secondPlayerProgress : true,
-		// 	//   answersOfSecondUser :true,
-		// 	//   answersOfFirstUser : true
-		// 	},
-		// 	  where: {
-		// 		  status
-		// 	  }
-		//   })
-      // .findOneBy({status: status})
-	//   .createQueryBuilder("game")
-    //   .leftJoinAndSelect("game.firstPlayerProgress", "firstPlayerProgress")
-    //   .leftJoinAndSelect("game.secondPlayerProgress", "secondPlayerProgress")
-    //   .createQueryBuilder()
-    //   .select()
-    //   .where(`status = :status`, { status })
-    //   .getOne();
-    // if (!foundQuizGame) return null;
-    // return foundQuizGame;
 	return await this.pairQuizGame.findOne({
 		relations: {
 			firstPlayerProgress:{
-				user:true,
-				answers:{question: true }
+				user: true,
+				answers: {question: true }
 			},
-			secondPlayerProgress:{
+			secondPlayerProgress: {
 				user:true,
-				answers:{question: true }
+				answers: {question: true }
 			},
 			question: true
 		}, 

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PairQuizGameProgressPlayer } from "../domain/entity.pairQuizGameProgressFirstPlayer";
+import { PairQuizGameProgressPlayer } from "../domain/entity.pairQuizGameProgressPlayer";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 

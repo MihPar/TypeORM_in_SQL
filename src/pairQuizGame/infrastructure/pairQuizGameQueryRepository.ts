@@ -7,7 +7,7 @@ import { GameTypeModel } from "../type/typeViewModel";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { PairQuizGameRepository } from "./pairQuizGameRepository";
 import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { prototype } from "events";
 
 @Injectable()

@@ -1,15 +1,15 @@
-import { CommandBus, CommandHandler } from "@nestjs/cqrs";
+import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Question } from "../../question/domain/entity.question";
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { QuestionQueryRepository } from "../../question/infrastructury/questionQueryRepository";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { ForbiddenException } from "@nestjs/common";
-import { ChangeAnswerStatusSecondPlayerCommand } from "./changeAnswerStatusSecondPlayer-use-case";
 import { CangeStatusToFinishedCommand } from "./changeStatusToFinished-use-case";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 
 export class SecondPlayerSendAnswerCommand {
 	constructor(
-		firstPlayer: GameStatusEnum,
+		secondPlayer: PairQuizGameProgressPlayer,
 		gameId: string,
 		gameQuestions: Question[],
 		inputAnswer: string
@@ -24,7 +24,7 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 		protected readonly commandBus: CommandBus
 	) {}
 	async execute(command: SecondPlayerSendAnswerCommand): Promise<any> {
-		if(secondPlayer.answer.length === gameQuestion.length) {
+		if(command.secondPlayer.answer.length === gameQuestion.length) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
 			const questionNumber: number = secondPlayer.answer.length

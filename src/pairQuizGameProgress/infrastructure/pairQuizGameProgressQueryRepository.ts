@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { AnswersPlayer } from "../domain/entity.answersFirstPlayer";
-import { PairQuizGameProgressPlayer } from "../domain/entity.pairQuizGameProgressFirstPlayer";
+import { AnswersPlayer } from "../domain/entity.answersPlayer";
+import { PairQuizGameProgressPlayer } from "../domain/entity.pairQuizGameProgressPlayer";
+import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 
 @Injectable()
 export class PairQuizGameProgressQueryRepository {
@@ -10,6 +11,8 @@ export class PairQuizGameProgressQueryRepository {
 		@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>,
 		
 		@InjectRepository(PairQuizGameProgressPlayer) protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
+
+		@InjectRepository(PairQuizGame) protected readonly pairQuizGame: Repository<PairQuizGame>
 
 	) {}
 	async deleteAllAnswersFirstPlayer() {
@@ -90,4 +93,14 @@ export class PairQuizGameProgressQueryRepository {
 			if(!getAnswer) return null
 			return getAnswer
 	}
+
+	// async getAnswerFirstPlayer(firstPlayer: PairQuizGameProgressPlayer, answer: string): Promise<string> {
+	// 	const getAnswer = await this.pairQuizGame.findOne({
+	// 		relations: {
+	// 			firstPlayerProgress: {answers: {answer: true}}
+	// 		},
+	// 		where: {answer}
+	// 	})
+	// 	return getAnswer.firstPlayerProgress.answers[0].answer
+	// }
 }

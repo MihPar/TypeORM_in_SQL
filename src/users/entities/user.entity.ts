@@ -6,7 +6,7 @@ import { LikeForPost } from "../../likes/entity/likesForPost.entity";
 import { Blogs } from "../../blogs/entity/blogs.entity";
 import { Posts } from "../../posts/entity/entity.posts";
 import { Comments } from "../../comment/entity/comment.entity";
-import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
+import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 
 @Entity()
 export class User {

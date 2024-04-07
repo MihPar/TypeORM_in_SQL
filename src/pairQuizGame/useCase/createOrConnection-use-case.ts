@@ -7,7 +7,7 @@ import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { v4 as uuidv4 } from "uuid";
 import { PairQuizGameProgressRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressRepository";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { User } from "../../users/entities/user.entity";
 
 export class CreateOrConnectGameCommand {
@@ -76,7 +76,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			foundQuizGame.question = getFiveQuestionsQuizGame
 
 			await this.pairQuizGameRepository.createNewGame(foundQuizGame)
-			console.log("foundQuizGame: ", foundQuizGame)
+			// console.log("foundQuizGame: ", foundQuizGame)
 
 			return PairQuizGame.getViewModel(foundQuizGame)
 		}

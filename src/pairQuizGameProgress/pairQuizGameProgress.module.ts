@@ -11,7 +11,7 @@ import { UsersQueryRepository } from '../users/users.queryRepository';
 import { QuestionRepository } from '../question/infrastructury/questionRepository';
 import { Question } from '../question/domain/entity.question';
 import { User } from '../users/entities/user.entity';
-import { PairQuizGameProgressPlayer } from './domain/entity.pairQuizGameProgressFirstPlayer';
+import { PairQuizGameProgressPlayer } from './domain/entity.pairQuizGameProgressPlayer';
 
 const useCase = [CreateOrConnectGameUseCase]
 const serves = [PairQuizGameProgressService]

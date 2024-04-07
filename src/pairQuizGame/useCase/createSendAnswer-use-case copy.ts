@@ -5,6 +5,9 @@ import { ForbiddenException } from "@nestjs/common";
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 import { SecondPlayerSendAnswerCommand } from "./secondPlayerSendAnswer-ues-case";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
+import { AnswerType } from "../type/typeViewModel";
+import { PairQuizGame } from "../domain/entity.pairQuezGame";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 
 export class SendAnswerCommand {
 	constructor(
@@ -19,22 +22,22 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
 		protected readonly commandBus: CommandBus
 	) {}
-	async execute(commandAnswer: SendAnswerCommand) {
+	async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType> {
 		
-		const game = await this.pairQuezGameQueryRepository.getUnfinishedGame(GameStatusEnum.Active)
+		const game: PairQuizGame = await this.pairQuezGameQueryRepository.getUnfinishedGame(GameStatusEnum.Active)
 		if(!game || game.status !== 'Active') throw new ForbiddenException('No active pair');
 
-		const firstPlayer = await this.pairQuezGameQueryRepository.getFirstPlayerByGameIdAndUserId(game.id, commandAnswer.userId)
+		const firstPlayer: PairQuizGameProgressPlayer = await this.pairQuezGameQueryRepository.getFirstPlayerByGameIdAndUserId(game.id, commandAnswer.userId)
 
-		const secondPlayer = await this.pairQuezGameQueryRepository.getSecondPlayerByGameIdAndUserId(game.id, commandAnswer.userId)
+		const secondPlayer: PairQuizGameProgressPlayer = await this.pairQuezGameQueryRepository.getSecondPlayerByGameIdAndUserId(game.id, commandAnswer.userId)
 
 		if(firstPlayer) {
-			const command = new FirstPlayerSendAnswerCommand(firstPlayer, game.id, gameQuestions!, commandAnswer.DTO.answer)
-			return await this.commandBus.execute(command)
+			const command = new FirstPlayerSendAnswerCommand(firstPlayer, game.id, game.question!, commandAnswer.DTO.answer)
+			return await this.commandBus.execute<FirstPlayerSendAnswerCommand>(command)
 		}
 
 		if(secondPlayer) {
-			const command = new SecondPlayerSendAnswerCommand(secondPlayer, game.id, gameQuestions!, inputAnswer)
+			const command = new SecondPlayerSendAnswerCommand(secondPlayer, game.id, game.question!, commandAnswer.DTO.answer)
 			return await this.commandBus.execute(command)
 		}
 	}

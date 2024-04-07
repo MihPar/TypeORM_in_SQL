@@ -1,6 +1,6 @@
-import { AnswersPlayer } from './../../pairQuizGameProgress/domain/entity.answersFirstPlayer';
+import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { Question } from "../../question/domain/entity.question";
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { GameTypeModel } from "../type/typeViewModel";

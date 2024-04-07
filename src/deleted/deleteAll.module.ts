@@ -34,8 +34,8 @@ import { QuestionQueryRepository } from '../question/infrastructury/questionQuer
 import { QuestionRepository } from '../question/infrastructury/questionRepository';
 import { Question } from '../question/domain/entity.question';
 import { PairQuizGameRepository } from '../pairQuizGame/infrastructure/pairQuizGameRepository';
-import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersFirstPlayer';
-import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer';
+import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersPlayer';
+import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { DeleteAllPairQuizGameProgressPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
 
 const useCase = [

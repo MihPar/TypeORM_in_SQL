@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressFirstPlayer";
-import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersFirstPlayer";
+import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
+import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
 
 @Entity()
 export class Question {

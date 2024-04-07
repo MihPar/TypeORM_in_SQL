@@ -5,7 +5,7 @@ import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQuery
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOrConnectGameCommand } from '../useCase/createOrConnection-use-case';
 import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
-import { GameTypeModel } from '../type/typeViewModel';
+import { AnswerType, GameTypeModel } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
@@ -52,7 +52,7 @@ export class PairQuizGameController {
 	@UserDecorator() user: User
   ): Promise<GameTypeModel> {
 	const command = new CreateOrConnectGameCommand(userId, user)
-	const createOrConnection = await this.commandBus.execute(command)
+	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
 	if(!createOrConnection) throw new NotFoundException('404')
 	return createOrConnection
   }
@@ -65,7 +65,7 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string
 	) {
 	const command = new SendAnswerCommand(DTO,userId)
-	const createSendAnswer = await this.commandBus.execute(command)
+	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
 	return createSendAnswer
   }
 
