@@ -70,23 +70,32 @@ export class PairQuezGameQueryRepository {
     return PairQuizGame.getViewModel(getGameById);
   }
 
-  async getUnfinishedGame(status: GameStatusEnum): Promise< PairQuizGame | null> {
-	const getGame = await this.pairQuezGame.findOneBy({status})
+  async getUnfinishedGame(status: GameStatusEnum, userId: string): Promise< PairQuizGame | null> {
+	const getGame = await this.pairQuezGame.findOne({
+		relations: {
+			firstPlayerProgress: true,
+			secondPlayerProgress: true,
+		},
+		where: [
+			{status, firstPlayerProgress: {userId}},
+			{status, secondPlayerProgress: {userId}},
+		]
+	})
 	if(!getGame) return null
 	return getGame
   }
 
-  async getFirstPlayerByGameIdAndUserId(gameId: string, userId: string): Promise<PairQuizGameProgressPlayer | null> {
+  async getPlayerByGameIdAndUserId(gameId: string, userId: string): Promise<PairQuizGameProgressPlayer | null> {
 	const getFirstPlayer = await this.pairQuizGameProgressPlayer.findOneBy({gameId, userId})
 	if(!getFirstPlayer) return null
 	return getFirstPlayer
   }
 
-  async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string): Promise<PairQuizGameProgressPlayer | null> {
-	const getSecondPlayer = await this.pairQuizGameProgressPlayer.findOneBy({gameId, userId})
-	if(!getSecondPlayer) return null
-	return getSecondPlayer
-  }
+//   async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string): Promise<PairQuizGameProgressPlayer | null> {
+// 	const getSecondPlayer = await this.pairQuizGameProgressPlayer.findOneBy({gameId, userId})
+// 	if(!getSecondPlayer) return null
+// 	return getSecondPlayer
+//   }
 
   // async getFirstPlayerByGameId(gameId: string) {}
 }

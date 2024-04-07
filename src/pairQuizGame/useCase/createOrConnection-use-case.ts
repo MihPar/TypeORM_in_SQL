@@ -27,12 +27,15 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 	async execute(command: CreateOrConnectGameCommand): Promise<GameTypeModel> {
 		const foundGameByUserId = await this.pairQuizGameRepository.foundGameByUserId(command.userId)
 		if(foundGameByUserId) throw new ForbiddenException('403')
-		
+		console.log("1")
 		const foundQuizGame = await this.pairQuizGameRepository.foundGame(GameStatusEnum.PendingSecondPlayer)
 		const getLoginOfUser = await this.usersQueryRepository.findUserById(command.userId)
 		const firstLogin = getLoginOfUser.login
+		console.log("2")
 
 		if(!foundQuizGame) {
+		console.log("3")
+
 			const progressFirstPlayer = new PairQuizGameProgressPlayer()
 			progressFirstPlayer.userId = command.userId
 			progressFirstPlayer.answerStatus = null
@@ -48,11 +51,15 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			newQuizGame.firstPlayerProgress = progressFirstPlayer
 			newQuizGame.secondPlayerProgress = null
 			newQuizGame.status = GameStatusEnum.PendingSecondPlayer
+			// console.log("newQuizGame: ", newQuizGame)
 
 			const createNewQuizGame = await this.pairQuizGameRepository.createNewGame(newQuizGame)
+			// console.log("createNewQuizGame: ", createNewQuizGame)
 
 			progressFirstPlayer.gameId = createNewQuizGame.id
+			// console.log("progressFirstPlayer.gameId: ", progressFirstPlayer.gameId)
 			await this.pairQuizGameProgressRepository.updateProgressFirstPlayer(progressFirstPlayer.gameId)
+			// console.log("4")
 
 			return PairQuizGame.quizGameViewModelForFirstPlayer(createNewQuizGame, firstLogin, command.userId)
 		} else {

@@ -66,7 +66,7 @@ export class PairQuizGameRepository {
 
   async createNewGame(newQuizGame: PairQuizGame): Promise<PairQuizGame> {
 
-    const createNewQuizGame = await this.pairQuizGame.create({...newQuizGame});
+    const createNewQuizGame = await this.pairQuizGame.save({...newQuizGame});
     return createNewQuizGame;
   }
 
@@ -96,10 +96,12 @@ export class PairQuizGameRepository {
     const getQuestionForQuizGame = await this.question
       .createQueryBuilder()
       .select()
-      .where(`'published' = :boolean`, { boolean })
+      .where(`published = :boolean`, { boolean })
       .orderBy('RANDOM()')
-      .limit(5)
+      .take(5)
       .getMany();
+
+	  console.log("getQuestionForQuizGame: ", getQuestionForQuizGame)
 
     if (!getQuestionForQuizGame) return null;
     return getQuestionForQuizGame;

@@ -9,6 +9,7 @@ import { AnswerType, GameTypeModel } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
+// import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
 
 @Controller('pair-game-quiz/pairs')
 export class PairQuizGameController {
@@ -64,7 +65,7 @@ export class PairQuizGameController {
 	@Body() DTO: CreatePairQuizGameDto,
 	@UserIdDecorator() userId: string
 	) {
-	const command = new SendAnswerCommand(DTO,userId)
+	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
 	return createSendAnswer
   }
