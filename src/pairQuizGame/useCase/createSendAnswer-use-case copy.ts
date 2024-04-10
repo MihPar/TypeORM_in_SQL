@@ -1,13 +1,10 @@
 import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreatePairQuizGameDto } from "../dto/createPairQuizGame.dto";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
-import { ForbiddenException, NotFoundException } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
 import { AnswerType } from "../type/typeViewModel";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 import { SecondPlayerSendAnswerCommand } from "./secondPlayerSendAnswer-ues-case";

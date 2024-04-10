@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Query, NotFoundException, Put } from '@nestjs/common';
-import { QuestionService } from '../aplication/question.service';
 import { AnswerAndBodyClass, PublishClass } from '../dto/question.dto';
 import { AuthBasic } from '../../users/gards/basic.auth';
 import { QuestionQueryRepository } from '../infrastructury/questionQueryRepository';
