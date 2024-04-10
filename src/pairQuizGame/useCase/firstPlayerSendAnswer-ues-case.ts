@@ -30,7 +30,7 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 	) {}
 	async execute(command: FirstPlayerSendAnswerCommand): Promise<any> {
 		// const answerFirst = await this.pairQuizGameProgressQueryRepository.getAnswerFirstPlayer(command.firstPlayer, command.inputAnswer)
-		if(command.firstPlayer.answers.length === gameQuestion.length) {
+		if(command.firstPlayer.answers.length === command.gameQuestions.length) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
 			const questionNumber: number = command.firstPlayer.answers.length

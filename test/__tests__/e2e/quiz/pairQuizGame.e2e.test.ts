@@ -170,15 +170,6 @@ describe('/blogs', () => {
 	
 			expect(updateQuestion.status).toBe(HttpStatus.NO_CONTENT)
 		})
-
-		// it("get my current unfinished game", async() => {
-		// 	const getUnfinishedGame = await request(server)
-		// 		.get('/pair-game-quiz/pairs/my-current')
-		// 		.set("Authorization", `Bearer ${tokenByUser}`)
-
-		// 		expect(getUnfinishedGame.status).toBe(HttpStatus.OK)
-		// })
-
 		
 		 
 		it("create connection", async() => {
@@ -205,5 +196,15 @@ describe('/blogs', () => {
 
 				expect(getGameById.status).toBe(HttpStatus.OK)
 		})
+
+		it("get my current unfinished game", async() => {
+			const getUnfinishedGame = await request(server)
+				.get('/pair-game-quiz/pairs/my-current')
+				.set("Authorization", `Bearer ${tokenByUser}`)
+
+				expect(getUnfinishedGame.status).toBe(HttpStatus.OK)
+		})
+
 	})
+	
 })  

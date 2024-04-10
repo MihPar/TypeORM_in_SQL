@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Question } from "../../question/domain/entity.question";
 import { Repository } from "typeorm";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
-import { GameStatusEnum } from "../enum/enumPendingPlayer";
+import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 
 @Injectable()
 export class PairQuizGameRepository {
@@ -14,7 +14,7 @@ export class PairQuizGameRepository {
     @InjectRepository(PairQuizGame)
     protected readonly pairQuizGame: Repository<PairQuizGame>,
     @InjectRepository(PairQuizGameProgressPlayer)
-    protected readonly PairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
+    protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
   ) {}
 
   async foundGameByUserId(userId: string): Promise<boolean> {
@@ -105,6 +105,28 @@ export class PairQuizGameRepository {
 
     if (!getQuestionForQuizGame) return null;
     return getQuestionForQuizGame;
+  }
+
+  async findUnanswerQuestionByUserId(id: string): Promise<PairQuizGame> {
+	return await this.pairQuizGame.findOne({
+		relations: {
+			firstPlayerProgress: true,
+			secondPlayerProgress: true
+		},
+		where: [
+		{
+			firstPlayerProgress: {userId: id},
+			firstPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
+			status: GameStatusEnum.Finished
+		},
+		{
+			secondPlayerProgress: {userId: id},
+			secondPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
+			status: GameStatusEnum.Finished
+		}
+	]
+		order: {firstPlayerProgress.questionNuber = 'ASC'}
+	})
   }
 
   // async connectionOrCreatePairQuizGame(userId: string) {

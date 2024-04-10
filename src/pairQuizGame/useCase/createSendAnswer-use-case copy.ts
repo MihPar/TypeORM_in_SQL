@@ -7,6 +7,9 @@ import { AnswerType } from "../type/typeViewModel";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 
 export class SendAnswerCommand {
 	constructor(
@@ -18,6 +21,7 @@ export class SendAnswerCommand {
 @CommandHandler(SendAnswerCommand)
 export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 	constructor(
+		protected readonly pairQuizGameRepository: PairQuizGameRepository,
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
 		protected readonly commandBus: CommandBus
 	) {}
@@ -30,6 +34,9 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 
 		// const secondPlayer: PairQuizGameProgressPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(game.id, commandAnswer.userId)
 		console.log("game: ", game)
+
+		const questionAttempt = await this.pairQuizGameRepository.findUnanswerQuestionByUserId(commandAnswer.userId)
+		if(!questionAttempt) return null
 
 		if(game.firstPlayerProgress) {
 			const command = new FirstPlayerSendAnswerCommand(game.firstPlayerProgress, game.id, game.question!, commandAnswer.DTO.answer)

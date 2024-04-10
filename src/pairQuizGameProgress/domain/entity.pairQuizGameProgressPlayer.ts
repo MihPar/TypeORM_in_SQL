@@ -1,15 +1,17 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
 import { AnswersPlayer } from "./entity.answersPlayer";
+import { Question } from "../../question/domain/entity.question";
+import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 
 @Entity()
 export class PairQuizGameProgressPlayer {
 	@PrimaryGeneratedColumn('uuid')
 	id: string
 
-	// @OneToOne(() => PairQuizGame, g => g.firstPlayerProgress)
-	// game: PairQuizGame
+	@OneToOne(() => PairQuizGame)
+	game: PairQuizGame
 
 	@Column({nullable: true})
 	gameId: string
@@ -20,11 +22,14 @@ export class PairQuizGameProgressPlayer {
 	@Column({nullable: true})
 	userId: string
 
-	// @OneToMany(() => Question, q => q.progressFirstPlayer)
-	// question: Question[]
+	@OneToMany(() => Question, q => q.progressPlayer)
+	question: Question
 
-	// @Column({nullable: true})
-	// questionId: string
+	@Column({nullable: true})
+	questionId: string
+
+	@Column()
+	questionNumber: number
 
 	@Column()
 	addedAt: Date
@@ -40,4 +45,14 @@ export class PairQuizGameProgressPlayer {
 
 	@OneToMany(() => AnswersPlayer, a => a.progress)
 	answers: AnswersPlayer[]
+
+	addAnswer(answer: string) {
+		if(this.question.correctAnswers.include(answer)) {
+			this.answerStatus = AnswerStatusEnum.Correct
+			this.score = 2
+		} else {
+			this.answerStatus = AnswerStatusEnum.InCorrect
+		}
+		this.addedAt = new Date()
+	}
 }
