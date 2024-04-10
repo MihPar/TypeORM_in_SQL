@@ -19,7 +19,7 @@ export class PairQuizGameController {
 	) {}
   
   @Get('my-current')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async getCurenctUnFinishedGame(
 	@UserIdDecorator() userId: string,

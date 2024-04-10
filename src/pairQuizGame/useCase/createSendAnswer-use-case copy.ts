@@ -35,19 +35,19 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
       );
     if (!game || game.status !== 'Active')
       throw new NotFoundException('No active pair');
-    const firstPlayer: PairQuizGameProgressPlayer =
-      await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(
-        game.id,
-        game.firstPlayerProgress.id,
-      );
+    // const firstPlayer: PairQuizGameProgressPlayer =
+    //   await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(
+    //     game.id,
+    //     game.firstPlayerProgress.id,
+    //   );
 
-    const secondPlayer: PairQuizGameProgressPlayer =
-      await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(
-        game.id,
-        game.secondPlayerProgress.id,
-      );
+    // const secondPlayer: PairQuizGameProgressPlayer =
+    //   await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(
+    //     game.id,
+    //     game.secondPlayerProgress.id,
+    //   );
 
-	  if (game.firstPlayerProgress) {
+	  if (game.firstPlayerProgress.user.id === commandAnswer.userId) {
       const command = new FirstPlayerSendAnswerCommand(
         game.firstPlayerProgress,
         game.id,
@@ -55,7 +55,7 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
         commandAnswer.DTO.answer,
       );
       return await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
-    } else if (game.secondPlayerProgress) {
+    } else if (game.secondPlayerProgress.user.id === commandAnswer.userId) {
       const command = new SecondPlayerSendAnswerCommand(
 		game.firstPlayerProgress,
         game.id,

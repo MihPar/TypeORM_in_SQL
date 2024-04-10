@@ -17,7 +17,10 @@ export class ChangeAnswerStatusPlayerUseCase implements ICommandHandler<ChangeAn
 	) {}
 	async execute(command: ChangeAnswerStatusPlayerCommand): Promise<any> {
 		const firstPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId)
-		if(firstPlayer.answers.length === command.gameQuestions.length) {
+		// console.log(command)
+		// console.log(firstPlayer)
+		if(firstPlayer.answers.length === 
+			command.gameQuestions.length) {
 			return  await this.pairQuezGameQueryRepository.setFinishAnswerDateFirstPlayer(command.gameId)
 		} else {
 			return

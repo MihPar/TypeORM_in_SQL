@@ -104,8 +104,6 @@ export class PairQuizGameRepository {
       .take(5)
       .getMany();
 
-	  console.log("getQuestionForQuizGame: ", getQuestionForQuizGame)
-
     if (!getQuestionForQuizGame) return null;
     return getQuestionForQuizGame;
   }
