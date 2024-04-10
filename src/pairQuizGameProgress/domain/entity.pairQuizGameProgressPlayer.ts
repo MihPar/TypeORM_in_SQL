@@ -28,8 +28,8 @@ export class PairQuizGameProgressPlayer {
 	@Column({nullable: true})
 	questionId: string
 
-	@Column()
-	questionNumber: number
+	// `@Column()
+	// questionNumber: number`
 
 	@Column()
 	addedAt: Date
@@ -47,7 +47,7 @@ export class PairQuizGameProgressPlayer {
 	answers: AnswersPlayer[]
 
 	addAnswer(answer: string) {
-		if(this.question.correctAnswers.include(answer)) {
+		if(this.question.correctAnswers.includes(answer)) {
 			this.answerStatus = AnswerStatusEnum.Correct
 			this.score = 2
 		} else {

@@ -6,10 +6,11 @@ import { GameStatusEnum } from "../enum/enumPendingPlayer";
 import { AnswerType } from "../type/typeViewModel";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
-import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
+import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
+// import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 
 export class SendAnswerCommand {
 	constructor(
@@ -20,30 +21,43 @@ export class SendAnswerCommand {
 
 @CommandHandler(SendAnswerCommand)
 export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
-	constructor(
-		protected readonly pairQuizGameRepository: PairQuizGameRepository,
-		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
-		protected readonly commandBus: CommandBus
-	) {}
-	async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType> {
-		
-		const game: PairQuizGame = await this.pairQuezGameQueryRepository.getUnfinishedGame(GameStatusEnum.Active, commandAnswer.userId)
-		if(!game || game.status !== 'Active') throw new NotFoundException('No active pair');
+  constructor(
+    protected readonly pairQuizGameRepository: PairQuizGameRepository,
+    protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
+    protected readonly commandBus: CommandBus,
+  ) {}
+  async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType | void> {
+    const game: PairQuizGame =
+      await this.pairQuezGameQueryRepository.getUnfinishedGame(
+        GameStatusEnum.Active,
+        commandAnswer.userId,
+      );
+    if (!game || game.status !== 'Active')
+      throw new NotFoundException('No active pair');
+    const firstPlayer: PairQuizGameProgressPlayer =
+      await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(
+        game.id,
+        game.firstPlayerProgress.id,
+      );
 
-		// const firstPlayer: PairQuizGameProgressPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(game.id, commandAnswer.userId)
+    const secondPlayer: PairQuizGameProgressPlayer =
+      await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(
+        game.id,
+        game.secondPlayerProgress.id,
+      );
+    // console.log("game: ", game)
 
-		// const secondPlayer: PairQuizGameProgressPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(game.id, commandAnswer.userId)
-		console.log("game: ", game)
-
-		const questionAttempt = await this.pairQuizGameRepository.findUnanswerQuestionByUserId(commandAnswer.userId)
-		if(!questionAttempt) return null
-
-		if(game.firstPlayerProgress) {
-			const command = new FirstPlayerSendAnswerCommand(game.firstPlayerProgress, game.id, game.question!, commandAnswer.DTO.answer)
-			return await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command)
-		} else if(game.secondPlayerProgress) {
-			const command = new SecondPlayerSendAnswerCommaned(game.secondPlayerProgress, game.id, game.question!, commandAnswer.DTO.answer)
-			return await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
-		}
-	}
+    if (game.firstPlayerProgress) {
+      const command = new FirstPlayerSendAnswerCommand(
+        game.firstPlayerProgress,
+        game.id,
+        game.question!,
+        commandAnswer.DTO.answer,
+      );
+      return await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
+    } else if (game.secondPlayerProgress) {
+      // const command = new SecondPlayerSendAnswerCommaned(game.secondPlayerProgress, game.id, game.question!, commandAnswer.DTO.answer)
+      // return await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
+    }
+  }
 }

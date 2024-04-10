@@ -9,7 +9,7 @@ import { UsersQueryRepository } from '../users/users.queryRepository';
 import { UsersRepository } from '../users/users.repository';
 import { User } from '../users/entities/user.entity';
 import { PairQuezGameQueryRepository } from './infrastructure/pairQuizGameQueryRepository';
-// import { FirstPlayerSendAnswerUseCase } from './useCase/firstPlayerSendAnswer-ues-case';
+import { FirstPlayerSendAnswerUseCase } from './useCase/firstPlayerSendAnswer-ues-case';
 import { CreateOrConnectGameUseCase } from './useCase/createOrConnection-use-case';
 import { ChangeAnswerStatusFirstPlayerUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
 import { CangeStatusToFinishedUseCase } from './useCase/changeStatusToFinished-use-case';
@@ -20,9 +20,8 @@ import { Question } from '../question/domain/entity.question';
 import { PairQuizGameProgressQueryRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
 import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersPlayer';
 import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
-// import { SendAnswerUseCase } from './useCase/createSendAnswer-use-case copy';
-// import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
-// import { ChangeAnswerStatusSecondPlayerUseCase } from './useCase/changeAnswerStatusSecondPlayer-use-case';
+import { SendAnswerUseCase } from './useCase/createSendAnswer-use-case copy';
+import { QuestionQueryRepository } from '../question/infrastructury/questionQueryRepository';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -33,16 +32,17 @@ const repo = [
   PairQuizGameRepository,
   PairQuizGameProgressRepository,
   QuestionRepository,
-  PairQuizGameProgressQueryRepository
+  PairQuizGameProgressQueryRepository,
+  QuestionQueryRepository,
 ];
 const useCase = [
-//   FirstPlayerSendAnswerUseCase,
+  FirstPlayerSendAnswerUseCase,
 //   SecondPlayerSendAnswerUseCase,
   CreateOrConnectGameUseCase,
   ChangeAnswerStatusFirstPlayerUseCase,
   CangeStatusToFinishedUseCase,
-//   SendAnswerUseCase
-//   ChangeAnswerStatusSecondPlayerUseCase,
+  SendAnswerUseCase,
+  ChangeAnswerStatusFirstPlayerUseCase,
 ];
 @Module({
   imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question]), CqrsModule],

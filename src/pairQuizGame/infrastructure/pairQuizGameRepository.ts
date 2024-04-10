@@ -1,3 +1,4 @@
+import { stringify } from 'querystring';
 import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -5,6 +6,7 @@ import { Question } from "../../question/domain/entity.question";
 import { Repository } from "typeorm";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
+import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 
 @Injectable()
 export class PairQuizGameRepository {
@@ -15,6 +17,7 @@ export class PairQuizGameRepository {
     protected readonly pairQuizGame: Repository<PairQuizGame>,
     @InjectRepository(PairQuizGameProgressPlayer)
     protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
+	@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>
   ) {}
 
   async foundGameByUserId(userId: string): Promise<boolean> {
@@ -113,19 +116,17 @@ export class PairQuizGameRepository {
 			firstPlayerProgress: true,
 			secondPlayerProgress: true
 		},
-		where: [
+		where: [{firstPlayerProgress: {userId: id}},
 		{
-			firstPlayerProgress: {userId: id},
 			firstPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
 			status: GameStatusEnum.Finished
 		},
+		{secondPlayerProgress: {userId: id}},
 		{
-			secondPlayerProgress: {userId: id},
 			secondPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
 			status: GameStatusEnum.Finished
 		}
-	]
-		order: {firstPlayerProgress.questionNuber = 'ASC'}
+	],
 	})
   }
 
@@ -137,8 +138,15 @@ export class PairQuizGameRepository {
 
   // async createAnswer(answer: string) {}
 
-  // async sendAnswerFirstPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
+  async sendAnswerFirstPlayer(userId: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
+	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
+		.createQueryBuilder()
+		.insert()
+		.into(PairQuizGameProgressPlayer)
+		.values({userId, gameId, questionId, answerStatus, addedAt, score: +count})
+		.execute()
+  }
   // async sendAnswerSecondPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
 
-  // async setFinishAnswerDateFirstPlayer(gameId: string) {}
+  
 }
