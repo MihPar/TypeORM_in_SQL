@@ -98,19 +98,27 @@ export class PairQuezGameQueryRepository {
 	return await this.answersPlayer.save(answer)
   }
 
-//   async getSecondPlayerByGameIdAndUserId(gameId: string, userId: string): Promise<PairQuizGameProgressPlayer | null> {
-// 	const getSecondPlayer = await this.pairQuizGameProgressPlayer.findOneBy({gameId, userId})
-// 	if(!getSecondPlayer) return null
-// 	return getSecondPlayer
-//   }
-
-//   async getFirstPlayerByGameId(gameId: string): Promise<PairQuizGameProgressPlayer | null> {
-// 	const getFirstPlayerById = await this.pairQuizGameProgressPlayer.findOne({where: {gameId}})
-// 	if(!getFirstPlayerById) return null
-// 	return getFirstPlayerById
-//   }
-
-  async setFinishAnswerDateFirstPlayer(gameId: string) {
+  async setFinishAnswerDateFirstPlayer(gameId: string): Promise<void> {
 	const result = await this.pairQuizGameProgressPlayer.update({gameId}, {answerStatus: AnswerStatusEnum.Correct})
+  }
+
+  async increaseCountFirstPlayer(gameId: string) {
+	return await this.pairQuizGameProgressPlayer.increment({gameId}, "score", 1 )
+  }
+
+  async increaseCountSecondPlayer(gameId: string) {
+	return await this.pairQuizGameProgressPlayer.increment({gameId}, "score", 1 )
+  }
+
+  async addBonusFirstPalyer(gameId: string) {
+	return await this.pairQuizGameProgressPlayer.update({gameId}, {bonus_score: 1})
+  }
+
+  async addBonusSecondPalyer(gameId: string) {
+	return await this.pairQuizGameProgressPlayer.update({gameId}, {bonus_score: 1})
+  }
+
+  async changeGameStatusToFinished(gameId: string) {
+	return await this.pairQuezGame.update({id: gameId}, {status: GameStatusEnum.Finished})
   }
 }

@@ -138,15 +138,21 @@ export class PairQuizGameRepository {
 
   // async createAnswer(answer: string) {}
 
-  async sendAnswerFirstPlayer(userId: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
+  async sendAnswerFirstPlayer(id: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
 		.createQueryBuilder()
-		.insert()
-		.into(PairQuizGameProgressPlayer)
-		.values({userId, gameId, questionId, answerStatus, addedAt, score: +count})
+		.update()
+		.set({gameId, questionId, answerStatus, addedAt, score: +count})
+		.where({id})
 		.execute()
   }
-  // async sendAnswerSecondPlayer(gameId: string, {questionId, answerStatus, addedAt}: object, "-0") {}
 
-  
+  async sendAnswerSecondPlayer(id: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
+	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
+	.createQueryBuilder()
+	.update()
+	.set({gameId, questionId, answerStatus, addedAt, score: +count})
+	.where({id})
+	.execute()
+  }
 }

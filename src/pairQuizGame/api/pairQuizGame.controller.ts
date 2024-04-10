@@ -67,6 +67,8 @@ export class PairQuizGameController {
 	) {
 	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
+
+		// console.log("createSendAnswer: ", createSendAnswer)
 	return createSendAnswer
   }
 

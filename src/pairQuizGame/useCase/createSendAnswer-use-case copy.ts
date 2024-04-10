@@ -10,6 +10,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
+import { SecondPlayerSendAnswerCommand } from "./secondPlayerSendAnswer-ues-case";
 // import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 
 export class SendAnswerCommand {
@@ -26,7 +27,7 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
     protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
     protected readonly commandBus: CommandBus,
   ) {}
-  async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType | void> {
+  async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType> {
     const game: PairQuizGame =
       await this.pairQuezGameQueryRepository.getUnfinishedGame(
         GameStatusEnum.Active,
@@ -45,9 +46,8 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
         game.id,
         game.secondPlayerProgress.id,
       );
-    // console.log("game: ", game)
 
-    if (game.firstPlayerProgress) {
+	  if (game.firstPlayerProgress) {
       const command = new FirstPlayerSendAnswerCommand(
         game.firstPlayerProgress,
         game.id,
@@ -56,8 +56,12 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
       );
       return await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
     } else if (game.secondPlayerProgress) {
-      // const command = new SecondPlayerSendAnswerCommaned(game.secondPlayerProgress, game.id, game.question!, commandAnswer.DTO.answer)
-      // return await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
+      const command = new SecondPlayerSendAnswerCommand(
+		game.firstPlayerProgress,
+        game.id,
+        game.question!,
+        commandAnswer.DTO.answer,)
+      return await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
     }
   }
 }

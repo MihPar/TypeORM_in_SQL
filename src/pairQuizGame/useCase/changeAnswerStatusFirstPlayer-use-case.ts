@@ -3,19 +3,19 @@ import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { compareAsc } from "date-fns";
 
-export class ChangeAnswerStatusFirstPlayerCommand {
+export class ChangeAnswerStatusPlayerCommand {
 	constructor(
 		public gameId: string,
 		public gameQuestions: Question[]
 	) {}
 }
 
-@CommandHandler(ChangeAnswerStatusFirstPlayerCommand)
-export class ChangeAnswerStatusFirstPlayerUseCase implements ICommandHandler<ChangeAnswerStatusFirstPlayerCommand> {
+@CommandHandler(ChangeAnswerStatusPlayerCommand)
+export class ChangeAnswerStatusPlayerUseCase implements ICommandHandler<ChangeAnswerStatusPlayerCommand> {
 	constructor(
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository
 	) {}
-	async execute(command: ChangeAnswerStatusFirstPlayerCommand): Promise<any> {
+	async execute(command: ChangeAnswerStatusPlayerCommand): Promise<any> {
 		const firstPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId)
 		if(firstPlayer.answers.length === command.gameQuestions.length) {
 			return  await this.pairQuezGameQueryRepository.setFinishAnswerDateFirstPlayer(command.gameId)

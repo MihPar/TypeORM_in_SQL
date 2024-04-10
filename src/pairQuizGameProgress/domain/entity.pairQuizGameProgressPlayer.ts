@@ -46,6 +46,9 @@ export class PairQuizGameProgressPlayer {
 	@OneToMany(() => AnswersPlayer, a => a.progress)
 	answers: AnswersPlayer[]
 
+	@Column({nullable: true})
+	answerFinishDate: Date
+
 	addAnswer(answer: string) {
 		if(this.question.correctAnswers.includes(answer)) {
 			this.answerStatus = AnswerStatusEnum.Correct

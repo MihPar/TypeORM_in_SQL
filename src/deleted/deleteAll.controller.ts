@@ -26,11 +26,9 @@ export class TestingController {
 //   @SkipThrottle({default: true})
   async remove() {
 	await this.commandBus.execute(new DeleteAllPairQuizGameCommnad())
-
-	await this.commandBus.execute(new DeleteAllQuestionCommand())
-
 	await this.commandBus.execute(new DeleteAllAnswersPlayerCommand())
 	await this.commandBus.execute(new DeleteAllPairQuizGameProgressPlayerCommand())
+	await this.commandBus.execute(new DeleteAllQuestionCommand())
     await this.commandBus.execute(new DeleteAllDevicesCommnad())
     await this.commandBus.execute(new DeleteAllCommentLikesCommand())
     await this.commandBus.execute(new DeleteAllPostLikesCommand())
