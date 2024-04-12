@@ -22,6 +22,7 @@ import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersPlay
 import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { SendAnswerUseCase } from './useCase/createSendAnswer-use-case copy';
 import { QuestionQueryRepository } from '../question/infrastructury/questionQueryRepository';
+import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -37,10 +38,9 @@ const repo = [
 ];
 const useCase = [
   FirstPlayerSendAnswerUseCase,
-//   SecondPlayerSendAnswerUseCase,
+  SecondPlayerSendAnswerUseCase,
   CreateOrConnectGameUseCase,
-//   ChangeAnswerStatusFirstPlayerUseCase,
-ChangeStatusToFinishedUseCase,
+  ChangeStatusToFinishedUseCase,
   SendAnswerUseCase,
   ChangeAnswerStatusPlayerUseCase,
 ];

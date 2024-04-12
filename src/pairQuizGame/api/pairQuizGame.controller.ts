@@ -37,9 +37,6 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string
 	): Promise<GameTypeModel | null> {
 		const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
-		// console.log(userId, " userId from accessToken")
-		// console.log(getGameById.firstPlayerProgress?.player.id, " id of first player participating in game")
-		// console.log(getGameById.secondPlayerProgress?.player.id, " id of second player participating in game")
 		if(getGameById.firstPlayerProgress.player.id !== userId && getGameById.secondPlayerProgress?.player.id !== userId) throw new ForbiddenException('403')
 		if(!getGameById) throw new NotFoundException('404')
 		return getGameById
@@ -52,6 +49,8 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string,
 	@UserDecorator() user: User
   ): Promise<GameTypeModel> {
+	const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
+		if(getGameById.firstPlayerProgress.player.id !== userId && getGameById.secondPlayerProgress?.player.id !== userId) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
 	if(!createOrConnection) throw new NotFoundException('404')
@@ -65,10 +64,10 @@ export class PairQuizGameController {
 	@Body() DTO: CreatePairQuizGameDto,
 	@UserIdDecorator() userId: string
 	) {
+	const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
+		if(getGameById.firstPlayerProgress.player.id !== userId && getGameById.secondPlayerProgress?.player.id !== userId) throw new ForbiddenException('403')
 	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
-
-		// console.log("createSendAnswer: ", createSendAnswer)
 	return createSendAnswer
   }
 

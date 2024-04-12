@@ -261,19 +261,15 @@ describe('/blogs', () => {
 		})
 
 		it('send my current answer', async() => {
-			// console.log("question: ", question)
-			// console.log("game.questions: ", game.questions)
 			const result = {answer: question.find(item => {
 				return item.body === game.questions[0].body
 			}).correctAnswers[0]
 		}
-		// console.log("result: ", result)
 			const sendAnswer = await request(server)
 				.post('/pair-game-quiz/pairs/my-current/answers')
 				.set("Authorization", `Bearer ${tokenByUser}`)
 				.send(result)
 
-				// console.log("body: ", sendAnswer.body)
 				expect(sendAnswer.status).toBe(HttpStatus.OK)
 				expect(sendAnswer.body).toEqual({
 					"questionId": game.questions[0].id,
