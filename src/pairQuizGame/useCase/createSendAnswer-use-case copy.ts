@@ -27,8 +27,8 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
   async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType> {
     const game: PairQuizGame =
       await this.pairQuezGameQueryRepository.getUnfinishedGame(
-        GameStatusEnum.Active,
-        commandAnswer.userId,
+		commandAnswer.userId,
+        GameStatusEnum.Active
       );
     if (!game || game.status !== 'Active')
       throw new NotFoundException('No active pair');

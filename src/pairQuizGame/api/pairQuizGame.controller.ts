@@ -9,6 +9,7 @@ import { AnswerType, GameTypeModel } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
+import { PairQuizGame } from '../domain/entity.pairQuezGame';
 // import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
 
 @Controller('pair-game-quiz/pairs')
@@ -49,8 +50,8 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string,
 	@UserDecorator() user: User
   ): Promise<GameTypeModel> {
-	const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
-		if(getGameById.firstPlayerProgress.player.id !== userId && getGameById.secondPlayerProgress?.player.id !== userId) throw new ForbiddenException('403')
+	// const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId, GameStatusEnum.Active)
+	// 	if(getGameById.firstPlayerProgress.userId !== userId && getGameById.secondPlayerProgress?.userId !== userId) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
 	if(!createOrConnection) throw new NotFoundException('404')
@@ -64,8 +65,8 @@ export class PairQuizGameController {
 	@Body() DTO: CreatePairQuizGameDto,
 	@UserIdDecorator() userId: string
 	) {
-	const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
-		if(getGameById.firstPlayerProgress.player.id !== userId && getGameById.secondPlayerProgress?.player.id !== userId) throw new ForbiddenException('403')
+	// const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId, GameStatusEnum.Active)
+	// 	if(getGameById.firstPlayerProgress.userId !== userId && getGameById.secondPlayerProgress?.userId !== userId) throw new ForbiddenException('403')
 	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
 	return createSendAnswer

@@ -57,7 +57,7 @@ export class PairQuezGameQueryRepository {
     return PairQuizGame.getViewModel(getGameById);
   }
 
-  async getUnfinishedGame(status: GameStatusEnum, userId: string): Promise<PairQuizGame | null> {
+  async getUnfinishedGame(userId: string, status: GameStatusEnum): Promise<PairQuizGame | null> {
 	const getGame = await this.pairQuezGame.findOne({
 		relations: {
 			firstPlayerProgress: {user: true, answers: true},
