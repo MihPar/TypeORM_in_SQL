@@ -51,7 +51,7 @@ export class PairQuizGameController {
 	@UserDecorator() user: User
   ): Promise<GameTypeModel> {
 	// const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId, GameStatusEnum.Active)
-	// 	if(getGameById.firstPlayerProgress.userId !== userId && getGameById.secondPlayerProgress?.userId !== userId) throw new ForbiddenException('403')
+	// 	if(getGameById.firstPlayerProgress.userId !== userId || getGameById.secondPlayerProgress?.userId !== userId) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
 	if(!createOrConnection) throw new NotFoundException('404')
@@ -65,8 +65,8 @@ export class PairQuizGameController {
 	@Body() DTO: CreatePairQuizGameDto,
 	@UserIdDecorator() userId: string
 	) {
-	// const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId, GameStatusEnum.Active)
-	// 	if(getGameById.firstPlayerProgress.userId !== userId && getGameById.secondPlayerProgress?.userId !== userId) throw new ForbiddenException('403')
+	const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId, GameStatusEnum.Active)
+		if(getGameById.firstPlayerProgress.userId !== userId || getGameById.secondPlayerProgress?.userId !== userId) throw new ForbiddenException('403')
 	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
 	return createSendAnswer

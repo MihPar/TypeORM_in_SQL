@@ -50,6 +50,7 @@ describe('/blogs', () => {
 	let tokenByUser2: string
 	let gameId: string
 	let game: any
+	let gameSecondPlayer: any
 
 	describe('Quiz question', () => {
     it('Connect with existing player or to create new pair which will be waiting second player', async () => {
@@ -240,14 +241,25 @@ describe('/blogs', () => {
       expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
     //   console.log('body: ', getUnfinishedGame.body.questions);
       game = getUnfinishedGame.body;
+	//   console.log("gameFirstPlayer: ", game)
     });
 
     it('send answer for first question', async () => {
+		// console.log('questionFirstPlayer: ', question)
       const result = {
-        answer: question.find((item) => {
-          return item.body === game.questions[0].body;
+		answer: game.questions.find((item) => {
+			console.log("item1: ", item)
+			console.log("game.questions[0]: ", game.questions[0])
+			console.log("game.questions[0].body: ", game.questions[0].body)
+			// console.log("game.questions[0].correctAnswers[0]: ", game.questions[0].correctAnswers[0])
+
+			return item.correctAnswers[0] === game.questions[0].body;
         }).correctAnswers[0],
+        // answer: question.find((item) => {
+        //   return item.correctAnswers[0] === game.questions[0].body;
+        // }).correctAnswers[0],
       };
+
       const sendAnswer0 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
         .set('Authorization', `Bearer ${tokenByUser}`)
@@ -342,15 +354,17 @@ describe('/blogs', () => {
   
 		expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
 		// console.log('body: ', getUnfinishedGame.body.questions);
-		game = getUnfinishedGame.body;
+		gameSecondPlayer = getUnfinishedGame.body;
 	  });
   
 	  it('send answer for first question', async () => {
 		const result = {
 		  answer: question.find((item) => {
-			return item.body === game.questions[0].body;
+			return item.body === gameSecondPlayer.questions[0].body;
 		  }).correctAnswers[0],
 		};
+		// console.log("result2: ", result)
+
 		const sendAnswer0 = await request(server)
 		  .post('/pair-game-quiz/pairs/my-current/answers')
 		  .set('Authorization', `Bearer ${tokenByUser2}`)
@@ -359,7 +373,7 @@ describe('/blogs', () => {
   
 		expect(sendAnswer0.status).toBe(HttpStatus.OK);
 		expect(sendAnswer0.body).toEqual({
-		  questionId: game.questions[0].id,
+		  questionId: gameSecondPlayer.questions[0].id,
 		  answerStatus: 'Correct',
 		  addedAt: expect.any(String),
 		});
@@ -367,7 +381,7 @@ describe('/blogs', () => {
 	  it('send current answer for second question', async () => {
 		const result = {
 		  answer: question.find((item) => {
-			return item.body === game.questions[1].body;
+			return item.body === gameSecondPlayer.questions[1].body;
 		  }).correctAnswers[1],
 		};
 		const sendAnswer1 = await request(server)
@@ -377,7 +391,7 @@ describe('/blogs', () => {
   
 		expect(sendAnswer1.status).toBe(HttpStatus.OK);
 		expect(sendAnswer1.body).toEqual({
-		  questionId: game.questions[1].id,
+		  questionId: gameSecondPlayer.questions[1].id,
 		  answerStatus: 'Correct',
 		  addedAt: expect.any(String),
 		});
@@ -385,7 +399,7 @@ describe('/blogs', () => {
 	  it('send current answer for third question', async () => {
 		  const result = {
 			answer: question.find((item) => {
-			  return item.body === game.questions[2].body;
+			  return item.body === gameSecondPlayer.questions[2].body;
 			}).correctAnswers[2],
 		  };
 		  const sendAnswer2 = await request(server)
@@ -395,7 +409,7 @@ describe('/blogs', () => {
 	
 		  expect(sendAnswer2.status).toBe(HttpStatus.OK);
 		  expect(sendAnswer2.body).toEqual({
-			questionId: game.questions[2].id,
+			questionId: gameSecondPlayer.questions[2].id,
 			answerStatus: 'Correct',
 			addedAt: expect.any(String),
 		  });
@@ -403,7 +417,7 @@ describe('/blogs', () => {
 		it('send current answer for four question', async () => {
 		const result = {
 		  answer: question.find((item) => {
-			return item.body === game.questions[3].body;
+			return item.body === gameSecondPlayer.questions[3].body;
 		  }).correctAnswers[3],
 		};
 		const sendAnswer3 = await request(server)
@@ -413,7 +427,7 @@ describe('/blogs', () => {
   
 		expect(sendAnswer3.status).toBe(HttpStatus.OK);
 		expect(sendAnswer3.body).toEqual({
-		  questionId: game.questions[3].id,
+		  questionId: gameSecondPlayer.questions[3].id,
 		  answerStatus: 'Correct',
 		  addedAt: expect.any(String),
 		});
@@ -421,7 +435,7 @@ describe('/blogs', () => {
 	  it('send current answer for fith question', async () => {
 		  const result = {
 			answer: question.find((item) => {
-			  return item.body === game.questions[4].body;
+			  return item.body === gameSecondPlayer.questions[4].body;
 			}).correctAnswers[4],
 		  };
 		  const sendAnswer4 = await request(server)
@@ -431,7 +445,7 @@ describe('/blogs', () => {
 	
 		  expect(sendAnswer4.status).toBe(HttpStatus.OK);
 		  expect(sendAnswer4.body).toEqual({
-			questionId: game.questions[4].id,
+			questionId: gameSecondPlayer.questions[4].id,
 			answerStatus: 'Correct',
 			addedAt: expect.any(String),
 		  });
