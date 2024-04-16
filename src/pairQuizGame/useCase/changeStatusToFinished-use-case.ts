@@ -24,16 +24,12 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 		) {
 			const firstPlayerLastAnswer = firstPlayer.answers[command.gameQuestions.length - 1]
 			const secondPlayerLastAnswer = secondPlayer.answers[command.gameQuestions.length - 1]
-			// await this.pairQuezGameQueryRepository.changeWinRate(command.gameId)
-			// await this.pairQuezGameQueryRepository.increaseCountFirstPlayer(command.gameId)
-			// await this.pairQuezGameQueryRepository.increaseCountSecondPlayer(command.gameId)
 			if (firstPlayerLastAnswer.addedAt < secondPlayerLastAnswer.addedAt) {
 				await this.pairQuezGameQueryRepository.addBonusFirstPalyer(command.gameId)
-				return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.gameId)
 			} else if (firstPlayerLastAnswer.addedAt > secondPlayerLastAnswer.addedAt) {
 				await this.pairQuezGameQueryRepository.addBonusSecondPalyer(command.gameId)
-				return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.gameId)
 			}
+			return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.gameId)
 		}
 	}
 }

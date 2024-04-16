@@ -18,7 +18,7 @@ export class AnswersPlayer {
   @ManyToOne(() => Question, (p) => p.answersPlayer)
   question: Question;
 
-  @Column()
+  @Column({nullable: true})
   questionId: string;
 
   @Column({ nullable: true })

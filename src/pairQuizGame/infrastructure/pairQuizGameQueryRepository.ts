@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
-import { Repository } from "typeorm";
+import { In, Not, Repository } from "typeorm";
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { GameTypeModel } from "../type/typeViewModel";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
@@ -26,8 +26,8 @@ export class PairQuezGameQueryRepository {
     return true;
   }
   async getCurrentUnFinGame(
+    userId: string,
     status: GameStatusEnum,
-    userId?: string,
   ): Promise<GameTypeModel | null> {
     const currentUnFinishedGame = await this.pairQuezGame.findOne({
 		relations: {
@@ -45,6 +45,12 @@ export class PairQuezGameQueryRepository {
   }
 
   async getGameById(id: string): Promise<GameTypeModel | null> {
+    const getGameById: PairQuizGame = await this.getRawGameById(id)
+    if (!getGameById) return null;
+    return PairQuizGame.getViewModel(getGameById);
+  }
+
+  async getRawGameById(id: string): Promise<PairQuizGame | null> {
     const getGameById: PairQuizGame = await this.pairQuezGame.findOne({
       relations: {
         firstPlayerProgress: { user: true, answers: { question: true } },
@@ -54,10 +60,13 @@ export class PairQuezGameQueryRepository {
       where: { id },
     });
     if (!getGameById) return null;
-    return PairQuizGame.getViewModel(getGameById);
+    return getGameById
   }
+  
 
-  async getUnfinishedGame(userId: string, status: GameStatusEnum): Promise<PairQuizGame | null> {
+  async getUnfinishedGame(userId: string): Promise<PairQuizGame | null> {
+	// console.log("userId: ", userId)
+	// console.log("status: ", status)
 	const getGame = await this.pairQuezGame.findOne({
 		relations: {
 			firstPlayerProgress: {user: true, answers: true},
@@ -65,11 +74,29 @@ export class PairQuezGameQueryRepository {
 			question: true
 		},
 		where: [
-			{status, firstPlayerProgress: {userId}},
-			{status, secondPlayerProgress: {userId}},
+			{status: Not(GameStatusEnum.Finished), firstPlayerProgress: {user: {id: userId}}},
+			{status:  Not(GameStatusEnum.Finished), secondPlayerProgress: {user: {id: userId}}},
 		]
 	})
 	if(!getGame) return null
+
+	return getGame
+  }
+
+  async getGameByUserIdAndStatuses(userId: string, statuses: GameStatusEnum[]): Promise<PairQuizGame | null> {
+	const getGame = await this.pairQuezGame.findOne({
+		relations: {
+			firstPlayerProgress: {user: true, answers: true},
+			secondPlayerProgress: {user: true, answers: true},
+			question: true
+		},
+		where: [
+			{status: In(statuses), firstPlayerProgress: {user: {id: userId}}},
+			{status: In(statuses), secondPlayerProgress: {user: {id: userId}}},
+		]
+	})
+	if(!getGame) return null
+
 	return getGame
   }
 

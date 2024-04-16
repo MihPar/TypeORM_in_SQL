@@ -136,7 +136,7 @@ export class PairQuizGameRepository {
 
   // async createAnswer(answer: string) {}
 
-  async sendAnswerFirstPlayer(PlayerId: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
+  async sendAnswerPlayer(PlayerId: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
 		.createQueryBuilder()
 		.update()
@@ -145,12 +145,12 @@ export class PairQuizGameRepository {
 		.execute()
   }
 
-  async sendAnswerSecondPlayer(id: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
-	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
-	.createQueryBuilder()
-	.update()
-	.set({gameId, questionId, answerStatus, addedAt, score: +count})
-	.where({id})
-	.execute()
-  }
+//   async sendAnswerSecondPlayer(id: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
+// 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
+// 	.createQueryBuilder()
+// 	.update()
+// 	.set({gameId, questionId, answerStatus, addedAt, score: +count})
+// 	.where({id})
+// 	.execute()
+//   }
 }

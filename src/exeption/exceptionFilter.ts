@@ -85,6 +85,20 @@ import { exceptionResponseType } from '../types/exeptionResponseType';
 		} else {
 		  response.status(status).json(responseBody.message);
 		}
+	  } else if (status === HttpStatus.FORBIDDEN ) {
+		const errorsResponse: exceptionResponseType = {
+		  errorsMessages: [],
+		};
+		const responseBody: any = exception.getResponse();
+  
+		if (typeof responseBody.message !== 'string') {
+		  responseBody.message.forEach((m) =>
+			errorsResponse.errorsMessages.push(m),
+		  );
+		  response.status(status).json(errorsResponse);
+		} else {
+		  response.status(status).json(responseBody.message);
+		}
 	  } else {
 		response.status(status).json({
 		  statusCode: status,

@@ -31,17 +31,17 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 		} else {
 			const answerLength: number = command.game.secondPlayerProgress.answers.length
 			const gameQuestion: Question = command.game.question[answerLength]
-			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.id)
+			const question = await this.questionQueryRepository.getQuestionById(gameQuestion?.id)
 
-			const isIncludes = question!.correctAnswers.includes(command.inputAnswer)
+			const isIncludes = question?.correctAnswers.includes(command.inputAnswer)
 				const answer = AnswersPlayer.createAnswer(
-					question!.id,
+					question?.id,
 					isIncludes ? AnswerStatusEnum.Correct : AnswerStatusEnum.InCorrect,
 					command.inputAnswer,
 					command.game.secondPlayerProgress,
        		 );
 				await this.pairQuezGameQueryRepository.createAnswers(answer)
-				await this.pairQuizGameRepository.sendAnswerFirstPlayer(
+				await this.pairQuizGameRepository.sendAnswerPlayer(
 					command.game.secondPlayerProgress.id,
 					command.game.id,
 					answer.questionId,

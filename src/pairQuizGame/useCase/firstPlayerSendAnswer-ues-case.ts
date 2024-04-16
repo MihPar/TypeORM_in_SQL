@@ -44,7 +44,7 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 					command.game.firstPlayerProgress,
        		 );
 				await this.pairQuezGameQueryRepository.createAnswers(answer)
-				await this.pairQuizGameRepository.sendAnswerFirstPlayer(
+				await this.pairQuizGameRepository.sendAnswerPlayer(
 					command.game.firstPlayerProgress.id,
 					command.game.id,
 					answer.questionId,
