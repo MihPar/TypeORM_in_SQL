@@ -42,11 +42,11 @@ export class AnswersPlayer {
     questionId: string,
     answerStatus: AnswerStatusEnum,
     answer: string,
-    progressId: string,
+    // progressId: string,
     progress: PairQuizGameProgressPlayer,
   ) {
 	const newAnswer = new this();
-	newAnswer.progressId = progressId
+	newAnswer.progressId = progress.id
 	newAnswer.questionId = questionId
 	newAnswer.answer = answer
 	newAnswer.answerStatus = answerStatus

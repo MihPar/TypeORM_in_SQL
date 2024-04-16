@@ -136,12 +136,12 @@ export class PairQuizGameRepository {
 
   // async createAnswer(answer: string) {}
 
-  async sendAnswerFirstPlayer(id: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
+  async sendAnswerFirstPlayer(PlayerId: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
 		.createQueryBuilder()
 		.update()
 		.set({gameId, questionId, answerStatus, addedAt, score: +count})
-		.where({id})
+		.where({id: PlayerId})
 		.execute()
   }
 
