@@ -47,15 +47,10 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			newQuizGame.firstPlayerProgress = progressFirstPlayer
 			newQuizGame.secondPlayerProgress = null
 			newQuizGame.status = GameStatusEnum.PendingSecondPlayer
-			// console.log("newQuizGame: ", newQuizGame)
-
 			const createNewQuizGame = await this.pairQuizGameRepository.createNewGame(newQuizGame)
-			// console.log("createNewQuizGame: ", createNewQuizGame)
 
 			progressFirstPlayer.gameId = createNewQuizGame.id
-			// console.log("progressFirstPlayer.gameId: ", progressFirstPlayer.gameId)
 			await this.pairQuizGameProgressRepository.updateProgressFirstPlayer(progressFirstPlayer.gameId)
-			// console.log("4")
 
 			return PairQuizGame.quizGameViewModelForFirstPlayer(createNewQuizGame, firstLogin, command.userId)
 		} else {
@@ -71,16 +66,13 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			progressSecondPlayer.answers = []
 
 			await this.pairQuizGameProgressRepository.createProgressForSecondPlayer(progressSecondPlayer)
-
 			foundQuizGame.secondPlayerProgress = progressSecondPlayer
 			foundQuizGame.secondPlayerProgressId = progressSecondPlayer.userId
 
 			const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(true)
 			foundQuizGame.question = getFiveQuestionsQuizGame
-
+			
 			await this.pairQuizGameRepository.createNewGame(foundQuizGame)
-			// console.log("foundQuizGame: ", foundQuizGame)
-
 			return PairQuizGame.getViewModel(foundQuizGame)
 		}
 	}

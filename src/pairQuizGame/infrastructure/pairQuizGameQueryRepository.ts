@@ -66,8 +66,6 @@ export class PairQuezGameQueryRepository {
   
 
   async getUnfinishedGame(userId: string): Promise<PairQuizGame | null> {
-	// console.log("userId: ", userId)
-	// console.log("status: ", status)
 	const getGame = await this.pairQuezGame.findOne({
 		relations: {
 			firstPlayerProgress: {user: true, answers: true},

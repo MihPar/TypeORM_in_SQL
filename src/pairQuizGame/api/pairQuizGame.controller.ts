@@ -28,7 +28,6 @@ export class PairQuizGameController {
 	const findUnfinishedUserGame = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(
 		userId, [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	)
-	// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
 	return findUnfinishedUserGame
   }
