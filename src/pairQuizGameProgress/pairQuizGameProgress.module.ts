@@ -13,13 +13,14 @@ import { Question } from '../question/domain/entity.question';
 import { User } from '../users/entities/user.entity';
 import { PairQuizGameProgressPlayer } from './domain/entity.pairQuizGameProgressPlayer';
 import { AnswersPlayer } from './domain/entity.answersPlayer';
+import { QuestionGame } from '../pairQuizGame/domain/entity.questionGame';
 
 const useCase = [CreateOrConnectGameUseCase]
 const serves = [PairQuizGameProgressService]
 const repo = [PairQuizGameRepository, PairQuizGameProgressRepository, UsersQueryRepository, QuestionRepository]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, PairQuizGame, Question, User, AnswersPlayer]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, PairQuizGame, Question, User, AnswersPlayer, QuestionGame]), CqrsModule],
   controllers: [PairQuizGameProgressController],
   providers: [...useCase, ...serves, ...repo],
 })

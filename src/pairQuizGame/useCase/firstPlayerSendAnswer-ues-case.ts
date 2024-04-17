@@ -52,9 +52,6 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 					answer.addedAt,
 					isIncludes ? "+1" : "+0",
 					)
-					// const changeAnswerStatusCommand = new ChangeAnswerStatusPlayerCommand(command.gameId, command.gameQuestions)
-					// await this.commandBus.execute<ChangeAnswerStatusPlayerCommand>(changeAnswerStatusCommand)
-
 					const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game.id, command.game.question)
 					await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
 

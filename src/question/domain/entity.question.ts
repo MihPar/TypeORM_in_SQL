@@ -2,6 +2,7 @@ import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
+import { QuestionGame } from "../../pairQuizGame/domain/entity.questionGame";
 
 @Entity()
 export class Question {
@@ -23,8 +24,8 @@ export class Question {
 	@Column({nullable: true})
 	updatedAt: Date
 
-	@ManyToMany(() => PairQuizGame, g => g.question)
-	games: PairQuizGame[]
+	@ManyToMany(() => QuestionGame, questionGame => questionGame.question)
+	questionGame: QuestionGame
 
 	@ManyToOne(() => PairQuizGameProgressPlayer)
 	progressFirstPlayer: PairQuizGameProgressPlayer
