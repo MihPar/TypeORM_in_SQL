@@ -29,6 +29,8 @@ export class PairQuezGameQueryRepository {
     userId: string,
     status: GameStatusEnum,
   ): Promise<GameTypeModel | null> {
+	// console.log('userId: ', userId)
+	// console.log('status: ', status)
     const currentUnFinishedGame = await this.pairQuezGame.findOne({
 		relations: {
 			firstPlayerProgress: {user: true, answers: {question: true}},
@@ -40,6 +42,8 @@ export class PairQuezGameQueryRepository {
 			{secondPlayerProgress: {user: {id: userId}}, status}
 		]
 	})
+	console.log("currentUnFinishedGame: ", currentUnFinishedGame)
+
     if (!currentUnFinishedGame) return null;
     return PairQuizGame.getViewModel(currentUnFinishedGame);
   }

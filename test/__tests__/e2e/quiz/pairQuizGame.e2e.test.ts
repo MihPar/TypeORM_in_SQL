@@ -240,7 +240,7 @@ describe('/blogs', () => {
 
       expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
       game = getUnfinishedGame.body;
-	  console.log("gameFirstPlayer: ", game)
+	//   console.log("gameFirstPlayer: ", game)
     });
 
     it('send answer for first question', async () => {
@@ -480,7 +480,7 @@ describe('/blogs', () => {
 				.set('Authorization', `Bearer ${tokenByUser}`);
 
 				expect(getGameById.status).toBe(HttpStatus.OK);
-				console.log("getGameById: ", getGameById.body)
+				// console.log("getGameById: ", getGameById.body)
 			});
 
   });

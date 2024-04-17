@@ -41,14 +41,10 @@ export class PairQuizGameController {
 	@Param('id', ParseUUIDPipe) id: string,
 	@UserIdDecorator() userId: string
 	): Promise<GameTypeModel | null> {
-		// console.log('userId: ', userId)
 		const getActivePair: PairQuizGame | null = await this.pairQuezGameQueryRepository.getRawGameById(id)
 		if(!getActivePair) throw new NotFoundException('404')
 		if(getActivePair.firstPlayerProgress.user.id !== userId 
 			&& getActivePair.secondPlayerProgress?.user?.id !== userId) throw new ForbiddenException('403')
-		// const getGameById: GameTypeModel | null = await this.pairQuezGameQueryRepository.getGameById(id)
-		// if(!getGameById) throw new NotFoundException('404')
-		// 	console.log("getGameById: ", getGameById)
 		return PairQuizGame.getViewModel(getActivePair)
   }
 
@@ -76,23 +72,19 @@ export class PairQuizGameController {
 	) {
 	const activeUserGame: PairQuizGame | null = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(userId, [GameStatusEnum.Active])
 		if(!activeUserGame) throw new ForbiddenException('403')
-			// console.log('try1')
 
 		const isFirstPlayer = activeUserGame.firstPlayerProgress.user.id === userId
 		const isSecondPlayer = activeUserGame.secondPlayerProgress?.user?.id === userId
 		const firstPlayerAswersCount = activeUserGame.firstPlayerProgress.answers.length
 		const secondPlayerAswersCount = activeUserGame.secondPlayerProgress?.answers?.length
 		if(isFirstPlayer && firstPlayerAswersCount === GAME_QUESTION_COUNT) {throw new ForbiddenException('403')}
-		// console.log('try2')
 
 		if(isSecondPlayer && secondPlayerAswersCount === GAME_QUESTION_COUNT) {throw new ForbiddenException('403')}
-		// console.log('try3')
 
 
 	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
 	if(!createSendAnswer) throw new ForbiddenException('403')
-		// console.log('try4')
 
 	return createSendAnswer
   }
