@@ -27,10 +27,8 @@ export class PairQuezGameQueryRepository {
   }
   async getCurrentUnFinGame(
     userId: string,
-    status: GameStatusEnum,
+    statuses: GameStatusEnum[],
   ): Promise<GameTypeModel | null> {
-	// console.log('userId: ', userId)
-	// console.log('status: ', status)
     const currentUnFinishedGame = await this.pairQuezGame.findOne({
 		relations: {
 			firstPlayerProgress: {user: true, answers: {question: true}},
@@ -38,11 +36,10 @@ export class PairQuezGameQueryRepository {
 			question: true
 		},
 		where: [
-			{firstPlayerProgress: {user: {id: userId}}, status},
-			{secondPlayerProgress: {user: {id: userId}}, status}
+			{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
+			{secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
 		]
 	})
-	console.log("currentUnFinishedGame: ", currentUnFinishedGame)
 
     if (!currentUnFinishedGame) return null;
     return PairQuizGame.getViewModel(currentUnFinishedGame);

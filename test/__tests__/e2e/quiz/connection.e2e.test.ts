@@ -111,7 +111,6 @@ describe('/blogs', () => {
 	const getMyCurrentGame = await request(server)
 		.get(`/pair-game-quiz/pairs/my-current`)
 		.set('Authorization', `Bearer ${tokenByUser}`)
-		console.log(getMyCurrentGame.body)
 
 		expect(getMyCurrentGame.status).toBe(HttpStatus.OK)
   })

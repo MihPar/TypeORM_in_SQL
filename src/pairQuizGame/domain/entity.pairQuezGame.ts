@@ -79,12 +79,12 @@ export class PairQuizGame {
 				},
 				score: getGameById.secondPlayerProgress.score
 			} : null,
-			questions: getGameById.question.map(item => {
+			questions: getGameById.question.length ? getGameById.question.map(item => {
 				return {
 					id: item.id,
 					body: item.body
 				}
-			}),
+			}) : null,
 			status: getGameById.status,
 			pairCreatedDate: getGameById.pairCreatedDate,
 			startGameDate: getGameById.startGameDate,
