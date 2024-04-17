@@ -21,13 +21,6 @@ export class PairQuizGameRepository {
   ) {}
 
   async foundGameByUserId(userId: string): Promise<boolean> {
-    // const foundGameByUserId = await this.pairQuizGame.findOneBy([
-    //   { firstPlayerProgressId: userId, status: GameStatusEnum.Active },
-	//   { firstPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
-    //   { secondPlayerProgressId: userId, status: GameStatusEnum.Active },
-	//   { secondPlayerProgressId: userId, status: GameStatusEnum.PendingSecondPlayer},
-    // ]);
-
 	const foundGameByUserId = await this.pairQuizGame.findOne({
 		relations: {
 			firstPlayerProgress: {
@@ -78,23 +71,6 @@ export class PairQuizGameRepository {
 		return updateGame
   }
 
-  //   async updateNewQuizGame(saveProgressFirstPlayer: PairQuizGameProgressFirstPlayer, id: string): Promise<any> {
-  // 	const updateNewQuizGame = await this.pairQuizGame
-  // 		.createQueryBuilder()
-  // 		.update()
-  // 		.set({firstPlayerProgress: saveProgressFirstPlayer})
-  // 		.where(`id = :id`, {id})
-  // 		.execute()
-  // 		console.log("updateNewQuizGame: ", updateNewQuizGame)
-  // 		return updateNewQuizGame
-  //   }
-
-  //   async changeStatusQuizGame(game: PairQuizGame): Promise<PairQuizGame | null> {
-  //     const changeStatusQuizGameOnActive = await this.pairQuizGame.save(game)
-  // 	  if(!changeStatusQuizGameOnActive) return null
-  // 	  return changeStatusQuizGameOnActive
-  //   }
-
   async getFiveQuestions(boolean: boolean): Promise<Question[] | null> {
     const getQuestionForQuizGame = await this.question
       .createQueryBuilder()
@@ -128,14 +104,6 @@ export class PairQuizGameRepository {
 	})
   }
 
-  // async connectionOrCreatePairQuizGame(userId: string) {
-  // 	const createOrConnect = await this.pairQuizGame
-  // 		.createQueryBuilder()
-  // 		.leftJoinAndSelect()
-  // }
-
-  // async createAnswer(answer: string) {}
-
   async sendAnswerPlayer(PlayerId: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
 		.createQueryBuilder()
@@ -144,13 +112,4 @@ export class PairQuizGameRepository {
 		.where({id: PlayerId})
 		.execute()
   }
-
-//   async sendAnswerSecondPlayer(id: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
-// 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
-// 	.createQueryBuilder()
-// 	.update()
-// 	.set({gameId, questionId, answerStatus, addedAt, score: +count})
-// 	.where({id})
-// 	.execute()
-//   }
 }
