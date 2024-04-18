@@ -13,6 +13,7 @@ import { DeleteAllPairQuizGameCommnad } from '../pairQuizGame/useCase/deleteAllP
 import { DeleteAllAnswersPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllAnswersFirstPlayer';
 import { DeleteAllQuestionCommand } from '../question/useCases/deleteAllQuestions-use-case';
 import { DeleteAllPairQuizGameProgressPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
+import { DelectAllQuestionGamesCommand } from '../pairQuizGame/useCase/deleteAllQuestionGames-use-case';
 
 // @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
@@ -25,6 +26,7 @@ export class TestingController {
   @HttpCode(204)
 //   @SkipThrottle({default: true})
   async remove() {
+	await this.commandBus.execute(new DelectAllQuestionGamesCommand())
 	await this.commandBus.execute(new DeleteAllPairQuizGameCommnad())
 	await this.commandBus.execute(new DeleteAllAnswersPlayerCommand())
 	await this.commandBus.execute(new DeleteAllPairQuizGameProgressPlayerCommand())

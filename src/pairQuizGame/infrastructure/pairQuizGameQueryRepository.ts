@@ -10,6 +10,7 @@ import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { prototype } from "events";
 import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
+import { QuestionGame } from "../domain/entity.questionGame";
 
 @Injectable()
 export class PairQuezGameQueryRepository {
@@ -17,6 +18,7 @@ export class PairQuezGameQueryRepository {
     @InjectRepository(PairQuizGame) protected readonly pairQuezGame: Repository<PairQuizGame>,
 	@InjectRepository(PairQuizGameProgressPlayer) protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
 	@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>,
+	@InjectRepository(QuestionGame) protected readonly questionGame: Repository<QuestionGame>,
     protected readonly usersQueryRepository: UsersQueryRepository,
     protected readonly pairQuizGameRepository: PairQuizGameRepository,
     protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
@@ -25,6 +27,12 @@ export class PairQuezGameQueryRepository {
     await this.pairQuezGame.createQueryBuilder().delete().execute();
     return true;
   }
+
+  async deleteAllQuestionGames() {
+    await this.questionGame.createQueryBuilder().delete().execute();
+    return true;
+  }
+
   async getCurrentUnFinGame(
     userId: string,
     statuses: GameStatusEnum[],
@@ -33,7 +41,7 @@ export class PairQuezGameQueryRepository {
 		relations: {
 			firstPlayerProgress: {user: true, answers: {question: true}},
 			secondPlayerProgress: {user: true, answers: {question: true}},
-			question: true
+			questionGames: {question: {questionGame: true}}
 		},
 		where: [
 			{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
@@ -41,7 +49,7 @@ export class PairQuezGameQueryRepository {
 		]
 	})
 
-    if (!currentUnFinishedGame) return null;
+	if (!currentUnFinishedGame) return null;
     return PairQuizGame.getViewModel(currentUnFinishedGame);
   }
 
@@ -56,7 +64,7 @@ export class PairQuezGameQueryRepository {
       relations: {
         firstPlayerProgress: { user: true, answers: { question: true } },
         secondPlayerProgress: { user: true, answers: { question: true } },
-        question: true,
+        questionGames: {question: true}
       },
       where: { id },
     });
@@ -70,7 +78,7 @@ export class PairQuezGameQueryRepository {
 		relations: {
 			firstPlayerProgress: {user: true, answers: true},
 			secondPlayerProgress: {user: true, answers: true},
-			question: true
+			questionGames: {question: true}
 		},
 		where: [
 			{status: Not(GameStatusEnum.Finished), firstPlayerProgress: {user: {id: userId}}},
@@ -87,7 +95,7 @@ export class PairQuezGameQueryRepository {
 		relations: {
 			firstPlayerProgress: {user: true, answers: true},
 			secondPlayerProgress: {user: true, answers: true},
-			question: true
+			questionGames: {question: true}
 		},
 		where: [
 			{status: In(statuses), firstPlayerProgress: {user: {id: userId}}},

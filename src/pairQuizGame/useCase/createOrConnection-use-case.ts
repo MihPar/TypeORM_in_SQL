@@ -9,6 +9,7 @@ import { PairQuizGameProgressRepository } from "../../pairQuizGameProgress/infra
 import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { User } from "../../users/entities/user.entity";
+import { QuestionGame } from "../domain/entity.questionGame";
 
 export class CreateOrConnectGameCommand {
 	constructor(
@@ -43,7 +44,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			newQuizGame.firstPlayerProgressId = progressFirstPlayer.userId
 			newQuizGame.secondPlayerProgressId = null
 			newQuizGame.pairCreatedDate = progressFirstPlayer.addedAt
-			newQuizGame.question = null
+			newQuizGame.questionGames = null
 			newQuizGame.firstPlayerProgress = progressFirstPlayer
 			newQuizGame.secondPlayerProgress = null
 			newQuizGame.status = GameStatusEnum.PendingSecondPlayer
@@ -70,7 +71,17 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			foundQuizGame.secondPlayerProgressId = progressSecondPlayer.userId
 
 			const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(true)
-			foundQuizGame.question = getFiveQuestionsQuizGame
+			
+			const questionGames = getFiveQuestionsQuizGame.map((item, index) => {
+				const questionGame = new QuestionGame();
+				questionGame.index = index
+				questionGame.pairQuizGame = foundQuizGame
+				questionGame.question = item
+				return questionGame
+			});
+
+			const saveQuestions = await this.pairQuizGameRepository.createQuestions(questionGames)
+			foundQuizGame.questionGames = questionGames
 			
 			await this.pairQuizGameRepository.createNewGame(foundQuizGame)
 			return PairQuizGame.getViewModel(foundQuizGame)

@@ -93,9 +93,6 @@ export class QuestionController {
 
 	const command = new updateQuestionPublishCommand(id, DTO)
 	const updateQuestionPublished = await this.commandBus.execute<updateQuestionPublishCommand | boolean>(command)
-	// console.log("updateQuestionPublished: ", updateQuestionPublished)
-	// if(!updateQuestionPublished) throw new NotFoundException('404')
 	return true
-	// return updateQuestionPublished
   }
 }

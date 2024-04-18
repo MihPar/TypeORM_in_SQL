@@ -63,7 +63,7 @@ export class QuestionRepository {
 		.where(`id = :id`, {id})
 		.execute()
 
-		// if(!updatePublished) return null
+		if(!updatePublished) return null
 		return true
   }
 }

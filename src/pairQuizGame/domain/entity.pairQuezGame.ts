@@ -1,7 +1,6 @@
 import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
-import { Question } from "../../question/domain/entity.question";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
 import { GameTypeModel } from "../type/typeViewModel";
 import { QuestionGame } from './entity.questionGame';
@@ -38,7 +37,7 @@ export class PairQuizGame {
 	finishGameDate: Date
 
 	@OneToMany(() => QuestionGame, questionGame => questionGame.pairQuizGame, {nullable: true})
-	questionGame: QuestionGame[]
+	questionGames: QuestionGame[]
 
 	// @Column({type: 'varchar', array: true})
 	// questionId: string[]
@@ -82,10 +81,10 @@ export class PairQuizGame {
 				},
 				score: getGameById.secondPlayerProgress.score
 			} : null,
-			questions: getGameById.question.length ? getGameById.question.map(item => {
+			questions: getGameById.questionGames.length ? getGameById.questionGames.map(item => {
 				return {
-					id: item.id,
-					body: item.body
+					id: item.question.id,
+					body: item.question.body
 				}
 			}) : null,
 			status: getGameById.status,

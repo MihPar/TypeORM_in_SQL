@@ -63,7 +63,7 @@ const pageCount = Math.ceil(getAllQuestions[1]/ +pageSize);
 		}
 	}
 
-	async getQuestionById(gameQuestionId): Promise<Question | null> {
+	async getQuestionById(gameQuestionId: string): Promise<Question | null> {
 		const findQuestionById = await this.question.findOneBy({id: gameQuestionId})
 		if(!findQuestionById) return null
 		return findQuestionById

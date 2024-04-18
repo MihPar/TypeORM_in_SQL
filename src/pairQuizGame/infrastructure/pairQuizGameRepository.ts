@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
+import { QuestionGame } from '../domain/entity.questionGame';
 
 @Injectable()
 export class PairQuizGameRepository {
@@ -17,7 +18,8 @@ export class PairQuizGameRepository {
     protected readonly pairQuizGame: Repository<PairQuizGame>,
     @InjectRepository(PairQuizGameProgressPlayer)
     protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
-	@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>
+	@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>,
+	@InjectRepository(QuestionGame) protected readonly questionGame: Repository<QuestionGame>
   ) {}
 
   async foundGameByUserId(userId: string): Promise<boolean> {
@@ -52,7 +54,7 @@ export class PairQuizGameRepository {
 				user:true,
 				answers: {question: true }
 			},
-			question: true
+			questionGames: true
 		}, 
 		where: {
 			status
@@ -111,5 +113,9 @@ export class PairQuizGameRepository {
 		.set({gameId, questionId, answerStatus, addedAt, score: +count})
 		.where({id: PlayerId})
 		.execute()
+  }
+
+  async createQuestions(createQuestions: QuestionGame[]) {
+	return await this.questionGame.save(createQuestions)
   }
 }

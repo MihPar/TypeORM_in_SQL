@@ -79,11 +79,9 @@ export class PairQuizGameController {
 
 		if(isSecondPlayer && secondPlayerAswersCount === GAME_QUESTION_COUNT) {throw new ForbiddenException('second player is not answer by all questions')}
 
-
 	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
 	if(!createSendAnswer) throw new ForbiddenException('the answer is not created')
-
 	return createSendAnswer
   }
 }

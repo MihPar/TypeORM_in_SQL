@@ -16,7 +16,6 @@ export class updateQuestionPublishUseCase implements ICommandHandler<updateQuest
 	) {}
 	async execute(command: updateQuestionPublishCommand): Promise<boolean> {
 		const updateQuestionPublidhed = await this.questionRepository.updatePublished(command.id, command.DTO.published)
-		// if(!updateQuestionPublidhed) return null
 		return true
 	}
 }

@@ -8,6 +8,7 @@ import { ForbiddenException } from "@nestjs/common";
 import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
 import { ChangeStatusToFinishedCommand } from './changeStatusToFinished-use-case';
 import { PairQuizGame } from '../domain/entity.pairQuezGame';
+import { QuestionGame } from '../domain/entity.questionGame';
 
 export class SecondPlayerSendAnswerCommand {
 	constructor(
@@ -29,9 +30,9 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 		if(command.game.secondPlayerProgress.answers.length > 4) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
-			const answerLength: number = command.game.secondPlayerProgress.answers.length
-			const gameQuestion: Question = command.game.question[answerLength]
-			const question = await this.questionQueryRepository.getQuestionById(gameQuestion?.id)
+			const currentQuestionIndex: number = command.game.secondPlayerProgress.answers.length
+			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index == currentQuestionIndex)
+			const question = await this.questionQueryRepository.getQuestionById(gameQuestion?.question.id)
 
 			const isIncludes = question?.correctAnswers.includes(command.inputAnswer)
 				const answer = AnswersPlayer.createAnswer(
@@ -49,7 +50,7 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 					answer.addedAt,
 					isIncludes ? "+1" : "+0",
 					)
-					const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game.id, command.game.question)
+					const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game.id, command.game.questionGames.map((item) => {return item.question}))
 					await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
 
 					return {

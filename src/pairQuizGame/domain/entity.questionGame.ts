@@ -7,12 +7,12 @@ export class QuestionGame {
 	@PrimaryGeneratedColumn()
 	id: string
 
-	@ManyToOne(() => PairQuizGame, g => g.questionGame)
+	@ManyToOne(() => PairQuizGame, g => g.questionGames)
 	pairQuizGame: PairQuizGame
 
 	@ManyToOne(() => Question, q => q.questionGame)
 	question: Question
 
 	@Column()
-	index: string
+	index: number
 }

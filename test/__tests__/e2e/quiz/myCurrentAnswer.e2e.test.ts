@@ -182,9 +182,12 @@ describe('/blogs', () => {
 
       expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
       game = getUnfinishedGame.body;
+	   console.log('game: ', game)
     });
 
     it('send answer for first question', async () => {
+		
+		
 		const questionForCorrectAnswer = question.find((item) => {
 			return item.body === game.questions[0].body
 		})
@@ -192,7 +195,7 @@ describe('/blogs', () => {
 		answer: questionForCorrectAnswer.correctAnswers[0]
       };
 
-      const sendAnswer0 = await request(server)
+	  const sendAnswer0 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
         .set('Authorization', `Bearer ${tokenByUser}`)
         .send(payload);
@@ -352,7 +355,7 @@ describe('/blogs', () => {
 		});
 		it('send current answer for four question', async () => {
 			const questionForCorrectAnswer = question.find((item) => {
-				return item.body === game.questions[4].body
+				return item.body === game.questions[3].body
 			})
 			const payload = {
 				answer: questionForCorrectAnswer.correctAnswers[4]

@@ -24,8 +24,8 @@ export class Question {
 	@Column({nullable: true})
 	updatedAt: Date
 
-	@ManyToMany(() => QuestionGame, questionGame => questionGame.question)
-	questionGame: QuestionGame
+	@OneToMany(() => QuestionGame, questionGame => questionGame.question)
+	questionGame: QuestionGame[]
 
 	@ManyToOne(() => PairQuizGameProgressPlayer)
 	progressFirstPlayer: PairQuizGameProgressPlayer
