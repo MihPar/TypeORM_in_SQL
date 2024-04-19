@@ -182,11 +182,10 @@ describe('/blogs', () => {
 
       expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
       game = getUnfinishedGame.body;
-	   console.log('game: ', game)
+	//    console.log('game: ', game)
     });
 
     it('send answer for first question', async () => {
-		
 		
 		const questionForCorrectAnswer = question.find((item) => {
 			return item.body === game.questions[0].body
