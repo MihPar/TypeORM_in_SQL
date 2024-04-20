@@ -199,6 +199,7 @@ describe('/blogs', () => {
         .set('Authorization', `Bearer ${tokenByUser}`)
         .send(payload);
 
+		console.log("gameId: ", game.questions[0].id)
       expect(sendAnswer0.status).toBe(HttpStatus.OK);
       expect(sendAnswer0.body).toEqual({
         questionId: game.questions[0].id,

@@ -1,11 +1,8 @@
 import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { Question } from "../../question/domain/entity.question";
 import { AnswerStatusEnum } from "../enum/enumPendingPlayer";
-import { ForbiddenException, NotFoundException } from "@nestjs/common";
+import { ForbiddenException } from "@nestjs/common";
 import { QuestionQueryRepository } from "../../question/infrastructury/questionQueryRepository";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
-import { ChangeAnswerStatusPlayerCommand } from "./changeAnswerStatusFirstPlayer-use-case";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository";
 import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
