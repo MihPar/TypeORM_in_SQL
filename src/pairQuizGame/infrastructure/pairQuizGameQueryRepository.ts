@@ -42,7 +42,7 @@ export class PairQuezGameQueryRepository {
 		relations: {
 			firstPlayerProgress: {user: true, answers: {question: true}},
 			secondPlayerProgress: {user: true, answers: {question: true}},
-			questionGames: {question: {questionGame: true}}
+			questionGames: {question: true}
 		},
 		where: [
 			{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},

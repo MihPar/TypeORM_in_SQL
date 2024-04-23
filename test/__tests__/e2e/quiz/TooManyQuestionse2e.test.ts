@@ -133,6 +133,14 @@ describe('/blogs', () => {
           body: 'What is your programmer`s language?',
           correctAnswers: ['JavaScript', 'javascript'],
         },
+		{
+			body: 'How many circle of car?',
+			correctAnswers: ['4', 'four'],
+		},
+		{
+			body: 'What color is your car?',
+			correctAnswers: ['green', 'gren'],
+		},
       ]
 	//   .sort((a: any, b: any) => {return a.body - b.body});
 
@@ -177,9 +185,9 @@ describe('/blogs', () => {
 		expect(connectPair.status).toBe(HttpStatus.OK);
 	  });
 
-	  // first player
+	  /***************************************/
 
-    it('get current unfinished game first player', async () => {
+    it('get current unfinished game', async () => {
       const getUnfinishedGame = await request(server)
         .get('/pair-game-quiz/pairs/my-current')
         .set('Authorization', `Bearer ${tokenByUser}`);
@@ -190,45 +198,85 @@ describe('/blogs', () => {
     });
 
     it('send answer for first question', async () => {
-		const questionForCorrectAnswer = question.find((item) => {
+		/** 1 **/
+		const questionOne = question.find((item) => {
 			return item.body === questionGame[0].body
 		})
-      const payload = {
-		answer: questionForCorrectAnswer.correctAnswers[0]
+      const payload1 = {
+		answer: questionOne.correctAnswers[0]
       };
-
-	  const sendAnswer0 = await request(server)
+	  const sendAnswer1 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
         .set('Authorization', `Bearer ${tokenByUser}`)
-        .send(payload);
+        .send(payload1);
 
-		const getCurrentGame = await request(server)
+		const getCurrentGame1 = await request(server)
         .get('/pair-game-quiz/pairs/my-current')
         .set('Authorization', `Bearer ${tokenByUser}`);
 
-      expect(getCurrentGame.status).toBe(HttpStatus.OK);
-      let currentGame = getCurrentGame.body;
-	  console.log('currentGame: ', currentGame.questions)
+      expect(getCurrentGame1.status).toBe(HttpStatus.OK);
+      let currentGame1 = getCurrentGame1.body;
+	  console.log('currentGame: ', currentGame1.questions)
 
 
-      expect(sendAnswer0.status).toBe(HttpStatus.OK);
-      expect(sendAnswer0.body).toEqual({
+      expect(sendAnswer1.status).toBe(HttpStatus.OK);
+      expect(sendAnswer1.body).toEqual({
         questionId: game.questions[0].id,
         answerStatus: 'Correct',
         addedAt: expect.any(String),
       });
+
+	  /** 2 **/
+
+	  const questionTwo = question.find((item) => {
+		return item.body === game.questions[0].body
+	})
+	const payload2 = {
+		answer: questionTwo.correctAnswers[0]
+	};
+
+	const sendAnswer2 = await request(server)
+	  .post('/pair-game-quiz/pairs/my-current/answers')
+	  .set('Authorization', `Bearer ${tokenByUser2}`)
+	  .send(payload2);
+
+	  const getCurrentGame2 = await request(server)
+	  .get('/pair-game-quiz/pairs/my-current')
+	  .set('Authorization', `Bearer ${tokenByUser}`);
+
+	expect(getCurrentGame2.status).toBe(HttpStatus.OK);
+	let currentGame2 = getCurrentGame2.body;
+	console.log('currentGame: ', currentGame2.questions)
+
+	expect(sendAnswer2.status).toBe(HttpStatus.OK);
+	expect(sendAnswer2.body).toEqual({
+	  questionId: gameSecondPlayer.questions[0].id,
+	  answerStatus: 'Correct',
+	  addedAt: expect.any(String),
+	});
+
     });
-    it('send current answer for second question', async () => {
-		const questionForCorrectAnswer = question.find((item) => {
+    it('send answer for second question', async () => {
+		/*1*/
+		const questionOne = question.find((item) => {
 			return item.body === questionGame[1].body
 		})
-      const payload = {
-		answer: questionForCorrectAnswer.correctAnswers[1]
+      const payload1 = {
+		answer: questionOne.correctAnswers[1]
       };
       const sendAnswer1 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
         .set('Authorization', `Bearer ${tokenByUser}`)
-        .send(payload);
+        .send(payload1);
+
+		const getCurrentGame1 = await request(server)
+        .get('/pair-game-quiz/pairs/my-current')
+        .set('Authorization', `Bearer ${tokenByUser}`);
+
+      expect(getCurrentGame1.status).toBe(HttpStatus.OK);
+      let currentGame1 = getCurrentGame1.body;
+	  console.log('currentGame: ', currentGame1.questions)
+
 
       expect(sendAnswer1.status).toBe(HttpStatus.OK);
       expect(sendAnswer1.body).toEqual({
@@ -236,37 +284,117 @@ describe('/blogs', () => {
         answerStatus: 'Correct',
         addedAt: expect.any(String),
       });
+
+	/*2*/
+
+	  const questionTwo = question.find((item) => {
+		return item.body === game.questions[0].body
+	})
+	const payload2 = {
+		answer: questionTwo.correctAnswers[0]
+	};
+
+	const sendAnswer2 = await request(server)
+	  .post('/pair-game-quiz/pairs/my-current/answers')
+	  .set('Authorization', `Bearer ${tokenByUser2}`)
+	  .send(payload2);
+
+	  const getCurrentGame2 = await request(server)
+	  .get('/pair-game-quiz/pairs/my-current')
+	  .set('Authorization', `Bearer ${tokenByUser}`);
+
+	expect(getCurrentGame2.status).toBe(HttpStatus.OK);
+	let currentGame2 = getCurrentGame2.body;
+	console.log('currentGame: ', currentGame2.questions)
+
+	expect(sendAnswer2.status).toBe(HttpStatus.OK);
+	expect(sendAnswer2.body).toEqual({
+	  questionId: gameSecondPlayer.questions[0].id,
+	  answerStatus: 'Correct',
+	  addedAt: expect.any(String),
+	});
+
     });
-	it('send current answer for third question', async () => {
-		const questionForCorrectAnswer = question.find((item) => {
+	it('send answer for third question', async () => {
+		/*1*/
+		const questionOne = question.find((item) => {
 			return item.body === questionGame[2].body
 		})
-      const payload = {
-		answer: questionForCorrectAnswer.correctAnswers[0]
+      const payload1 = {
+		answer: questionOne.correctAnswers[0]
       };
-		const sendAnswer2 = await request(server)
+		const sendAnswer1 = await request(server)
 		  .post('/pair-game-quiz/pairs/my-current/answers')
 		  .set('Authorization', `Bearer ${tokenByUser}`)
-		  .send(payload);
+		  .send(payload1);
+
+		  const getCurrentGame1 = await request(server)
+        .get('/pair-game-quiz/pairs/my-current')
+        .set('Authorization', `Bearer ${tokenByUser}`);
+
+      expect(getCurrentGame1.status).toBe(HttpStatus.OK);
+      let currentGame1 = getCurrentGame1.body;
+	  console.log('currentGame: ', currentGame1.questions)
+
   
-		expect(sendAnswer2.status).toBe(HttpStatus.OK);
-		expect(sendAnswer2.body).toEqual({
+		expect(sendAnswer1.status).toBe(HttpStatus.OK);
+		expect(sendAnswer1.body).toEqual({
 		  questionId: game.questions[2].id,
 		  answerStatus: 'Correct',
 		  addedAt: expect.any(String),
 		});
+
+		/*2*/
+
+		const questionTwo = question.find((item) => {
+			return item.body === game.questions[0].body
+		})
+		const payload2 = {
+			answer: questionTwo.correctAnswers[0]
+		};
+	
+		const sendAnswer2 = await request(server)
+		  .post('/pair-game-quiz/pairs/my-current/answers')
+		  .set('Authorization', `Bearer ${tokenByUser2}`)
+		  .send(payload2);
+	
+		  const getCurrentGame2 = await request(server)
+		  .get('/pair-game-quiz/pairs/my-current')
+		  .set('Authorization', `Bearer ${tokenByUser}`);
+	
+		expect(getCurrentGame2.status).toBe(HttpStatus.OK);
+		let currentGame2 = getCurrentGame2.body;
+		console.log('currentGame: ', currentGame2.questions)
+	
+		expect(sendAnswer2.status).toBe(HttpStatus.OK);
+		expect(sendAnswer2.body).toEqual({
+		  questionId: gameSecondPlayer.questions[0].id,
+		  answerStatus: 'Correct',
+		  addedAt: expect.any(String),
+		});
+		
 	  });
 	it('send current answer for four question', async () => {
-		const questionForCorrectAnswer = question.find((item) => {
+		/*1*/
+		const questionOne = question.find((item) => {
 			return item.body === questionGame[3].body
 		})
 		const payload = {
-			answer: questionForCorrectAnswer.correctAnswers[1]
+			answer: questionOne.correctAnswers[1]
 		};
       const sendAnswer3 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
         .set('Authorization', `Bearer ${tokenByUser}`)
         .send(payload);
+
+		const getCurrentGame1 = await request(server)
+        .get('/pair-game-quiz/pairs/my-current')
+        .set('Authorization', `Bearer ${tokenByUser}`);
+
+      expect(getCurrentGame1.status).toBe(HttpStatus.OK);
+      let currentGame1 = getCurrentGame1.body;
+	  console.log('currentGame: ', currentGame1.questions)
+
 
       expect(sendAnswer3.status).toBe(HttpStatus.OK);
       expect(sendAnswer3.body).toEqual({
@@ -274,18 +402,56 @@ describe('/blogs', () => {
         answerStatus: 'Correct',
         addedAt: expect.any(String),
       });
+
+	  /*2*/
+
+		const questionTwo = question.find((item) => {
+			return item.body === game.questions[0].body
+		})
+		const payload2 = {
+			answer: questionTwo.correctAnswers[0]
+		};
+	
+		const sendAnswer2 = await request(server)
+		  .post('/pair-game-quiz/pairs/my-current/answers')
+		  .set('Authorization', `Bearer ${tokenByUser2}`)
+		  .send(payload2);
+	
+		  const getCurrentGame2 = await request(server)
+		  .get('/pair-game-quiz/pairs/my-current')
+		  .set('Authorization', `Bearer ${tokenByUser}`);
+	
+		expect(getCurrentGame2.status).toBe(HttpStatus.OK);
+		let currentGame2 = getCurrentGame2.body;
+		console.log('currentGame: ', currentGame2.questions)
+	
+		expect(sendAnswer2.status).toBe(HttpStatus.OK);
+		expect(sendAnswer2.body).toEqual({
+		  questionId: gameSecondPlayer.questions[0].id,
+		  answerStatus: 'Correct',
+		  addedAt: expect.any(String),
+		});
     });
 	it('send current answer for fith question', async () => {
-		const questionForCorrectAnswer = question.find((item) => {
+		const questionOne = question.find((item) => {
 			return item.body === questionGame[4].body
 		})
-		const payload = {
-			answer: questionForCorrectAnswer.correctAnswers[1]
+		const payload1 = {
+			answer: questionOne.correctAnswers[1]
 		};
 		const sendAnswer4 = await request(server)
 		  .post('/pair-game-quiz/pairs/my-current/answers')
 		  .set('Authorization', `Bearer ${tokenByUser}`)
-		  .send(payload);
+		  .send(payload1);
+
+		  const getCurrentGame1 = await request(server)
+        .get('/pair-game-quiz/pairs/my-current')
+        .set('Authorization', `Bearer ${tokenByUser}`);
+
+      expect(getCurrentGame1.status).toBe(HttpStatus.OK);
+      let currentGame1 = getCurrentGame1.body;
+	  console.log('currentGame: ', currentGame1.questions)
+
   
 		expect(sendAnswer4.status).toBe(HttpStatus.OK);
 		expect(sendAnswer4.body).toEqual({
@@ -293,21 +459,52 @@ describe('/blogs', () => {
 		  answerStatus: 'Correct',
 		  addedAt: expect.any(String),
 		});
+
+
+	  /*2*/
+
+	  const questionTwo = question.find((item) => {
+		return item.body === game.questions[0].body
+	})
+	const payload2 = {
+		answer: questionTwo.correctAnswers[0]
+	};
+
+	const sendAnswer2 = await request(server)
+	  .post('/pair-game-quiz/pairs/my-current/answers')
+	  .set('Authorization', `Bearer ${tokenByUser2}`)
+	  .send(payload2);
+
+	  const getCurrentGame2 = await request(server)
+	  .get('/pair-game-quiz/pairs/my-current')
+	  .set('Authorization', `Bearer ${tokenByUser}`);
+
+	expect(getCurrentGame2.status).toBe(HttpStatus.OK);
+	let currentGame2 = getCurrentGame2.body;
+	console.log('currentGame: ', currentGame2.questions)
+
+	expect(sendAnswer2.status).toBe(HttpStatus.OK);
+	expect(sendAnswer2.body).toEqual({
+	  questionId: gameSecondPlayer.questions[0].id,
+	  answerStatus: 'Correct',
+	  addedAt: expect.any(String),
+	});
+	
 	  });
 
 	  // second player
 
-	  it('get current unfinished game second player', async () => {
-		const getUnfinishedGame = await request(server)
-		  .get('/pair-game-quiz/pairs/my-current')
-		  .set('Authorization', `Bearer ${tokenByUser2}`);
+	//   it('get current unfinished game second player', async () => {
+	// 	const getUnfinishedGame = await request(server)
+	// 	  .get('/pair-game-quiz/pairs/my-current')
+	// 	  .set('Authorization', `Bearer ${tokenByUser2}`);
 
 		  
-		//   console.log("getUnfinishedGame: ", getUnfinishedGame.body)
+	// 	//   console.log("getUnfinishedGame: ", getUnfinishedGame.body)
   
-		expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
-		gameSecondPlayer = getUnfinishedGame.body;
-	  });
+	// 	expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
+	// 	gameSecondPlayer = getUnfinishedGame.body;
+	//   });
   
 	  it('send answer for first question', async () => {
 		const questionForCorrectAnswer = question.find((item) => {
