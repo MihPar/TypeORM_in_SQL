@@ -83,7 +83,8 @@ export class PairQuizGameRepository {
       .getMany();
 
     if (!getQuestionForQuizGame) return null;
-    return getQuestionForQuizGame;
+    return getQuestionForQuizGame
+	// .sort((a: any, b: any) => {return a.body - b.body});
   }
 
   async findUnanswerQuestionByUserId(id: string): Promise<PairQuizGame> {

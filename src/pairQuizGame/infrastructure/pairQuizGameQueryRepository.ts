@@ -8,9 +8,9 @@ import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { PairQuizGameRepository } from "./pairQuizGameRepository";
 import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
-import { prototype } from "events";
 import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
 import { QuestionGame } from "../domain/entity.questionGame";
+
 
 @Injectable()
 export class PairQuezGameQueryRepository {
@@ -24,6 +24,7 @@ export class PairQuezGameQueryRepository {
     protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
   ) {}
   async deleteAllPairQuizGame() {
+	
     await this.pairQuezGame.createQueryBuilder().delete().execute();
     return true;
   }
@@ -50,7 +51,7 @@ export class PairQuezGameQueryRepository {
 	})
 
 	if (!currentUnFinishedGame) return null;
-    return PairQuizGame.getViewModel(currentUnFinishedGame);
+    return PairQuizGame.getViewModel(currentUnFinishedGame)
   }
 
   async getGameById(id: string): Promise<GameTypeModel | null> {

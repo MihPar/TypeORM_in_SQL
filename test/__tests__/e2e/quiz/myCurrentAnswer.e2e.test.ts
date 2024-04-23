@@ -51,6 +51,7 @@ describe('/blogs', () => {
 	let gameId: string
 	let game: any
 	let gameSecondPlayer: any
+	let questionGame: Array<{id: string, body: string}>
 
 	describe('Quiz question', () => {
     it('create first player', async () => {
@@ -132,7 +133,8 @@ describe('/blogs', () => {
           body: 'What is your programmer`s language?',
           correctAnswers: ['JavaScript', 'javascript'],
         },
-      ];
+      ]
+	//   .sort((a: any, b: any) => {return a.body - b.body});
 
       question.map(async (item, index) => {
         const create = await request(server)
@@ -170,6 +172,8 @@ describe('/blogs', () => {
 		const connectPair = await request(server)
 		  .post('/pair-game-quiz/pairs/connection')
 		  .set('Authorization', `Bearer ${tokenByUser2}`);
+		//   console.log("connectPair: ", connectPair.body.questions)
+		  questionGame = connectPair.body.questions
 		expect(connectPair.status).toBe(HttpStatus.OK);
 	  });
 
@@ -188,7 +192,7 @@ describe('/blogs', () => {
     it('send answer for first question', async () => {
 		
 		const questionForCorrectAnswer = question.find((item) => {
-			return item.body === game.questions[0].body
+			return item.body === questionGame[0].body
 		})
       const payload = {
 		answer: questionForCorrectAnswer.correctAnswers[0]
@@ -199,7 +203,7 @@ describe('/blogs', () => {
         .set('Authorization', `Bearer ${tokenByUser}`)
         .send(payload);
 
-		console.log("gameId: ", game.questions[0].id)
+		// console.log("gameId: ", game.questions[0].id)
       expect(sendAnswer0.status).toBe(HttpStatus.OK);
       expect(sendAnswer0.body).toEqual({
         questionId: game.questions[0].id,
@@ -209,7 +213,7 @@ describe('/blogs', () => {
     });
     it('send current answer for second question', async () => {
 		const questionForCorrectAnswer = question.find((item) => {
-			return item.body === game.questions[1].body
+			return item.body === questionGame[1].body
 		})
       const payload = {
 		answer: questionForCorrectAnswer.correctAnswers[1]
@@ -228,10 +232,10 @@ describe('/blogs', () => {
     });
 	it('send current answer for third question', async () => {
 		const questionForCorrectAnswer = question.find((item) => {
-			return item.body === game.questions[2].body
+			return item.body === questionGame[2].body
 		})
       const payload = {
-		answer: questionForCorrectAnswer.correctAnswers[2]
+		answer: questionForCorrectAnswer.correctAnswers[0]
       };
 		const sendAnswer2 = await request(server)
 		  .post('/pair-game-quiz/pairs/my-current/answers')
@@ -247,10 +251,10 @@ describe('/blogs', () => {
 	  });
 	it('send current answer for four question', async () => {
 		const questionForCorrectAnswer = question.find((item) => {
-			return item.body === game.questions[3].body
+			return item.body === questionGame[3].body
 		})
 		const payload = {
-			answer: questionForCorrectAnswer.correctAnswers[3]
+			answer: questionForCorrectAnswer.correctAnswers[1]
 		};
       const sendAnswer3 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
@@ -266,10 +270,10 @@ describe('/blogs', () => {
     });
 	it('send current answer for fith question', async () => {
 		const questionForCorrectAnswer = question.find((item) => {
-			return item.body === game.questions[4].body
+			return item.body === questionGame[4].body
 		})
 		const payload = {
-			answer: questionForCorrectAnswer.correctAnswers[4]
+			answer: questionForCorrectAnswer.correctAnswers[1]
 		};
 		const sendAnswer4 = await request(server)
 		  .post('/pair-game-quiz/pairs/my-current/answers')
@@ -290,6 +294,9 @@ describe('/blogs', () => {
 		const getUnfinishedGame = await request(server)
 		  .get('/pair-game-quiz/pairs/my-current')
 		  .set('Authorization', `Bearer ${tokenByUser2}`);
+
+		  
+		//   console.log("getUnfinishedGame: ", getUnfinishedGame.body)
   
 		expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
 		gameSecondPlayer = getUnfinishedGame.body;
@@ -339,7 +346,7 @@ describe('/blogs', () => {
 			return item.body === game.questions[2].body
 		})
 		const payload = {
-			answer: questionForCorrectAnswer.correctAnswers[2]
+			answer: questionForCorrectAnswer.correctAnswers[1]
 		};
 		  const sendAnswer2 = await request(server)
 			.post('/pair-game-quiz/pairs/my-current/answers')
@@ -358,7 +365,7 @@ describe('/blogs', () => {
 				return item.body === game.questions[3].body
 			})
 			const payload = {
-				answer: questionForCorrectAnswer.correctAnswers[4]
+				answer: questionForCorrectAnswer.correctAnswers[1]
 			};
 		const sendAnswer3 = await request(server)
 		  .post('/pair-game-quiz/pairs/my-current/answers')
@@ -377,7 +384,7 @@ describe('/blogs', () => {
 			return item.body === game.questions[4].body
 		})
 		const payload = {
-			answer: questionForCorrectAnswer.correctAnswers[4]
+			answer: questionForCorrectAnswer.correctAnswers[1]
 		};
 		  const sendAnswer4 = await request(server)
 			.post('/pair-game-quiz/pairs/my-current/answers')

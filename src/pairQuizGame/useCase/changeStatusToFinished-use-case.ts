@@ -1,10 +1,12 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
+import { PairQuizGame } from "../domain/entity.pairQuezGame";
 
 export class ChangeStatusToFinishedCommand {
 	constructor(
 		public gameId: string,
+		public game: PairQuizGame,
 		public gameQuestions: Question[]
 	) {}
 }
@@ -15,8 +17,8 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository
 	) {}
 	async execute(command: ChangeStatusToFinishedCommand): Promise<any> {
-		const firstPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId)
-		const secondPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId)
+		const firstPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId, command.game.firstPlayerProgress.user.id)
+		const secondPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId, command.game.secondPlayerProgress.user.id)
 
 		if(
 			firstPlayer.answers.length === command.gameQuestions.length &&

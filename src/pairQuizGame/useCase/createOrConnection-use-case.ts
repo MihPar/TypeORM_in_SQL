@@ -10,6 +10,8 @@ import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { User } from "../../users/entities/user.entity";
 import { QuestionGame } from "../domain/entity.questionGame";
+import { Question } from "../../question/domain/entity.question";
+// import { questions } from "../infrastructure/pairQuizGameQueryRepository";
 
 export class CreateOrConnectGameCommand {
 	constructor(
@@ -72,7 +74,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 
 			const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(true)
 			
-			const questionGames = getFiveQuestionsQuizGame.map((item, index) => {
+			const questionGames: QuestionGame[] = getFiveQuestionsQuizGame.map((item, index) => {
 				const questionGame = new QuestionGame();
 				questionGame.index = index
 				questionGame.pairQuizGame = foundQuizGame

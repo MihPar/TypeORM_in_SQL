@@ -86,7 +86,9 @@ export class PairQuizGame {
 					id: item.question.id,
 					body: item.question.body
 				}
-			}) : null,
+			})
+			// .sort((a: any, b: any) => {return a.body - b.body}) 
+			: null,
 			status: getGameById.status,
 			pairCreatedDate: getGameById.pairCreatedDate,
 			startGameDate: getGameById.startGameDate,

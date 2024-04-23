@@ -29,6 +29,7 @@ export class PairQuizGameController {
 		userId, [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
+		// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
 	return findUnfinishedUserGame
   }
 
@@ -43,6 +44,7 @@ export class PairQuizGameController {
 		if(!getActivePair) throw new NotFoundException('404')
 		if(getActivePair.firstPlayerProgress.user.id !== userId 
 			&& getActivePair.secondPlayerProgress?.user?.id !== userId) throw new ForbiddenException('403')
+			// console.log("PairQuizGame.getViewModel(getActivePair): ", PairQuizGame.getViewModel(getActivePair))
 		return PairQuizGame.getViewModel(getActivePair)
   }
 
@@ -57,8 +59,11 @@ export class PairQuizGameController {
 		if(getGameById) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
+	// console.log("id: ", createOrConnection.id)
 	if(!createOrConnection) throw new ForbiddenException('403')
-	return createOrConnection
+	const updatedGame = await this.pairQuezGameQueryRepository.getRawGameById(createOrConnection.id)
+		// console.log("createOrConnection: ", createOrConnection)
+	return PairQuizGame.getViewModel(updatedGame)
   }
 
   @Post('my-current/answers')
