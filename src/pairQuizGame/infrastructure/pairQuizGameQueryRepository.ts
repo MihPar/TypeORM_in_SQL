@@ -42,7 +42,7 @@ export class PairQuezGameQueryRepository {
 		relations: {
 			firstPlayerProgress: {user: true, answers: {question: true}},
 			secondPlayerProgress: {user: true, answers: {question: true}},
-			questionGames: {question: true}
+			questionGames: {question: {questionGame: true}}
 		},
 		where: [
 			{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
@@ -65,7 +65,7 @@ export class PairQuezGameQueryRepository {
       relations: {
         firstPlayerProgress: { user: true, answers: { question: true } },
         secondPlayerProgress: { user: true, answers: { question: true } },
-        questionGames: {question: true}
+        questionGames: {question: {questionGame: true}}
       },
       where: { id },
     });
@@ -79,7 +79,7 @@ export class PairQuezGameQueryRepository {
 		relations: {
 			firstPlayerProgress: {user: true, answers: true},
 			secondPlayerProgress: {user: true, answers: true},
-			questionGames: {question: true}
+			questionGames: {question: {questionGame: true}}
 		},
 		where: [
 			{status: Not(GameStatusEnum.Finished), firstPlayerProgress: {user: {id: userId}}},

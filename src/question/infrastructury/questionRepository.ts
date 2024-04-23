@@ -22,11 +22,11 @@ export class QuestionRepository {
 
   async getQuestion(id: string): Promise<Question | null> {
 	const findQuestion = await this.question
-	.findOneBy({id})
-		// .createQueryBuilder()
-		// .select()
-		// .where(`id = :id`, {id: questionId})
-		// .getOne()
+	// .findOneBy({id})
+		.createQueryBuilder()
+		.select()
+		.where(`id = :id`, {id})
+		.getOne()
 
 	if(!findQuestion) return null
 		return findQuestion

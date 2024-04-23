@@ -28,6 +28,7 @@ export class PairQuizGameController {
 	const findUnfinishedUserGame = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(
 		userId, [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	)
+	// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
 		// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
 	return findUnfinishedUserGame
@@ -59,11 +60,11 @@ export class PairQuizGameController {
 		if(getGameById) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
-	// console.log("id: ", createOrConnection.id)
 	if(!createOrConnection) throw new ForbiddenException('403')
-	const updatedGame = await this.pairQuezGameQueryRepository.getRawGameById(createOrConnection.id)
-		// console.log("createOrConnection: ", createOrConnection)
-	return PairQuizGame.getViewModel(updatedGame)
+	// const updatedGame = await this.pairQuezGameQueryRepository.getRawGameById(createOrConnection.id)
+	// return PairQuizGame.getViewModel(updatedGame)
+		console.log("createOrConnection: ", createOrConnection)
+	return createOrConnection
   }
 
   @Post('my-current/answers')

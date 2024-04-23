@@ -63,7 +63,6 @@ export class PairQuizGameRepository {
   }
 
   async createNewGame(newQuizGame: PairQuizGame): Promise<PairQuizGame> {
-
     const createNewQuizGame = await this.pairQuizGame.save({...newQuizGame});
     return createNewQuizGame;
   }
