@@ -95,4 +95,36 @@ export class PairQuizGame {
 			finishGameDate: getGameById.finishGameDate
 		  }
 		}
+
+		static getViewModels(getGameFirstPlayer: PairQuizGame, getGameSecondPlayer: PairQuizGame, question: QuestionGame[]): GameTypeModel {
+			return {
+				id: getGameFirstPlayer.id,
+				firstPlayerProgress: {
+				  answers: getGameFirstPlayer.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+				  player: {
+					id: getGameFirstPlayer.firstPlayerProgress.user.id,
+					login: getGameFirstPlayer.firstPlayerProgress.user.login
+				  },
+				  score: getGameFirstPlayer.firstPlayerProgress.score
+				},
+				secondPlayerProgress: getGameSecondPlayer.secondPlayerProgress ?  {
+					answers: getGameSecondPlayer.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+					player: {
+					  id: getGameSecondPlayer.secondPlayerProgress.user.id,
+					  login: getGameSecondPlayer.secondPlayerProgress.user.login
+					},
+					score: getGameSecondPlayer.secondPlayerProgress.score
+				} : null,
+				questions: question.length ? question.map(item => {
+					return {
+						id: item.question.id,
+						body: item.question.body
+					}
+				}) : null,
+				status: getGameFirstPlayer.status,
+				pairCreatedDate: getGameFirstPlayer.pairCreatedDate,
+				startGameDate: getGameFirstPlayer.startGameDate,
+				finishGameDate: getGameFirstPlayer.finishGameDate
+			  }
+			}
 	}
