@@ -37,37 +37,43 @@ export class PairQuezGameQueryRepository {
   async getCurrentUnFinGame(
     userId: string,
     statuses: GameStatusEnum[],
-  ): Promise<any
-	//   GameTypeModel 
-	| null> {
-	const currentUnFinishedGameFirstPlayer = await this.pairQuezGame.findOne({
-				relations: {
-					firstPlayerProgress: {user: true, answers: {question: true}},
-					secondPlayerProgress: {user: true, answers: {question: true}},
-				},
-				where: [
-					{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
-			        {secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
+  ): Promise<GameTypeModel | null> {
+		const currentUnFinishedGame = await this.pairQuezGame.findOne({
+			relations: {
+				firstPlayerProgress: {user: true, answers: {question: true}},
+				secondPlayerProgress: {user: true, answers: {question: true}},
+				questionGames: {question: {questionGame: true}}
+			},
+			where: [
+				{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
+				{secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
+			],
+			order: {questionGames: {index: "ASC"}}
+		// }
+		// sortBy(question => idex: ASC, answers => addedAt: ASC)
+		})
 
-				],
-				order: {firstPlayerProgress: {answers: {addedAt: "ASC"}}}
+		if(!currentUnFinishedGame) return null
+
+	const currentUnFinishedGameFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
+				relations: {user: {progressPlayer: true}, answers: {progress: true}},
+				where: {gameId: currentUnFinishedGame.id, id: currentUnFinishedGame.firstPlayerProgress.id},
+				order: {answers: {addedAt: "ASC"}}
+			})
+	
+	if(currentUnFinishedGame.status === GameStatusEnum.PendingSecondPlayer) return null
+
+	const currentUnFinishedGameSecondPlayer = await this.pairQuizGameProgressPlayer.findOne({
+				relations: {user: {progressPlayer: true}, answers: {progress: true}},
+				where: {gameId: currentUnFinishedGame.id, id: currentUnFinishedGame.secondPlayerProgress.id},
+				order: {answers: {addedAt: "ASC"}}
 			})
 
-	const currentUnFinishedGameSecondPlayer = await this.pairQuezGame.findOne({
-				relations: {
-					firstPlayerProgress: {user: true, answers: {question: true}},
-					secondPlayerProgress: {user: true, answers: {question: true}}
-				},
-				where: [
-					{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
-			        {secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
-				],
-				order: {secondPlayerProgress: {answers: {addedAt: "ASC"}}}
-			})
-
-	const questionGame = await this.questionGame.find({
-				order: {index: "ASC"}
-			})
+	// const questionGame = await this.questionGame.findOne({
+	// 	relations: {question: {questionGame: true}},
+	// 	where: {pairQuizGameId: currentUnFinishedGame.id},
+	// 	order: {index: "ASC"}
+	// })
 		// const currentUnFinishedGame = await this.pairQuezGame
 		// .createQueryBuilder('game')
 		// .leftJoinAndSelect('game.firstPlayerProgress', 'pairQuizGameProgressPlayer')
@@ -98,16 +104,15 @@ export class PairQuezGameQueryRepository {
 	// 	where: [
 	// 		{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
 	// 		{secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
-	// 	],
-		// order: {questionGames: {index: "ASC"}, firstPlayerProgress: {answers: {addedAt: "ASC"}}, secondPlayerProgress: {answers: {addedAt: "ASC"}}}
-	// }
-	// sortBy(question => idex: ASC, answers => addedAt: ASC)
+	// 	]
+	// // }
+	// // sortBy(question => idex: ASC, answers => addedAt: ASC)
 	// })
 
-	// if (!currentUnFinishedGame) return null;
+	if (!currentUnFinishedGame) return null;
     // return PairQuizGame.getViewModel(currentUnFinishedGame)
-	if(currentUnFinishedGameFirstPlayer || currentUnFinishedGameSecondPlayer) return null
-	return PairQuizGame.getViewModels(currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer, questionGame)
+	// if(currentUnFinishedGameFirstPlayer || currentUnFinishedGameSecondPlayer) return null
+	return PairQuizGame.getViewModels(currentUnFinishedGame, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 
   async getGameById(id: string): Promise<GameTypeModel | null> {

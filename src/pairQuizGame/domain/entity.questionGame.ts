@@ -10,6 +10,9 @@ export class QuestionGame {
 	@ManyToOne(() => PairQuizGame, g => g.questionGames)
 	pairQuizGame: PairQuizGame
 
+	@Column()
+	pairQuizGameId: string
+
 	@ManyToOne(() => Question, q => q.questionGame)
 	question: Question
 

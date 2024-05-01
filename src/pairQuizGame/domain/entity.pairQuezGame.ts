@@ -96,35 +96,35 @@ export class PairQuizGame {
 		  }
 		}
 
-		static getViewModels(getGameFirstPlayer: PairQuizGame, getGameSecondPlayer: PairQuizGame, question: QuestionGame[]): GameTypeModel {
+		static getViewModels(game: PairQuizGame, getGameFirstPlayer: PairQuizGameProgressPlayer, getGameSecondPlayer: PairQuizGameProgressPlayer): GameTypeModel {
 			return {
-				id: getGameFirstPlayer.id,
+				id: game.id,
 				firstPlayerProgress: {
-				  answers: getGameFirstPlayer.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+				  answers: getGameFirstPlayer.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 				  player: {
-					id: getGameFirstPlayer.firstPlayerProgress.user.id,
-					login: getGameFirstPlayer.firstPlayerProgress.user.login
+					id: getGameFirstPlayer.user.id,
+					login: getGameFirstPlayer.user.login
 				  },
-				  score: getGameFirstPlayer.firstPlayerProgress.score
+				  score: getGameFirstPlayer.score
 				},
-				secondPlayerProgress: getGameSecondPlayer.secondPlayerProgress ?  {
-					answers: getGameSecondPlayer.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+				secondPlayerProgress: getGameSecondPlayer ?  {
+					answers: getGameSecondPlayer.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 					player: {
-					  id: getGameSecondPlayer.secondPlayerProgress.user.id,
-					  login: getGameSecondPlayer.secondPlayerProgress.user.login
+					  id: getGameSecondPlayer.user.id,
+					  login: getGameSecondPlayer.user.login
 					},
-					score: getGameSecondPlayer.secondPlayerProgress.score
+					score: getGameSecondPlayer.score
 				} : null,
-				questions: question.length ? question.map(item => {
+				questions: game.questionGames.length ? game.questionGames.map(item => {
 					return {
 						id: item.question.id,
 						body: item.question.body
 					}
 				}) : null,
-				status: getGameFirstPlayer.status,
-				pairCreatedDate: getGameFirstPlayer.pairCreatedDate,
-				startGameDate: getGameFirstPlayer.startGameDate,
-				finishGameDate: getGameFirstPlayer.finishGameDate
+				status: game.status,
+				pairCreatedDate: game.pairCreatedDate,
+				startGameDate: game.startGameDate,
+				finishGameDate: game.finishGameDate
 			  }
 			}
 	}
