@@ -41,12 +41,12 @@ export class PairQuizGameController {
 	@Param('id', ParseUUIDPipe) id: string,
 	@UserIdDecorator() userId: string
 	): Promise<GameTypeModel | null> {
-		const getActivePair: PairQuizGame | null = await this.pairQuezGameQueryRepository.getRawGameById(id)
+		const getActivePair: any | null = await this.pairQuezGameQueryRepository.getRawGameById(id)
 		if(!getActivePair) throw new NotFoundException('404')
 		if(getActivePair.firstPlayerProgress.user.id !== userId 
 			&& getActivePair.secondPlayerProgress?.user?.id !== userId) throw new ForbiddenException('403')
 			// console.log("PairQuizGame.getViewModel(getActivePair): ", PairQuizGame.getViewModel(getActivePair))
-		return PairQuizGame.getViewModel(getActivePair)
+		return PairQuizGame.getViewModels(getActivePair.game, getActivePair.firstPlayer, getActivePair.secondPlayer)
   }
 
   @Post('connection')

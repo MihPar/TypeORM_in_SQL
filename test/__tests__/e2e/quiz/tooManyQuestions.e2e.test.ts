@@ -190,6 +190,7 @@ describe('/blogs', () => {
       const getUnfinishedGame = await request(server)
         .get('/pair-game-quiz/pairs/my-current')
         .set('Authorization', `Bearer ${tokenByUser}`);
+		// console.log("tokenByUser: ", tokenByUser)
 
       expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
       game = getUnfinishedGame.body;
@@ -215,7 +216,7 @@ describe('/blogs', () => {
 
       expect(getCurrentGame1.status).toBe(HttpStatus.OK);
       let currentGame1 = getCurrentGame1.body;
-	  console.log('currentGame: ', currentGame1.questions)
+	//   console.log('currentGame: ', currentGame1.questions)
 
 
       expect(sendAnswer1.status).toBe(HttpStatus.OK);

@@ -90,9 +90,9 @@ describe('/blogs', () => {
 	  /************* create user2 *******/
 
 	  const user2 = {
-        login: '1Mickle',
-        password: '1qwerty',
-        email: '1mpara7473@gmail.com',
+        login: 'Iliy',
+        password: 'qwerty',
+        email: 'mpara7473@gmail.com',
       };
 
       const createUser2 = await request(server)
@@ -123,22 +123,22 @@ describe('/blogs', () => {
     });
 
 
-    it('create connection', async () => {
-      const createPair = await request(server)
-        .post('/pair-game-quiz/pairs/connection')
-        .set('Authorization', `Bearer ${tokenByUser}`);
-
-      expect(createPair.status).toBe(HttpStatus.OK);
-      gameId = createPair.body.id;
-      expect(createPair.body.id).toEqual(expect.any(String));
-
-	  const connectPair = await request(server)
+	it('create connection', async () => {
+		const createPair = await request(server)
+		  .post('/pair-game-quiz/pairs/connection')
+		  .set('Authorization', `Bearer ${tokenByUser}`);
+  
+		expect(createPair.status).toBe(HttpStatus.OK);
+		gameId = createPair.body.id;
+		expect(createPair.body.id).toEqual(expect.any(String));
+  
+		const connectPair = await request(server)
 		  .post('/pair-game-quiz/pairs/connection')
 		  .set('Authorization', `Bearer ${tokenByUser2}`);
 		questionGame = connectPair.body.questions
 		expect(connectPair.status).toBe(HttpStatus.OK);
+	  });
 
-    });
 
     it('get game by id', async () => {
       const getGameById = await request(server)

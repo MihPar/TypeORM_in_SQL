@@ -69,49 +69,7 @@ export class PairQuezGameQueryRepository {
 				order: {answers: {addedAt: "ASC"}}
 			})
 
-	// const questionGame = await this.questionGame.findOne({
-	// 	relations: {question: {questionGame: true}},
-	// 	where: {pairQuizGameId: currentUnFinishedGame.id},
-	// 	order: {index: "ASC"}
-	// })
-		// const currentUnFinishedGame = await this.pairQuezGame
-		// .createQueryBuilder('game')
-		// .leftJoinAndSelect('game.firstPlayerProgress', 'pairQuizGameProgressPlayer')
-		// .leftJoinAndSelect('game.firstPlayerProgress', 'user')
-		// .leftJoinAndSelect('game.firstPlayerProgress', 'answers')
-		// .leftJoinAndSelect('game.firstPlayerProgress', 'question')
-		// .leftJoinAndSelect('game.secondPlayerProgress', 'pairQuizGameProgressPlayer')
-		// .leftJoinAndSelect('game.secondPlayerProgress', 'user')
-		// .leftJoinAndSelect('game.secondPlayerProgress', 'answers')
-		// .leftJoinAndSelect('game.secondPlayerProgress', 'question')
-		// .leftJoinAndSelect('game.questionGames', 'questionGame')
-		// .leftJoinAndSelect('game.questionGames', 'question')
-		// .where(`"game.firstPlayerProgress.user" = :"userId" AND "game.status" = :statusOne OR "game.status" = :statusTwo`, {userId, statusOne: statuses[0], statusTwo: statuses[1]})
-		// .andWhere(`"game.secondPlayerProgress.user" = :"userId" AND "game.status" = :statusOne OR "game.status" = :statusTwo`, {userId, statusOne: statuses[0], statusTwo: statuses[1]})
-		// .orderBy({
-		// 	"game.questionGames.index": "ASC",
-		// 	"game.firstPlayerProgress.answers.addedAt": "ASC",
-		// 	"game.secondPlayerProgress.answers.addedAt": "ASC"
-		// })
-		// .getOne()
-
-    // const currentUnFinishedGame = await this.pairQuezGame.findOne({
-	// 	relations: {
-	// 		firstPlayerProgress: {user: true, answers: {question: true}},
-	// 		secondPlayerProgress: {user: true, answers: {question: true}},
-	// 		questionGames: {question: {questionGame: true}}
-	// 	},
-	// 	where: [
-	// 		{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
-	// 		{secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
-	// 	]
-	// // }
-	// // sortBy(question => idex: ASC, answers => addedAt: ASC)
-	// })
-
 	if (!currentUnFinishedGame) return null;
-    // return PairQuizGame.getViewModel(currentUnFinishedGame)
-	// if(currentUnFinishedGameFirstPlayer || currentUnFinishedGameSecondPlayer) return null
 	return PairQuizGame.getViewModels(currentUnFinishedGame, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 
@@ -121,26 +79,7 @@ export class PairQuezGameQueryRepository {
     return PairQuizGame.getViewModel(getGameById);
   }
 
-  async getRawGameById(id: string): Promise<PairQuizGame | null> {
-	// const getGameById = await this.pairQuezGame
-	// 	.createQueryBuilder('game')
-	// 	.leftJoinAndSelect('game.firstPlayerProgress', 'pairQuizGameProgressPlayer')
-	// 	.leftJoinAndSelect('game.firstPlayerProgress', 'user')
-	// 	.leftJoinAndSelect('game.firstPlayerProgress', 'answers')
-	// 	.leftJoinAndSelect('game.firstPlayerProgress', 'question')
-	// 	.leftJoinAndSelect('game.secondPlayerProgress', 'pairQuizGameProgressPlayer')
-	// 	.leftJoinAndSelect('game.secondPlayerProgress', 'user')
-	// 	.leftJoinAndSelect('game.secondPlayerProgress', 'answers')
-	// 	.leftJoinAndSelect('game.secondPlayerProgress', 'question')
-	// 	.leftJoinAndSelect('game.questionGames', 'questionGame')
-	// 	.leftJoinAndSelect('game.questionGames', 'question')
-	// 	.where(`game.id = :id`, {id})
-	// 	.orderBy({
-	// 		"game.questionGames.index": "ASC",
-	// 		"game.firstPlayerProgress.answers.addedAt": "ASC",
-	// 		"game.secondPlayerProgress.answers.addedAt": "ASC"
-	// 	})
-	// 	.getOne()
+  async getRawGameById(id: string): Promise<any | null> {
     const getGameById: PairQuizGame = await this.pairQuezGame.findOne({
       relations: {
         firstPlayerProgress: { user: true, answers: { question: true } },
@@ -148,15 +87,25 @@ export class PairQuezGameQueryRepository {
         questionGames: { question: { questionGame: true } },
       },
       where: { id },
-      order: {
-        questionGames: { index: 'ASC' },
-        firstPlayerProgress: { answers: { addedAt: 'ASC' } },
-        secondPlayerProgress: { answers: { addedAt: 'ASC' } },
-      },
-      // sortBy(question => idex: ASC, answers => addedAt: ASC)
+      order: {questionGames: { index: 'ASC' }},
     });
+
+	const currentUnFinishedGameFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
+		relations: {user: {progressPlayer: true}, answers: {progress: true}},
+		where: {gameId: getGameById.id, id: getGameById.firstPlayerProgress.id},
+		order: {answers: {addedAt: "ASC"}}
+	})
+
+if(getGameById.status === GameStatusEnum.PendingSecondPlayer) return null
+
+const currentUnFinishedGameSecondPlayer = await this.pairQuizGameProgressPlayer.findOne({
+		relations: {user: {progressPlayer: true}, answers: {progress: true}},
+		where: {gameId: getGameById.id, id: getGameById.secondPlayerProgress.id},
+		order: {answers: {addedAt: "ASC"}}
+	})
     if (!getGameById) return null;
-    return getGameById
+	const game = {currentGame: getGameById, firstPlayer: currentUnFinishedGameFirstPlayer, secondPlayer: currentUnFinishedGameSecondPlayer}
+    return game 
   }
   
 
