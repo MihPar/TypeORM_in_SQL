@@ -31,8 +31,13 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 			throw new ForbiddenException('You already answered all questions')
 		} else {
 			const currentQuestionIndex: number = command.game.firstPlayerProgress.answers.length
-			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex - 1))
-			if(!gameQuestion.question.id) return null
+			console.log("command.game.questionGames: ", command.game.questionGames)
+			console.log(currentQuestionIndex)
+			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex))
+			console.log(typeof currentQuestionIndex)
+			console.log(typeof command.game.questionGames[0].index)
+			console.log("gameQuestion: ", gameQuestion)
+			if(!gameQuestion) return null
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.question.id)
 
 			const isIncludes = question!.correctAnswers.includes(command.inputAnswer)

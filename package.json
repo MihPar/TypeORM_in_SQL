@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config test/jest-e2e.json --runInBand",
+    "test:e2e": "jest --config test/jest-e2e.json --runInBand --detectOpenHandles",
     "serveoNeon": "ssh -R 80:ep-weathered-mouse-a5h47925.us-east-2.aws.neon.tech:5432 serveo.net",
     "serveo": "ssh -R 80:localhost:4000 serveo.net",
 	"serveo1": "ssh -R 80:localhost:8080 localhost.run",

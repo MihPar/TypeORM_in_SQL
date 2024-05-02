@@ -26,8 +26,9 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string,
   ) {
 	const findUnfinishedUserGame = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(
-		userId, [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
+		userId, GameStatusEnum.Active
 	)
+	// [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
 		// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
@@ -41,12 +42,13 @@ export class PairQuizGameController {
 	@Param('id', ParseUUIDPipe) id: string,
 	@UserIdDecorator() userId: string
 	): Promise<GameTypeModel | null> {
-		const getActivePair: any | null = await this.pairQuezGameQueryRepository.getRawGameById(id)
+		const getActivePair: GameTypeModel | null = await this.pairQuezGameQueryRepository.getRawGameById(id)
 		if(!getActivePair) throw new NotFoundException('404')
-		if(getActivePair.firstPlayerProgress.user.id !== userId 
-			&& getActivePair.secondPlayerProgress?.user?.id !== userId) throw new ForbiddenException('403')
+		if(getActivePair.firstPlayerProgress.player.id !== userId 
+			&& getActivePair.secondPlayerProgress?.player?.id !== userId) throw new ForbiddenException('403')
 			// console.log("PairQuizGame.getViewModel(getActivePair): ", PairQuizGame.getViewModel(getActivePair))
-		return PairQuizGame.getViewModels(getActivePair.game, getActivePair.firstPlayer, getActivePair.secondPlayer)
+		// return PairQuizGame.getViewModels(getActivePair.game, getActivePair.firstPlayer, getActivePair.secondPlayer)
+		return getActivePair
   }
 
   @Post('connection')
@@ -56,6 +58,7 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string,
 	@UserDecorator() user: User
   ): Promise<GameTypeModel> {
+	console.log("start")
 	const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId)
 		if(getGameById) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
@@ -63,7 +66,7 @@ export class PairQuizGameController {
 	if(!createOrConnection) throw new ForbiddenException('403')
 	// const updatedGame = await this.pairQuezGameQueryRepository.getRawGameById(createOrConnection.id)
 	// return PairQuizGame.getViewModel(updatedGame)
-		console.log("createOrConnection: ", createOrConnection)
+		// console.log("createOrConnection: ", createOrConnection)
 	return createOrConnection
   }
 

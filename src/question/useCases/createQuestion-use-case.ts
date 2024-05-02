@@ -13,16 +13,16 @@ export class classCreateQuestionUseCase
   constructor(protected readonly questionRepository: QuestionRepository) {}
 
   async execute(command: CreateQuestionCommand): Promise<any> {
-	const createDate = new Date()
     const question = new Question();
     question.body = command.body;
     question.correctAnswers = command.correctAnswers;
-    question.published = false;
-	question.createdAt = createDate
+    question.published = true;
+	question.createdAt = new Date()
 
     const createQuest: Question = await this.questionRepository.createQuestion(
       question,
     );
+// console.log("createQuest: ", createQuest)
 	if(!createQuest) return null
     return Question.createQuestion(createQuest)
   }

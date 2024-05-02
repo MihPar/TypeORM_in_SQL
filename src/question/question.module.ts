@@ -12,13 +12,14 @@ import { DeletedQuestionUseCase } from './useCases/deletedQuestion-use-case';
 import { UpdateQuestionUseCase } from './useCases/updateQuestion-use-case';
 import { updateQuestionPublishUseCase } from './useCases/updateQuestionPublished';
 import { QuestionGame } from '../pairQuizGame/domain/entity.questionGame';
+import { PairQuizGame } from '../pairQuizGame/domain/entity.pairQuezGame';
 
 const repo = [QuestionQueryRepository, QuestionRepository]
 const service = [QuestionService, JwtService]
 const useCase = [classCreateQuestionUseCase, DeletedQuestionUseCase, UpdateQuestionUseCase, updateQuestionPublishUseCase]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Question, QuestionGame]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Question, QuestionGame, PairQuizGame]), CqrsModule],
   controllers: [QuestionController],
   providers: [...repo, ...service, ...useCase],
 })

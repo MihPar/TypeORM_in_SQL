@@ -3,6 +3,7 @@ import { Question } from "../../question/domain/entity.question";
 import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
 import { PairQuizGameProgressPlayer } from "./entity.pairQuizGameProgressPlayer";
 import { AnswerType } from "../../pairQuizGame/type/typeViewModel";
+import { log } from "console";
 
 @Entity()
 export class AnswersPlayer {
@@ -31,6 +32,7 @@ export class AnswersPlayer {
   addedAt: Date;
 
   static getViewModelForGame(answer: AnswersPlayer): AnswerType {
+	console.log(JSON.stringify(answer))
     return {
       questionId: answer.question.id,
       answerStatus: answer.answerStatus,

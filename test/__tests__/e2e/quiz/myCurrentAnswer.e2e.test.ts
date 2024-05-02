@@ -147,7 +147,7 @@ describe('/blogs', () => {
         expect(create.body.correctAnswers).toEqual(
           question[index].correctAnswers,
         );
-        expect(create.body.published).toBe(false);
+        expect(create.body.published).toBe(true);
         expect(create.body.createdAt).toEqual(create.body.createdAt);
         expect(create.body.updatedAt).toBe(null);
 
@@ -186,7 +186,7 @@ describe('/blogs', () => {
 
       expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
       game = getUnfinishedGame.body;
-	   console.log('game: ', game.questions)
+	//    console.log('game: ', game.questions)
     });
 
     it('send answer for first question', async () => {
@@ -208,7 +208,7 @@ describe('/blogs', () => {
 
       expect(getCurrentGame.status).toBe(HttpStatus.OK);
       let currentGame = getCurrentGame.body;
-	  console.log('currentGame: ', currentGame.questions)
+	//   console.log('currentGame: ', currentGame.questions)
 
 
       expect(sendAnswer0.status).toBe(HttpStatus.OK);

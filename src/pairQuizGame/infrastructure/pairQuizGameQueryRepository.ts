@@ -36,7 +36,7 @@ export class PairQuezGameQueryRepository {
 
   async getCurrentUnFinGame(
     userId: string,
-    statuses: GameStatusEnum[],
+    statuses: GameStatusEnum,
   ): Promise<GameTypeModel | null> {
 		const currentUnFinishedGame = await this.pairQuezGame.findOne({
 			relations: {
@@ -45,8 +45,8 @@ export class PairQuezGameQueryRepository {
 				questionGames: {question: {questionGame: true}}
 			},
 			where: [
-				{firstPlayerProgress: {user: {id: userId}}, status: In(statuses)},
-				{secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
+				{firstPlayerProgress: {user: {id: userId}}, status: statuses},
+				{secondPlayerProgress: {user: {id: userId}}, status: statuses}
 			],
 			order: {questionGames: {index: "ASC"}}
 		// }
@@ -73,11 +73,11 @@ export class PairQuezGameQueryRepository {
 	return PairQuizGame.getViewModels(currentUnFinishedGame, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 
-  async getGameById(id: string): Promise<GameTypeModel | null> {
-    const getGameById: PairQuizGame = await this.getRawGameById(id)
-    if (!getGameById) return null;
-    return PairQuizGame.getViewModel(getGameById);
-  }
+//   async getGameById(id: string): Promise<GameTypeModel | null> {
+//     const getGameById: PairQuizGame = await this.getRawGameById(id)
+//     if (!getGameById) return null;
+//     return PairQuizGame.getViewModel(getGameById);
+//   }
 
   async getRawGameById(id: string): Promise<any | null> {
     const getGameById: PairQuizGame = await this.pairQuezGame.findOne({
@@ -103,9 +103,10 @@ const currentUnFinishedGameSecondPlayer = await this.pairQuizGameProgressPlayer.
 		where: {gameId: getGameById.id, id: getGameById.secondPlayerProgress.id},
 		order: {answers: {addedAt: "ASC"}}
 	})
+    // if (!getGameById) return null;
+	// const game = {currentGame: getGameById, firstPlayer: currentUnFinishedGameFirstPlayer, secondPlayer: currentUnFinishedGameSecondPlayer}
     if (!getGameById) return null;
-	const game = {currentGame: getGameById, firstPlayer: currentUnFinishedGameFirstPlayer, secondPlayer: currentUnFinishedGameSecondPlayer}
-    return game 
+	return PairQuizGame.getViewModels(getGameById, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
   
 
