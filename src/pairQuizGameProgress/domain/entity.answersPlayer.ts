@@ -32,7 +32,7 @@ export class AnswersPlayer {
   addedAt: Date;
 
   static getViewModelForGame(answer: AnswersPlayer): AnswerType {
-	console.log(JSON.stringify(answer))
+	// console.log(JSON.stringify(answer))
     return {
       questionId: answer.questionId,
       answerStatus: answer.answerStatus,

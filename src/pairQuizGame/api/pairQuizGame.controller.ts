@@ -58,7 +58,7 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string,
 	@UserDecorator() user: User
   ): Promise<GameTypeModel> {
-	console.log("start")
+	// console.log("start")
 	const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId)
 		if(getGameById) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)

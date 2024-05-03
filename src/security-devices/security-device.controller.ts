@@ -23,7 +23,7 @@ export class SecurityDeviceController {
   
   @Get('')
   @HttpCode(200)
-  @SkipThrottle({default: true})
+//   @SkipThrottle({default: true})
   @UseGuards(CheckRefreshToken)
   async getDevicesUser(
     @UserDecorator() user: User,
@@ -34,7 +34,7 @@ export class SecurityDeviceController {
   }
 
   @Delete('')
-  @SkipThrottle({default: true})
+//   @SkipThrottle({default: true})
   @UseGuards(CheckRefreshToken)
   @HttpCode(204)
   async terminateCurrentSession(

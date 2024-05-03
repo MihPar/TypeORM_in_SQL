@@ -24,7 +24,7 @@ export class QuestionRepository {
   }
 
   async getQuestion(id: string): Promise<Question | null> {
-	console.log("try")
+	// console.log("try")
 
 	const findQuestion = await this.dataSource.getRepository(Question)
 	.findOneBy({id})
@@ -33,7 +33,7 @@ export class QuestionRepository {
 	// 	.select()
 	// 	.where(`id = :id`, {id})
 	// 	.getOne()
-		console.log("findQuestion: ", findQuestion)
+		// console.log("findQuestion: ", findQuestion)
 
 	if(!findQuestion) return null
 		return findQuestion

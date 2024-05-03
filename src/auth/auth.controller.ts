@@ -79,7 +79,7 @@ export class AuthController {
 	
 	@HttpCode(200)
 	@Post("refresh-token")
-	@SkipThrottle({default: true})
+	// @SkipThrottle({default: true})
 	@UseGuards(CheckRefreshToken)
 	async cretaeRefreshToken(
 		@Req() req: Request,
@@ -131,7 +131,7 @@ export class AuthController {
 
 	@HttpCode(204)
 	@Post("logout")
-	@SkipThrottle({default: true})
+	// @SkipThrottle({default: true})
 	@UseGuards(CheckRefreshToken)
 	async cretaeLogout(@Req() req: Request) {
 		const refreshToken: string = req.cookies.refreshToken;
@@ -143,7 +143,7 @@ export class AuthController {
 
 	@HttpCode(200)
 	@Get("me")
-	@SkipThrottle({default: true})
+	// @SkipThrottle({default: true})
 	@UseGuards(CheckRefreshTokenFor)
 	async findMe(@Req() req: Request, @UserDecorator() user: User,) {
 		if (!req.headers.authorization) throw new UnauthorizedException('Not authorization 401')
