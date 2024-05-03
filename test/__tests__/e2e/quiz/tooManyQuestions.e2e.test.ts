@@ -163,33 +163,30 @@ describe('/blogs', () => {
     //     updatedAt: Date
     //   }
 
-	const create = result.map((item) => {
+	const create = result.map((item, index) => {
 		expect(item.body.id).toEqual(expect.any(String));
-        // expect(item.body.body).toEqual(question[index].body);
-        // expect(item.body.correctAnswers).toEqual(question[index].correctAnswers);
+        expect(item.body.body).toEqual(question[index].body);
+        expect(item.body.correctAnswers).toEqual(question[index].correctAnswers);
         expect(item.body.published).toBe(true);
         expect(item.body.createdAt).toEqual(item.body.createdAt);
         expect(item.body.updatedAt).toBe(null);
-// return item.body
+		return item.body
 	})
-	// console.log("create: ", create)
+	console.log("create: ", create)
 
-// 	const publishedQuestion0 = await request(server)
-// 		.put(`/sa/quiz/questions/${create[0].body.id}/publish`)
-// 		.auth('admin', 'qwerty')
-// 		.send({ published: true });
+	const publishedQuestion0 = await request(server)
+		.put(`/sa/quiz/questions/${create[0].id}/publish`)
+		.auth('admin', 'qwerty')
+		.send({ published: true });
+		console.log("publishedQuestion0: ", publishedQuestion0.body)
 
-// 		const publishedQuestion1 = await request(server)
-// 		.put(`/sa/quiz/questions/${create[1].body.id}/publish`)
-// 		.auth('admin', 'qwerty')
-// 		.send({ published: true });
+		const publishedQuestion1 = await request(server)
+		.put(`/sa/quiz/questions/${create[1].id}/publish`)
+		.auth('admin', 'qwerty')
+		.send({ published: true });
 
-//   expect(publishedQuestion0.status).toBe(HttpStatus.NO_CONTENT);
-//   expect(publishedQuestion1.status).toBe(HttpStatus.NO_CONTENT);
-	
-	// expect(1+1).toBe(2)
-	
-	  
+  expect(publishedQuestion0.status).toBe(HttpStatus.NO_CONTENT);
+  expect(publishedQuestion1.status).toBe(HttpStatus.NO_CONTENT);
     })
 
 	// it('create connection', async () => {

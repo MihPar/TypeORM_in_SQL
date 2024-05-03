@@ -8,7 +8,7 @@ import { AnswerAndBodyClass } from '../dto/question.dto';
 @Injectable()
 export class QuestionRepository {
   constructor(
-    //@InjectRepository(Question) public question: Repository<Question>,
+    @InjectRepository(Question) public question: Repository<Question>,
 	protected dataSource: DataSource
 
   ) {}
@@ -24,12 +24,16 @@ export class QuestionRepository {
   }
 
   async getQuestion(id: string): Promise<Question | null> {
+	console.log("try")
+
 	const findQuestion = await this.dataSource.getRepository(Question)
 	.findOneBy({id})
-		// .createQueryBuilder()
-		// .select()
-		// .where(`id = :id`, {id})
-		// .getOne()
+	// const findQuestion = await this.question
+	// 	.createQueryBuilder()
+	// 	.select()
+	// 	.where(`id = :id`, {id})
+	// 	.getOne()
+		console.log("findQuestion: ", findQuestion)
 
 	if(!findQuestion) return null
 		return findQuestion

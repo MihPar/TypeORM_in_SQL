@@ -4,7 +4,7 @@ import { Question } from "../../question/domain/entity.question";
 
 @Entity()
 export class QuestionGame {
-	@PrimaryGeneratedColumn()
+	@PrimaryGeneratedColumn("uuid")
 	id: string
 
 	@ManyToOne(() => PairQuizGame, g => g.questionGames)

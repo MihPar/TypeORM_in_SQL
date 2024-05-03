@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Query, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, UseGuards, Query, NotFoundException, Put, ParseUUIDPipe } from '@nestjs/common';
 import { AnswerAndBodyClass, PublishClass } from '../dto/question.dto';
 import { AuthBasic } from '../../users/gards/basic.auth';
 import { QuestionQueryRepository } from '../infrastructury/questionQueryRepository';
@@ -87,7 +87,7 @@ export class QuestionController {
 
   @Put(':id/publish')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async updatePublishQuestion(@Body() DTO: PublishClass, @Param('id') id: string): Promise<boolean> {
+  async updatePublishQuestion(@Body() DTO: PublishClass, @Param('id', ParseUUIDPipe) id: string): Promise<boolean> {
 	const findQuestionById = await this.questionRepository.getQuestion(id)
 	if(!findQuestionById) throw new NotFoundException('404')
 

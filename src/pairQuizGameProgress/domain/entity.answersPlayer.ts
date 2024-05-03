@@ -7,7 +7,7 @@ import { log } from "console";
 
 @Entity()
 export class AnswersPlayer {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @ManyToOne(() => PairQuizGameProgressPlayer, (p) => p.answers)
