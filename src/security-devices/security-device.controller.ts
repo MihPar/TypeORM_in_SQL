@@ -11,7 +11,7 @@ import { SkipThrottle } from "@nestjs/throttler";
 import { User } from "../users/entities/user.entity";
 import { UserDecorator, UserIdDecorator } from "../users/infrastructure/decorators/decorator.user";
 
-@SkipThrottle()
+// @SkipThrottle()
 @Controller('security/devices')
 export class SecurityDeviceController {
   constructor(
