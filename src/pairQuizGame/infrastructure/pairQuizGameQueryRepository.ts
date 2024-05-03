@@ -90,6 +90,8 @@ export class PairQuezGameQueryRepository {
       order: {questionGames: { index: 'ASC' }},
     });
 
+	if(!getGameById) return null
+
 	const currentUnFinishedGameFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
 		relations: {user: {progressPlayer: true}, answers: {progress: true}},
 		where: {gameId: getGameById.id, id: getGameById.firstPlayerProgress.id},
