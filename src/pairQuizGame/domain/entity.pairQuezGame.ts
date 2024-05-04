@@ -97,6 +97,7 @@ export class PairQuizGame {
 		}
 
 		static getViewModels(game: PairQuizGame, getGameFirstPlayer: PairQuizGameProgressPlayer, getGameSecondPlayer: PairQuizGameProgressPlayer): GameTypeModel {
+			// console.log("getGameFirstPlayer: ", getGameFirstPlayer.answers)
 			return {
 				id: game.id,
 				firstPlayerProgress: {

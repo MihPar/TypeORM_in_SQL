@@ -26,7 +26,7 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string,
   ) {
 	const findUnfinishedUserGame = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(
-		userId, GameStatusEnum.Active
+		userId, [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	)
 	// [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
@@ -43,6 +43,7 @@ export class PairQuizGameController {
 	@UserIdDecorator() userId: string
 	): Promise<GameTypeModel | null> {
 		const getActivePair: GameTypeModel | null = await this.pairQuezGameQueryRepository.getRawGameById(id)
+		// console.log("getActivePair: ", getActivePair)
 		if(!getActivePair) throw new NotFoundException('404')
 		if(getActivePair.firstPlayerProgress.player.id !== userId 
 			&& getActivePair.secondPlayerProgress?.player?.id !== userId) throw new ForbiddenException('403')
@@ -77,11 +78,12 @@ export class PairQuizGameController {
 	@Body() DTO: CreatePairQuizGameDto,
 	@UserIdDecorator() userId: string
 	) {
-	const activeUserGame: PairQuizGame | null = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(userId, [GameStatusEnum.Active])
+	const activeUserGame: GameTypeModel | null = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId, [GameStatusEnum.Active])
+	// console.log("activeUserGame: ", activeUserGame.firstPlayerProgress.answers)
 		if(!activeUserGame) throw new ForbiddenException('the game is not exist by userId and status')
 
-		const isFirstPlayer = activeUserGame.firstPlayerProgress.user.id === userId
-		const isSecondPlayer = activeUserGame.secondPlayerProgress?.user?.id === userId
+		const isFirstPlayer = activeUserGame.firstPlayerProgress.player.id === userId
+		const isSecondPlayer = activeUserGame.secondPlayerProgress?.player?.id === userId
 		const firstPlayerAswersCount = activeUserGame.firstPlayerProgress.answers.length
 		const secondPlayerAswersCount = activeUserGame.secondPlayerProgress?.answers?.length
 		if(isFirstPlayer && firstPlayerAswersCount === GAME_QUESTION_COUNT) {throw new ForbiddenException('first player is not answer by all questions')}

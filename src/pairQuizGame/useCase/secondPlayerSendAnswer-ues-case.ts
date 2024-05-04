@@ -35,14 +35,14 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion?.question.id)
 
 			const isIncludes = question?.correctAnswers.includes(command.inputAnswer)
-				const answer = AnswersPlayer.createAnswer(
+			const answer = AnswersPlayer.createAnswer(
 					question?.id,
 					isIncludes ? AnswerStatusEnum.Correct : AnswerStatusEnum.InCorrect,
 					command.inputAnswer,
 					command.game.secondPlayerProgress,
        		 );
-				await this.pairQuezGameQueryRepository.createAnswers(answer)
-				await this.pairQuizGameRepository.sendAnswerPlayer(
+			await this.pairQuezGameQueryRepository.createAnswers(answer)
+			await this.pairQuizGameRepository.sendAnswerPlayer(
 					command.game.secondPlayerProgress.id,
 					command.game.id,
 					answer.questionId,
@@ -51,9 +51,9 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 					isIncludes ? "+1" : "+0",
 					)
 					const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game.id, command.game, command.game.questionGames.map((item) => {return item.question}))
-					await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
+			await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
 
-					return {
+				return {
 						questionId: answer.questionId,
 						answerStatus: answer.answerStatus,
 						addedAt: answer.addedAt

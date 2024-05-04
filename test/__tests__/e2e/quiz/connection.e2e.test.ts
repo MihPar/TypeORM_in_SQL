@@ -140,7 +140,7 @@ describe('/blogs', () => {
 	  });
 
 
-    it('get game by id', async () => {
+    it('get game by id of userOne', async () => {
       const getGameById = await request(server)
         .get(`/pair-game-quiz/pairs/${gameId}`)
         .set('Authorization', `Bearer ${tokenByUser}`);
@@ -148,6 +148,23 @@ describe('/blogs', () => {
       expect(getGameById.status).toBe(HttpStatus.OK);
     });
 
+	it('get game by id of userTwo', async () => {
+		const getGameById2 = await request(server)
+		  .get(`/pair-game-quiz/pairs/${gameId}`)
+		  .set('Authorization', `Bearer ${tokenByUser2}`);
+  
+		expect(getGameById2.status).toBe(HttpStatus.OK);
+	  });
+
+	it('Do not get game by id if user not participated', async() => {
+		const getDoNotExistingGame = await request(server)
+			.get(`/pair-game-quiz/pairs/123456789012345678901234`)
+			.set('Authorization', `Bearer ${tokenByUser2}`);
+
+			expect(getDoNotExistingGame.status).toBe(HttpStatus.BAD_REQUEST);
+	})
+
+	  
 	it('return unfinished game', async() => {
 		const getUnfinishedGame = await request(server)
 		   .get('/pair-game-quiz/pairs/my-current')
