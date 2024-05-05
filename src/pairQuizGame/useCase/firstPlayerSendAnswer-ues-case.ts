@@ -9,6 +9,7 @@ import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQuery
 import { ChangeStatusToFinishedCommand } from "./changeStatusToFinished-use-case";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { QuestionGame } from "../domain/entity.questionGame";
+import { GameTypeModel } from "../type/typeViewModel";
 
 export class FirstPlayerSendAnswerCommand {
 	constructor(

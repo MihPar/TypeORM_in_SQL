@@ -2,6 +2,7 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
+import { GameTypeModel } from "../type/typeViewModel";
 
 export class ChangeStatusToFinishedCommand {
 	constructor(

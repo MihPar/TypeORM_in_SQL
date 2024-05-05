@@ -3,7 +3,7 @@ import { CreatePairQuizGameDto } from "../dto/createPairQuizGame.dto";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { NotFoundException } from "@nestjs/common";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
-import { AnswerType } from "../type/typeViewModel";
+import { AnswerType, GameTypeModel } from "../type/typeViewModel";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
@@ -31,10 +31,10 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
     if (!game || game.status !== 'Active')
       throw new NotFoundException('No active pair');
 
-	  if (game.firstPlayerProgress.user.id === commandAnswer.userId) {
+	if (game.firstPlayerProgress.user.id === commandAnswer.userId) {
       const command = new FirstPlayerSendAnswerCommand(
         game,
-        commandAnswer.DTO.answer,
+		commandAnswer.DTO.answer,
       );
 	// console.log("firstPlayer: ", await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command))
       return await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);

@@ -49,8 +49,6 @@ export class PairQuezGameQueryRepository {
 				{secondPlayerProgress: {user: {id: userId}}, status: In(statuses)}
 			],
 			order: {questionGames: {index: "ASC"}}
-		// }
-		// sortBy(question => idex: ASC, answers => addedAt: ASC)
 		})
 
 		if(!currentUnFinishedGame) return null
@@ -61,15 +59,12 @@ export class PairQuezGameQueryRepository {
 				order: {answers: {addedAt: "ASC"}}
 			})
 	
-	// if(currentUnFinishedGame.status === GameStatusEnum.PendingSecondPlayer) return null
-
 	const currentUnFinishedGameSecondPlayer = currentUnFinishedGame.secondPlayerProgress ?  await this.pairQuizGameProgressPlayer.findOne({
 				relations: {user: {progressPlayer: true}, answers: {progress: true}},
 				where: {gameId: currentUnFinishedGame.id, id: currentUnFinishedGame.secondPlayerProgress.id},
 				order: {answers: {addedAt: "ASC"}}
 			}) : null
 
-	// if (!currentUnFinishedGame) return null;
 	return PairQuizGame.getViewModels(currentUnFinishedGame, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 
