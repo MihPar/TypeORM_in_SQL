@@ -8,7 +8,6 @@ import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 import { SecondPlayerSendAnswerCommand } from "./secondPlayerSendAnswer-ues-case";
-// import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 
 export class SendAnswerCommand {
 	constructor(
