@@ -33,6 +33,7 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 		} else {
 			const currentQuestionIndex: number = command.game.secondPlayerProgress.answers.length
 			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index == currentQuestionIndex)
+			if(!gameQuestion) return null
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion?.question.id)
 
 			const isIncludes = question?.correctAnswers.includes(command.inputAnswer)

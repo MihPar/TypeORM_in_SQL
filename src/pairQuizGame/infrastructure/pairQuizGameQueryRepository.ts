@@ -154,8 +154,37 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 		],
 		order: {questionGames: { index: 'ASC' }}
 	})
-	if(!getGame) return null
+	if (!getGame) return null;
+	// console.log("getGame: ", getGame)
 
+//   const currentUnFinishedGameFirstPlayer =
+//     await this.pairQuizGameProgressPlayer.findOne({
+//       relations: {
+//         user: { progressPlayer: true },
+//         answers: { progress: true },
+//       },
+//       where: { gameId: getGame.id, id: getGame.firstPlayerProgress.id },
+//       order: { answers: { addedAt: 'ASC' } },
+//     });
+
+	// console.log("currentUnFinishedGameFirstPlayer: ", currentUnFinishedGameFirstPlayer)
+
+	// const currentUnFinishedGameSecondPlayer = getGame.secondPlayerProgress
+    // ? await this.pairQuizGameProgressPlayer.findOne({
+    //     relations: {
+    //       user: { progressPlayer: true },
+    //       answers: { progress: true },
+    //     },
+    //     where: { gameId: getGame.id, id: getGame.secondPlayerProgress.id },
+    //     order: { answers: { addedAt: 'ASC' } },
+    //   })
+    // : null;
+	// getGame.firstPlayerProgress = currentUnFinishedGameFirstPlayer
+	// getGame.secondPlayerProgress = currentUnFinishedGameSecondPlayer
+	// // console.log("getGame.firstPlayerProgress.answer: ", getGame.firstPlayerProgress.answers)
+	// const newGame = {...getGame, ...getGame.firstPlayerProgress, ...getGame.secondPlayerProgress}
+	// console.log("newGame: ", newGame)
+	// return newGame
 	return getGame
   }
 

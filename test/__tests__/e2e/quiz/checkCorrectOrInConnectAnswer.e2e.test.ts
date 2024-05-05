@@ -240,7 +240,7 @@ describe('/blogs', () => {
 		return item.body === game.questions[0].body
 	})
 	const payload2 = {
-		answer: questionTwo.correctAnswers[4]
+		answer: questionTwo.correctAnswers[5]
 	};
 
 	const sendAnswer2 = await request(server)
@@ -269,9 +269,9 @@ describe('/blogs', () => {
 			return item.body === game.questions[1].body
 		})
 		const payload2 = {
-			answer: questionTwo.correctAnswers[1]
+			answer: questionTwo.correctAnswers[0]
 		};
-	
+	// console.log("payload2: ", payload2)
 		const sendAnswer2 = await request(server)
 		  .post('/pair-game-quiz/pairs/my-current/answers')
 		  .set('Authorization', `Bearer ${tokenByUser2}`)
@@ -282,8 +282,8 @@ describe('/blogs', () => {
 		  .set('Authorization', `Bearer ${tokenByUser2}`);
 	
 		expect(getCurrentGame2.status).toBe(HttpStatus.OK);
-		let currentGame2 = getCurrentGame2.body;
-		console.log('currentGame: ', currentGame2.questions)
+		// let currentGame2 = getCurrentGame2.body;
+		// console.log('currentGame: ', currentGame2.questions)
 	
 		expect(sendAnswer2.status).toBe(HttpStatus.OK);
 		expect(sendAnswer2.body).toEqual({
@@ -292,7 +292,5 @@ describe('/blogs', () => {
 		  addedAt: expect.any(String),
 		});
 	  });
-
-	
   });
 })  
