@@ -9,8 +9,14 @@ export interface DatabaseConfig {
 export default (): DatabaseConfig => ({
   database: {
     type: 'postgres',
-    url: process.env.DATABASE_URL,
+	host: "localhost",
+    port: 5432,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    database: "BankSystem",
     autoLoadEntities: true,
+    // url: process.env.DATABASE_URL,
+    // autoLoadEntities: true,
     // namingStrategy: new PluralNamingStrategy(),
     // logging: ['query'],
     synchronize: true,
