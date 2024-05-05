@@ -36,7 +36,7 @@ export class PairQuezGameQueryRepository {
 
   async getCurrentUnFinGame(
     userId: string,
-    statuses: GameStatusEnum[],
+    statuses?: GameStatusEnum[],
   ): Promise<GameTypeModel | null> {
 		const currentUnFinishedGame = await this.pairQuezGame.findOne({
 			relations: {
@@ -156,7 +156,8 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 		where: [
 			{status: Not(GameStatusEnum.Finished), firstPlayerProgress: {user: {id: userId}}},
 			{status:  Not(GameStatusEnum.Finished), secondPlayerProgress: {user: {id: userId}}},
-		]
+		],
+		order: {questionGames: { index: 'ASC' }}
 	})
 	if(!getGame) return null
 
