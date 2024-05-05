@@ -111,6 +111,39 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
     // if (!getGameById) return null;
 	return PairQuizGame.getViewModels(getGameById, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
+
+  async getRawGameByUserId(id: string): Promise<any | null> {
+    const getGameById: PairQuizGame = await this.pairQuezGame.findOne({
+      relations: {
+        firstPlayerProgress: { user: true, answers: { question: true } },
+        secondPlayerProgress: { user: true, answers: { question: true } },
+        questionGames: { question: { questionGame: true } },
+      },
+      where: { id },
+      order: {questionGames: { index: 'ASC' }},
+    });
+
+	if(!getGameById) return null
+
+	const currentUnFinishedGameFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
+		relations: {user: {progressPlayer: true}, answers: {progress: true}},
+		where: {gameId: getGameById.id, id: getGameById.firstPlayerProgress.id},
+		order: {answers: {addedAt: "ASC"}}
+	})
+
+// if(getGameById.status === GameStatusEnum.PendingSecondPlayer) return null
+
+const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? await this.pairQuizGameProgressPlayer.findOne({
+		relations: {user: {progressPlayer: true}, answers: {progress: true}},
+		where: {gameId: getGameById.id, id: getGameById.secondPlayerProgress.id},
+		order: {answers: {addedAt: "ASC"}}
+	}) : null
+
+    // if (!getGameById) return null;
+	// const game = {currentGame: getGameById, firstPlayer: currentUnFinishedGameFirstPlayer, secondPlayer: currentUnFinishedGameSecondPlayer}
+    // if (!getGameById) return null;
+	return PairQuizGame.getViewModels(getGameById, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
+  }
   
 
   async getUnfinishedGame(userId: string): Promise<PairQuizGame | null> {

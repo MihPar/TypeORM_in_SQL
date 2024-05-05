@@ -37,12 +37,13 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
         game,
         commandAnswer.DTO.answer,
       );
-	  console.log("firstPlayer: ", this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command))
+	//   console.log("firstPlayer: ", await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command))
       return await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
     } else if (game.secondPlayerProgress.user.id === commandAnswer.userId) {
       const command = new SecondPlayerSendAnswerCommand(
 		game,
         commandAnswer.DTO.answer,)
+		// console.log("secondPlayer: ", await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command))
       return await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
     }
   }
