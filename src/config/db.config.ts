@@ -9,13 +9,8 @@ export interface DatabaseConfig {
 export default (): DatabaseConfig => ({
   database: {
     type: 'postgres',
-	host: "localhost",
-    port: 5432,
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
-    database: "BankSystem",
-    autoLoadEntities: true,
     // url: process.env.DATABASE_URL,
+    url: 'postgresql://MihPar:2TDbEoVawR3Z@ep-weathered-mouse-a5h47925.us-east-2.aws.neon.tech/neondb?sslmode=require',
     // autoLoadEntities: true,
     // namingStrategy: new PluralNamingStrategy(),
     // logging: ['query'],
