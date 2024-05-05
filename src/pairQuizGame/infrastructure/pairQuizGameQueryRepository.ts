@@ -125,6 +125,7 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 		where: {gameId: getGameById.id, id: getGameById.firstPlayerProgress.id},
 		order: {answers: {addedAt: "ASC"}}
 	})
+	// console.log("currentUnFinishedGameFirstPlayer: ", currentUnFinishedGameFirstPlayer)
 
 // if(getGameById.status === GameStatusEnum.PendingSecondPlayer) return null
 
