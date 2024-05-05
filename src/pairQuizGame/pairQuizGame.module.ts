@@ -20,7 +20,7 @@ import { Question } from '../question/domain/entity.question';
 import { PairQuizGameProgressQueryRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
 import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersPlayer';
 import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
-import { SendAnswerUseCase } from './useCase/createSendAnswer-use-case copy';
+import { SendAnswerUseCase } from './useCase/createSendAnswer-use-case';
 import { QuestionQueryRepository } from '../question/infrastructury/questionQueryRepository';
 import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
 import { QuestionGame } from './domain/entity.questionGame';

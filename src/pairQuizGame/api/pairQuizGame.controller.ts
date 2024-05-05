@@ -8,7 +8,7 @@ import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
 import { AnswerType, GameTypeModel } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
-import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case copy';
+import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case';
 import { PairQuizGame } from '../domain/entity.pairQuezGame';
 import { GAME_QUESTION_COUNT } from '../domain/constants';
 
@@ -93,6 +93,7 @@ export class PairQuizGameController {
 	const command = new SendAnswerCommand(DTO, userId)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
 	if(!createSendAnswer) throw new ForbiddenException('the answer is not created')
+		// console.log("createSendAnswer: ", createSendAnswer)
 	return createSendAnswer
   }
 }
