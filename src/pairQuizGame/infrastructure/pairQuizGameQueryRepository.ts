@@ -150,8 +150,8 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 			questionGames: {question: {questionGame: true}}
 		},
 		where: [
-			{status: Not(GameStatusEnum.Finished), firstPlayerProgress: {user: {id: userId}}},
-			{status:  Not(GameStatusEnum.Finished), secondPlayerProgress: {user: {id: userId}}},
+			{status: GameStatusEnum.Active, firstPlayerProgress: {user: {id: userId}}},
+			{status:  GameStatusEnum.Active, secondPlayerProgress: {user: {id: userId}}},
 		],
 		order: {questionGames: { index: 'ASC' }}
 	})

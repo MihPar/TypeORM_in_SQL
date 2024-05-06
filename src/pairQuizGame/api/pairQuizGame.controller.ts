@@ -31,7 +31,6 @@ export class PairQuizGameController {
 	// [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
-		// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
 	return findUnfinishedUserGame
   }
 
