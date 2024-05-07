@@ -160,13 +160,31 @@ describe('/blogs', () => {
 		.auth('admin', 'qwerty')
 		.send({ published: true });
 
-		const publishedQuestion1 = await request(server)
+	const publishedQuestion1 = await request(server)
 		.put(`/sa/quiz/questions/${create[1].id}/publish`)
+		.auth('admin', 'qwerty')
+		.send({ published: true });
+
+	const publishedQuestion2 = await request(server)
+		.put(`/sa/quiz/questions/${create[2].id}/publish`)
+		.auth('admin', 'qwerty')
+		.send({ published: true });
+
+	const publishedQuestion3 = await request(server)
+		.put(`/sa/quiz/questions/${create[3].id}/publish`)
+		.auth('admin', 'qwerty')
+		.send({ published: true });
+
+	const publishedQuestion4 = await request(server)
+		.put(`/sa/quiz/questions/${create[4].id}/publish`)
 		.auth('admin', 'qwerty')
 		.send({ published: true });
 
   expect(publishedQuestion0.status).toBe(HttpStatus.NO_CONTENT);
   expect(publishedQuestion1.status).toBe(HttpStatus.NO_CONTENT);
+  expect(publishedQuestion2.status).toBe(HttpStatus.NO_CONTENT);
+  expect(publishedQuestion3.status).toBe(HttpStatus.NO_CONTENT);
+  expect(publishedQuestion4.status).toBe(HttpStatus.NO_CONTENT);
     })
 
 	it('create connection', async () => {
@@ -240,7 +258,7 @@ describe('/blogs', () => {
 		return item.body === game.questions[0].body
 	})
 	const payload2 = {
-		answer: questionTwo.correctAnswers[5]
+		answer: "inCorrect"
 	};
 
 	const sendAnswer2 = await request(server)

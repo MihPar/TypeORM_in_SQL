@@ -35,9 +35,9 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 			// console.log("command.game.questionGames: ", command.game.questionGames)
 			// console.log(currentQuestionIndex)
 			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex))
-			// console.log(typeof currentQuestionIndex)
-			// console.log(typeof command.game.questionGames[0].index)
-			// console.log("gameQuestion: ", gameQuestion)
+			console.log(typeof currentQuestionIndex)
+			console.log(typeof command.game.questionGames[0].index)
+			console.log("gameQuestion: ", gameQuestion)
 			if(!gameQuestion) return null
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.question.id)
 
