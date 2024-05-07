@@ -11,7 +11,7 @@ import { User } from '../users/entities/user.entity';
 import { PairQuezGameQueryRepository } from './infrastructure/pairQuizGameQueryRepository';
 import { FirstPlayerSendAnswerUseCase } from './useCase/firstPlayerSendAnswer-ues-case';
 import { CreateOrConnectGameUseCase } from './useCase/createOrConnection-use-case';
-import { ChangeAnswerStatusPlayerUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
+// import { ChangeAnswerStatusPlayerUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
 import { ChangeStatusToFinishedUseCase } from './useCase/changeStatusToFinished-use-case';
 import { PairQuizGameRepository } from './infrastructure/pairQuizGameRepository';
 import { PairQuizGameProgressRepository } from '../pairQuizGameProgress/infrastructure/pairQuizGameProgressRepository';
@@ -43,7 +43,7 @@ const useCase = [
   CreateOrConnectGameUseCase,
   ChangeStatusToFinishedUseCase,
   SendAnswerUseCase,
-  ChangeAnswerStatusPlayerUseCase,
+//   ChangeAnswerStatusPlayerUseCase,
 ];
 @Module({
   imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question, QuestionGame]), CqrsModule],

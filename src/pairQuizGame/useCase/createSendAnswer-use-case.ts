@@ -38,7 +38,7 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 		commandAnswer.DTO.answer,
       );
 	const result = await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
-	console.log("firstPlayer: ", result)
+	// console.log("firstPlayer: ", result)
 
       return result
     } else if (game.secondPlayerProgress.user.id === commandAnswer.userId) {
@@ -46,7 +46,7 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 		game,
         commandAnswer.DTO.answer,)
 		const result = await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
-		console.log("secondPlayer: ", result)
+		// console.log("secondPlayer: ", result)
 
 		return result
 

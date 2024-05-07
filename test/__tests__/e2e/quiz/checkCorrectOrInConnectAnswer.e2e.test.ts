@@ -272,7 +272,7 @@ describe('/blogs', () => {
 
 	expect(getCurrentGame2.status).toBe(HttpStatus.OK);
 	let currentGame2 = getCurrentGame2.body;
-	console.log("currentGame2.secondPlayer: ", currentGame2.secondPlayerProgress)
+	// console.log("currentGame2.secondPlayer: ", currentGame2.secondPlayerProgress)
 
 	expect(sendAnswer2.status).toBe(HttpStatus.OK);
 	expect(sendAnswer2.body).toEqual({
@@ -288,8 +288,8 @@ describe('/blogs', () => {
 		  .set('Authorization', `Bearer ${tokenByUser}`);
   
 		expect(getGameById.status).toBe(HttpStatus.OK);
-		console.log("getGameById11: ", getGameById.body.firstPlayerProgress)
-		console.log("getGameById12: ", getGameById.body.secondPlayerProgress)
+		// console.log("getGameById11: ", getGameById.body.firstPlayerProgress)
+		// console.log("getGameById12: ", getGameById.body.secondPlayerProgress)
 	  });
   
 	  it('get game by id of userTwo', async () => {
@@ -298,8 +298,8 @@ describe('/blogs', () => {
 			.set('Authorization', `Bearer ${tokenByUser2}`);
 	
 		  expect(getGameById2.status).toBe(HttpStatus.OK);
-		console.log("getGameById21: ", getGameById2.body.firstPlayerProgress)
-		console.log("getGameById22: ", getGameById2.body.secondPlayerProgress)
+		// console.log("getGameById21: ", getGameById2.body.firstPlayerProgress)
+		// console.log("getGameById22: ", getGameById2.body.secondPlayerProgress)
 
 		});
 

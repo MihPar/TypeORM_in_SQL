@@ -37,7 +37,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 		if(!foundQuizGame) {
 			const progressFirstPlayer = new PairQuizGameProgressPlayer()
 			progressFirstPlayer.userId = command.userId
-			progressFirstPlayer.answerStatus = null
+			// progressFirstPlayer.answerStatus = null
 			progressFirstPlayer.addedAt = new Date()
 			progressFirstPlayer.answers = []
 			await this.pairQuizGameProgressRepository.createProgressFirstPlayer(progressFirstPlayer)
@@ -63,7 +63,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			const progressSecondPlayer = new PairQuizGameProgressPlayer()
 			progressSecondPlayer.userId = command.userId
 			progressSecondPlayer.user = command.user
-			progressSecondPlayer.answerStatus = null
+			// progressSecondPlayer.answerStatus = null
 			progressSecondPlayer.addedAt = new Date()
 			progressSecondPlayer.gameId = foundQuizGame.id
 			progressSecondPlayer.answers = []
