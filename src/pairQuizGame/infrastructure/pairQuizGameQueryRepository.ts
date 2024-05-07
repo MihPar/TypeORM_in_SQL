@@ -219,7 +219,7 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 	return getFirstPlayer
   }
 
-  async createAnswers(answer: AnswersPlayer) {
+  async createAnswers(answer: AnswersPlayer[]) {
 	return await this.answersPlayer.save(answer)
   }
 

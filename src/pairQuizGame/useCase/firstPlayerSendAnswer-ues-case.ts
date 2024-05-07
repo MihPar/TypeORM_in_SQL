@@ -42,13 +42,17 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.question.id)
 
 			const isIncludes = question!.correctAnswers.includes(command.inputAnswer)
-				const answer = AnswersPlayer.createAnswer(
+			const answer = AnswersPlayer.createAnswer(
 					question!.id,
 					isIncludes ? AnswerStatusEnum.Correct : AnswerStatusEnum.InCorrect,
 					command.inputAnswer,
 					command.game.firstPlayerProgress,
        		 );
-				await this.pairQuezGameQueryRepository.createAnswers(answer)
+
+			//  console.log(command.game.firstPlayerProgress.answers)
+			const answerPush = command.game.firstPlayerProgress.answers
+			answerPush.push(answer)
+				await this.pairQuezGameQueryRepository.createAnswers(answerPush)
 				await this.pairQuizGameRepository.sendAnswerPlayer(
 					command.game.firstPlayerProgress.id,
 					command.game.id,
