@@ -34,8 +34,8 @@ export class PairQuizGameProgressPlayer {
 	@Column()
 	addedAt: Date
 
-	@Column({nullable: true})
-	answerStatus: AnswerStatusEnum
+	// @Column({nullable: true})
+	// answerStatus: AnswerStatusEnum
 
 	@Column({default: 0})
 	score: number
@@ -49,13 +49,13 @@ export class PairQuizGameProgressPlayer {
 	// @Column({nullable: true})
 	// answerFinishDate: Date
 
-	addAnswer(answer: string) {
-		if(this.question.correctAnswers.includes(answer)) {
-			this.answerStatus = AnswerStatusEnum.Correct
-			this.score = 2
-		} else {
-			this.answerStatus = AnswerStatusEnum.InCorrect
-		}
-		this.addedAt = new Date()
-	}
+	// addAnswer(answer: string) {
+	// 	if(this.question.correctAnswers.includes(answer)) {
+	// 		this.answerStatus = AnswerStatusEnum.Correct
+	// 		this.score = 2
+	// 	} else {
+	// 		this.answerStatus = AnswerStatusEnum.InCorrect
+	// 	}
+	// 	this.addedAt = new Date()
+	// }
 }

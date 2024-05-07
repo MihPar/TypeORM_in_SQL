@@ -86,31 +86,31 @@ export class PairQuizGameRepository {
 	// .sort((a: any, b: any) => {return a.body - b.body});
   }
 
-  async findUnanswerQuestionByUserId(id: string): Promise<PairQuizGame> {
-	return await this.pairQuizGame.findOne({
-		relations: {
-			firstPlayerProgress: true,
-			secondPlayerProgress: true
-		},
-		where: [{firstPlayerProgress: {userId: id}},
-		{
-			firstPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
-			status: GameStatusEnum.Finished
-		},
-		{secondPlayerProgress: {userId: id}},
-		{
-			secondPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
-			status: GameStatusEnum.Finished
-		}
-	],
-	})
-  }
+//   async findUnanswerQuestionByUserId(id: string): Promise<PairQuizGame> {
+// 	return await this.pairQuizGame.findOne({
+// 		relations: {
+// 			firstPlayerProgress: true,
+// 			secondPlayerProgress: true
+// 		},
+// 		where: [{firstPlayerProgress: {userId: id}},
+// 		{
+// 			firstPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
+// 			status: GameStatusEnum.Finished
+// 		},
+// 		{secondPlayerProgress: {userId: id}},
+// 		{
+// 			secondPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
+// 			status: GameStatusEnum.Finished
+// 		}
+// 	],
+// 	})
+//   }
 
   async sendAnswerPlayer(playerId: string, gameId: string, questionId: string, answerStatus: AnswerStatusEnum, addedAt: Date, count: string) {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
 		.createQueryBuilder()
 		.update()
-		.set({gameId, questionId, answerStatus, addedAt, score: +count})
+		.set({gameId, questionId, addedAt, score: +count})
 		.where({id: playerId})
 		.execute()
   }

@@ -224,7 +224,7 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
   }
 
   async setFinishAnswerDateFirstPlayer(gameId: string): Promise<void> {
-	const result = await this.pairQuizGameProgressPlayer.update({gameId}, {answerStatus: AnswerStatusEnum.Correct})
+	const result = await this.pairQuizGameProgressPlayer.update({gameId}, {gameStatus: AnswerStatusEnum.Correct})
   }
 
   async increaseCountFirstPlayer(gameId: string) {
