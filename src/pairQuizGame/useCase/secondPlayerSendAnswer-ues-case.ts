@@ -46,7 +46,7 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 			// console.log("Array1: ", command.game.firstPlayerProgress.answers.push(answer))
 			const answerPush = command.game.firstPlayerProgress.answers
 			answerPush.push(answer)
-			console.log("Array2: ", answerPush)
+			// console.log("Array2: ", answerPush)
 			// await this.pairQuizGameRepository.createNewGame()
 			await this.pairQuezGameQueryRepository.createAnswers(answerPush)
 			await this.pairQuizGameRepository.sendAnswerPlayer(
