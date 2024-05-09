@@ -204,7 +204,7 @@ describe('/blogs', () => {
 		expect(createPair.status).toBe(HttpStatus.OK);
 		gameId = createPair.body.id;
 
-		console.warn(createPair.body)
+		// console.warn(createPair.body)
 
 		expect(createPair.body.id).toEqual(expect.any(String));
 
@@ -252,7 +252,7 @@ describe('/blogs', () => {
       const payload1 = {
 		answer: questionOne.correctAnswers[0]
       };
-	  console.log(payload1, " payload 1")
+	//   console.log(payload1, " payload 1")
 	  const sendAnswer1 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
         .set('Authorization', `Bearer ${tokenByUser}`)
@@ -272,11 +272,11 @@ describe('/blogs', () => {
 	  //expect(questionOne).toEqual(questionGame[0])
       expect(getCurrentGame1.status).toBe(HttpStatus.OK);
 	//   let quest = getCurrentGame1.body.questions.map(item => {item.id})
-	  console.log("id: ", getCurrentGame1.body.questions[0].id)
-	  console.log("id: ", getCurrentGame1.body.questions[1].id)
-	  console.log("id: ", getCurrentGame1.body.questions[2].id)
-	  console.log("id: ", getCurrentGame1.body.questions[3].id)
-	  console.log("id: ", getCurrentGame1.body.questions[4].id)
+	//   console.log("id: ", getCurrentGame1.body.questions[0].id)
+	//   console.log("id: ", getCurrentGame1.body.questions[1].id)
+	//   console.log("id: ", getCurrentGame1.body.questions[2].id)
+	//   console.log("id: ", getCurrentGame1.body.questions[3].id)
+	//   console.log("id: ", getCurrentGame1.body.questions[4].id)
 	  expect((getCurrentGame1.body as GameTypeModel).questions[0]).toEqual(questionGame[0])
 	  // проверка полей игры
 	  expect((getCurrentGame1.body as GameTypeModel).id).toEqual(getGameById.body.id)

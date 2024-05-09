@@ -77,15 +77,15 @@ export class PairQuizGameController {
 	@Body() DTO: GameAnswerDto,
 	@UserIdDecorator() userId: string
 	) {
-		console.error(DTO, " dto in controller")
+		// console.error(DTO, " dto in controller")
 	const activeUserGame: GameTypeModel | null = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId, [GameStatusEnum.Active])
 	// console.log("activeUserGame: ", activeUserGame.firstPlayerProgress.answers)
 		if(!activeUserGame) throw new ForbiddenException('the game is not exist by userId and status')
 
 		const isFirstPlayer = activeUserGame.firstPlayerProgress.player.id === userId
-		isFirstPlayer && console.error("firstplayer")
+		// isFirstPlayer && console.error("firstplayer")
 		const isSecondPlayer = activeUserGame.secondPlayerProgress?.player?.id === userId
-		isSecondPlayer && console.error("secondplayer")
+		// isSecondPlayer && console.error("secondplayer")
 		const firstPlayerAswersCount = activeUserGame.firstPlayerProgress.answers.length
 		const secondPlayerAswersCount = activeUserGame.secondPlayerProgress?.answers?.length
 		if(isFirstPlayer && firstPlayerAswersCount === GAME_QUESTION_COUNT) {throw new ForbiddenException('first player is not answer by all questions')}

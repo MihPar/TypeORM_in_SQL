@@ -30,24 +30,24 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 		protected readonly commandBus: CommandBus
 	) {}
 	async execute(command: FirstPlayerSendAnswerCommand): Promise<any> {
-		console.error(command, "command")
+		// console.log("inputAnswer: ", command.inputAnswer)
 		if(command.activeUserGame.firstPlayerProgress.answers.length > 4) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
 			const currentQuestionIndex: number = command.activeUserGame.firstPlayerProgress.answers.length
 			// console.log("command.game.questionGames: ", command.game.questionGames)
 			// console.log(currentQuestionIndex)
-			console.error(command.activeUserGame.questions, "questions of game to answer by first player")
+			// console.error(command.activeUserGame.questions, "questions of game to answer by first player")
 			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex))
-			console.error(gameQuestion, " found question of the game to answer")
+			// console.error(gameQuestion, " found question of the game to answer")
 			// console.log(typeof currentQuestionIndex)
 			// console.log(typeof command.game.questionGames[0].index)
 			// console.log("gameQuestion: ", gameQuestion)
 			if(!gameQuestion) return null
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.question.id)
-			console.log(question, " found question in db by id of gameQuestion")
+			// console.log(question, " found question in db by id of gameQuestion")
 			const isIncludes = question!.correctAnswers.includes(command.inputAnswer)
-			console.error(isIncludes, question!.correctAnswers.includes(command.inputAnswer), command.inputAnswer)
+			// console.error(isIncludes, question!.correctAnswers.includes(command.inputAnswer), command.inputAnswer)
 			const answer = AnswersPlayer.createAnswer(
 					question!.id,
 					isIncludes ? AnswerStatusEnum.Correct : AnswerStatusEnum.InCorrect,
@@ -55,7 +55,7 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 					command.game.firstPlayerProgress,
        		 );
 
-			//  console.log(command.game.firstPlayerProgress.answers)
+			//  console.log("answer: ", answer.answer)
 			const answerPush = command.game.firstPlayerProgress.answers
 			answerPush.push(answer)
 				await this.pairQuezGameQueryRepository.createAnswers(answerPush)

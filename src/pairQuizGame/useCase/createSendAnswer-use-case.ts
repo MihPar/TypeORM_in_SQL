@@ -25,6 +25,7 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
     protected readonly commandBus: CommandBus,
   ) {}
   async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType> {
+	// console.log("DTO: ", commandAnswer.DTO)
     const game: PairQuizGame =
       await this.pairQuezGameQueryRepository.getUnfinishedGame(
 		commandAnswer.userId
