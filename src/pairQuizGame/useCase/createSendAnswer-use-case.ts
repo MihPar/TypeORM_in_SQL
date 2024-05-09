@@ -1,5 +1,4 @@
 import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { CreatePairQuizGameDto } from "../dto/createPairQuizGame.dto";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { NotFoundException } from "@nestjs/common";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
@@ -8,10 +7,11 @@ import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 import { SecondPlayerSendAnswerCommand } from "./secondPlayerSendAnswer-ues-case";
+import { GameAnswerDto } from "../dto/createPairQuizGame.dto";
 
 export class SendAnswerCommand {
 	constructor(
-		public DTO: CreatePairQuizGameDto,
+		public DTO: GameAnswerDto,
 		public userId: string
 	) {}
 }

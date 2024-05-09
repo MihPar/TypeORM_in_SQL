@@ -4,7 +4,7 @@ import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decor
 import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOrConnectGameCommand } from '../useCase/createOrConnection-use-case';
-import { CreatePairQuizGameDto } from '../dto/createPairQuizGame.dto';
+import { GameAnswerDto } from '../dto/createPairQuizGame.dto';
 import { AnswerType, GameTypeModel } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
@@ -74,15 +74,18 @@ export class PairQuizGameController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async sendAnswer(
-	@Body() DTO: CreatePairQuizGameDto,
+	@Body() DTO: GameAnswerDto,
 	@UserIdDecorator() userId: string
 	) {
+		console.error(DTO, " dto in controller")
 	const activeUserGame: GameTypeModel | null = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId, [GameStatusEnum.Active])
 	// console.log("activeUserGame: ", activeUserGame.firstPlayerProgress.answers)
 		if(!activeUserGame) throw new ForbiddenException('the game is not exist by userId and status')
 
 		const isFirstPlayer = activeUserGame.firstPlayerProgress.player.id === userId
+		isFirstPlayer && console.error("firstplayer")
 		const isSecondPlayer = activeUserGame.secondPlayerProgress?.player?.id === userId
+		isSecondPlayer && console.error("secondplayer")
 		const firstPlayerAswersCount = activeUserGame.firstPlayerProgress.answers.length
 		const secondPlayerAswersCount = activeUserGame.secondPlayerProgress?.answers?.length
 		if(isFirstPlayer && firstPlayerAswersCount === GAME_QUESTION_COUNT) {throw new ForbiddenException('first player is not answer by all questions')}
