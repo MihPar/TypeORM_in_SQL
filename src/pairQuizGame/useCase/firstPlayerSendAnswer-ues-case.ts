@@ -15,6 +15,7 @@ import { log } from "console";
 export class FirstPlayerSendAnswerCommand {
 	constructor(
 		public game: PairQuizGame,
+		public activeUserGame: GameTypeModel,
 		public inputAnswer: string
 	) {}
 }
@@ -30,13 +31,13 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 	) {}
 	async execute(command: FirstPlayerSendAnswerCommand): Promise<any> {
 		console.error(command, "command")
-		if(command.game.firstPlayerProgress.answers.length > 4) {
+		if(command.activeUserGame.firstPlayerProgress.answers.length > 4) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
-			const currentQuestionIndex: number = command.game.firstPlayerProgress.answers.length
+			const currentQuestionIndex: number = command.activeUserGame.firstPlayerProgress.answers.length
 			// console.log("command.game.questionGames: ", command.game.questionGames)
 			// console.log(currentQuestionIndex)
-			console.error(command.game.questionGames, "questions of game to answer by first player")
+			console.error(command.activeUserGame.questions, "questions of game to answer by first player")
 			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex))
 			console.error(gameQuestion, " found question of the game to answer")
 			// console.log(typeof currentQuestionIndex)

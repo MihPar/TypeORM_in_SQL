@@ -12,7 +12,8 @@ import { GameAnswerDto } from "../dto/createPairQuizGame.dto";
 export class SendAnswerCommand {
 	constructor(
 		public DTO: GameAnswerDto,
-		public userId: string
+		public userId: string,
+		public activeUserGame: GameTypeModel
 	) {}
 }
 
@@ -29,21 +30,23 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 		commandAnswer.userId
       );
 	//   console.log('answers: ', game.firstPlayerProgress.answers)
-    if (!game || game.status !== 'Active')
+    if (!commandAnswer.activeUserGame || commandAnswer.activeUserGame.status !== 'Active')
       throw new NotFoundException('No active pair');
 
-	if (game.firstPlayerProgress.user.id === commandAnswer.userId) {
+	if (commandAnswer.activeUserGame.firstPlayerProgress.player.id === commandAnswer.userId) {
       const command = new FirstPlayerSendAnswerCommand(
-        game,
+		game,
+        commandAnswer.activeUserGame,
 		commandAnswer.DTO.answer,
       );
 	const result = await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
 	// console.log("firstPlayer: ", result)
 
       return result
-    } else if (game.secondPlayerProgress.user.id === commandAnswer.userId) {
+    } else if (commandAnswer.activeUserGame.secondPlayerProgress.player.id === commandAnswer.userId) {
       const command = new SecondPlayerSendAnswerCommand(
 		game,
+		commandAnswer.activeUserGame,
         commandAnswer.DTO.answer,)
 		const result = await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
 		// console.log("secondPlayer: ", result)

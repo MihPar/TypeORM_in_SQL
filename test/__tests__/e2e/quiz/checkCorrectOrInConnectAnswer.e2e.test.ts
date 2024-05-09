@@ -56,6 +56,7 @@ describe('/blogs', () => {
 	let game2: any
 	let gameSecondPlayer: any
 	let questionGame: Array<{id: string, body: string}>
+	let gameConnectPair: PairQuizGame
 
 	describe('Quiz question', () => {
     it('create first player', async () => {
@@ -210,6 +211,8 @@ describe('/blogs', () => {
 		const connectPair = await request(server)
 		  .post('/pair-game-quiz/pairs/connection')
 		  .set('Authorization', `Bearer ${tokenByUser2}`);
+
+		gameConnectPair = connectPair.body
 		questionGame = connectPair.body.questions
 		expect(questionGame).toHaveLength(5)
 		expect(connectPair.status).toBe(HttpStatus.OK);
@@ -255,7 +258,12 @@ describe('/blogs', () => {
         .set('Authorization', `Bearer ${tokenByUser}`)
         .send(payload1);
 
-		
+		const getGameById = await request(server)
+		  .get(`/pair-game-quiz/pairs/${gameId}`)
+		  .set('Authorization', `Bearer ${tokenByUser}`);
+  
+		expect(getGameById.status).toBe(HttpStatus.OK);
+
 
 		const getCurrentGame1 = await request(server)
         .get('/pair-game-quiz/pairs/my-current')
@@ -263,8 +271,16 @@ describe('/blogs', () => {
 
 	  //expect(questionOne).toEqual(questionGame[0])
       expect(getCurrentGame1.status).toBe(HttpStatus.OK);
-	  expect((getCurrentGame1.body as GameTypeModel).questions).toEqual(questionGame)
+	//   let quest = getCurrentGame1.body.questions.map(item => {item.id})
+	  console.log("id: ", getCurrentGame1.body.questions[0].id)
+	  console.log("id: ", getCurrentGame1.body.questions[1].id)
+	  console.log("id: ", getCurrentGame1.body.questions[2].id)
+	  console.log("id: ", getCurrentGame1.body.questions[3].id)
+	  console.log("id: ", getCurrentGame1.body.questions[4].id)
+	  expect((getCurrentGame1.body as GameTypeModel).questions[0]).toEqual(questionGame[0])
 	  // проверка полей игры
+	  expect((getCurrentGame1.body as GameTypeModel).id).toEqual(getGameById.body.id)
+	  expect((getCurrentGame1.body as GameTypeModel).firstPlayerProgress).toEqual(getGameById.body.firstPlayerProgress)
 	  //expect((getCurrentGame1.body as GameTypeModel)).toEqual({})
 
 	  expect(sendAnswer1.status).toBe(HttpStatus.OK);

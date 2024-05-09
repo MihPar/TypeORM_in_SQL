@@ -14,6 +14,7 @@ import { GameTypeModel } from '../type/typeViewModel';
 export class SecondPlayerSendAnswerCommand {
 	constructor(
 		public game: PairQuizGame,
+		public activeUserGame: GameTypeModel,
 		public inputAnswer: string
 	) {}
 }
@@ -28,10 +29,10 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 		protected readonly commandBus: CommandBus
 	) {}
 	async execute(command: SecondPlayerSendAnswerCommand): Promise<any> {
-		if(command.game.secondPlayerProgress.answers.length > 4) {
+		if(command.activeUserGame.secondPlayerProgress.answers.length > 4) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
-			const currentQuestionIndex: number = command.game.secondPlayerProgress.answers.length
+			const currentQuestionIndex: number = command.activeUserGame.secondPlayerProgress.answers.length
 			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index == currentQuestionIndex)
 			if(!gameQuestion) return null
 			const question = await this.questionQueryRepository.getQuestionById(gameQuestion?.question.id)
