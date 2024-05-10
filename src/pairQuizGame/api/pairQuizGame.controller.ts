@@ -85,7 +85,7 @@ export class PairQuizGameController {
 	const activeUserGame: GameTypeModel | null = await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId, [GameStatusEnum.Active])
 	// console.log("activeUserGame: ", activeUserGame.firstPlayerProgress.answers)
 		if(!activeUserGame) throw new ForbiddenException('the game is not exist by userId and status')
-
+		console.error(activeUserGame, " activeUserGAem in sendAnswer")
 		const isFirstPlayer = activeUserGame.firstPlayerProgress.player.id === userId
 		// isFirstPlayer && console.error("firstplayer")
 		const isSecondPlayer = activeUserGame.secondPlayerProgress?.player?.id === userId
