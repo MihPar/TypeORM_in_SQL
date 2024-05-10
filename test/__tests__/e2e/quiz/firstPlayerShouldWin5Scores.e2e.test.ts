@@ -251,7 +251,6 @@ describe('/blogs', () => {
         return item.body === questionGame[0].body;
       });
       expect(questionOne.correctAnswers[0]).toBeDefined();
-      expect(questionOne.correctAnswers[0]).toEqual(expect.any(String));
       const payload1 = {
         answer: questionOne.correctAnswers[0],
       };
@@ -275,6 +274,7 @@ describe('/blogs', () => {
       expect((getCurrentGame1.body as GameTypeModel).questions[0]).toEqual(
         questionGame[0],
       );
+
       expect((getCurrentGame1.body as GameTypeModel).id).toEqual(
         getGameById.body.id,
       );

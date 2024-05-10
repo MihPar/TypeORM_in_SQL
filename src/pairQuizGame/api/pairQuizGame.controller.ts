@@ -9,7 +9,6 @@ import { AnswerType, GameTypeModel } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case';
-import { PairQuizGame } from '../domain/entity.pairQuezGame';
 import { GAME_QUESTION_COUNT } from '../domain/constants';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
 
@@ -31,7 +30,8 @@ export class PairQuizGameController {
 		userId, [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	)
 	// [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
-	// console.log("findUnfinishedUserGame: ", findUnfinishedUserGame)
+	console.log("findUnfinishedUserGame1: ", findUnfinishedUserGame.firstPlayerProgress.answers)
+	console.log("findUnfinishedUserGame2: ", findUnfinishedUserGame.secondPlayerProgress.answers)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
 	return findUnfinishedUserGame
   }
