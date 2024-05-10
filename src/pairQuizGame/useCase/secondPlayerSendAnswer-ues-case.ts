@@ -56,7 +56,7 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 					answer.questionId,
 					answer.answerStatus,
 					answer.addedAt,
-					isIncludes ? "+1" : "+0",
+					isIncludes ? "1" : "0",
 					)
 			const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game.id, command.game, command.game.questionGames.map((item) => {return item.question}))
 			await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
