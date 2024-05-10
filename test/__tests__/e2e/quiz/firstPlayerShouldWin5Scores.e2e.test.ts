@@ -511,6 +511,14 @@ describe('/blogs', () => {
 			// console.log("getGameById2: ", getGameById.body.secondPlayerProgress)
 		  });
 
+	it("get my current game by userOne", async() => {
+			const myCurrentGame = await request(server)
+				.get(`/pair-game-quiz/pairs/my-current`)
+				.set('Authorization', `Bearer ${tokenByUser}`);
+				
+				expect(myCurrentGame.status).toBe(HttpStatus.OK)
+		})
+
 	it('get active game by id by userOne', async () => {
 			const getGameById = await request(server)
 			  .get(`/pair-game-quiz/pairs/${gameId}`)
@@ -520,5 +528,13 @@ describe('/blogs', () => {
 			// console.log("getGameById1: ", getGameById.body.firstPlayerProgress)
 			// console.log("getGameById2: ", getGameById.body.secondPlayerProgress)
 		  });
+	
+	it("get my current game by userTwo", async() => {
+		const myCurrentGame = await request(server)
+			.get(`/pair-game-quiz/pairs/my-current`)
+			.set('Authorization', `Bearer ${tokenByUser2}`);
+			
+			expect(myCurrentGame.status).toBe(HttpStatus.OK)
+	})
   });
 });
