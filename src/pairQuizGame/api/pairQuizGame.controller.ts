@@ -63,7 +63,7 @@ export class PairQuizGameController {
 		if(getGameById) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
-	if(!createOrConnection) throw new ForbiddenException('403')
+	// if(!createOrConnection) throw new ForbiddenException('403')
 	// const updatedGame = await this.pairQuezGameQueryRepository.getRawGameById(createOrConnection.id)
 	// return PairQuizGame.getViewModel(updatedGame)
 		// console.log("createOrConnection: ", createOrConnection)
