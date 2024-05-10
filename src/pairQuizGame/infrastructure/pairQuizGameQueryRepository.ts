@@ -52,6 +52,7 @@ export class PairQuezGameQueryRepository {
 		})
 
 		if(!currentUnFinishedGame) return null
+		console.error(currentUnFinishedGame, " currentUbfinishedGame in getCurrentUnFinGame Repo")
 
 	const currentUnFinishedGameFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
 				relations: {user: {progressPlayer: true}, answers: {question: true}},
@@ -66,6 +67,7 @@ export class PairQuezGameQueryRepository {
 				order: {answers: {addedAt: "ASC"}}
 			}) : null
 
+			console.error(currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer, " players progresses")
 	return PairQuizGame.getViewModels(currentUnFinishedGame, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 
