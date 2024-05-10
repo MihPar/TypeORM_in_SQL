@@ -28,8 +28,8 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 		protected readonly usersQueryRepository: UsersQueryRepository,
 	) {}
 	async execute(command: CreateOrConnectGameCommand): Promise<GameTypeModel> {
-		const foundGameByUserId = await this.pairQuizGameRepository.foundGameByUserId(command.userId)
-		if(foundGameByUserId) throw new ForbiddenException('403')
+		// const foundGameByUserId = await this.pairQuizGameRepository.foundGameByUserId(command.userId)
+		// if(foundGameByUserId) throw new ForbiddenException('403')
 		const foundQuizGame = await this.pairQuizGameRepository.foundGame(GameStatusEnum.PendingSecondPlayer)
 		const getLoginOfUser = await this.usersQueryRepository.findUserById(command.userId)
 		const firstLogin = getLoginOfUser.login

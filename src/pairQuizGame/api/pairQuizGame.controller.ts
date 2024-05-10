@@ -11,11 +11,13 @@ import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case';
 import { PairQuizGame } from '../domain/entity.pairQuezGame';
 import { GAME_QUESTION_COUNT } from '../domain/constants';
+import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
 
 @Controller('pair-game-quiz/pairs')
 export class PairQuizGameController {
   constructor(
 	protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
+	protected readonly pairQuizGameRepository: PairQuizGameRepository,
 	protected readonly commandBus: CommandBus
 	) {}
   
@@ -59,8 +61,10 @@ export class PairQuizGameController {
 	@UserDecorator() user: User
   ): Promise<GameTypeModel> {
 	// console.log("start")
-	const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId)
-		if(getGameById) throw new ForbiddenException('403')
+	// const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId)
+	// 	if(getGameById) throw new ForbiddenException('403')
+	const foundGameByUserId = await this.pairQuizGameRepository.foundGameByUserId(userId)
+		if(foundGameByUserId) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
 	// if(!createOrConnection) throw new ForbiddenException('403')
