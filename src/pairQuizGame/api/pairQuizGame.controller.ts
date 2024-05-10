@@ -60,7 +60,7 @@ export class PairQuizGameController {
   ): Promise<GameTypeModel> {
 	// console.log("start")
 	const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId)
-		if(getGameById) throw new ForbiddenException('403')
+		if(!getGameById) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
 	// if(!createOrConnection) throw new ForbiddenException('403')
@@ -94,7 +94,7 @@ export class PairQuizGameController {
 
 	const command = new SendAnswerCommand(DTO, userId, activeUserGame)
 	const createSendAnswer = await this.commandBus.execute<SendAnswerCommand | AnswerType>(command)
-	// if(!createSendAnswer) throw new ForbiddenException('the answer is not created')
+	if(!createSendAnswer) throw new ForbiddenException('the answer is not created')
 		// console.log("createSendAnswer: ", createSendAnswer)
 	return createSendAnswer
   }
