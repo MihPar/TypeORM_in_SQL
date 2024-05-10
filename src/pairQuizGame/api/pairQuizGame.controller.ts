@@ -60,7 +60,7 @@ export class PairQuizGameController {
   ): Promise<GameTypeModel> {
 	// console.log("start")
 	const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId)
-		if((getGameById.firstPlayerProgress.user.id || getGameById.secondPlayerProgress.user.id) === userId) throw new ForbiddenException('403')
+		if(getGameById) throw new ForbiddenException('403')
 	const command = new CreateOrConnectGameCommand(userId, user)
 	const createOrConnection = await this.commandBus.execute<CreateOrConnectGameCommand | GameTypeModel>(command)
 	// if(!createOrConnection) throw new ForbiddenException('403')

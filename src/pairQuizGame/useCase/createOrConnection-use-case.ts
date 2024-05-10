@@ -29,7 +29,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 	) {}
 	async execute(command: CreateOrConnectGameCommand): Promise<GameTypeModel> {
 		const foundGameByUserId = await this.pairQuizGameRepository.foundGameByUserId(command.userId)
-		if(foundGameByUserId) throw new HttpException("the game is already exists", 403)
+		if(foundGameByUserId) throw new HttpException("current user is already participating in active pair", 403)
 		const foundQuizGame = await this.pairQuizGameRepository.foundGame(GameStatusEnum.PendingSecondPlayer)
 		const getLoginOfUser = await this.usersQueryRepository.findUserById(command.userId)
 		const firstLogin = getLoginOfUser.login
