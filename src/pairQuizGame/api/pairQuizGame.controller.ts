@@ -30,8 +30,8 @@ export class PairQuizGameController {
 		userId, [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
 	)
 	// [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
-	 console.log("findUnfinishedUserGame1: ", findUnfinishedUserGame?.firstPlayerProgress?.answers)
-	console.log("findUnfinishedUserGame2: ", findUnfinishedUserGame?.secondPlayerProgress?.answers)
+	//  console.log("findUnfinishedUserGame1: ", findUnfinishedUserGame?.firstPlayerProgress?.answers)
+	// console.log("findUnfinishedUserGame2: ", findUnfinishedUserGame?.secondPlayerProgress?.answers)
 	if(!findUnfinishedUserGame) throw new NotFoundException('404')
 	return findUnfinishedUserGame
   }

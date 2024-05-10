@@ -100,14 +100,14 @@ export class PairQuizGame {
 			// console.log("getGameFirstPlayer: ", getGameFirstPlayer.answers.map(item => AnswersPlayer.getViewModelForGame(item)))
 			return {
 				id: game.id,
-				firstPlayerProgress: {
+				firstPlayerProgress: getGameFirstPlayer ? {
 				  answers: getGameFirstPlayer.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 				  player: {
 					id: getGameFirstPlayer.user.id,
 					login: getGameFirstPlayer.user.login
 				  },
 				  score: getGameFirstPlayer.score
-				},
+				} : null,
 				secondPlayerProgress: getGameSecondPlayer ?  {
 					answers: getGameSecondPlayer.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 					player: {
