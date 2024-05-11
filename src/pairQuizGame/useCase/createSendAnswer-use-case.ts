@@ -51,9 +51,7 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
         commandAnswer.DTO.answer,)
 		const result = await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
 		// console.log("secondPlayer: ", result)
-
 		return result
-
     }
   }
 }

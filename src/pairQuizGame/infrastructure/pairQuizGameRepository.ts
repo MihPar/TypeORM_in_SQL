@@ -110,7 +110,7 @@ export class PairQuizGameRepository {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
 		.createQueryBuilder()
 		.update()
-		.set({score: () => Boolean(count) ? "score + 1": "score + 0"})
+		.set({score: () => Boolean(count) ? "score + 1" : "score + 0"})
 		.where({id: playerId})
 		.execute()
   }
