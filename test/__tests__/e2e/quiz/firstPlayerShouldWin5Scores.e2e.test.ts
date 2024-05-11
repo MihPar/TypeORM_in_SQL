@@ -752,7 +752,7 @@ describe('/blogs', () => {
 	  .set('Authorization', `Bearer ${tokenByUser2}`);
 	  expect(getGameById.status).toBe(HttpStatus.OK);
 
-	  expect((getCurrentGameUserTwo.body as GameTypeModel).firstPlayerProgress.score.toString()).toBe("4")
+    expect((getCurrentGameUserTwo.body as GameTypeModel).firstPlayerProgress.score.toString()).toBe("4")
 	expect((getCurrentGameUserTwo.body as GameTypeModel).secondPlayerProgress.score.toString()).toBe("4")
 	expect((getGameById.body as GameTypeModel).firstPlayerProgress.score.toString()).toBe("4")
 	expect((getGameById.body as GameTypeModel).secondPlayerProgress.score.toString()).toBe("4")
@@ -764,8 +764,8 @@ describe('/blogs', () => {
         .set('Authorization', `Bearer ${tokenByUser}`);
 
       expect(getGameById.status).toBe(HttpStatus.OK);
-      // console.log("getGameById1: ", getGameById.body.firstPlayerProgress)
-      // console.log("getGameById2: ", getGameById.body.secondPlayerProgress)
+      console.log("getGameById1: ", getGameById.body.firstPlayerProgress)
+      console.log("getGameById2: ", getGameById.body.secondPlayerProgress)
     });
 
     it('get my current game by userOne', async () => {
@@ -774,6 +774,8 @@ describe('/blogs', () => {
         .set('Authorization', `Bearer ${tokenByUser}`);
 
       expect(myCurrentGame.status).toBe(HttpStatus.NOT_FOUND);
+	//   console.log("myCurrentGame1: ", (myCurrentGame.body as GameTypeModel).firstPlayerProgress)
+	//   console.log("myCurrentGame2: ", (myCurrentGame.body as GameTypeModel).secondPlayerProgress)
     });
 
     it('get active game by id by userOne', async () => {

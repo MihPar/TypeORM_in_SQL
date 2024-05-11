@@ -3,10 +3,11 @@ import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { GameTypeModel } from "../type/typeViewModel";
+import { GameStatusEnum } from "../enum/enumPendingPlayer";
 
 export class ChangeStatusToFinishedCommand {
 	constructor(
-		public gameId: string,
+		// public gameId: string,
 		public game: PairQuizGame,
 		public gameQuestions: Question[]
 	) {}
@@ -18,21 +19,24 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository
 	) {}
 	async execute(command: ChangeStatusToFinishedCommand): Promise<any> {
-		const firstPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId, command.game.firstPlayerProgress.user.id)
-		const secondPlayer = await this.pairQuezGameQueryRepository.getPlayerByGameIdAndUserId(command.gameId, command.game.secondPlayerProgress.user.id)
+		const firstPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.firstPlayerProgress.user.id, [GameStatusEnum.Active])
+		const secondPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.secondPlayerProgress.user.id, [GameStatusEnum.Active])
+
+		// console.log("firstPlayer: ", firstPlayer.firstPlayerProgress.answers)
+		// console.log("secondPlayer: ", secondPlayer.secondPlayerProgress.answers)
 
 		if(
-			firstPlayer.answers.length === command.gameQuestions.length &&
-			secondPlayer.answers.length === command.gameQuestions.length
+			firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length &&
+			secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length
 		) {
-			const firstPlayerLastAnswer = firstPlayer.answers[command.gameQuestions.length - 1]
-			const secondPlayerLastAnswer = secondPlayer.answers[command.gameQuestions.length - 1]
+			const firstPlayerLastAnswer = firstPlayer.firstPlayerProgress.answers[command.gameQuestions.length - 1]
+			const secondPlayerLastAnswer = secondPlayer.secondPlayerProgress.answers[command.gameQuestions.length - 1]
 			if (firstPlayerLastAnswer.addedAt < secondPlayerLastAnswer.addedAt) {
-				await this.pairQuezGameQueryRepository.addBonusFirstPalyer(command.gameId)
+				await this.pairQuezGameQueryRepository.addBonusFirstPalyer(command.game.id)
 			} else if (firstPlayerLastAnswer.addedAt > secondPlayerLastAnswer.addedAt) {
-				await this.pairQuezGameQueryRepository.addBonusSecondPalyer(command.gameId)
+				await this.pairQuezGameQueryRepository.addBonusSecondPalyer(command.game.id)
 			}
-			return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.gameId)
+			return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.game.id)
 		}
 	}
 }

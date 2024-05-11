@@ -63,7 +63,7 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 					command.game.firstPlayerProgress.id,
 					isIncludes ? true : false,
 					)
-				const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game.id, command.game, command.game.questionGames.map((item) => {return item.question}))
+				const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game, command.game.questionGames.map((item) => {return item.question}))
 				await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
 
 					return {
