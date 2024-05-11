@@ -106,7 +106,7 @@ export class PairQuizGameRepository {
 // 	})
 //   }
 
-  async sendAnswerPlayer(playerId: string, count: string) {
+  async sendAnswerPlayer(playerId: string, count: boolean) {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
 		.createQueryBuilder()
 		.update()

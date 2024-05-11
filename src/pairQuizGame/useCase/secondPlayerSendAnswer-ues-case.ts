@@ -52,7 +52,7 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 			await this.pairQuezGameQueryRepository.createAnswers(answerPush)
 			await this.pairQuizGameRepository.sendAnswerPlayer(
 					command.game.secondPlayerProgress.id,
-					isIncludes ? "+1" : "+0",
+					isIncludes ? true : false,
 					)
 			const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game.id, command.game, command.game.questionGames.map((item) => {return item.question}))
 			await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
