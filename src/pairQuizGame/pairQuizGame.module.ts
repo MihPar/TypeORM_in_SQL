@@ -24,6 +24,7 @@ import { SendAnswerUseCase } from './useCase/createSendAnswer-use-case';
 import { QuestionQueryRepository } from '../question/infrastructury/questionQueryRepository';
 import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
 import { QuestionGame } from './domain/entity.questionGame';
+import { GetCurrectUserStatisticUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -44,6 +45,7 @@ const useCase = [
   ChangeStatusToFinishedUseCase,
   SendAnswerUseCase,
 //   ChangeAnswerStatusPlayerUseCase,
+  GetCurrectUserStatisticUseCase
 ];
 @Module({
   imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question, QuestionGame]), CqrsModule],

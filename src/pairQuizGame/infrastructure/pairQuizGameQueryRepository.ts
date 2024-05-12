@@ -180,17 +180,17 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 	return getGame
   }
 
-  async getPlayerByGameIdAndUserId(gameId: string, userId?: string): Promise<PairQuizGameProgressPlayer | null> {
-	const getFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
-		relations: {
-			answers: true
-		},
-		where: {gameId, userId}
-	})
+//   async getPlayerByGameIdAndUserId(gameId: string, userId?: string): Promise<PairQuizGameProgressPlayer | null> {
+// 	const getFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
+// 		relations: {
+// 			answers: true
+// 		},
+// 		where: {gameId, userId}
+// 	})
 	
-	if(!getFirstPlayer) return null
-	return getFirstPlayer
-  }
+// 	if(!getFirstPlayer) return null
+// 	return getFirstPlayer
+//   }
 
   async createAnswers(answer: AnswersPlayer[]) {
 	return await this.answersPlayer.save(answer)
@@ -254,4 +254,6 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 		  };
 		  return result;
   }
+
+//   async getCurrectUserStatistic(userId: string) {}
 }

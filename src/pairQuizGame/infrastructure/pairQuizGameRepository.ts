@@ -8,6 +8,7 @@ import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
 import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 import { QuestionGame } from '../domain/entity.questionGame';
+import { PlayerStatisticsView } from '../type/typeViewModel';
 
 @Injectable()
 export class PairQuizGameRepository {
@@ -86,25 +87,52 @@ export class PairQuizGameRepository {
 	// .sort((a: any, b: any) => {return a.body - b.body});
   }
 
-//   async findUnanswerQuestionByUserId(id: string): Promise<PairQuizGame> {
-// 	return await this.pairQuizGame.findOne({
-// 		relations: {
-// 			firstPlayerProgress: true,
-// 			secondPlayerProgress: true
-// 		},
-// 		where: [{firstPlayerProgress: {userId: id}},
-// 		{
-// 			firstPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
-// 			status: GameStatusEnum.Finished
-// 		},
-// 		{secondPlayerProgress: {userId: id}},
-// 		{
-// 			secondPlayerProgress: {answerStatus: AnswerStatusEnum.Correct},
-// 			status: GameStatusEnum.Finished
-// 		}
-// 	],
-// 	})
-//   }
+  private async mapPlayerStatisticForView(
+    player: PairQuizGameProgressPlayer,
+  ): Promise<PlayerStatisticsView> {
+    const playerSumScores = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .select('SUM(score)', 'sumScore')
+      .where('id = :id', { id: player.id })
+      .getRawOne()
+      .then((result) => parseInt(result.sumScore));
+
+    const playerTotalGameCount = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .where('id = :id', { id: player.id })
+      .getCount();
+
+    const playerAvgScores =
+      Math.ceil((playerSumScores / playerTotalGameCount) * 100) / 100;
+    // умножить на 100, + округлнение в большую стороную +
+
+    const playerWinCount = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .where('id = :id', { id: player.id })
+      .andWhere('userStatus = :status', { status: 'Winner' })
+      .getCount();
+
+    const playerLossCount = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .where('id = :id', { id: player.id })
+      .andWhere('userStatus = :status', { status: 'Loser' })
+      .getCount();
+
+    const playerDrawsCount = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .where('id = :id', { id: player.id })
+      .andWhere('userStatus = :status', { status: 'Draw' })
+      .getCount();
+
+    return {
+      sumScore: playerSumScores,
+      avgScores: playerAvgScores,
+      gamesCount: playerTotalGameCount,
+      winsCount: playerWinCount,
+      lossesCount: playerLossCount,
+      drawsCount: playerDrawsCount,
+    };
+}
 
   async sendAnswerPlayer(playerId: string, count: boolean) {
 	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
@@ -117,5 +145,14 @@ export class PairQuizGameRepository {
 
   async createQuestions(createQuestions: QuestionGame[]) {
 	return await this.questionGame.save(createQuestions)
+  }
+
+  async getStatisticOfUser(userId: string): Promise<PlayerStatisticsView | null> {
+	const getUsersStatistic = await this.pairQuizGameProgressPlayer.findOne({
+		where: {id: userId}
+	})
+	if(!getUsersStatistic) return null
+	const statistic = await this.mapPlayerStatisticForView(getUsersStatistic);
+	return statistic
   }
 }

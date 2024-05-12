@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
 import { AnswersPlayer } from "./entity.answersPlayer";
@@ -34,8 +34,9 @@ export class PairQuizGameProgressPlayer {
 	@Column()
 	addedAt: Date
 
-	// @Column({nullable: true})
-	// answerStatus: AnswerStatusEnum
+	@Column({default: null})
+	// @Index()
+  	userStatus: string;
 
 	@Column({default: 0})
 	score: number

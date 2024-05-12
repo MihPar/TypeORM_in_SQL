@@ -5,12 +5,13 @@ import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQuery
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOrConnectGameCommand } from '../useCase/createOrConnection-use-case';
 import { GameAnswerDto } from '../dto/createPairQuizGame.dto';
-import { AnswerType, GameTypeModel } from '../type/typeViewModel';
+import { AnswerType, GameTypeModel, PlayerStatisticsView } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case';
 import { GAME_QUESTION_COUNT } from '../domain/constants';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
+import { GetCurrectUserStatisticCommand } from '../useCase/changeAnswerStatusFirstPlayer-use-case';
 
 @Controller('pair-game-quiz/pairs')
 export class PairQuizGameController {
@@ -24,24 +25,34 @@ export class PairQuizGameController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async getAllGameByUserId(
-	@UserIdDecorator() userId: string,
-	@Query() 
-		query: {
-			sortBy: string
-			sortDirection: string
-			pageNumber: string
-			pageSize: string
-		}
-) {
-	const findGameByUser = await this.pairQuezGameQueryRepository.findAllGames(
-		query.pageNumber || '1',
-		query.pageSize || '10',
-		query.sortBy || 'pairCreatedDate',
-		query.sortDirection || 'desc',
-		userId
-	)
-	return findGameByUser
-}
+    @UserIdDecorator() userId: string,
+    @Query()
+    query: {
+      sortBy: string;
+      sortDirection: string;
+      pageNumber: string;
+      pageSize: string;
+    },
+  ) {
+    const findGameByUser = await this.pairQuezGameQueryRepository.findAllGames(
+      query.pageNumber || '1',
+      query.pageSize || '10',
+      query.sortBy || 'pairCreatedDate',
+      query.sortDirection || 'desc',
+      userId,
+    );
+    return findGameByUser;
+  }
+
+  @Get('my-statistic')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(BearerTokenPairQuizGame)
+  async getCurrectUserStatistic(@UserIdDecorator() userId: string) {
+    const command = new GetCurrectUserStatisticCommand(userId);
+    const getStatisticOfCurrectUser = await this.commandBus
+      .execute<GetCurrectUserStatisticCommand | PlayerStatisticsView | null>(command);
+    return getStatisticOfCurrectUser;
+  }
 
   @Get('my-current')
   @HttpCode(HttpStatus.OK)
