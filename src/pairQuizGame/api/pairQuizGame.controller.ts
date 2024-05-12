@@ -51,6 +51,7 @@ export class PairQuizGameController {
     const command = new GetCurrectUserStatisticCommand(userId);
     const getStatisticOfCurrectUser = await this.commandBus
       .execute<GetCurrectUserStatisticCommand | PlayerStatisticsView | null>(command);
+	//   console.log("getStatisticOfCurrectUser: ", getStatisticOfCurrectUser)
     return getStatisticOfCurrectUser;
   }
 

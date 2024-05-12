@@ -246,7 +246,7 @@ describe('/blogs', () => {
 			.get(`/pair-game-quiz/pairs/my-statistic`)
 			.set(`Authorization`, `Bearer ${tokenByUser}`)
 
-			console.log("getAllGames: ", getStatisticGame.body)
+			// console.log("getAllGames: ", getStatisticGame.body)
 
 			expect(getStatisticGame.status).toBe(HttpStatus.OK)
 			// expect((getAllGames.body as PaginationType<GameTypeModel>).items.map(item => item.firstPlayerProgress)).toEqual([game.firstPlayerProgress])
