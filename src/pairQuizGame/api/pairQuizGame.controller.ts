@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, HttpStatus, HttpCode, UseGuards, NotFoundException, ForbiddenException, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, HttpStatus, HttpCode, UseGuards, NotFoundException, ForbiddenException, ParseUUIDPipe, Query } from '@nestjs/common';
 import { BearerTokenPairQuizGame } from '../guards/bearerTokenPairQuizGame';
 import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
 import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
@@ -19,6 +19,29 @@ export class PairQuizGameController {
     protected readonly pairQuizGameRepository: PairQuizGameRepository,
     protected readonly commandBus: CommandBus,
   ) {}
+
+  @Get('my')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(BearerTokenPairQuizGame)
+  async getAllGameByUserId(
+	@UserIdDecorator() userId: string,
+	@Query() 
+		query: {
+			sortBy: string
+			sortDirection: string
+			pageNumber: string
+			pageSize: string
+		}
+) {
+	const findGameByUser = await this.pairQuezGameQueryRepository.findAllGames(
+		query.pageNumber || '1',
+		query.pageSize || '10',
+		query.sortBy || 'pairCreatedDate',
+		query.sortDirection || 'desc',
+		userId
+	)
+	return findGameByUser
+}
 
   @Get('my-current')
   @HttpCode(HttpStatus.OK)

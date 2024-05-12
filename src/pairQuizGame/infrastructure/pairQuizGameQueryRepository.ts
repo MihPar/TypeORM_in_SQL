@@ -10,6 +10,7 @@ import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
 import { QuestionGame } from "../domain/entity.questionGame";
+import { PaginationType } from "../../types/pagination.types";
 
 
 @Injectable()
@@ -159,36 +160,6 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 		order: {questionGames: { index: 'ASC' }}
 	})
 	if (!getGame) return null;
-	// console.log("getGame: ", getGame)
-
-//   const currentUnFinishedGameFirstPlayer =
-//     await this.pairQuizGameProgressPlayer.findOne({
-//       relations: {
-//         user: { progressPlayer: true },
-//         answers: { progress: true },
-//       },
-//       where: { gameId: getGame.id, id: getGame.firstPlayerProgress.id },
-//       order: { answers: { addedAt: 'ASC' } },
-//     });
-
-	// console.log("currentUnFinishedGameFirstPlayer: ", currentUnFinishedGameFirstPlayer)
-
-	// const currentUnFinishedGameSecondPlayer = getGame.secondPlayerProgress
-    // ? await this.pairQuizGameProgressPlayer.findOne({
-    //     relations: {
-    //       user: { progressPlayer: true },
-    //       answers: { progress: true },
-    //     },
-    //     where: { gameId: getGame.id, id: getGame.secondPlayerProgress.id },
-    //     order: { answers: { addedAt: 'ASC' } },
-    //   })
-    // : null;
-	// getGame.firstPlayerProgress = currentUnFinishedGameFirstPlayer
-	// getGame.secondPlayerProgress = currentUnFinishedGameSecondPlayer
-	// // console.log("getGame.firstPlayerProgress.answer: ", getGame.firstPlayerProgress.answers)
-	// const newGame = {...getGame, ...getGame.firstPlayerProgress, ...getGame.secondPlayerProgress}
-	// console.log("newGame: ", newGame)
-	// return newGame
 	return getGame
   }
 
@@ -225,9 +196,6 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 	return await this.answersPlayer.save(answer)
   }
 
-//   async setFinishAnswerDateFirstPlayer(gameId: string): Promise<void> {
-// 	const result = await this.pairQuizGameProgressPlayer.update({gameId}, {gameStatus: AnswerStatusEnum.Correct})
-//   }
 
   async increaseCountFirstPlayer(gameId: string) {
 	return await this.pairQuizGameProgressPlayer.increment({gameId}, "score", 1 )
@@ -247,5 +215,43 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 
   async changeGameStatusToFinished(gameId: string) {
 	return await this.pairQuezGame.update({id: gameId}, {status: GameStatusEnum.Finished, finishGameDate: new Date().toISOString()})
+  }
+
+  async findAllGames(
+	pageNumber: string,
+	pageSize: string,
+	sortBy: string,
+	sortDirection: string,
+	userId: string
+  ): Promise<PaginationType<GameTypeModel>> {
+
+	const findGameByUser = await this.pairQuezGame.findAndCount({
+			relations: {
+				firstPlayerProgress: {user: true, answers: true},
+				secondPlayerProgress: {user: true, answers: true},
+				questionGames: {question: {questionGame: true}}
+			},
+			where: [
+				{firstPlayerProgress: {user: {id: userId}}},
+				{secondPlayerProgress: {user: {id: userId}}}
+			],
+			order: {
+				[sortBy]: `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`
+			},
+			take: +pageSize,
+			skip: ((+pageNumber - 1) * +pageSize)
+		})
+
+		const [allGames, totalCount] = findGameByUser
+		const pagesCount: number = Math.ceil(totalCount / +pageSize);
+
+		const result: PaginationType<GameTypeModel> = {
+			pagesCount: pagesCount,
+			page: +pageNumber,
+			pageSize: +pageSize,
+			totalCount: +totalCount,
+			items: allGames.map((item: PairQuizGame) => PairQuizGame.getViewModel(item)),
+		  };
+		  return result;
   }
 }

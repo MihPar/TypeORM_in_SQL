@@ -26,11 +26,11 @@ export class CommentQueryRepository {
 			.where("id = :commentId", {commentId})
 			.getOne()
 
-			const commentLikeStatus = await this.likeForCommentRepository
-				.createQueryBuilder()
-				.select()
-				.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
-				.getOne()
+		const commentLikeStatus = await this.likeForCommentRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
+			.getOne()
 	
    let myStatus: LikeStatusEnum = LikeStatusEnum.None;
 		if(userId) {
