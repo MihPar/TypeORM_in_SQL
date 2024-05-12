@@ -236,7 +236,7 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 				{secondPlayerProgress: {user: {id: userId}}}
 			],
 			order: {
-				[sortBy]: `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`
+				[sortBy]: `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`,
 			},
 			take: +pageSize,
 			skip: ((+pageNumber - 1) * +pageSize)
@@ -250,10 +250,10 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 			page: +pageNumber,
 			pageSize: +pageSize,
 			totalCount: +totalCount,
-			items: allGames.map((item: PairQuizGame) => PairQuizGame.getViewModel(item)),
+			items: allGames.map((item: PairQuizGame) => {
+				return PairQuizGame.getViewModel(item)
+			})
 		  };
 		  return result;
   }
-
-//   async getCurrectUserStatistic(userId: string) {}
 }

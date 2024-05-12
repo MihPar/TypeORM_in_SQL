@@ -140,7 +140,7 @@ export class PostsQueryRepository {
 				.where(`"userId" = :userId AND "postId" = :postId`, {userId, postId: post.id})
 				.getOne()
 
-			myStatus = userLike ? (userLike?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
+		myStatus = userLike ? (userLike?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
 		const newestLikes = await this.LikeForPostRepository
 			.createQueryBuilder()
