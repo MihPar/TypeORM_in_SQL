@@ -17,13 +17,12 @@ export class classCreateQuestionUseCase
     question.body = command.body;
     question.correctAnswers = command.correctAnswers;
     question.published = true;
-	question.createdAt = new Date()
+    question.createdAt = new Date();
 
     const createQuest: Question = await this.questionRepository.createQuestion(
       question,
     );
-// console.log("createQuest: ", createQuest)
-	if(!createQuest) return null
-    return Question.createQuestion(createQuest)
+    if (!createQuest) return null;
+    return Question.createQuestion(createQuest);
   }
 }

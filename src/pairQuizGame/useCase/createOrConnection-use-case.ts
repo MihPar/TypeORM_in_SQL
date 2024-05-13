@@ -40,20 +40,21 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			// progressFirstPlayer.answerStatus = null
 			progressFirstPlayer.addedAt = new Date()
 			progressFirstPlayer.answers = []
-			await this.pairQuizGameProgressRepository.createProgressFirstPlayer(progressFirstPlayer)
+			const createProgressFirstPlayer = await this.pairQuizGameProgressRepository.createProgressFirstPlayer(progressFirstPlayer)
 			
 			const newQuizGame = new PairQuizGame()
-			newQuizGame.firstPlayerProgressId = progressFirstPlayer.userId
+			newQuizGame.firstPlayerProgressId = progressFirstPlayer.id
 			newQuizGame.secondPlayerProgressId = null
 			newQuizGame.pairCreatedDate = progressFirstPlayer.addedAt
 			newQuizGame.questionGames = null
-			newQuizGame.firstPlayerProgress = progressFirstPlayer
+			newQuizGame.firstPlayerProgress = createProgressFirstPlayer
 			newQuizGame.secondPlayerProgress = null
 			newQuizGame.status = GameStatusEnum.PendingSecondPlayer
+			
 			const createNewQuizGame = await this.pairQuizGameRepository.createNewGame(newQuizGame)
 
-			progressFirstPlayer.gameId = createNewQuizGame.id
-			await this.pairQuizGameProgressRepository.updateProgressFirstPlayer(progressFirstPlayer.gameId)
+			createProgressFirstPlayer.gameId = createNewQuizGame.id
+			await this.pairQuizGameProgressRepository.updateProgressFirstPlayer(createProgressFirstPlayer.id, createProgressFirstPlayer.gameId)
 
 			return PairQuizGame.quizGameViewModelForFirstPlayer(createNewQuizGame, firstLogin, command.userId)
 		} else {
@@ -70,7 +71,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 
 			await this.pairQuizGameProgressRepository.createProgressForSecondPlayer(progressSecondPlayer)
 			foundQuizGame.secondPlayerProgress = progressSecondPlayer
-			foundQuizGame.secondPlayerProgressId = progressSecondPlayer.userId
+			foundQuizGame.secondPlayerProgressId = progressSecondPlayer.id
 
 			const getFiveQuestionsQuizGame = await this.pairQuizGameRepository.getFiveQuestions(true)
 			
@@ -83,7 +84,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 			});
 
 			const saveQuestions = await this.pairQuizGameRepository.createQuestions(questionGames)
-			foundQuizGame.questionGames = questionGames
+			foundQuizGame.questionGames = saveQuestions
 			
 			await this.pairQuizGameRepository.createNewGame(foundQuizGame)
 			return PairQuizGame.getViewModel(foundQuizGame)

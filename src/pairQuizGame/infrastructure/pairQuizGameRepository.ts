@@ -19,58 +19,72 @@ export class PairQuizGameRepository {
     protected readonly pairQuizGame: Repository<PairQuizGame>,
     @InjectRepository(PairQuizGameProgressPlayer)
     protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
-	@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>,
-	@InjectRepository(QuestionGame) protected readonly questionGame: Repository<QuestionGame>
+    @InjectRepository(AnswersPlayer)
+    protected readonly answersPlayer: Repository<AnswersPlayer>,
+    @InjectRepository(QuestionGame)
+    protected readonly questionGame: Repository<QuestionGame>,
   ) {}
 
   async foundGameByUserId(userId: string): Promise<boolean> {
-	const foundGameByUserId = await this.pairQuizGame.findOne({
-		relations: {
-			firstPlayerProgress: {
-				user: true
-			},
-			secondPlayerProgress: {
-				user: true
-			}
-		},
-		where: [
-			{firstPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.Active},
-			{firstPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.PendingSecondPlayer},
-			{secondPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.Active},
-			{secondPlayerProgress: {user: {id: userId}}, status: GameStatusEnum.PendingSecondPlayer}
-		]
-	})
+    const foundGameByUserId = await this.pairQuizGame.findOne({
+      relations: {
+        firstPlayerProgress: {
+          user: true,
+        },
+        secondPlayerProgress: {
+          user: true,
+        },
+      },
+      where: [
+        {
+          firstPlayerProgress: { user: { id: userId } },
+          status: GameStatusEnum.Active,
+        },
+        {
+          firstPlayerProgress: { user: { id: userId } },
+          status: GameStatusEnum.PendingSecondPlayer,
+        },
+        {
+          secondPlayerProgress: { user: { id: userId } },
+          status: GameStatusEnum.Active,
+        },
+        {
+          secondPlayerProgress: { user: { id: userId } },
+          status: GameStatusEnum.PendingSecondPlayer,
+        },
+      ],
+    });
     if (!foundGameByUserId) return false;
     return true;
   }
 
   async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {
-	return await this.pairQuizGame.findOne({
-		relations: {
-			firstPlayerProgress:{
-				user: true,
-				answers: {question: true }
-			},
-			secondPlayerProgress: {
-				user:true,
-				answers: {question: true }
-			},
-			questionGames: true
-		}, 
-		where: {
-			status
-		}
-	})
+    return await this.pairQuizGame.findOne({
+      relations: {
+        firstPlayerProgress: {
+          user: true,
+          answers: { question: true },
+        },
+        secondPlayerProgress: {
+          user: true,
+          answers: { question: true },
+        },
+        questionGames: true,
+      },
+      where: {
+        status,
+      },
+    });
   }
 
   async createNewGame(newQuizGame: PairQuizGame): Promise<PairQuizGame> {
-    const createNewQuizGame = await this.pairQuizGame.save({...newQuizGame});
+    const createNewQuizGame = await this.pairQuizGame.save({ ...newQuizGame });
     return createNewQuizGame;
   }
 
   async updateExistingGame(game: PairQuizGame): Promise<PairQuizGame> {
-	const updateGame = await this.pairQuizGame.save(game)
-		return updateGame
+    const updateGame = await this.pairQuizGame.save(game);
+    return updateGame;
   }
 
   async getFiveQuestions(boolean: boolean): Promise<Question[] | null> {
@@ -83,8 +97,7 @@ export class PairQuizGameRepository {
       .getMany();
 
     if (!getQuestionForQuizGame) return null;
-    return getQuestionForQuizGame
-	// .sort((a: any, b: any) => {return a.body - b.body});
+    return getQuestionForQuizGame;
   }
 
   private async mapPlayerStatisticForView(
@@ -132,28 +145,30 @@ export class PairQuizGameRepository {
       lossesCount: playerLossCount,
       drawsCount: playerDrawsCount,
     };
-}
+  }
 
-  async sendAnswerPlayer(playerId: string, count: boolean) {
-	const answersFirstPlayer = await this.pairQuizGameProgressPlayer
-		.createQueryBuilder()
-		.update()
-		.set({score: () => Boolean(count) ? "score + 1" : "score + 0"})
-		.where({id: playerId})
-		.execute()
+  async sendAnswerPlayer(playerProgressId: string, count: boolean) {
+    const answersFirstPlayer = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .update()
+      .set({ score: () => (Boolean(count) ? 'score + 1' : 'score + 0') })
+      .where({ id: playerProgressId })
+      .execute();
   }
 
   async createQuestions(createQuestions: QuestionGame[]) {
-	return await this.questionGame.save(createQuestions)
+    return await this.questionGame.save(createQuestions);
   }
 
-  async getStatisticOfUser(userId: string): Promise<PlayerStatisticsView | null> {
-	const getUserStatistic = await this.pairQuizGameProgressPlayer.findOne({
-		where: {userId: userId}
-	})
-	// console.log("getUserStatistic: ", getUserStatistic)
-	if(!getUserStatistic) return null
-	const statistic = await this.mapPlayerStatisticForView(getUserStatistic);
-	return statistic
+  async getStatisticOfUser(
+    userId: string,
+  ): Promise<PlayerStatisticsView | null> {
+    const getUserStatistic = await this.pairQuizGameProgressPlayer.findOne({
+      relations: { user: true },
+      where: { user: { id: userId } },
+    });
+    if (!getUserStatistic) return null;
+    const statistic = await this.mapPlayerStatisticForView(getUserStatistic);
+    return statistic;
   }
 }

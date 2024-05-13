@@ -25,12 +25,10 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
     protected readonly commandBus: CommandBus,
   ) {}
   async execute(commandAnswer: SendAnswerCommand): Promise<AnswerType> {
-	// console.log("DTO: ", commandAnswer.DTO)
     const game: PairQuizGame =
       await this.pairQuezGameQueryRepository.getUnfinishedGame(
 		commandAnswer.userId
       );
-	//   console.log('answers: ', game.firstPlayerProgress.answers)
     if (!commandAnswer.activeUserGame || commandAnswer.activeUserGame.status !== 'Active')
       throw new NotFoundException('No active pair');
 
@@ -41,8 +39,6 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 		commandAnswer.DTO.answer,
       );
 	const result = await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
-	// console.log("firstPlayer: ", result)
-
       return result
     } else if (commandAnswer.activeUserGame.secondPlayerProgress.player.id === commandAnswer.userId) {
       const command = new SecondPlayerSendAnswerCommand(
@@ -50,7 +46,6 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 		commandAnswer.activeUserGame,
         commandAnswer.DTO.answer,)
 		const result = await this.commandBus.execute<SecondPlayerSendAnswerCommand | AnswerType>(command)
-		// console.log("secondPlayer: ", result)
 		return result
     }
   }

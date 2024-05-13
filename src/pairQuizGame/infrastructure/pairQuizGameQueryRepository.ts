@@ -53,14 +53,12 @@ export class PairQuezGameQueryRepository {
 		})
 
 		if(!currentUnFinishedGame) return null
-		// console.error(currentUnFinishedGame, " currentUbfinishedGame in getCurrentUnFinGame Repo")
 
 	const currentUnFinishedGameFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
 				relations: {user: {progressPlayer: true}, answers: {question: true}},
 				where: {id: currentUnFinishedGame.firstPlayerProgress.id},
 				order: {answers: {addedAt: "ASC"}}
 			})
-	// console.log("currentUnFinishedGameFirstPlayer: ", currentUnFinishedGameFirstPlayer)
 	
 	const currentUnFinishedGameSecondPlayer = currentUnFinishedGame.secondPlayerProgress ?  await this.pairQuizGameProgressPlayer.findOne({
 				relations: {user: {progressPlayer: true}, answers: {question: true}},
@@ -68,7 +66,6 @@ export class PairQuezGameQueryRepository {
 				order: {answers: {addedAt: "ASC"}}
 			}) : null
 
-			// console.error(currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer, " players progresses")
 	return PairQuizGame.getViewModels(currentUnFinishedGame, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 
@@ -97,17 +94,12 @@ export class PairQuezGameQueryRepository {
 		order: {answers: {addedAt: "ASC"}}
 	})
 
-// if(getGameById.status === GameStatusEnum.PendingSecondPlayer) return null
-
 const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? await this.pairQuizGameProgressPlayer.findOne({
 		relations: {user: {progressPlayer: true}, answers: {progress: true}},
 		where: {id: getGameById.secondPlayerProgress.id},
 		order: {answers: {addedAt: "ASC"}}
 	}) : null
 
-    // if (!getGameById) return null;
-	// const game = {currentGame: getGameById, firstPlayer: currentUnFinishedGameFirstPlayer, secondPlayer: currentUnFinishedGameSecondPlayer}
-    // if (!getGameById) return null;
 	return PairQuizGame.getViewModels(getGameById, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 

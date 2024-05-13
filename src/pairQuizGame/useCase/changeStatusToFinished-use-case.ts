@@ -22,9 +22,6 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 		const firstPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.firstPlayerProgress.user.id, [GameStatusEnum.Active])
 		const secondPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.secondPlayerProgress.user.id, [GameStatusEnum.Active])
 
-		// console.log("firstPlayer: ", firstPlayer.firstPlayerProgress.answers)
-		// console.log("secondPlayer: ", secondPlayer.secondPlayerProgress.answers)
-
 		if(
 			firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length &&
 			secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length

@@ -51,7 +51,6 @@ export class PairQuizGameController {
     const command = new GetCurrectUserStatisticCommand(userId);
     const getStatisticOfCurrectUser = await this.commandBus
       .execute<GetCurrectUserStatisticCommand | PlayerStatisticsView | null>(command);
-	//   console.log("getStatisticOfCurrectUser: ", getStatisticOfCurrectUser)
     return getStatisticOfCurrectUser;
   }
 
@@ -64,9 +63,6 @@ export class PairQuizGameController {
         GameStatusEnum.Active,
         GameStatusEnum.PendingSecondPlayer,
       ]);
-    // [GameStatusEnum.Active, GameStatusEnum.PendingSecondPlayer]
-    //  console.log("findUnfinishedUserGame1: ", findUnfinishedUserGame?.firstPlayerProgress?.answers)
-    // console.log("findUnfinishedUserGame2: ", findUnfinishedUserGame?.secondPlayerProgress?.answers)
     if (!findUnfinishedUserGame) throw new NotFoundException('404');
     return findUnfinishedUserGame;
   }
@@ -80,15 +76,12 @@ export class PairQuizGameController {
   ): Promise<GameTypeModel | null> {
     const getActivePair: GameTypeModel | null =
       await this.pairQuezGameQueryRepository.getRawGameById(id);
-    // console.log("getActivePair: ", getActivePair)
     if (!getActivePair) throw new NotFoundException('404');
     if (
       getActivePair.firstPlayerProgress.player.id !== userId &&
       getActivePair.secondPlayerProgress?.player?.id !== userId
     )
       throw new ForbiddenException('403');
-    // console.log("PairQuizGame.getViewModel(getActivePair): ", PairQuizGame.getViewModel(getActivePair))
-    // return PairQuizGame.getViewModels(getActivePair.game, getActivePair.firstPlayer, getActivePair.secondPlayer)
     return getActivePair;
   }
 
@@ -99,9 +92,6 @@ export class PairQuizGameController {
     @UserIdDecorator() userId: string,
     @UserDecorator() user: User,
   ): Promise<GameTypeModel> {
-    // console.log("start")
-    // const getGameById: PairQuizGame | null = await this.pairQuezGameQueryRepository.getUnfinishedGame(userId)
-    // 	if(getGameById) throw new ForbiddenException('403')
     const foundGameByUserId =
       await this.pairQuizGameRepository.foundGameByUserId(userId);
     if (foundGameByUserId) throw new ForbiddenException('403');
@@ -109,10 +99,7 @@ export class PairQuizGameController {
     const createOrConnection = await this.commandBus.execute<
       CreateOrConnectGameCommand | GameTypeModel
     >(command);
-    // if(!createOrConnection) throw new ForbiddenException('403')
-    // const updatedGame = await this.pairQuezGameQueryRepository.getRawGameById(createOrConnection.id)
-    // return PairQuizGame.getViewModel(updatedGame)
-    // console.log("createOrConnection: ", createOrConnection)
+    
     return createOrConnection;
   }
 
@@ -123,23 +110,18 @@ export class PairQuizGameController {
     @Body() DTO: GameAnswerDto,
     @UserIdDecorator() userId: string,
   ) {
-    // console.error(DTO, " dto in controller")
     const activeUserGame: GameTypeModel | null =
       await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId, [
         GameStatusEnum.Active,
       ]);
-    // console.log("activeUserGame: ", activeUserGame.firstPlayerProgress.answers)
     if (!activeUserGame)
       throw new ForbiddenException(
         'the game is not exist by userId and status',
       );
-    // console.error(activeUserGame, " activeUserGAem in sendAnswer")
     const isFirstPlayer =
       activeUserGame.firstPlayerProgress.player.id === userId;
-    // isFirstPlayer && console.error("firstplayer")
     const isSecondPlayer =
       activeUserGame.secondPlayerProgress?.player?.id === userId;
-    // isSecondPlayer && console.error("secondplayer")
     const firstPlayerAswersCount =
       activeUserGame.firstPlayerProgress.answers.length;
     const secondPlayerAswersCount =
@@ -162,7 +144,6 @@ export class PairQuizGameController {
     >(command);
     if (!createSendAnswer)
       throw new ForbiddenException('the answer is not created');
-    // console.log("createSendAnswer: ", createSendAnswer)
     return createSendAnswer;
   }
 }

@@ -13,11 +13,12 @@ export class PairQuizGameProgressRepository {
 		return createProgressFirstPlayer
 	}
 
-	async updateProgressFirstPlayer(gameId: string) {
+	async updateProgressFirstPlayer(id: string, gameId: string) {
 		const updateProgress = await this.pairQuizGameProgressPlayer
 			.createQueryBuilder()
 			.update()
 			.set({gameId})
+			.where("id = :id", {id})
 			.execute()
 			return updateProgress
 	}

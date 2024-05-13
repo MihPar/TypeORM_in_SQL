@@ -24,7 +24,6 @@ export class QuestionRepository {
   }
 
   async getQuestion(id: string): Promise<Question | null> {
-	// console.log("try")
 
 	const findQuestion = await this.dataSource.getRepository(Question)
 	.findOneBy({id})

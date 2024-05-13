@@ -34,18 +34,6 @@ if (publishedStatus !== 'all') {
 }
 const getAllQuestions = await getAllQuestionsQuery.getManyAndCount();
 
-// const getTotalCountAllQuestonsQuery = this.question
-//   .createQueryBuilder()
-//   .where(`body ILIKE :bodySearchTerm`, { bodySearchTerm: `${bodySearchTerm}` });
-
-// if (publishedStatus !== 'all') {
-// 	getTotalCountAllQuestonsQuery.andWhere(`published = :publishedStatus`, {
-//     publishedStatus: publishedStatus === 'published' ? true : false,
-//   });
-// }
-// const getTotalCountAllQuestons = await getTotalCountAllQuestonsQuery.getCount();
-
-// const pageCount = Math.ceil(getTotalCountAllQuestons / +pageSize);
 const pageCount = Math.ceil(getAllQuestions[1]/ +pageSize);
 		return {
 			pagesCount: pageCount,
@@ -63,13 +51,13 @@ const pageCount = Math.ceil(getAllQuestions[1]/ +pageSize);
 		}
 	}
 
-	async getQuestionById(gameQuestionId: string): Promise<Question | null> {
+async getQuestionById(gameQuestionId: string): Promise<Question | null> {
 		const findQuestionById = await this.question.findOneBy({id: gameQuestionId})
 		if(!findQuestionById) return null
 		return findQuestionById
 	}
 
-	async deleteAllQuestions() {
+async deleteAllQuestions() {
 		await this.question
 			.createQueryBuilder()
 			.delete()

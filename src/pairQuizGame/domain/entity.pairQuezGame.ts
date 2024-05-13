@@ -86,9 +86,7 @@ export class PairQuizGame {
 					id: item.question.id,
 					body: item.question.body
 				}
-			})
-			// .sort((a: any, b: any) => {return a.body - b.body}) 
-			: null,
+			}) : null,
 			status: getGameById.status,
 			pairCreatedDate: getGameById.pairCreatedDate,
 			startGameDate: getGameById.startGameDate,
@@ -132,7 +130,7 @@ export class PairQuizGame {
 
 			
 		static getViewModels(game: PairQuizGame, getGameFirstPlayer: PairQuizGameProgressPlayer, getGameSecondPlayer: PairQuizGameProgressPlayer): GameTypeModel {
-			// console.log("getGameFirstPlayer: ", getGameFirstPlayer.answers.map(item => AnswersPlayer.getViewModelForGame(item)))
+			
 			return {
 				id: game.id,
 				firstPlayerProgress: getGameFirstPlayer ? {
