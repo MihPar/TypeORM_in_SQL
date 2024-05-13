@@ -47,10 +47,11 @@ export class PairQuizGameController {
   @Get('my-statistic')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
-  async getCurrectUserStatistic(@UserIdDecorator() userId: string) {
+  async getCurrectUserStatistic(@UserIdDecorator() userId: string): Promise<PlayerStatisticsView | null> {
     const command = new GetCurrectUserStatisticCommand(userId);
     const getStatisticOfCurrectUser = await this.commandBus
       .execute<GetCurrectUserStatisticCommand | PlayerStatisticsView | null>(command);
+	if(!getStatisticOfCurrectUser) return null
     return getStatisticOfCurrectUser;
   }
 
