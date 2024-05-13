@@ -207,7 +207,7 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 						{secondPlayerProgress: {user: {id: userId}}}
 					],
 					order: {
-						questionGames: { index: 'ASC' }
+						questionGames: {question: 'ASC'}
 					},
 				})
 		
