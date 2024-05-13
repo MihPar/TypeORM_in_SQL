@@ -103,41 +103,6 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 	return PairQuizGame.getViewModels(getGameById, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
   }
 
-//   async getRawGameByUserId(id: string): Promise<any | null> {
-//     const getGameById: PairQuizGame = await this.pairQuezGame.findOne({
-//       relations: {
-//         firstPlayerProgress: { user: true, answers: { question: true } },
-//         secondPlayerProgress: { user: true, answers: { question: true } },
-//         questionGames: { question: { questionGame: true } },
-//       },
-//       where: { id },
-//       order: {questionGames: { index: 'ASC' }},
-//     });
-
-// 	if(!getGameById) return null
-
-// 	const currentUnFinishedGameFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
-// 		relations: {user: {progressPlayer: true}, answers: {progress: true}},
-// 		where: {gameId: getGameById.id, user: {id: getGameById.firstPlayerProgress.user.id}},
-// 		order: {answers: {addedAt: "ASC"}}
-// 	})
-// 	// console.log("currentUnFinishedGameFirstPlayer: ", currentUnFinishedGameFirstPlayer)
-
-// // if(getGameById.status === GameStatusEnum.PendingSecondPlayer) return null
-
-// const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? await this.pairQuizGameProgressPlayer.findOne({
-// 		relations: {user: {progressPlayer: true}, answers: {progress: true}},
-// 		where: {gameId: getGameById.id, user: {id: getGameById.firstPlayerProgress.user.id}},
-// 		order: {answers: {addedAt: "ASC"}}
-// 	}) : null
-
-//     // if (!getGameById) return null;
-// 	// const game = {currentGame: getGameById, firstPlayer: currentUnFinishedGameFirstPlayer, secondPlayer: currentUnFinishedGameSecondPlayer}
-//     // if (!getGameById) return null;
-// 	return PairQuizGame.getViewModels(getGameById, currentUnFinishedGameFirstPlayer, currentUnFinishedGameSecondPlayer)
-//   }
-  
-
   async getUnfinishedGame(userId: string): Promise<PairQuizGame | null> {
 	const getGame = await this.pairQuezGame.findOne({
 		relations: {
@@ -171,18 +136,6 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 
 	return getGame
   }
-
-//   async getPlayerByGameIdAndUserId(gameId: string, userId?: string): Promise<PairQuizGameProgressPlayer | null> {
-// 	const getFirstPlayer = await this.pairQuizGameProgressPlayer.findOne({
-// 		relations: {
-// 			answers: true
-// 		},
-// 		where: {gameId, userId}
-// 	})
-	
-// 	if(!getFirstPlayer) return null
-// 	return getFirstPlayer
-//   }
 
   async createAnswers(answer: AnswersPlayer[]) {
 	return await this.answersPlayer.save(answer)
