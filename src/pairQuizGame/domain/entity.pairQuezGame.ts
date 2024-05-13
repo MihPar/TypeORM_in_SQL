@@ -94,7 +94,7 @@ export class PairQuizGame {
 		  }
 		}
 
-		static getViewModelPaging(getGameById: PairQuizGame, questions: PairQuizGame): GameTypeModel  {
+		static getViewModelPaging(getGameById: PairQuizGame, game: PairQuizGame): GameTypeModel  {
 			return {
 				id: getGameById.id,
 				firstPlayerProgress: {
@@ -113,7 +113,7 @@ export class PairQuizGame {
 					},
 					score: getGameById.secondPlayerProgress.score
 				} : null,
-				questions: questions.questionGames.length ?  questions.questionGames.map(item => {
+				questions: game.questionGames.length ?  game.questionGames.map(item => {
 					return {
 						id: item.question.id,
 						body: item.question.body
