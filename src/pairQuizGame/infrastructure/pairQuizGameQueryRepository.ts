@@ -62,7 +62,7 @@ export class PairQuezGameQueryRepository {
 	
 	const currentUnFinishedGameSecondPlayer = currentUnFinishedGame.secondPlayerProgress ?  await this.pairQuizGameProgressPlayer.findOne({
 				relations: {user: {progressPlayer: true}, answers: {question: true}},
-				where: {gameId: currentUnFinishedGame.id, user: {id: currentUnFinishedGame.firstPlayerProgress.user.id}},
+				where: {gameId: currentUnFinishedGame.id, user: {id: currentUnFinishedGame.secondPlayerProgress.user.id}},
 				order: {answers: {addedAt: "ASC"}}
 			}) : null
 
@@ -96,7 +96,7 @@ export class PairQuezGameQueryRepository {
 
 const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? await this.pairQuizGameProgressPlayer.findOne({
 		relations: {user: {progressPlayer: true}, answers: {progress: true}},
-		where: {gameId: id, user: {id: getGameById.firstPlayerProgress.user.id}},
+		where: {gameId: id, user: {id: getGameById.secondPlayerProgress.user.id}},
 		order: {answers: {addedAt: "ASC"}}
 	}) : null
 

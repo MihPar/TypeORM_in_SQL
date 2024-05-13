@@ -37,6 +37,7 @@ export class CreateOrConnectGameUseCase implements ICommandHandler<CreateOrConne
 		if(!foundQuizGame) {
 			const progressFirstPlayer = new PairQuizGameProgressPlayer()
 			progressFirstPlayer.userId = command.userId
+			progressFirstPlayer.user = command.user
 			// progressFirstPlayer.answerStatus = null
 			progressFirstPlayer.addedAt = new Date()
 			progressFirstPlayer.answers = []
