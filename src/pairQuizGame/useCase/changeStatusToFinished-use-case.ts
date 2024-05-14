@@ -7,7 +7,6 @@ import { GameStatusEnum } from "../enum/enumPendingPlayer";
 
 export class ChangeStatusToFinishedCommand {
 	constructor(
-		// public gameId: string,
 		public game: PairQuizGame,
 		public gameQuestions: Question[]
 	) {}
