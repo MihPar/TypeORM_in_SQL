@@ -58,6 +58,10 @@ describe('/blogs', () => {
 	let gameSecondPlayer: any
 	let questionGame: Array<{id: string, body: string}>
 	let gameConnectPair: PairQuizGame
+	let tokenByUser3: string
+	let tokenByUser4: string
+	let game3: any
+	let game4: any
 
 	describe('Quiz question', () => {
     it('create first player', async () => {
@@ -240,13 +244,216 @@ describe('/blogs', () => {
 		  expect(getUnfinishedGame2.status).toBe(HttpStatus.OK);
 		  game2 = getUnfinishedGame2.body
 	  });
+	  
+		/************* create user3 *******/
+
+	  it('create fird player', async () => {
+		const user3 = {
+		  login: 'Leonid',
+		  password: 'qwerty3',
+		  email: '3mpara7473@gmail.com',
+		};
+  
+		const createUser3 = await request(server)
+		  .post(`/sa/users`)
+		  .auth('admin', 'qwerty')
+		  .send(user3)
+		  .expect(201)
+  
+		userLogin = createUser3.body.login;
+		userId = createUser3.body.id;
+  
+		expect(createUser3.body).toStrictEqual({
+		  id: expect.any(String),
+		  login: user3.login,
+		  email: user3.email,
+		  createdAt: expect.any(String),
+		});
+		const createAccessToken = await request(server).post('/auth/login').send({
+		  loginOrEmail: user3.login,
+		  password: user3.password,
+		});
+  
+		tokenByUser3 = createAccessToken.body.accessToken;
+		expect(createAccessToken.status).toBe(HttpStatus.OK);
+		expect(createAccessToken.body).toEqual({
+		  accessToken: expect.any(String),
+		});
+	  });
+  
+	  /********** create user4 ****************/
+	  it('create fourth user', async () => {
+		const user4 = {
+		  login: 'Boris',
+		  password: 'qwerty4',
+		  email: '4mpara7473@gmail.com',
+		};
+  
+		const createUser4 = await request(server)
+		  .post(`/sa/users`)
+		  .auth('admin', 'qwerty')
+		  .send(user4)
+		  .expect(201)
+  
+		const createAccessToken4= await request(server)
+		  .post('/auth/login')
+		  .send({
+			loginOrEmail: user4.login,
+			password: user4.password,
+		  });
+		expect(createAccessToken4.body.accessToken).toEqual(expect.any(String));
+		tokenByUser4 = createAccessToken4.body.accessToken;
+	  });
+  
+	  it('create questions', async () => {
+		questionsInMemory = [
+		  {
+			body: 'What is your name?',
+			correctAnswers: ['Mickle'],
+		  },
+		  {
+			body: 'How old are you?',
+			correctAnswers: ['five'],
+		  },
+		  {
+			body: 'Where are you from?',
+			correctAnswers: ['New York'],
+		  },
+		  {
+			body: 'What is your profession?',
+			correctAnswers: ['developer'],
+		  },
+		  {
+			body: 'What is your programmer`s language?',
+			correctAnswers: ['JavaScript'],
+		  },
+		  {
+			  body: 'What is our language?',
+			  correctAnswers: ['Russia'],
+			},
+		]
+  
+		const promises = questionsInMemory.map((item) => {
+		  return request(server)
+			.post('/sa/quiz/questions')
+			.auth('admin', 'qwerty')
+			.send(item);
+		  });
+  
+	  const result = await Promise.all(promises)
+  
+	  const create = result.map((item, index) => {
+		  expect(item.body.id).toEqual(expect.any(String));
+		  expect(item.body.body).toEqual(questionsInMemory[index].body);
+		  expect(item.body.correctAnswers).toEqual(questionsInMemory[index].correctAnswers);
+		  expect(item.body.published).toBe(true);
+		  expect(item.body.createdAt).toEqual(expect.any(String));
+		  expect(item.body.updatedAt).toBe(null);
+		  return item.body
+	  })
+	  // TODO лучше через мап
+	  const publishedQuestion0 = await request(server)
+		  .put(`/sa/quiz/questions/${create[0].id}/publish`)
+		  .auth('admin', 'qwerty')
+		  .send({ published: true });
+  
+	  const publishedQuestion1 = await request(server)
+		  .put(`/sa/quiz/questions/${create[1].id}/publish`)
+		  .auth('admin', 'qwerty')
+		  .send({ published: true });
+  
+	  const publishedQuestion2 = await request(server)
+		  .put(`/sa/quiz/questions/${create[2].id}/publish`)
+		  .auth('admin', 'qwerty')
+		  .send({ published: true });
+  
+	  const publishedQuestion3 = await request(server)
+		  .put(`/sa/quiz/questions/${create[3].id}/publish`)
+		  .auth('admin', 'qwerty')
+		  .send({ published: true });
+  
+	  const publishedQuestion4 = await request(server)
+		  .put(`/sa/quiz/questions/${create[4].id}/publish`)
+		  .auth('admin', 'qwerty')
+		  .send({ published: true });
+  
+	expect(publishedQuestion0.status).toBe(HttpStatus.NO_CONTENT);
+	expect(publishedQuestion1.status).toBe(HttpStatus.NO_CONTENT);
+	expect(publishedQuestion2.status).toBe(HttpStatus.NO_CONTENT);
+	expect(publishedQuestion3.status).toBe(HttpStatus.NO_CONTENT);
+	expect(publishedQuestion4.status).toBe(HttpStatus.NO_CONTENT);
+	  })
+
+	  it('get current unfinished game by first player', async () => {
+		const getUnfinishedGame = await request(server)
+		  .get('/pair-game-quiz/pairs/my-current')
+		  .set('Authorization', `Bearer ${tokenByUser}`);
+		
+		expect((getUnfinishedGame.body as GameTypeModel).questions).toEqual(questionGame)
+		expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
+		game = getUnfinishedGame.body;
+	  });
+  
+	  it('get current unfinished game by second user', async () => {
+		  const getUnfinishedGame2 = await request(server)
+			.get('/pair-game-quiz/pairs/my-current')
+			.set('Authorization', `Bearer ${tokenByUser2}`);
+	
+		expect((getUnfinishedGame2.body as GameTypeModel).questions).toEqual(questionGame)
+		  expect(getUnfinishedGame2.status).toBe(HttpStatus.OK);
+		  game2 = getUnfinishedGame2.body
+	  });
+  
+	  it('create connection two game', async () => {
+		  const createPair = await request(server)
+			.post('/pair-game-quiz/pairs/connection')
+			.set('Authorization', `Bearer ${tokenByUser3}`);
+		  expect(createPair.status).toBe(HttpStatus.OK);
+		  gameId = createPair.body.id;
+  
+		//   console.warn(createPair.body)
+		//   console.log("tokenByUser4: ", tokenByUser4)
+  
+		  expect(createPair.body.id).toEqual(expect.any(String));
+  
+		  const connectPair = await request(server)
+		  .post('/pair-game-quiz/pairs/connection')
+		  .set('Authorization', `Bearer ${tokenByUser4}`);
+  
+		  gameConnectPair = connectPair.body
+		  questionGame = connectPair.body.questions
+		//   expect(questionGame).toHaveLength(5)
+		// console.log("two game: ", connectPair.body)
+		  expect(connectPair.status).toBe(HttpStatus.OK);
+		});
+
+		it('get current unfinished game by third player', async () => {
+			const getUnfinishedGame3 = await request(server)
+			  .get('/pair-game-quiz/pairs/my-current')
+			  .set('Authorization', `Bearer ${tokenByUser3}`);
+			
+			expect((getUnfinishedGame3.body as GameTypeModel).questions).toEqual(questionGame)
+			expect(getUnfinishedGame3.status).toBe(HttpStatus.OK);
+			game3 = getUnfinishedGame3.body;
+		  });
+	  
+		  it('get current unfinished game by fourth user', async () => {
+			  const getUnfinishedGame4 = await request(server)
+				.get('/pair-game-quiz/pairs/my-current')
+				.set('Authorization', `Bearer ${tokenByUser4}`);
+		
+			expect((getUnfinishedGame4.body as GameTypeModel).questions).toEqual(questionGame)
+			  expect(getUnfinishedGame4.status).toBe(HttpStatus.OK);
+			  game4 = getUnfinishedGame4.body
+		  });
+
 
 	  it('get statistic of user by currect game', async () => {
 		const getStatisticGame = await request(server)
-			.get(`/pair-game-quiz/pairs/my-statistic`)
-			.set(`Authorization`, `Bearer ${tokenByUser}`)
+			.get(`/pair-game-quiz/users/my-statistic`)
+			.set(`Authorization`, `Bearer ${tokenByUser4}`)
 
-			// console.log("getAllGames: ", getStatisticGame.body)
+			console.log("getAllGames: ", getStatisticGame.body)
 
 			expect(getStatisticGame.status).toBe(HttpStatus.OK)
 			// expect((getAllGames.body as PaginationType<GameTypeModel>).items.map(item => item.firstPlayerProgress)).toEqual([game.firstPlayerProgress])
