@@ -67,3 +67,7 @@ export const aDescribe = (skip: boolean): jest.Describe => {
 	if(skip) {return describe.skip}
 	return describe
 }
+
+export const sortAddedAt = (arr) => {
+	return arr.sort()
+}
