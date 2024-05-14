@@ -1,9 +1,8 @@
-import { sortAddedAt } from './../../helpers/helpers';
 import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
-import { GameTypeModel } from "../type/typeViewModel";
+import { AnswerType, GameTypeModel } from "../type/typeViewModel";
 import { QuestionGame } from './entity.questionGame';
 
 @Entity()
@@ -67,7 +66,7 @@ export class PairQuizGame {
 		return {
 			id: getGameById.id,
 			firstPlayerProgress: {
-			  answers: getGameById.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)).sort(),
+			  answers: getGameById.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 			  player: {
 				id: getGameById.firstPlayerProgress.user.id,
 				login: getGameById.firstPlayerProgress.user.login
@@ -75,7 +74,7 @@ export class PairQuizGame {
 			  score: getGameById.firstPlayerProgress.score
 			},
 			secondPlayerProgress: getGameById.secondPlayerProgress ?  {
-				answers: getGameById.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)).sort(),
+				answers: getGameById.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 				player: {
 				  id: getGameById.secondPlayerProgress.user.id,
 				  login: getGameById.secondPlayerProgress.user.login
@@ -95,11 +94,11 @@ export class PairQuizGame {
 		  }
 		}
 
-		static getViewModelPaging(getGameById: PairQuizGame, game: PairQuizGame): GameTypeModel  {
+		static getViewModelPaging(getGameById: PairQuizGame, gameByAnswers: PairQuizGame): GameTypeModel  {
 			return {
 				id: getGameById.id,
 				firstPlayerProgress: {
-				  answers: getGameById.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+				  answers: gameByAnswers.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 				  player: {
 					id: getGameById.firstPlayerProgress.user.id,
 					login: getGameById.firstPlayerProgress.user.login
@@ -107,14 +106,14 @@ export class PairQuizGame {
 				  score: getGameById.firstPlayerProgress.score
 				},
 				secondPlayerProgress: getGameById.secondPlayerProgress ?  {
-					answers: getGameById.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+					answers: gameByAnswers.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 					player: {
 					  id: getGameById.secondPlayerProgress.user.id,
 					  login: getGameById.secondPlayerProgress.user.login
 					},
 					score: getGameById.secondPlayerProgress.score
 				} : null,
-				questions: game.questionGames.length ?  game.questionGames.map(item => {
+				questions: gameByAnswers.questionGames.length ?  gameByAnswers.questionGames.map(item => {
 					return {
 						id: item.question.id,
 						body: item.question.body

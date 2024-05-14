@@ -196,9 +196,24 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 			page: +pageNumber,
 			pageSize: +pageSize,
 			totalCount: +totalCount,
-			items: allGames.map((item: PairQuizGame) => {
-				return PairQuizGame.getViewModel(item)
-			})
+			items: await Promise.all(allGames.map(async (item: PairQuizGame) => {
+				const getSortedAnswers = await this.pairQuezGame.findOne({
+					relations: {
+						firstPlayerProgress: {user: true, answers: true},
+						secondPlayerProgress: {user: true, answers: true},
+						questionGames: {question: {questionGame: true}}
+					},
+					where: [
+						{firstPlayerProgress: {user: {id: userId}}},
+						{secondPlayerProgress: {user: {id: userId}}}
+					],
+					order: {
+						firstPlayerProgress: {answers: "DESC"},
+						secondPlayerProgress: {answers: "DESC"}
+					},
+				})
+				return PairQuizGame.getViewModelPaging(item, getSortedAnswers)
+			}))
 		  };
 		  return result;
   }
