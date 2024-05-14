@@ -67,7 +67,7 @@ export class PairQuizGame {
 		return {
 			id: getGameById.id,
 			firstPlayerProgress: {
-			  answers: getGameById.firstPlayerProgress.answers.sort().map(item => AnswersPlayer.getViewModelForGame(item)),
+			  answers: sortAddedAt<AnswersPlayer>(getGameById.firstPlayerProgress.answers).map(item => AnswersPlayer.getViewModelForGame(item)),
 			  player: {
 				id: getGameById.firstPlayerProgress.user.id,
 				login: getGameById.firstPlayerProgress.user.login
@@ -75,7 +75,7 @@ export class PairQuizGame {
 			  score: getGameById.firstPlayerProgress.score
 			},
 			secondPlayerProgress: getGameById.secondPlayerProgress ?  {
-				answers: getGameById.secondPlayerProgress.answers.sort().map(item => AnswersPlayer.getViewModelForGame(item)),
+				answers: sortAddedAt<AnswersPlayer>(getGameById.secondPlayerProgress.answers).map(item => AnswersPlayer.getViewModelForGame(item)),
 				player: {
 				  id: getGameById.secondPlayerProgress.user.id,
 				  login: getGameById.secondPlayerProgress.user.login
