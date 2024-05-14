@@ -69,6 +69,6 @@ export const aDescribe = (skip: boolean): jest.Describe => {
 	return describe
 }
 
-export const sortAddedAt = <T  extends {addedAt: string | Date}>(arr: Array<T>): Array<T> => {
-	return arr.sort((a: T, b: T) => a.addedAt.toString() < b.addedAt.toString() ? 1 : -1)
+export const sortAddedAt = <T extends {addedAt: string | Date}>(arr: Array<T>): Array<T> => {
+	return arr.sort((a: T, b: T) => a.addedAt.toString() > b.addedAt.toString() ? 1 : -1)
 }
