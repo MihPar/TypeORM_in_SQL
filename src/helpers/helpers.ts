@@ -5,6 +5,7 @@ import { LikeStatusEnum } from '../likes/likes.emun';
 import { PostsViewModel } from '../posts/posts.type';
 import { CommentViewModel } from '../comment/comment.type';
 import { Comments } from '../comment/entity/comment.entity';
+import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersPlayer';
 
 export const commentDBToView = (
   item: Comments, 
@@ -68,6 +69,6 @@ export const aDescribe = (skip: boolean): jest.Describe => {
 	return describe
 }
 
-export const sortAddedAt = (arr: Array<string>): Array<string> => {
-	return arr.sort((a: string, b: string) => a < b ? 1 : 1)
+export const sortAddedAt = (arr: any) => {
+	return arr.sort((a: any, b: any) => a < b ? 1 : 1)
 }
