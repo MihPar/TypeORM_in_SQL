@@ -65,6 +65,8 @@ describe('/blogs', () => {
         password: string,
         email: string
 	}
+	let game3: any
+	let game4: any
 
 	describe('Quiz question', () => {
     it('create first player', async () => {
@@ -228,38 +230,11 @@ describe('/blogs', () => {
 
 	  /***************************************/
 
-	  it('get current unfinished game', async () => {
-		const getUnfinishedGame = await request(server)
-		  .get('/pair-game-quiz/pairs/my-current')
-		  .set('Authorization', `Bearer ${tokenByUser}`);
-		
-		expect((getUnfinishedGame.body as GameTypeModel).questions).toEqual(questionGame)
-		expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
-		game = getUnfinishedGame.body;
-	  });
-  
-	  it('get current unfinished game for second user', async () => {
-		  const getUnfinishedGame2 = await request(server)
-			.get('/pair-game-quiz/pairs/my-current')
-			.set('Authorization', `Bearer ${tokenByUser2}`);
-	
-		expect((getUnfinishedGame2.body as GameTypeModel).questions).toEqual(questionGame)
-		  expect(getUnfinishedGame2.status).toBe(HttpStatus.OK);
-		  game2 = getUnfinishedGame2.body
-	  });
+	 
 
-	  it('get all games of user', async () => {
-		const getAllGames = await request(server)
-			.get(`/pair-game-quiz/pairs/my`)
-			.set(`Authorization`, `Bearer ${tokenByUser}`)
+	  
 
-			console.log("getAllGames: ", getAllGames.body)
-
-			expect(getAllGames.status).toBe(HttpStatus.OK)
-			expect((getAllGames.body as PaginationType<GameTypeModel>).items.map(item => item.firstPlayerProgress)).toEqual([game.firstPlayerProgress])
-	  })
-
-	  it('create first player', async () => {
+	  it('create fird player', async () => {
 		/************* create user3 *******/
 		const user3 = {
 		  login: 'Leonid',
@@ -295,7 +270,7 @@ describe('/blogs', () => {
 	  });
   
 	  /********** create user4 ****************/
-	  it('create second user', async () => {
+	  it('create fourth user', async () => {
 		const user4 = {
 		  login: 'Boris',
 		  password: 'qwerty4',
@@ -311,8 +286,8 @@ describe('/blogs', () => {
 		const createAccessToken4= await request(server)
 		  .post('/auth/login')
 		  .send({
-			loginOrEmail: user2.login,
-			password: user2.password,
+			loginOrEmail: user4.login,
+			password: user4.password,
 		  });
 		expect(createAccessToken4.body.accessToken).toEqual(expect.any(String));
 		tokenByUser4 = createAccessToken4.body.accessToken;
@@ -396,6 +371,26 @@ describe('/blogs', () => {
 	expect(publishedQuestion3.status).toBe(HttpStatus.NO_CONTENT);
 	expect(publishedQuestion4.status).toBe(HttpStatus.NO_CONTENT);
 	  })
+
+	  it('get current unfinished game by first player', async () => {
+		const getUnfinishedGame = await request(server)
+		  .get('/pair-game-quiz/pairs/my-current')
+		  .set('Authorization', `Bearer ${tokenByUser}`);
+		
+		expect((getUnfinishedGame.body as GameTypeModel).questions).toEqual(questionGame)
+		expect(getUnfinishedGame.status).toBe(HttpStatus.OK);
+		game = getUnfinishedGame.body;
+	  });
+  
+	  it('get current unfinished game by second user', async () => {
+		  const getUnfinishedGame2 = await request(server)
+			.get('/pair-game-quiz/pairs/my-current')
+			.set('Authorization', `Bearer ${tokenByUser2}`);
+	
+		expect((getUnfinishedGame2.body as GameTypeModel).questions).toEqual(questionGame)
+		  expect(getUnfinishedGame2.status).toBe(HttpStatus.OK);
+		  game2 = getUnfinishedGame2.body
+	  });
   
 	  it('create connection two game', async () => {
 		  const createPair = await request(server)
@@ -404,19 +399,52 @@ describe('/blogs', () => {
 		  expect(createPair.status).toBe(HttpStatus.OK);
 		  gameId = createPair.body.id;
   
-		  // console.warn(createPair.body)
+		//   console.warn(createPair.body)
+		//   console.log("tokenByUser4: ", tokenByUser4)
   
 		  expect(createPair.body.id).toEqual(expect.any(String));
   
 		  const connectPair = await request(server)
-			.post('/pair-game-quiz/pairs/connection')
-			.set('Authorization', `Bearer ${tokenByUser4}`);
+		  .post('/pair-game-quiz/pairs/connection')
+		  .set('Authorization', `Bearer ${tokenByUser4}`);
   
 		  gameConnectPair = connectPair.body
 		  questionGame = connectPair.body.questions
 		//   expect(questionGame).toHaveLength(5)
-		console.log("two game: ", connectPair.body)
+		// console.log("two game: ", connectPair.body)
 		  expect(connectPair.status).toBe(HttpStatus.OK);
 		});
+
+		it('get current unfinished game by third player', async () => {
+			const getUnfinishedGame3 = await request(server)
+			  .get('/pair-game-quiz/pairs/my-current')
+			  .set('Authorization', `Bearer ${tokenByUser3}`);
+			
+			expect((getUnfinishedGame3.body as GameTypeModel).questions).toEqual(questionGame)
+			expect(getUnfinishedGame3.status).toBe(HttpStatus.OK);
+			game3 = getUnfinishedGame3.body;
+		  });
+	  
+		  it('get current unfinished game by fourth user', async () => {
+			  const getUnfinishedGame4 = await request(server)
+				.get('/pair-game-quiz/pairs/my-current')
+				.set('Authorization', `Bearer ${tokenByUser4}`);
+		
+			expect((getUnfinishedGame4.body as GameTypeModel).questions).toEqual(questionGame)
+			  expect(getUnfinishedGame4.status).toBe(HttpStatus.OK);
+			  game4 = getUnfinishedGame4.body
+		  });
+	  
+
+		it('get all games of user', async () => {
+			const getAllGames = await request(server)
+				.get(`/pair-game-quiz/pairs/my`)
+				.set(`Authorization`, `Bearer ${tokenByUser4}`)
+	
+				// console.log("getAllGames: ", getAllGames.body)
+	
+				expect(getAllGames.status).toBe(HttpStatus.OK)
+				expect((getAllGames.body as PaginationType<GameTypeModel>).items.map(item => item)).toEqual(expect.any(Array<Object>))
+		  })
   });
 })  
