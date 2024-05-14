@@ -94,11 +94,11 @@ export class PairQuizGame {
 		  }
 		}
 
-		static getViewModelPaging(getGameById: PairQuizGame, gameByAnswers: PairQuizGame): GameTypeModel  {
+		static getViewModelPaging(getGameById: PairQuizGame, game: PairQuizGame): GameTypeModel  {
 			return {
 				id: getGameById.id,
 				firstPlayerProgress: {
-				  answers: gameByAnswers.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+				  answers: getGameById.firstPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 				  player: {
 					id: getGameById.firstPlayerProgress.user.id,
 					login: getGameById.firstPlayerProgress.user.login
@@ -106,14 +106,14 @@ export class PairQuizGame {
 				  score: getGameById.firstPlayerProgress.score
 				},
 				secondPlayerProgress: getGameById.secondPlayerProgress ?  {
-					answers: gameByAnswers.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
+					answers: getGameById.secondPlayerProgress.answers.map(item => AnswersPlayer.getViewModelForGame(item)),
 					player: {
 					  id: getGameById.secondPlayerProgress.user.id,
 					  login: getGameById.secondPlayerProgress.user.login
 					},
 					score: getGameById.secondPlayerProgress.score
 				} : null,
-				questions: gameByAnswers.questionGames.length ?  gameByAnswers.questionGames.map(item => {
+				questions: game.questionGames.length ?  game.questionGames.map(item => {
 					return {
 						id: item.question.id,
 						body: item.question.body
