@@ -13,7 +13,7 @@ import { GAME_QUESTION_COUNT } from '../domain/constants';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
 import { GetCurrectUserStatisticCommand } from '../useCase/changeAnswerStatusFirstPlayer-use-case';
 
-@Controller('pair-game-quiz/pairs')
+@Controller('pair-game-quiz')
 export class PairQuizGameController {
   constructor(
     protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
@@ -21,7 +21,7 @@ export class PairQuizGameController {
     protected readonly commandBus: CommandBus,
   ) {}
 
-  @Get('my')
+  @Get('pairs/my')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async getAllGameByUserId(
@@ -44,7 +44,7 @@ export class PairQuizGameController {
     return findGameByUser;
   }
 
-  @Get('my-statistic')
+  @Get('users/my-statistic')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async getCurrectUserStatistic(@UserIdDecorator() userId: string): Promise<PlayerStatisticsView | null> {
@@ -55,7 +55,7 @@ export class PairQuizGameController {
     return getStatisticOfCurrectUser;
   }
 
-  @Get('my-current')
+  @Get('pairs/my-current')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async getCurenctUnFinishedGame(@UserIdDecorator() userId: string) {
@@ -68,7 +68,7 @@ export class PairQuizGameController {
     return findUnfinishedUserGame;
   }
 
-  @Get(':id')
+  @Get('pairs/:id')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async getGameById(
@@ -86,7 +86,7 @@ export class PairQuizGameController {
     return getActivePair;
   }
 
-  @Post('connection')
+  @Post('pairs/connection')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async createOrConnectionGame(
@@ -104,7 +104,7 @@ export class PairQuizGameController {
     return createOrConnection;
   }
 
-  @Post('my-current/answers')
+  @Post('pairs/my-current/answers')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
   async sendAnswer(
