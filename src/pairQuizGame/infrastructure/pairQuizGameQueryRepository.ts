@@ -208,8 +208,8 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 						{secondPlayerProgress: {user: {id: userId}}}
 					],
 					order: {
-						firstPlayerProgress: {answers: "DESC"},
-						secondPlayerProgress: {answers: "DESC"}
+						firstPlayerProgress: {answers: "ASC"},
+						secondPlayerProgress: {answers: "ASC"}
 					},
 				})
 				return PairQuizGame.getViewModelPaging(item, getSortedAnswers)
