@@ -164,7 +164,7 @@ export class PairQuizGameRepository {
   ): Promise<PlayerStatisticsView | null> {
     const getUserStatistic = await this.pairQuizGameProgressPlayer.findOne({
       relations: { user: true },
-      where: { user: { id: userId } },
+      where: { userId },
     });
     if (!getUserStatistic) return null;
     const statistic = await this.mapPlayerStatisticForView(getUserStatistic);
