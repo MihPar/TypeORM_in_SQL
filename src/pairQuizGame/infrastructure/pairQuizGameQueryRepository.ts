@@ -182,6 +182,7 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 			],
 			order: {
 				[sortBy]: `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`,
+				pairCreatedDate: "desc" 
 			},
 			take: +pageSize,
 			skip: ((+pageNumber - 1) * +pageSize)

@@ -444,7 +444,7 @@ describe('/blogs', () => {
 				// console.log("getAllGames: ", getAllGames.body)
 	
 				expect(getAllGames.status).toBe(HttpStatus.OK)
-				expect((getAllGames.body as PaginationType<GameTypeModel>).items.map(item => item)).toEqual(expect.any(Array<Object>))
+				expect((getAllGames.body as PaginationType<GameTypeModel>).items.map(item => item)).toEqual([(game4 as GameTypeModel).firstPlayerProgress, (game4 as GameTypeModel).secondPlayerProgress])
 		  })
   });
 })  
