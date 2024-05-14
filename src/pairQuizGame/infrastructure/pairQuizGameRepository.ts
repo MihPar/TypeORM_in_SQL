@@ -106,34 +106,33 @@ export class PairQuizGameRepository {
     const playerSumScores = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .select('SUM(score)', 'sumScore')
-      .where('id = :id', { id: player.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .getRawOne()
       .then((result) => parseInt(result.sumScore));
 
     const playerTotalGameCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where('id = :id', { id: player.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .getCount();
 
     const playerAvgScores =
       Math.ceil((playerSumScores / playerTotalGameCount) * 100) / 100;
-    // умножить на 100, + округлнение в большую стороную +
 
     const playerWinCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where('id = :id', { id: player.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Winner })
       .getCount();
 
     const playerLossCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where('id = :id', { id: player.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Loser })
       .getCount();
 
     const playerDrawsCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where('id = :id', { id: player.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Draw })
       .getCount();
 
