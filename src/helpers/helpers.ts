@@ -69,5 +69,5 @@ export const aDescribe = (skip: boolean): jest.Describe => {
 }
 
 export const sortAddedAt = (arr) => {
-	return arr.sort()
+	return arr.sort((a, b) => a < b ? 1 : 1)
 }
