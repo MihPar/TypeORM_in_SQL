@@ -5,7 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Question } from "../../question/domain/entity.question";
 import { Repository } from "typeorm";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
-import { AnswerStatusEnum, GameStatusEnum } from "../enum/enumPendingPlayer";
+import { AnswerStatusEnum, GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
 import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 import { QuestionGame } from '../domain/entity.questionGame';
 import { PlayerStatisticsView } from '../type/typeViewModel';
@@ -122,19 +122,19 @@ export class PairQuizGameRepository {
     const playerWinCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .where('id = :id', { id: player.id })
-      .andWhere(`"userStatus" = :status`, { status: 'Winner' })
+      .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Winner })
       .getCount();
 
     const playerLossCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .where('id = :id', { id: player.id })
-      .andWhere(`"userStatus" = :status`, { status: 'Loser' })
+      .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Loser })
       .getCount();
 
     const playerDrawsCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .where('id = :id', { id: player.id })
-      .andWhere(`"userStatus" = :status`, { status: 'Draw' })
+      .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Draw })
       .getCount();
 
     return {

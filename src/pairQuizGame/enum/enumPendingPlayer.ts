@@ -8,3 +8,9 @@ export enum GameStatusEnum {
 	Active = 'Active',
 	Finished = 'Finished'
 }
+
+export enum StatusGameEnum {
+	Winner = 'Winner',
+	Loser = 'Loser',
+	Draw = 'Draw'
+}
