@@ -106,15 +106,15 @@ export class PairQuizGameRepository {
     const playerSumScores = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .select('SUM(score)', 'sumScore')
-      .where(`"userId" = :userId`, { userId: player.user.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .getRawOne()
       .then((result) => parseInt(result.sumScore));
 
-	  console.log("playerSumScores: ", playerSumScores)
+	//   console.log("playerSumScores: ", playerSumScores)
 
     const playerTotalGameCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId: player.user.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .getCount();
 
     const playerAvgScores =
@@ -122,19 +122,19 @@ export class PairQuizGameRepository {
 
     const playerWinCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId: player.user.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Winner })
       .getCount();
 
     const playerLossCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId: player.user.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Loser })
       .getCount();
 
     const playerDrawsCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId: player.user.id })
+      .where(`"userId" = :userId`, { userId: player.userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Draw })
       .getCount();
 
@@ -164,12 +164,11 @@ export class PairQuizGameRepository {
   async getStatisticOfUser(
     userId: string,
   ): Promise<PlayerStatisticsView | null> {
-    const getUserStatistic = await this.pairQuizGameProgressPlayer.findOne({
+    const player = await this.pairQuizGameProgressPlayer.findOne({
       relations: { user: true },
-      where: {user: {id: userId}},
+      where: {userId: userId},
     });
-    if (!getUserStatistic) return null;
-    const statistic = await this.mapPlayerStatisticForView(getUserStatistic);
+    const statistic = await this.mapPlayerStatisticForView(player);
     return statistic;
   }
 }

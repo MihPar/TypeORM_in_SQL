@@ -453,10 +453,10 @@ describe('/blogs', () => {
 			.get(`/pair-game-quiz/users/my-statistic`)
 			.set(`Authorization`, `Bearer ${tokenByUser4}`)
 
-			console.log("getAllGames: ", getStatisticGame.body)
+			// console.log("getAllGames: ", getStatisticGame.body)
 
 			expect(getStatisticGame.status).toBe(HttpStatus.OK)
-			// expect((getAllGames.body as PaginationType<GameTypeModel>).items.map(item => item.firstPlayerProgress)).toEqual([game.firstPlayerProgress])
+			expect((game4.body as PaginationType<GameTypeModel>).items.map(item => item.firstPlayerProgress)).toEqual([game.firstPlayerProgress])
 	  })
     
   });
