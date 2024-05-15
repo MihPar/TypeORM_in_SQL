@@ -148,12 +148,12 @@ export class PairQuizGameRepository {
     };
   }
 
-  async sendAnswerPlayer(playerProgressId: string, count: boolean) {
+  async sendAnswerPlayer(userId: string, count: boolean) {
     const answersFirstPlayer = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .update()
       .set({ score: () => (Boolean(count) ? 'score + 1' : 'score + 0') })
-      .where({ id: playerProgressId })
+      .where({ userId: userId })
       .execute();
   }
 
