@@ -40,18 +40,18 @@ export class PairQuizGameRepository {
           firstPlayerProgress: { user: { id: userId } },
           status: GameStatusEnum.Active,
         },
-        {
-          firstPlayerProgress: { user: { id: userId } },
-          status: GameStatusEnum.PendingSecondPlayer,
-        },
+        // {
+        //   firstPlayerProgress: { user: { id: userId } },
+        //   status: GameStatusEnum.PendingSecondPlayer,
+        // },
         {
           secondPlayerProgress: { user: { id: userId } },
           status: GameStatusEnum.Active,
         },
-        {
-          secondPlayerProgress: { user: { id: userId } },
-          status: GameStatusEnum.PendingSecondPlayer,
-        },
+        // {
+        //   secondPlayerProgress: { user: { id: userId } },
+        //   status: GameStatusEnum.PendingSecondPlayer,
+        // },
       ],
     });
     if (!foundGameByUserId) return false;
