@@ -25,7 +25,7 @@ export class PairQuizGameRepository {
     protected readonly questionGame: Repository<QuestionGame>,
   ) {}
 
-  async foundGameByUserId(userId: string): Promise<boolean> {
+  async foundGameByUserId(userId: string): Promise<PairQuizGame | null> {
     const foundGameByUserId = await this.pairQuizGame.findOne({
       relations: {
         firstPlayerProgress: {
@@ -54,8 +54,8 @@ export class PairQuizGameRepository {
         // },
       ],
     });
-    if (!foundGameByUserId) return false;
-    return true;
+    if (!foundGameByUserId) return null;
+    return foundGameByUserId;
   }
 
   async foundGame(status: GameStatusEnum): Promise<PairQuizGame | null> {

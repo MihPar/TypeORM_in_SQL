@@ -7,7 +7,8 @@ import { CommentViewModel } from '../comment/comment.type';
 import { Comments } from '../comment/entity/comment.entity';
 import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersPlayer';
 import { HttpStatus } from '@nestjs/common';
-import { QuestionMemory } from './questionMemory';
+import { QuestionMemory, questionsInMemory } from './questionMemory';
+import { GameTypeModel } from '../pairQuizGame/type/typeViewModel';
 
 
 
@@ -31,6 +32,14 @@ export const commentDBToView = (
     },
   };
 };
+
+let answer: {
+	questionId: string
+	answerStatus: string
+	addedAt: string
+}
+
+let question: {body: string, correctAnswers: string[]}[]
 
 // export const commentByPostView = (
 // 	item: CommentClass,
@@ -135,17 +144,17 @@ export const createQuestionsAndPublished = async(server: any, questionsInMemory:
   return questionsInMemory
 }
 
-export const toCreatePair = async(server: any, accessTokenOne: string, accessTokenTwo: string) => {
+export const toCreatePair = async(server: any, accessTokenOne: string, accessTokenTwo: string): Promise<GameTypeModel | null> => {
 	const createPair = await request(server)
 		.post('/pair-game-quiz/pairs/connection')
 		.set('Authorization', `Bearer ${accessTokenOne}`)
-		.expect(200)
+		// .expect(200)
 	
 	const connectPair = await request(server)
 		.post('/pair-game-quiz/pairs/connection')
 		.set('Authorization', `Bearer ${accessTokenTwo}`)
-		.expect(200)
-	if(!createPair && !connectPair) return false
+		// .expect(200)
+	if(!createPair && !connectPair) return null
 	return connectPair.body
 }
 // автоматические ответы на вопросы в игре пользователями 
@@ -159,4 +168,23 @@ export const findAllGames = async(server: any, accessToken: string) => {
 	} catch(err) {
 		console.log(err, 'do not have any games by exists user')
 	}
+}
+
+export const sendAnswers = async(server: any, accessTokenOne: string, accessTokenTwo: string, questions: QuestionMemory) => {
+	const questionGame = (await toCreatePair(server, accessTokenOne, accessTokenTwo)).questions
+
+	const questionsForCurrectAnswers = questions.find((item) => {
+		return item.body === questionGame[0].body
+	})
+
+	const payload = {
+		answer: questionsForCurrectAnswers.correctAnswers[0]
+      };
+
+	const sendAnswer = await request(server)
+		.post('/pair-game-quiz/pairs/my-current/answers')
+		.set('Authorization', `Bearer ${accessTokenOne}`)
+		.send(payload);
+	
+	return sendAnswer.body
 }

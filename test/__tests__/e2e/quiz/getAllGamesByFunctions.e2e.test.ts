@@ -6,7 +6,7 @@ import { appSettings } from "../../../../src/setting";
 import { PairQuizGame } from "../../../../src/pairQuizGame/domain/entity.pairQuezGame";
 import { GameTypeModel } from "../../../../src/pairQuizGame/type/typeViewModel";
 import { PaginationType } from "../../../../src/types/pagination.types";
-import { createAddUser, createQuestionsAndPublished, createToken, findAllGames, toCreatePair } from "../../../../src/helpers/helpers";
+import { createAddUser, createQuestionsAndPublished, createToken, findAllGames, sendAnswers, toCreatePair } from "../../../../src/helpers/helpers";
 import { questionsInMemory } from "../../../../src/helpers/questionMemory";
 
 
@@ -70,6 +70,11 @@ describe('/blogs', () => {
 		body: string,
 		correctAnswers: string[]
 	}
+	let answer: {
+		questionId: string
+        answerStatus: string
+        addedAt: string
+	}
 
 	describe("some description",  () => {
 		it("creting users in db", async () => {
@@ -103,6 +108,10 @@ describe('/blogs', () => {
 
 			connectThreeAndOne = await toCreatePair(server, user3Token, user1Token)
 			console.log("connectThreeAndFour: ", connectThreeAndOne)
+		})
+
+		it('send answers for questions', async() => {
+			await sendAnswers(server, user1Token, user2Token, questionsInMemory)
 		})
 
 		it('get all games', async () => {

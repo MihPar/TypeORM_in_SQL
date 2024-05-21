@@ -12,6 +12,7 @@ import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case';
 import { GAME_QUESTION_COUNT } from '../domain/constants';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
 import { GetCurrectUserStatisticCommand } from '../useCase/changeAnswerStatusFirstPlayer-use-case';
+import { PairQuizGame } from '../domain/entity.pairQuezGame';
 
 @Controller('pair-game-quiz')
 export class PairQuizGameController {
@@ -93,7 +94,7 @@ export class PairQuizGameController {
     @UserIdDecorator() userId: string,
     @UserDecorator() user: User,
   ): Promise<GameTypeModel> {
-    const foundGameByUserId =
+    const foundGameByUserId: PairQuizGame =
       await this.pairQuizGameRepository.foundGameByUserId(userId);
     if (foundGameByUserId) throw new ForbiddenException('403');
     const command = new CreateOrConnectGameCommand(userId, user);
