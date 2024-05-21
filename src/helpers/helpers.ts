@@ -10,36 +10,34 @@ import { HttpStatus } from '@nestjs/common';
 import { QuestionMemory, questionsInMemory } from './questionMemory';
 import { GameTypeModel } from '../pairQuizGame/type/typeViewModel';
 
-
-
 export const commentDBToView = (
-  item: Comments, 
-  myStatus: LikeStatusEnum | null
+  item: Comments,
+  myStatus: LikeStatusEnum | null,
 ): CommentViewModel => {
   return {
     id: item.id,
     content: item.content,
     // commentatorInfo: item.commentatorInfo,
     commentatorInfo: {
-		userId: item.userId,
-		userLogin: item.userLogin
-	},
+      userId: item.userId,
+      userLogin: item.userLogin,
+    },
     createdAt: item.createdAt,
     likesInfo: {
       likesCount: item?.likesCount || 0,
       dislikesCount: item?.dislikesCount || 0,
-      myStatus: myStatus || LikeStatusEnum.None
+      myStatus: myStatus || LikeStatusEnum.None,
     },
   };
 };
 
 let answer: {
-	questionId: string
-	answerStatus: string
-	addedAt: string
-}
+  questionId: string;
+  answerStatus: string;
+  addedAt: string;
+};
 
-let question: {body: string, correctAnswers: string[]}[]
+let question: { body: string; correctAnswers: string[] }[];
 
 // export const commentByPostView = (
 // 	item: CommentClass,
@@ -58,133 +56,172 @@ let question: {body: string, correctAnswers: string[]}[]
 // 	};
 //   };
 
-  
-export const createAddUser = async (server: any, body: InputModelClassCreateBody) => {
-	const createUser = await request(server)
-	  .post(`/sa/users`)
-	  .auth('admin', 'qwerty')
-	  .send(body)
-	  return createUser
-}
+export const createAddUser = async (
+  server: any,
+  body: InputModelClassCreateBody,
+) => {
+  const createUser = await request(server)
+    .post(`/sa/users`)
+    .auth('admin', 'qwerty')
+    .send(body);
+  return createUser;
+};
 
-export const createToken = async (server: any, loginOrEmail: string, password: string) => {
-	const createAccessToken = await request(server)
-		.post('/auth/login')
-		.send({
-		  loginOrEmail,
-		  password
-		})
-	return createAccessToken
-}
+export const createToken = async (
+  server: any,
+  loginOrEmail: string,
+  password: string,
+) => {
+  const createAccessToken = await request(server).post('/auth/login').send({
+    loginOrEmail,
+    password,
+  });
+  return createAccessToken;
+};
 
 export const aDescribe = (skip: boolean): jest.Describe => {
-	if(skip) {return describe.skip}
-	return describe
-}
+  if (skip) {
+    return describe.skip;
+  }
+  return describe;
+};
 
-export const sortAddedAt = <T extends {addedAt: string | Date}>(arr: Array<T>): Array<T> => {
-	return arr.sort((a: T, b: T) => a.addedAt.toString() > b.addedAt.toString() ? 1 : -1)
-} 
+export const sortAddedAt = <T extends { addedAt: string | Date }>(
+  arr: Array<T>,
+): Array<T> => {
+  return arr.sort((a: T, b: T) =>
+    a.addedAt.toString() > b.addedAt.toString() ? 1 : -1,
+  );
+};
 
 // функция создания пары
 
-export const createQuestionsAndPublished = async(server: any, questionsInMemory: QuestionMemory
+export const createQuestionsAndPublished = async (
+  server: any,
+  questionsInMemory: QuestionMemory,
 ) => {
-	  const promises = questionsInMemory.map((item) => {
-		return request(server)
-		  .post('/sa/quiz/questions')
-		  .auth('admin', 'qwerty')
-		  .send(item);
-		});
+  const promises = questionsInMemory.map((item) => {
+    return request(server)
+      .post('/sa/quiz/questions')
+      .auth('admin', 'qwerty')
+      .send(item);
+  });
 
-	const result = await Promise.all(promises)
+  const result = await Promise.all(promises);
 
-	const create = result.map((item, index) => {
-		expect(item.body.id).toEqual(expect.any(String));
-		expect(item.body.body).toEqual(questionsInMemory[index].body);
-		expect(item.body.correctAnswers).toEqual(questionsInMemory[index].correctAnswers);
-		expect(item.body.published).toBe(true);
-		expect(item.body.createdAt).toEqual(expect.any(String));
-		expect(item.body.updatedAt).toBe(null);
-		return item.body
-	})
-	// TODO лучше через мап
-	const publishedQuestion0 = await request(server)
-		.put(`/sa/quiz/questions/${create[0].id}/publish`)
-		.auth('admin', 'qwerty')
-		.send({ published: true });
+  const create = result.map((item, index) => {
+    expect(item.body.id).toEqual(expect.any(String));
+    expect(item.body.body).toEqual(questionsInMemory[index].body);
+    expect(item.body.correctAnswers).toEqual(
+      questionsInMemory[index].correctAnswers,
+    );
+    expect(item.body.published).toBe(true);
+    expect(item.body.createdAt).toEqual(expect.any(String));
+    expect(item.body.updatedAt).toBe(null);
+    return item.body;
+  });
+  // TODO лучше через мап
+  const publishedQuestion0 = await request(server)
+    .put(`/sa/quiz/questions/${create[0].id}/publish`)
+    .auth('admin', 'qwerty')
+    .send({ published: true });
 
-	const publishedQuestion1 = await request(server)
-		.put(`/sa/quiz/questions/${create[1].id}/publish`)
-		.auth('admin', 'qwerty')
-		.send({ published: true });
+  const publishedQuestion1 = await request(server)
+    .put(`/sa/quiz/questions/${create[1].id}/publish`)
+    .auth('admin', 'qwerty')
+    .send({ published: true });
 
-	const publishedQuestion2 = await request(server)
-		.put(`/sa/quiz/questions/${create[2].id}/publish`)
-		.auth('admin', 'qwerty')
-		.send({ published: true });
+  const publishedQuestion2 = await request(server)
+    .put(`/sa/quiz/questions/${create[2].id}/publish`)
+    .auth('admin', 'qwerty')
+    .send({ published: true });
 
-	const publishedQuestion3 = await request(server)
-		.put(`/sa/quiz/questions/${create[3].id}/publish`)
-		.auth('admin', 'qwerty')
-		.send({ published: true });
+  const publishedQuestion3 = await request(server)
+    .put(`/sa/quiz/questions/${create[3].id}/publish`)
+    .auth('admin', 'qwerty')
+    .send({ published: true });
 
-	const publishedQuestion4 = await request(server)
-		.put(`/sa/quiz/questions/${create[4].id}/publish`)
-		.auth('admin', 'qwerty')
-		.send({ published: true });
+  const publishedQuestion4 = await request(server)
+    .put(`/sa/quiz/questions/${create[4].id}/publish`)
+    .auth('admin', 'qwerty')
+    .send({ published: true });
 
   expect(publishedQuestion0.status).toBe(HttpStatus.NO_CONTENT);
   expect(publishedQuestion1.status).toBe(HttpStatus.NO_CONTENT);
   expect(publishedQuestion2.status).toBe(HttpStatus.NO_CONTENT);
   expect(publishedQuestion3.status).toBe(HttpStatus.NO_CONTENT);
   expect(publishedQuestion4.status).toBe(HttpStatus.NO_CONTENT);
-	
-  if(!publishedQuestion0 && !publishedQuestion1 && !publishedQuestion2 && !publishedQuestion3 && !publishedQuestion4) return false
-  return questionsInMemory
-}
 
-export const toCreatePair = async(server: any, accessTokenOne: string, accessTokenTwo: string): Promise<GameTypeModel | null> => {
-	const createPair = await request(server)
-		.post('/pair-game-quiz/pairs/connection')
-		.set('Authorization', `Bearer ${accessTokenOne}`)
-		// .expect(200)
-	
-	const connectPair = await request(server)
-		.post('/pair-game-quiz/pairs/connection')
-		.set('Authorization', `Bearer ${accessTokenTwo}`)
-		// .expect(200)
-	if(!createPair && !connectPair) return null
-	return connectPair.body
-}
-// автоматические ответы на вопросы в игре пользователями 
+  if (
+    !publishedQuestion0 &&
+    !publishedQuestion1 &&
+    !publishedQuestion2 &&
+    !publishedQuestion3 &&
+    !publishedQuestion4
+  )
+    return false;
+  return questionsInMemory;
+};
 
-export const findAllGames = async(server: any, accessToken: string) => {
-	try {
-		const getAllGames = await request(server)
-		.get('/pair-game-quiz/pairs/my')
-		.set(`Authorization`, `Bearer ${accessToken}`)
-		return getAllGames.body
-	} catch(err) {
-		console.log(err, 'do not have any games by exists user')
+export const toCreatePair = async (
+  server: any,
+  accessTokenOne: string,
+  accessTokenTwo: string,
+): Promise<GameTypeModel | null> => {
+  const createPair = await request(server)
+    .post('/pair-game-quiz/pairs/connection')
+    .set('Authorization', `Bearer ${accessTokenOne}`);
+  // .expect(200)
+
+  const connectPair = await request(server)
+    .post('/pair-game-quiz/pairs/connection')
+    .set('Authorization', `Bearer ${accessTokenTwo}`);
+  // .expect(200)
+  if (!createPair && !connectPair) return null;
+  return connectPair.body;
+};
+// автоматические ответы на вопросы в игре пользователями
+
+export const findAllGames = async (server: any, accessToken: string) => {
+  try {
+    const getAllGames = await request(server)
+      .get('/pair-game-quiz/pairs/my')
+      .set(`Authorization`, `Bearer ${accessToken}`);
+    return getAllGames.body;
+  } catch (err) {
+    console.log(err, 'do not have any games by exists user');
+  }
+};
+
+export const sendAnswers = async (
+  server: any,
+  accessTokenOne: string,
+  accessTokenTwo: string,
+  questions: QuestionMemory,
+  callBack: GameTypeModel,
+) => {
+  const array = callBack.questions;
+  const questionsForCurrectAnswers = questions.find((item) => {
+	let arr: string
+	for(let i = 0; i < array.length; i++) {
+		arr = array[i].body
+		return arr
 	}
-}
+    // for (let item of array) {
+    //   return item;
+    // }
+    // return item.body === item.body;
+    return item.body === arr;
+  });
 
-export const sendAnswers = async(server: any, accessTokenOne: string, accessTokenTwo: string, questions: QuestionMemory) => {
-	const questionGame = (await toCreatePair(server, accessTokenOne, accessTokenTwo)).questions
+  const payload = {
+    answer: questionsForCurrectAnswers.correctAnswers[0],
+  };
 
-	const questionsForCurrectAnswers = questions.find((item) => {
-		return item.body === questionGame[0].body
-	})
+  const sendAnswer = await request(server)
+    .post('/pair-game-quiz/pairs/my-current/answers')
+    .set('Authorization', `Bearer ${accessTokenOne}`)
+    .send(payload);
 
-	const payload = {
-		answer: questionsForCurrectAnswers.correctAnswers[0]
-      };
-
-	const sendAnswer = await request(server)
-		.post('/pair-game-quiz/pairs/my-current/answers')
-		.set('Authorization', `Bearer ${accessTokenOne}`)
-		.send(payload);
-	
-	return sendAnswer.body
-}
+  return sendAnswer.body
+};

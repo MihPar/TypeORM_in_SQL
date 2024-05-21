@@ -103,20 +103,20 @@ describe('/blogs', () => {
 
 		it('create pairs', async() => {
 			connectOneAndTwo = await toCreatePair(server, user1Token, user2Token)
+			// console.log("connectOneAndTwo: ", connectOneAndTwo)
 
-			console.log("connectOneAndTwo: ", connectOneAndTwo)
-
-			connectThreeAndOne = await toCreatePair(server, user3Token, user1Token)
-			console.log("connectThreeAndFour: ", connectThreeAndOne)
+			connectThreeAndOne = await toCreatePair(server, user3Token, user4Token)
+			// console.log("connectThreeAndFour: ", connectThreeAndOne)
 		})
 
 		it('send answers for questions', async() => {
-			await sendAnswers(server, user1Token, user2Token, questionsInMemory)
+			const result = await sendAnswers(server, user1Token, user2Token, questionsInMemory, connectThreeAndOne)
+			console.log("result: ", result)
 		})
 
 		it('get all games', async () => {
 			const allGames = await findAllGames(server, user1Token)
-			// console.log("allGames: ", allGames)
+			console.log("allGames: ", allGames)
 		})
 	})
 })
