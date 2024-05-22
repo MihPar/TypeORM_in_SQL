@@ -167,7 +167,7 @@ export const toCreatePair = async (
   server: any,
   accessTokenOne: string,
   accessTokenTwo: string,
-): Promise<GameTypeModel | null> => {
+): Promise<[number, GameTypeModel | null]> => {
   const createPair = await request(server)
     .post('/pair-game-quiz/pairs/connection')
     .set('Authorization', `Bearer ${accessTokenOne}`);
@@ -178,7 +178,7 @@ export const toCreatePair = async (
     .set('Authorization', `Bearer ${accessTokenTwo}`);
   // .expect(200)
   if (!createPair && !connectPair) return null;
-  return connectPair.body;
+  return [connectPair.status, connectPair.body];
 };
 // автоматические ответы на вопросы в игре пользователями
 
@@ -198,20 +198,22 @@ export const sendAnswers = async (
   accessTokenOne: string,
   accessTokenTwo: string,
   questions: QuestionMemory,
-  callBack: GameTypeModel,
+  game: GameTypeModel, // callback - это функция обратного вызова (по-русски) портому это всегда функция
 ) => {
-  const array = callBack.questions;
+  const array = game.questions;
+//   console.log(">>>", game)
   const questionsForCurrectAnswers = questions.find((item) => {
 	let arr: string
 	for(let i = 0; i < array.length; i++) {
-		arr = array[i].body
-		return arr
+		//arr = array[i].body
+		if(array[i].body === item.body) return true;
+		//return arr
 	}
     // for (let item of array) {
     //   return item;
     // }
     // return item.body === item.body;
-    return item.body === arr;
+    //return item.body === arr;
   });
 
   const payload = {
@@ -225,3 +227,10 @@ export const sendAnswers = async (
 
   return sendAnswer.body
 };
+
+export const findGameById = async(server: any, id: string, accessToke: string): Promise<[number, GameTypeModel | null]> => {
+	const getGameById = await request(server)
+		.get(`/pair-game-quiz/pairs/${id}`)
+		.set('Authorization', `Bearer ${accessToke}`);
+		return [getGameById.status, getGameById.body]
+}
