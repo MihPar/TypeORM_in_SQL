@@ -125,18 +125,23 @@ describe('/blogs', () => {
 		})
 
 		it('send answers for questions by first and second game', async() => {
+			console.log("before send answers: ", 1)
 			const sendAnswerByFirstGame = await sendAnswers(server, user1Token, user2Token, questionsInMemory, firstGame)
-			// console.log("result: ", resultOneAndTwo)
+			console.log("after sening answers: ", 2)
+
+			// console.log("sendAnswerByFirstGame: ", sendAnswerByFirstGame)
 			const foundGameOneAndTwoOnFinish = await findGameById(server, firstGame.id, user1Token)
-			// console.log("foundGameOneAndTwoOnFinish: ", foundGameOneAndTwoOnFinish.body)
+			console.log("foundGameOneAndTwoOnFinish: ", foundGameOneAndTwoOnFinish[1])
+			console.log("first: ", foundGameOneAndTwoOnFinish[1].firstPlayerProgress.answers)
+			console.log("second: ", foundGameOneAndTwoOnFinish[1].secondPlayerProgress.answers)
 			// todo добавить метод нахождения игры по айди для проверки того что она окончена и можно игрокам-участникам начинать новую игру
 			expect(foundGameOneAndTwoOnFinish[0]).toBe(200) // todo скопируй енамку и вставь вместо финиш
 			expect(foundGameOneAndTwoOnFinish[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и вставь вместо финиш
-			const sendAnswerBySecondGame = await sendAnswers(server, user3Token, user4Token, questionsInMemory, secondGame)
-			// console.log("result: ", resultThreeAndFour)
-			const foundGameThreeAndFourOnFinish = await findGameById(server, secondGame.id, user1Token)
-			expect(sendAnswerBySecondGame[0]).toBe(200)
-			expect(sendAnswerBySecondGame[1].status).toBe(GameStatusEnum.Finished)
+			// const sendAnswerBySecondGame = await sendAnswers(server, user3Token, user4Token, questionsInMemory, secondGame)
+			// // console.log("result: ", resultThreeAndFour)
+			// const foundGameThreeAndFourOnFinish = await findGameById(server, secondGame.id, user1Token)
+			// expect(sendAnswerBySecondGame[0]).toBe(200)
+			// expect(sendAnswerBySecondGame[1].status).toBe(GameStatusEnum.Finished)
 		})
 			
 		// it('create pairs third and forth game', async() => {

@@ -116,6 +116,7 @@ export class PairQuizGameController {
       await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId, [
         GameStatusEnum.Active,
       ]);
+	//   console.log("activeUserGame: ", activeUserGame)
     if (!activeUserGame)
       throw new ForbiddenException(
         'the game is not exist by userId and status',

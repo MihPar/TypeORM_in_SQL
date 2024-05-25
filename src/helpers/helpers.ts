@@ -200,32 +200,48 @@ export const sendAnswers = async (
   questions: QuestionMemory,
   game: GameTypeModel, // callback - это функция обратного вызова (по-русски) портому это всегда функция
 ) => {
-  const array = game.questions;
-//   console.log(">>>", game)
-  const questionsForCurrectAnswers = questions.find((item) => {
-	let arr: string
-	for(let i = 0; i < array.length; i++) {
-		//arr = array[i].body
-		if(array[i].body === item.body) return true;
-		//return arr
-	}
-    // for (let item of array) {
-    //   return item;
-    // }
-    // return item.body === item.body;
-    //return item.body === arr;
-  });
+//   const array = game.questions;
+// //   console.log(">>>", game)
+//   const questionsForCurrectAnswers = questions.find((item) => {
+// 	let arr: Array<object>
+// 	for(let i = 0; i < array.length; i++) {
+// 		//arr = array[i].body
+// 		if(array[i].body === item.body) return true;
+// 		//return arr
 
-  const payload = {
-    answer: questionsForCurrectAnswers.correctAnswers[0],
-  };
+// 	}
+//     // for (let item of array) {
+//     //   return item;
+//     // }
+//     // return item.body === item.body;
+//     //return item.body === arr;
+//   });
 
-  const sendAnswer = await request(server)
+game.questions.forEach(async (questionInGame, index) => {
+	console.log("index: ", index)
+	// console.log("question: ", questions)
+	const answer = questions.find(questionInMemory => questionInMemory.body === questionInGame.body).correctAnswers[0]
+
+	const payload = {
+		answer
+	  };
+	  await delay(100)
+
+	const sendAnswerFirstPlayer = await request(server)
     .post('/pair-game-quiz/pairs/my-current/answers')
     .set('Authorization', `Bearer ${accessTokenOne}`)
     .send(payload);
 
-  return sendAnswer.body
+	await delay(100)
+	
+	const sendAnswerSecondPlayer = await request(server)
+    .post('/pair-game-quiz/pairs/my-current/answers')
+    .set('Authorization', `Bearer ${accessTokenTwo}`)
+    .send(payload);
+
+})
+
+//   return sendAnswer.body
 };
 
 export const findGameById = async(server: any, id: string, accessToke: string): Promise<[number, GameTypeModel | null]> => {
@@ -234,3 +250,11 @@ export const findGameById = async(server: any, id: string, accessToke: string): 
 		.set('Authorization', `Bearer ${accessToke}`);
 		return [getGameById.status, getGameById.body]
 }
+
+export const delay = async (milliseconds: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve()
+      }, milliseconds)
+    })
+  }
