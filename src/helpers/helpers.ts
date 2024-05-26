@@ -194,55 +194,56 @@ export const findAllGames = async (server: any, accessToken: string) => {
 };
 
 export const sendAnswers = async (
-  server: any,
-  accessTokenOne: string,
-  accessTokenTwo: string,
-  questions: QuestionMemory,
-  game: GameTypeModel, // callback - это функция обратного вызова (по-русски) портому это всегда функция
-) => {
-//   const array = game.questions;
-// //   console.log(">>>", game)
-//   const questionsForCurrectAnswers = questions.find((item) => {
-// 	let arr: Array<object>
-// 	for(let i = 0; i < array.length; i++) {
-// 		//arr = array[i].body
-// 		if(array[i].body === item.body) return true;
-// 		//return arr
-
-// 	}
-//     // for (let item of array) {
-//     //   return item;
-//     // }
-//     // return item.body === item.body;
-//     //return item.body === arr;
-//   });
-
-game.questions.forEach(async (questionInGame, index) => {
-	console.log("index: ", index)
+	server: any,
+	accessTokenOne: string,
+	accessTokenTwo: string,
+	questions: QuestionMemory,
+	game: GameTypeModel, // callback - это функция обратного вызова (по-русски) портому это всегда функция
+  ) => {
+  //   const array = game.questions;
+  // //   console.log(">>>", game)
+  //   const questionsForCurrectAnswers = questions.find((item) => {
+  //   let arr: Array<object>
+  //   for(let i = 0; i < array.length; i++) {
+  //     //arr = array[i].body
+  //     if(array[i].body === item.body) return true;
+  //     //return arr
+  
+  //   }
+  //     // for (let item of array) {
+  //     //   return item;
+  //     // }
+  //     // return item.body === item.body;
+  //     //return item.body === arr;
+  //   });
+  
+	for (const questionInGame of game.questions) {
+	  const index = game.questions.indexOf(questionInGame);
+	// console.log("index: ", index)
 	// console.log("question: ", questions)
 	const answer = questions.find(questionInMemory => questionInMemory.body === questionInGame.body).correctAnswers[0]
-
+  
 	const payload = {
-		answer
+	  answer
 	  };
 	  await delay(100)
-
+  
 	const sendAnswerFirstPlayer = await request(server)
-    .post('/pair-game-quiz/pairs/my-current/answers')
-    .set('Authorization', `Bearer ${accessTokenOne}`)
-    .send(payload);
-
+	  .post('/pair-game-quiz/pairs/my-current/answers')
+	  .set('Authorization', `Bearer ${accessTokenOne}`)
+	  .send(payload);
+  
 	await delay(100)
-	
+  
 	const sendAnswerSecondPlayer = await request(server)
-    .post('/pair-game-quiz/pairs/my-current/answers')
-    .set('Authorization', `Bearer ${accessTokenTwo}`)
-    .send(payload);
-
-})
-
-//   return sendAnswer.body
-};
+	  .post('/pair-game-quiz/pairs/my-current/answers')
+	  .set('Authorization', `Bearer ${accessTokenTwo}`)
+	  .send(payload);
+  
+  }
+  
+  //   return sendAnswer.body
+  };
 
 export const findGameById = async(server: any, id: string, accessToke: string): Promise<[number, GameTypeModel | null]> => {
 	const getGameById = await request(server)

@@ -48,12 +48,12 @@ describe('/blogs', () => {
         email: '2mpara7473@gmail.com',
       };
 	  let user3Creds= {
-        login: '3Mickle',
+        login: 'Alex',
         password: '3qwerty',
         email: '3mpara7473@gmail.com',
       };
 	  let user4Creds= {
-        login: '4Mickle',
+        login: 'Pet',
         password: '4qwerty',
         email: '4mpara7473@gmail.com',
       };
@@ -80,6 +80,9 @@ describe('/blogs', () => {
 	let secondGame: any
 	let firsdGame: any
 	let fourthGame: any
+	let fivethGame: any
+	let sithGame: any
+	let seventhGame: any
 
 	let sendAnswerByFirstGame: any
 	let sendAnswerBySecondGame: any
@@ -110,80 +113,120 @@ describe('/blogs', () => {
 			expect(question).toEqual(questionsInMemory)
 		})
 
-		it('create pairs first and second game', async() => {
+		it('create pairs first game (1 and 2)', async() => {
 			const connectOneAndTwoRes = await toCreatePair(server, user1Token, user2Token)
 			expect(connectOneAndTwoRes[0]).toBe(200)
 			expect(connectOneAndTwoRes[1]).toBeDefined()
 			firstGame = connectOneAndTwoRes[1]
 			// console.log("connectOneAndTwo: ", connectOneAndTwo)
 
+			// console.log("before send answers: ", 1)
+			const sendAnswerByFirstGame = await sendAnswers(server, user1Token, user2Token, questionsInMemory, firstGame)
+			// console.log("after sening answers: ", 2)
+
+			// console.log("sendAnswerByFirstGame: ", sendAnswerByFirstGame)
+			const foundFirstGame = await findGameById(server, firstGame.id, user1Token)
+			// console.log("foundFirstGame: ", foundFirstGame[1])
+			// console.log("first: ", foundFirstGame[1].firstPlayerProgress.answers)
+			// console.log("second: ", foundFirstGame[1].secondPlayerProgress.answers)
+			// todo добавить метод нахождения игры по айди для проверки того что она окончена и можно игрокам-участникам начинать новую игру
+			expect(foundFirstGame[0]).toBe(200) // todo скопируй енамку и вставь вместо финиш
+			expect(foundFirstGame[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и вставь вместо финиш
+			
+		})
+
+		it('create pairs second game (3 and 4)', async() => {
 			const connectThreeAndFourRes = await toCreatePair(server, user3Token, user4Token)
 			expect(connectThreeAndFourRes[0]).toBe(200)
 			expect(connectThreeAndFourRes[1]).toBeDefined()
 			secondGame = connectThreeAndFourRes[1]
 			// console.log("connectThreeAndFour: ", connectThreeAndOne)
-		})
 
-		it('send answers for questions by first and second game', async() => {
-			console.log("before send answers: ", 1)
-			const sendAnswerByFirstGame = await sendAnswers(server, user1Token, user2Token, questionsInMemory, firstGame)
-			console.log("after sening answers: ", 2)
-
-			// console.log("sendAnswerByFirstGame: ", sendAnswerByFirstGame)
-			const foundGameOneAndTwoOnFinish = await findGameById(server, firstGame.id, user1Token)
-			console.log("foundGameOneAndTwoOnFinish: ", foundGameOneAndTwoOnFinish[1])
-			console.log("first: ", foundGameOneAndTwoOnFinish[1].firstPlayerProgress.answers)
-			console.log("second: ", foundGameOneAndTwoOnFinish[1].secondPlayerProgress.answers)
-			// todo добавить метод нахождения игры по айди для проверки того что она окончена и можно игрокам-участникам начинать новую игру
-			expect(foundGameOneAndTwoOnFinish[0]).toBe(200) // todo скопируй енамку и вставь вместо финиш
-			expect(foundGameOneAndTwoOnFinish[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и вставь вместо финиш
-			// const sendAnswerBySecondGame = await sendAnswers(server, user3Token, user4Token, questionsInMemory, secondGame)
-			// // console.log("result: ", resultThreeAndFour)
-			// const foundGameThreeAndFourOnFinish = await findGameById(server, secondGame.id, user1Token)
-			// expect(sendAnswerBySecondGame[0]).toBe(200)
-			// expect(sendAnswerBySecondGame[1].status).toBe(GameStatusEnum.Finished)
+			const sendAnswerBySecondGame = await sendAnswers(server, user3Token, user4Token, questionsInMemory, secondGame)
+			// console.log("result: ", resultThreeAndFour)
+			const foundSecondGame = await findGameById(server, secondGame.id, user3Token)
+			expect(foundSecondGame[0]).toBe(200)
+			expect(foundSecondGame[1].status).toBe(GameStatusEnum.Finished)
+			
 		})
 			
-		// it('create pairs third and forth game', async() => {
-		// 	connectOneAndTwo = await toCreatePair(server, user1Token, user2Token)
-		// 	// console.log("connectOneAndTwo: ", connectOneAndTwo)
+		it('create pairs third game (1 and 4)', async() => {
+			const connectOnedAndFourRes = await toCreatePair(server, user1Token, user4Token)
+			expect(connectOnedAndFourRes[0]).toBe(200)
+			expect(connectOnedAndFourRes[1]).toBeDefined()
+			firsdGame = connectOnedAndFourRes[1]
+			// console.log("connectOneAndTwo: ", connectOneAndTwo)
 
-		// 	connectThreeAndFour = await toCreatePair(server, user3Token, user4Token)
-		// 	// console.log("connectThreeAndFour: ", connectThreeAndOne)
-		// })
+			const sendAnswerByThirdGame = await sendAnswers(server, user1Token, user4Token, questionsInMemory, firsdGame)
 
-		// it('send answers for questions by third and forth game', async() => {
-		// 	const resultOneAndTwo = await sendAnswers(server, user1Token, user2Token, questionsInMemory, connectOneAndTwo)
-			// console.log("result: ", resultOneAndTwo)
+			const foundGameByThirdGame = await findGameById(server, firsdGame.id, user1Token)
+			expect(foundGameByThirdGame[0]).toBe(200)
+			expect(foundGameByThirdGame[1].status).toBe(GameStatusEnum.Finished)
+			// console.log("result3: ", sendAnswerByThirdGame)
 
-			// const resultThreeAndFour = await sendAnswers(server, user3Token, user4Token, questionsInMemory, connectThreeAndFour)
-			// console.log("result: ", resultThreeAndFour)
-		// })
+		})
 
-		// it("create fifth game (1 and 3 user)", async () => {
-		// 	connectOneAndTwo = await toCreatePair(server, user1Token, user3Token)
-		// 	// console.log("connectOneAndTwo: ", connectOneAndTwo)
+		it('create pair by fourth game (3 and 2)', async() => {
+			const connectThreeAndTwoRes = await toCreatePair(server, user3Token, user2Token)
+			expect(connectThreeAndTwoRes[0]).toBe(200)
+			expect(connectThreeAndTwoRes[1]).toBeDefined()
+			fourthGame = connectThreeAndTwoRes[1]
+			// console.log("connectThreeAndFour: ", connectThreeAndOne)
 
-		// 	const resultOneAndTwo = await sendAnswers(server, user1Token, user3Token, questionsInMemory, connectOneAndTwo)
-		// 	console.log("result: ", resultOneAndTwo)
-		// })
+			const sendAnswerByFourGame = await sendAnswers(server, user3Token, user2Token, questionsInMemory, fourthGame)
 
-		// it("create sixth game (1 and 4 user)", async() => {
-		// 	connectOneAndTwo = await toCreatePair(server, user1Token, user4Token)
-		// 	// console.log("connectOneAndTwo: ", connectOneAndTwo)
+			const foundGameByFourGame = await findGameById(server,fourthGame.id, user2Token)
+			expect(foundGameByFourGame[0]).toBe(200)
+			expect(foundGameByFourGame[1].status).toBe(GameStatusEnum.Finished)
+			// console.log("result4: ", resultThreeAndFour)
+		})
 
-		// 	const resultOneAndTwo = await sendAnswers(server, user1Token, user4Token, questionsInMemory, connectOneAndTwo)
-		// 	console.log("result: ", resultOneAndTwo)
-		// })
+		it("create fifth game (1 and 3 user)", async () => {
+			const connectOneAndTreeRes = await toCreatePair(server, user1Token, user3Token)
+			expect(connectOneAndTreeRes[0]).toBe(200)
+			expect(connectOneAndTreeRes[1]).toBeDefined()
+			fivethGame = connectOneAndTreeRes[1]
 
-		// it("create seventh game (1 and 2 user)", async () => {
-		// 	connectOneAndTwo = await toCreatePair(server, user1Token, user2Token)
-		// 	// console.log("connectOneAndTwo: ", connectOneAndTwo)
-		// })
+			// console.log("connectOneAndTwo: ", connectOneAndTwo)
+			const sendAnswerByThirdsGame = await sendAnswers(server, user1Token, user3Token, questionsInMemory, fivethGame)
 
-		// it('get all games', async () => {
-		// 	const allGames = await findAllGames(server, user1Token)
-		// 	console.log("allGames: ", allGames)
-		// })
+			const foundFithGame = await findGameById(server, fivethGame.id, user3Token)
+			expect(foundFithGame[0]).toBe(200)
+			expect(foundFithGame[1].status).toBe(GameStatusEnum.Finished)
+			// console.log("result: ", sendAnswerByThirdGame)
+		})
+
+		it("create sixth game (1 and 4 user)", async() => {
+			const connectOneAndFourRes = await toCreatePair(server, user1Token, user4Token)
+			expect(connectOneAndFourRes[0]).toBe(200)
+			expect(connectOneAndFourRes[1]).toBeDefined()
+			sithGame = connectOneAndFourRes[1]
+
+			// console.log("connectOneAndTwo: ", connectOneAndTwo)
+
+			const sendAnswerBeSixthGame = await sendAnswers(server, user1Token, user4Token, questionsInMemory, sithGame)
+			const findSixthGame = await findGameById(server, sithGame.id, user1Token)
+			expect(findSixthGame[0]).toBe(200)
+			expect(findSixthGame[1].status).toBe(GameStatusEnum.Finished)
+			// console.log("result: ", sendAnswerBeSixthGame)
+		})
+
+		it("create seventh game (1 and 2 user)", async () => {
+			const connectOneAndTwoRes = await toCreatePair(server, user1Token, user2Token)
+			expect(connectOneAndTwoRes[0]).toBe(200)
+			expect(connectOneAndTwoRes[1]).toBeDefined()
+			seventhGame = connectOneAndTwoRes[1]
+
+			const sendAnswerBySeventhGame = await sendAnswers(server, user1Token, user2Token, questionsInMemory, seventhGame)
+			const findSeventhGame = await findGameById(server, seventhGame.id, user2Token)
+			expect(findSeventhGame[0]).toBe(200)
+			expect(findSeventhGame[1].status).toBe(GameStatusEnum.Finished)
+			// console.log("connectOneAndTwo: ", connectOneAndTwo)
+		})
+
+		it('get all games', async () => {
+			const allGames = await findAllGames(server, user1Token)
+			console.log("allGames: ", allGames)
+		})
 	})
 })
