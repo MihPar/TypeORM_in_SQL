@@ -21,7 +21,6 @@ export class PairQuizGameController {
     protected readonly pairQuizGameRepository: PairQuizGameRepository,
     protected readonly commandBus: CommandBus,
   ) {}
-
   @Get('pairs/my')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)

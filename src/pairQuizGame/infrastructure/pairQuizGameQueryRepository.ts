@@ -211,7 +211,7 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 					order: {questionGames: { index: 'ASC' }}
 				})
 
-				return PairQuizGame.getViewModel(findGameByUser)
+				return PairQuizGame.getViewModel(item)
 			}))
 		  };
 		  return result;
