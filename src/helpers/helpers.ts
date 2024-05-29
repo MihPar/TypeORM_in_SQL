@@ -86,13 +86,25 @@ export const aDescribe = (skip: boolean): jest.Describe => {
   return describe;
 };
 
-export const sortAddedAt = <T extends { addedAt: string | Date }>(
+export const sortAddedAt = <T extends { addedAt:  Date }>(
   arr: Array<T>,
 ): Array<T> => {
   return arr.sort((a: T, b: T) =>
-    a.addedAt.toString() > b.addedAt.toString() ? 1 : -1,
+    { 
+		console.error(a.addedAt.toString(),  b.addedAt.toString())
+		return a.addedAt.toISOString() > b.addedAt.toISOString() ? 1 : -1
+	}
   );
 };
+// type Arr = {
+// 		questionId: string,
+// 		answerStatus: string
+// 		addedAt: string
+// 	}
+// type Obj = Arr[]
+// export const sortAddedAt = (obj: Obj) => {
+// 	return obj.sort((a: Arr, b: Arr) => {return a.addedAt.toString() > b.addedAt.toString() ? 1 : -1})
+// }
 
 // функция создания пары
 
@@ -187,7 +199,7 @@ export const findAllGames = async (server: any, accessToken: string) => {
     const getAllGames = await request(server)
       .get('/pair-game-quiz/pairs/my')
       .set(`Authorization`, `Bearer ${accessToken}`);
-    return getAllGames.body;
+    return {status: getAllGames.status, body:  getAllGames.body};
   } catch (err) {
     console.log(err, 'do not have any games by exists user');
   }

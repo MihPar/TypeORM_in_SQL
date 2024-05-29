@@ -52,7 +52,7 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 			answerPush.push(answer)
 				await this.pairQuezGameQueryRepository.createAnswers(answerPush)
 				await this.pairQuizGameRepository.sendAnswerPlayer(
-					command.game.firstPlayerProgress.userId,
+					command.game.firstPlayerProgress.user.id,
 					isIncludes ? true : false,
 					)
 				const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game, command.game.questionGames.map((item) => {return item.question}))

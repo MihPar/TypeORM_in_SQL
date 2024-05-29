@@ -181,8 +181,9 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 				{secondPlayerProgress: {user: {id: userId}}}
 			],
 			order: {
+				questionGames: {index: 'ASC'},
 				[sortBy]: `${sortDirection.toUpperCase() === "DESC" ? "DESC" : "ASC"}`,
-				pairCreatedDate: "DESC" 
+				pairCreatedDate: "DESC",
 			},
 			take: +pageSize,
 			skip: ((+pageNumber - 1) * +pageSize)
@@ -198,18 +199,20 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 			totalCount: +totalCount,
 			items: await Promise.all(allGames.map(async(item: PairQuizGame) => {
 
-				const findGameByUser = await this.pairQuezGame.findOne({
-					relations: {
-						firstPlayerProgress: {user: true, answers: true},
-						secondPlayerProgress: {user: true, answers: true},
-						questionGames: {question: {questionGame: true}}
-					},
-					where: [
-						{firstPlayerProgress: {user: {id: userId}}},
-						{secondPlayerProgress: {user: {id: userId}}}
-					],
-					order: {questionGames: { index: 'ASC' }}
-				})
+				// const findGameByUser = await this.pairQuezGame.findOne({
+				// 	relations: {
+				// 		firstPlayerProgress: {user: true, answers: true},
+				// 		secondPlayerProgress: {user: true, answers: true},
+				// 		questionGames: {question: {questionGame: true}}
+				// 	},
+				// 	where: [
+				// 		{firstPlayerProgress: {user: {id: userId}}},
+				// 		{secondPlayerProgress: {user: {id: userId}}}
+				// 	],
+				// 	order: {
+				// 		questionGames: {index: 'ASC'}
+				// 	}
+				// })
 
 				return PairQuizGame.getViewModel(item)
 			}))

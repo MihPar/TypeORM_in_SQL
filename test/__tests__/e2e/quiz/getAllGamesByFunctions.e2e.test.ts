@@ -132,7 +132,7 @@ describe('/blogs', () => {
 			// todo добавить метод нахождения игры по айди для проверки того что она окончена и можно игрокам-участникам начинать новую игру
 			expect(foundFirstGame[0]).toBe(200) // todo скопируй енамку и вставь вместо финиш
 			expect(foundFirstGame[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и вставь вместо финиш
-			console.log("result1: ", foundFirstGame)
+			// console.log("result1: ", foundFirstGame)
 			
 		})
 
@@ -147,7 +147,7 @@ describe('/blogs', () => {
 			const foundSecondGame = await findGameById(server, secondGame.id, user3Token)
 			expect(foundSecondGame[0]).toBe(200)
 			expect(foundSecondGame[1].status).toBe(GameStatusEnum.Finished)
-			console.log("result2: ", foundSecondGame)
+			// console.log("result2: ", foundSecondGame)
 			
 		})
 			
@@ -163,7 +163,7 @@ describe('/blogs', () => {
 			const foundGameByThirdGame = await findGameById(server, firsdGame.id, user1Token)
 			expect(foundGameByThirdGame[0]).toBe(200)
 			expect(foundGameByThirdGame[1].status).toBe(GameStatusEnum.Finished)
-			console.log("result3: ", foundGameByThirdGame)
+			// console.log("result3: ", foundGameByThirdGame)
 
 		})
 
@@ -179,7 +179,7 @@ describe('/blogs', () => {
 			const foundGameByFourGame = await findGameById(server,fourthGame.id, user2Token)
 			expect(foundGameByFourGame[0]).toBe(200)
 			expect(foundGameByFourGame[1].status).toBe(GameStatusEnum.Finished)
-			console.log("result4: ", foundGameByFourGame)
+			// console.log("result4: ", foundGameByFourGame)
 		})
 
 		it("create fifth game (1 and 3 user)", async () => {
@@ -194,7 +194,7 @@ describe('/blogs', () => {
 			const foundFithGame = await findGameById(server, fivethGame.id, user3Token)
 			expect(foundFithGame[0]).toBe(200)
 			expect(foundFithGame[1].status).toBe(GameStatusEnum.Finished)
-			console.log("result5: ", foundFithGame)
+			// console.log("result5: ", foundFithGame)
 		})
 
 		it("create sixth game (1 and 4 user)", async() => {
@@ -209,7 +209,7 @@ describe('/blogs', () => {
 			const findSixthGame = await findGameById(server, sithGame.id, user1Token)
 			expect(findSixthGame[0]).toBe(200)
 			expect(findSixthGame[1].status).toBe(GameStatusEnum.Finished)
-			console.log("result6: ", findSixthGame)
+			// console.log("result6: ", findSixthGame)
 		})
 
 		it("create seventh game (1 and 2 user)", async () => {
@@ -222,12 +222,19 @@ describe('/blogs', () => {
 			const findSeventhGame = await findGameById(server, seventhGame.id, user2Token)
 			expect(findSeventhGame[0]).toBe(200)
 			expect(findSeventhGame[1].status).toBe(GameStatusEnum.Finished)
-			console.log("result7: ", findSeventhGame)
+			// console.log("result7: ", findSeventhGame)
 		})
 
 		it('get all games', async () => {
-			const allGames = await findAllGames(server, user1Token)
-			console.log("allGames: ", allGames)
+			const {status, body : allGames} = await findAllGames(server, user1Token)
+			
+			expect(status).toBe(200);
+			expect(allGames.items).toHaveLength(5)
+			console.log((allGames.items[3] as GameTypeModel).secondPlayerProgress.answers)
+			// берем
+
+			// console.log("allGames: ",( allGames as PaginationType<GameTypeModel>).items.map(item => {return [item.firstPlayerProgress.answers.map(item => item), item.secondPlayerProgress.answers.map(item => item)]}))
+			// console.log("allGames: ", allGames)
 		})
 	})
 })
