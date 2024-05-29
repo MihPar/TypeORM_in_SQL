@@ -20,6 +20,8 @@ export class FirstPlayerSendAnswerCommand {
 	) {}
 }
 
+// todo check finding game methods in game repo and delete obsolete game
+
 @CommandHandler(FirstPlayerSendAnswerCommand)
 export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayerSendAnswerCommand> {
 	constructor(
@@ -52,10 +54,13 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 			answerPush.push(answer)
 				await this.pairQuezGameQueryRepository.createAnswers(answerPush)
 				await this.pairQuizGameRepository.sendAnswerPlayer(
-					command.game.firstPlayerProgress.user.id,
-					isIncludes ? true : false,
+					{
+						userId: command.game.firstPlayerProgress.user.id,
+						count: (isIncludes ? true : false),
+						gameId: command.game.id
+				}
 					)
-				const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game, command.game.questionGames.map((item) => {return item.question}))
+				const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game, command.game.questionGames.map(item => item.question))
 				await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
 
 					return {

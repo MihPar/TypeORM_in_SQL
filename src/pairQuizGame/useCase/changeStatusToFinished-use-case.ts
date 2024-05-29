@@ -4,6 +4,7 @@ import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQuery
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { GameTypeModel } from "../type/typeViewModel";
 import { GameStatusEnum } from "../enum/enumPendingPlayer";
+import { sortAddedAt } from "../../helpers/helpers";
 
 export class ChangeStatusToFinishedCommand {
 	constructor(
@@ -25,13 +26,13 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 			firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length &&
 			secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length
 		) {
-			const firstPlayerLastAnswer = firstPlayer.firstPlayerProgress.answers[command.gameQuestions.length - 1]
+			const firstPlayerLastAnswer = sortAddedAt(firstPlayer.firstPlayerProgress.answers)[command.gameQuestions.length - 1]
 			// console.log('firstPlayerLastAnswer: ', firstPlayerLastAnswer)
-			const secondPlayerLastAnswer = secondPlayer.secondPlayerProgress.answers[command.gameQuestions.length - 1]
-			if (firstPlayerLastAnswer.addedAt < secondPlayerLastAnswer.addedAt) {
-				await this.pairQuezGameQueryRepository.addBonusFirstPalyer(command.game.firstPlayerProgress.id)
-			} else if (firstPlayerLastAnswer.addedAt > secondPlayerLastAnswer.addedAt) {
-				await this.pairQuezGameQueryRepository.addBonusSecondPalyer(command.game.secondPlayerProgress.id)
+			const secondPlayerLastAnswer = sortAddedAt(secondPlayer.secondPlayerProgress.answers)[command.gameQuestions.length - 1]
+			if (firstPlayerLastAnswer.addedAt.toISOString() < secondPlayerLastAnswer.addedAt.toISOString()) {
+				await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.firstPlayerProgress.id)
+			} else if (firstPlayerLastAnswer.addedAt.toISOString() > secondPlayerLastAnswer.addedAt.toISOString()) {
+				await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.secondPlayerProgress.id)
 			}
 			return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.game.id)
 		}

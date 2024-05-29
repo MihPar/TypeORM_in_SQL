@@ -1,6 +1,6 @@
 import { Column, Entity, Index, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
-import { AnswerStatusEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
+import { AnswerStatusEnum, StatusGameEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
 import { AnswersPlayer } from "./entity.answersPlayer";
 import { Question } from "../../question/domain/entity.question";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";

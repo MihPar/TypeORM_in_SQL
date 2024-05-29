@@ -91,7 +91,7 @@ export const sortAddedAt = <T extends { addedAt:  Date }>(
 ): Array<T> => {
   return arr.sort((a: T, b: T) =>
     { 
-		console.error(a.addedAt.toString(),  b.addedAt.toString())
+		// console.error(a.addedAt.toString(),  b.addedAt.toString())
 		return a.addedAt.toISOString() > b.addedAt.toISOString() ? 1 : -1
 	}
   );

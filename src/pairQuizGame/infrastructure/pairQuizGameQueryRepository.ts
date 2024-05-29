@@ -150,13 +150,13 @@ const currentUnFinishedGameSecondPlayer = getGameById.secondPlayerProgress ? awa
 	return await this.pairQuizGameProgressPlayer.increment({gameId}, "score", 1 )
   }
 
-  async addBonusFirstPalyer(id: string) {
-	return await this.pairQuizGameProgressPlayer.update({id}, {score: () => "score + 1", bonus_score: () => "score + 1"})
+  async addBonusPalyer(id: string) {
+	return await this.pairQuizGameProgressPlayer.update({id}, {score: () => "score + 1"})
   }
 
-  async addBonusSecondPalyer(id: string) {
-	return await this.pairQuizGameProgressPlayer.update({id}, {score: () => "score + 1", bonus_score: () => "score + 1"})
-  }
+//   async addBonusSecondPalyer(id: string) {
+// 	return await this.pairQuizGameProgressPlayer.update({id}, {score: () => "score + 1", bonus_score: () => "score + 1"})
+//   }
 
   async changeGameStatusToFinished(gameId: string) {
 	return await this.pairQuezGame.update({id: gameId}, {status: GameStatusEnum.Finished, finishGameDate: new Date().toISOString()})

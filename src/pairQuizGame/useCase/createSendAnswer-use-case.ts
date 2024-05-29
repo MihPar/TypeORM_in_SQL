@@ -29,8 +29,8 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
       await this.pairQuezGameQueryRepository.getUnfinishedGame(
 		commandAnswer.userId
       );
-    if (!commandAnswer.activeUserGame || commandAnswer.activeUserGame.status !== 'Active')
-      throw new NotFoundException('No active pair');
+    // if (!commandAnswer.activeUserGame || commandAnswer.activeUserGame.status !== 'Active')
+    //   throw new NotFoundException('No active pair');
 
 	if (commandAnswer.activeUserGame.firstPlayerProgress.player.id === commandAnswer.userId) {
       const command = new FirstPlayerSendAnswerCommand(
