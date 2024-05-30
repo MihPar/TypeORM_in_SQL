@@ -227,14 +227,8 @@ describe('/blogs', () => {
 
 		it('get all games', async () => {
 			const {status, body : allGames} = await findAllGames(server, user1Token)
-			
 			expect(status).toBe(200);
 			expect(allGames.items).toHaveLength(5)
-			// console.log((allGames.items[3] as GameTypeModel).secondPlayerProgress.answers)
-			// берем
-
-			// console.log("allGames: ",( allGames as PaginationType<GameTypeModel>).items.map(item => {return [item.firstPlayerProgress.answers.map(item => item), item.secondPlayerProgress.answers.map(item => item)]}))
-			// console.log("allGames: ", allGames)
 		})
 	})
 })

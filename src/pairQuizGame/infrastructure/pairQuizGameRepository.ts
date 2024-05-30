@@ -100,9 +100,37 @@ export class PairQuizGameRepository {
     return getQuestionForQuizGame;
   }
 
-  private async mapPlayerStatisticForView(
+  async sendAnswerPlayer({
+    userId,
+    count,
+    gameId,
+  }: {
+    userId: string;
+    count: boolean;
+    gameId: string;
+  }) {
+    const answersPlayer = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .update()
+      .set({ score: () => (Boolean(count) ? 'score + 1' : 'score + 0') })
+      .where({ userId, gameId })
+      .execute();
+
+    const result = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .select()
+      .where({ userId })
+      .getOne();
+    //   console.log("result: ", result.score)
+  }
+
+  async createQuestions(createQuestions: QuestionGame[]) {
+    return await this.questionGame.save(createQuestions);
+  }
+
+  async getStatisticOfUser(
     userId: string,
-  ): Promise<PlayerStatisticsView> {
+  ): Promise<PlayerStatisticsView | null> {
     const playerSumScores = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .select('SUM(score)', 'sumScore')
@@ -110,42 +138,46 @@ export class PairQuizGameRepository {
       .getRawOne()
       .then((result) => parseInt(result.sumScore));
 
-console.log(" all progresses of user, ", await this.pairQuizGameProgressPlayer.find(
-	{
-		where: {
-			userId
-		}
-	}
-))
+    console.log(
+      ' all progresses of user, ',
+      await this.pairQuizGameProgressPlayer.find({
+        where: {
+          userId,
+        },
+      }),
+    );
 
-	  console.log("result: as first player ", await this.pairQuizGame
-	  .find({
-		where : 
-			{firstPlayerProgress: {user: {id: userId}}},
-					  })
-				.then(result => result.map(item => ({
-					playerId: item.firstPlayerProgress.id,
-					answers: item.firstPlayerProgress.answers
-				})))
-			)
+    console.log(
+      'result: as first player ',
+      await this.pairQuizGame
+        .find({
+          where: { firstPlayerProgress: { user: { id: userId } } },
+        })
+        .then((result) =>
+          result.map((item) => ({
+            playerId: item.firstPlayerProgress.id,
+            answers: item.firstPlayerProgress.answers,
+          })),
+        ),
+    );
 
-			console.log("result: as second player ", await this.pairQuizGame
-	  .find({
-		where : 
-			{secondPlayerProgress: {user: {id: userId}}},
-					  })
-				.then(result => result.map(item => ({
-					playerId: item.secondPlayerProgress.id,
-					answers: item.secondPlayerProgress.answers
-				})))
-			)
-      //.then((result) => parseInt(result.sumScore)))
-
-	//   console.log("playerSumScores: ", playerSumScores)
+    console.log(
+      'result: as second player ',
+      await this.pairQuizGame
+        .find({
+          where: { secondPlayerProgress: { user: { id: userId } } },
+        })
+        .then((result) =>
+          result.map((item) => ({
+            playerId: item.secondPlayerProgress.id,
+            answers: item.secondPlayerProgress.answers,
+          })),
+        ),
+    );
 
     const playerTotalGameCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId})
+      .where(`"userId" = :userId`, { userId })
       .getCount();
 
     const playerAvgScores =
@@ -153,19 +185,19 @@ console.log(" all progresses of user, ", await this.pairQuizGameProgressPlayer.f
 
     const playerWinCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId})
+      .where(`"userId" = :userId`, { userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Winner })
       .getCount();
 
     const playerLossCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId})
+      .where(`"userId" = :userId`, { userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Loser })
       .getCount();
 
     const playerDrawsCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      .where(`"userId" = :userId`, { userId})
+      .where(`"userId" = :userId`, { userId })
       .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Draw })
       .getCount();
 
@@ -177,32 +209,5 @@ console.log(" all progresses of user, ", await this.pairQuizGameProgressPlayer.f
       lossesCount: playerLossCount,
       drawsCount: playerDrawsCount,
     };
-  }
-
-  async sendAnswerPlayer({userId, count, gameId}:{userId: string, count: boolean, gameId: string}) {
-    const answersPlayer = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder()
-      .update()
-      .set({ score: () => (Boolean(count) ? 'score + 1' : 'score + 0') })
-      .where({ userId, gameId})
-      .execute();
-
-	  const result = await this.pairQuizGameProgressPlayer
-	    .createQueryBuilder()
-	  	.select()
-		.where({userId})
-		.getOne()
-	//   console.log("result: ", result.score)
-  }
-
-  async createQuestions(createQuestions: QuestionGame[]) {
-    return await this.questionGame.save(createQuestions);
-  }
-
-  async getStatisticOfUser(
-    userId: string,
-  ): Promise<PlayerStatisticsView | null> {
-    const statistic = await this.mapPlayerStatisticForView(userId);
-    return statistic;
   }
 }
