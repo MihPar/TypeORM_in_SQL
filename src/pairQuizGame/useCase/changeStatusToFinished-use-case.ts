@@ -34,6 +34,17 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 			} else if (firstPlayerLastAnswer.addedAt.toISOString() > secondPlayerLastAnswer.addedAt.toISOString()) {
 				await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.secondPlayerProgress.id)
 			}
+			const firstPlayerScore = command.game.firstPlayerProgress.score
+			const secondPalyerScore = command.game.secondPlayerProgress.score
+			if(firstPlayerScore > secondPalyerScore)  {
+				await this.pairQuezGameQueryRepository.makeFirstPlayerWin(command.game)
+			}
+			if(firstPlayerScore < secondPalyerScore) {
+				await this.pairQuezGameQueryRepository.makeSecondPlayerWin(command.game);
+			}
+			if(firstPlayerScore === secondPalyerScore) {
+				await this.pairQuezGameQueryRepository.notAWinner(command.game);
+			}
 			return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.game.id)
 		}
 	}
