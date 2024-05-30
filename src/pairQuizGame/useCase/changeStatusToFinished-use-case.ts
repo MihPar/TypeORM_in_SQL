@@ -3,7 +3,7 @@ import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { GameTypeModel } from "../type/typeViewModel";
-import { GameStatusEnum } from "../enum/enumPendingPlayer";
+import { GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
 import { sortAddedAt } from "../../helpers/helpers";
 
 export class ChangeStatusToFinishedCommand {
@@ -29,22 +29,34 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 			const firstPlayerLastAnswer = sortAddedAt(firstPlayer.firstPlayerProgress.answers)[command.gameQuestions.length - 1]
 			const secondPlayerLastAnswer = sortAddedAt(secondPlayer.secondPlayerProgress.answers)[command.gameQuestions.length - 1]
 			if (firstPlayerLastAnswer.addedAt.toISOString() < secondPlayerLastAnswer.addedAt.toISOString()) {
-				await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.firstPlayerProgress.id)
+				command.game.firstPlayerProgress.score += 1
+				// await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.firstPlayerProgress.id)
 			} else if (firstPlayerLastAnswer.addedAt.toISOString() > secondPlayerLastAnswer.addedAt.toISOString()) {
-				await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.secondPlayerProgress.id)
+				command.game.secondPlayerProgress.score += 1
+				// await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.secondPlayerProgress.id)
 			}
 			const firstPlayerScore = command.game.firstPlayerProgress.score
 			const secondPalyerScore = command.game.secondPlayerProgress.score
 			if(firstPlayerScore > secondPalyerScore)  {
-				await this.pairQuezGameQueryRepository.makeFirstPlayerWin(command.game)
+				command.game.secondPlayerProgress.userStatus = StatusGameEnum.Loser
+				command.game.firstPlayerProgress.userStatus = StatusGameEnum.Winner
+				// await this.pairQuezGameQueryRepository.makeFirstPlayerWin(command.game)
 			}
 			if(firstPlayerScore < secondPalyerScore) {
-				await this.pairQuezGameQueryRepository.makeSecondPlayerWin(command.game);
+				command.game.secondPlayerProgress.userStatus = StatusGameEnum.Winner
+				command.game.firstPlayerProgress.userStatus = StatusGameEnum.Loser
+				// await this.pairQuezGameQueryRepository.makeSecondPlayerWin(command.game);
 			}
 			if(firstPlayerScore === secondPalyerScore) {
-				await this.pairQuezGameQueryRepository.notAWinner(command.game);
+				command.game.secondPlayerProgress.userStatus = StatusGameEnum.Draw
+				command.game.firstPlayerProgress.userStatus = StatusGameEnum.Draw
+				// await this.pairQuezGameQueryRepository.notAWinner(command.game);
 			}
-			return await this.pairQuezGameQueryRepository.changeGameStatusToFinished(command.game.id)
+			command.game.status = GameStatusEnum.Finished
+			 await this.pairQuezGameQueryRepository.saveProgress(command.game.firstPlayerProgress)
+			 await this.pairQuezGameQueryRepository.saveProgress(command.game.secondPlayerProgress)
+			return await this.pairQuezGameQueryRepository.saveGame(command.game)
+			//changeGameStatusToFinished(command.game.id)
 		}
 	}
 }
