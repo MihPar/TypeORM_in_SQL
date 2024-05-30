@@ -138,42 +138,42 @@ export class PairQuizGameRepository {
       .getRawOne()
       .then((result) => parseInt(result.sumScore));
 
-    console.log(
-      ' all progresses of user, ',
-      await this.pairQuizGameProgressPlayer.find({
-        where: {
-          userId,
-        },
-      }),
-    );
+    // console.log(
+    //   ' all progresses of user, ',
+    //   await this.pairQuizGameProgressPlayer.find({
+    //     where: {
+    //       userId,
+    //     },
+    //   }),
+    // );
 
-    console.log(
-      'result: as first player ',
-      await this.pairQuizGame
-        .find({
-          where: { firstPlayerProgress: { user: { id: userId } } },
-        })
-        .then((result) =>
-          result.map((item) => ({
-            playerId: item.firstPlayerProgress.id,
-            answers: item.firstPlayerProgress.answers,
-          })),
-        ),
-    );
+    // console.log(
+    //   'result: as first player ',
+    //   await this.pairQuizGame
+    //     .find({
+    //       where: { firstPlayerProgress: { user: { id: userId } } },
+    //     })
+    //     .then((result) =>
+    //       result.map((item) => ({
+    //         playerId: item.firstPlayerProgress.id,
+    //         answers: item.firstPlayerProgress.answers,
+    //       })),
+    //     ),
+    // );
 
-    console.log(
-      'result: as second player ',
-      await this.pairQuizGame
-        .find({
-          where: { secondPlayerProgress: { user: { id: userId } } },
-        })
-        .then((result) =>
-          result.map((item) => ({
-            playerId: item.secondPlayerProgress.id,
-            answers: item.secondPlayerProgress.answers,
-          })),
-        ),
-    );
+    // console.log(
+    //   'result: as second player ',
+    //   await this.pairQuizGame
+    //     .find({
+    //       where: { secondPlayerProgress: { user: { id: userId } } },
+    //     })
+    //     .then((result) =>
+    //       result.map((item) => ({
+    //         playerId: item.secondPlayerProgress.id,
+    //         answers: item.secondPlayerProgress.answers,
+    //       })),
+    //     ),
+    // );
 
     const playerTotalGameCount = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
