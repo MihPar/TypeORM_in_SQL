@@ -4,6 +4,8 @@ import { Repository } from "typeorm";
 import { AnswersPlayer } from "../domain/entity.answersPlayer";
 import { PairQuizGameProgressPlayer } from "../domain/entity.pairQuizGameProgressPlayer";
 import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
+import { TopUserView } from "../../pairQuizGame/type/typeViewModel";
+import { PaginationType } from "../../types/pagination.types";
 
 @Injectable()
 export class PairQuizGameProgressQueryRepository {
@@ -94,13 +96,11 @@ export class PairQuizGameProgressQueryRepository {
 			return getAnswer
 	}
 
-	// async getAnswerFirstPlayer(firstPlayer: PairQuizGameProgressPlayer, answer: string): Promise<string> {
-	// 	const getAnswer = await this.pairQuizGame.findOne({
-	// 		relations: {
-	// 			firstPlayerProgress: {answers: {answer: true}}
-	// 		},
-	// 		where: {answer}
-	// 	})
-	// 	return getAnswer.firstPlayerProgress.answers[0].answer
-	// }
+	async getTopUsers(
+		pageNumber: string,
+		pageSize: string,
+		sortBy: string
+	): Promise<PaginationType<TopUserView>> {
+		
+	}
 }

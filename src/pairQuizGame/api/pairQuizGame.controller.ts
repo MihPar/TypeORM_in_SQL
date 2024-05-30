@@ -5,7 +5,7 @@ import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQuery
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOrConnectGameCommand } from '../useCase/createOrConnection-use-case';
 import { GameAnswerDto } from '../dto/createPairQuizGame.dto';
-import { AnswerType, GameTypeModel, PlayerStatisticsView } from '../type/typeViewModel';
+import { AnswerType, GameTypeModel, PlayerStatisticsView, TopUserView } from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case';
@@ -13,6 +13,8 @@ import { GAME_QUESTION_COUNT } from '../domain/constants';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
 import { GetCurrectUserStatisticCommand } from '../useCase/changeAnswerStatusFirstPlayer-use-case';
 import { PairQuizGame } from '../domain/entity.pairQuezGame';
+import { PaginationType } from '../../types/pagination.types';
+import { PairQuizGameProgressQueryRepository } from '../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
 
 @Controller('pair-game-quiz')
 export class PairQuizGameController {
@@ -20,7 +22,28 @@ export class PairQuizGameController {
     protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
     protected readonly pairQuizGameRepository: PairQuizGameRepository,
     protected readonly commandBus: CommandBus,
+	protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository
   ) {}
+
+  @Get('users/top')
+  @HttpCode(HttpStatus.OK)
+  async getTopUsers(
+	@Query()
+		query: {
+		sortBy: string;
+		pageNumber: string;
+		pageSize: string;
+		}
+  ): Promise<PaginationType<TopUserView>> {
+		const getUsersOfTop = await this.pairQuizGameProgressQueryRepository.getTopUsers(
+			query.pageNumber || '1',
+			query.pageSize || '10',
+			query.sortBy || 'pairCreatedDate',
+		)
+		return getUsersOfTop
+  }
+
+
   @Get('pairs/my')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
