@@ -27,7 +27,6 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 			secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length
 		) {
 			const firstPlayerLastAnswer = sortAddedAt(firstPlayer.firstPlayerProgress.answers)[command.gameQuestions.length - 1]
-			// console.log('firstPlayerLastAnswer: ', firstPlayerLastAnswer)
 			const secondPlayerLastAnswer = sortAddedAt(secondPlayer.secondPlayerProgress.answers)[command.gameQuestions.length - 1]
 			if (firstPlayerLastAnswer.addedAt.toISOString() < secondPlayerLastAnswer.addedAt.toISOString()) {
 				await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.firstPlayerProgress.id)
