@@ -7,6 +7,7 @@ import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
 import { TopUserView } from "../../pairQuizGame/type/typeViewModel";
 import { PaginationType } from "../../types/pagination.types";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
+import { StatusGameEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
 
 @Injectable()
 export class PairQuizGameProgressQueryRepository {
@@ -101,65 +102,86 @@ export class PairQuizGameProgressQueryRepository {
 		pageSize: number,
 		
 	): Promise<PaginationType<TopUserView>> {
-		const uniqueUserIds = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder('PlayerTrm')
-      .select('PlayerTrm.userId', 'userId')
-      .distinct(true)
-      .getRawMany();
+		const stackAllGames = await this.pairQuizGameProgressPlayer.find({
+			relations: {user: true},
+		})
+		// console.log("stackAllGames: ", stackAllGames)
+	// const stackAllGames = await this.pairQuizGameProgressPlayer
+	// 		.createQueryBuilder()
+	// 		.select(`'userId'`)
+	// 		.distinct(true)
+	// 		.getRawMany();
+
+	const uniqUserByIds = Array.from(new Set(stackAllGames.map(item => item.userId)))
+	// console.log('result: ', uniqUserByIds)
     const sortParam = sort.map((param) => param.replace(/\+/g, ' '));
-    const userIds = uniqueUserIds.map((row) => row.userId);
-    const totalCountQuery = await uniqueUserIds.length;
+    // const userIds = stackAllGames.map((row) => row.user.id);
+    const totalCountQuery = await uniqUserByIds.length;
 
     const items = await Promise.all(
-      userIds.map(async(userId) => {
-	const user = await this.usersQueryRepository.findUserById(userId)
-    const playerSumScores = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder('PlayerTrm')
-      .select('SUM(PlayerTrm.scoresNumberInGame)', 'sumScore')
-      .where('PlayerTrm.userId = :userId', { userId })
-      .getRawOne()
-      .then((result) => parseInt(result.sumScore));
+		uniqUserByIds.map(async (userId) => {
+        const user = await this.usersQueryRepository.findUserById(userId);
+		// console.log("user: ", user)
+        const playerSumScores = await this.pairQuizGameProgressPlayer
+          .createQueryBuilder()
+          .select('SUM(score)', 'sumScore')
+          .where(`"userId" = :userId`, { userId })
+          .getRawOne()
+          .then((result) => parseInt(result.sumScore));
 
-    const playerTotalGameCount = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder('PlayerTrm')
-      .where('PlayerTrm.userId = :userId', { userId })
-      .getCount();
+		//   console.log("userId: ", userId)
+		//   console.log("playerSumScores: ", playerSumScores)
 
-    const playerAvgScores = +(playerSumScores / playerTotalGameCount).toFixed(2);
+		//   const playerSumScores = await this.pairQuizGameProgressPlayer
+		//   .createQueryBuilder()
+		//   .select('SUM(score)', 'sumScore')
+		//   .where(`"userId" = :userId`, { userId })
+		//   .getRawOne()
+		//   .then((result) => parseInt(result.sumScore));
 
-    const playerWinCount = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder('PlayerTrm')
-      .where('PlayerTrm.userId = :userId', { userId })
-      .andWhere('PlayerTrm.userStatus = :status', { status: 'Winner' })
-      .getCount();
+        const playerTotalGameCount = await this.pairQuizGameProgressPlayer
+          .createQueryBuilder()
+          .where(`"userId" = :userId`, { userId })
+          .getCount();
 
-    const playerLossCount = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder('PlayerTrm')
-      .where('PlayerTrm.userId = :userId', { userId })
-      .andWhere('PlayerTrm.userStatus = :status', { status: 'Loser' })
-      .getCount();
+        // const playerAvgScores = +(
+        //   playerSumScores / playerTotalGameCount
+        // ).toFixed(2);
 
-    const playerDrawsCount = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder('PlayerTrm')
-      .where('PlayerTrm.userId = :userId', { userId })
-      .andWhere('PlayerTrm.userStatus = :status', { status: 'Draw' })
-      .getCount();
+		const playerAvgScores =
+      Math.ceil((playerSumScores / playerTotalGameCount) * 100) / 100;
 
-	
+        const playerWinCount = await this.pairQuizGameProgressPlayer
+          .createQueryBuilder()
+          .where(`"userId" = :userId`, { userId })
+          .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Winner })
+          .getCount();
 
-    return {
-      sumScore: playerSumScores,
-      avgScores: playerAvgScores,
-      gamesCount: playerTotalGameCount,
-      winsCount: playerWinCount,
-      lossesCount: playerLossCount,
-      drawsCount: playerDrawsCount,
-      player: {
-        id: user.id,
-        login: user.login
-      },
-    };
-	  })
+        const playerLossCount = await this.pairQuizGameProgressPlayer
+          .createQueryBuilder()
+          .where(`"userId" = :userId`, { userId })
+          .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Loser })
+          .getCount();
+
+        const playerDrawsCount = await this.pairQuizGameProgressPlayer
+          .createQueryBuilder()
+          .where(`"userId" = :userId`, { userId })
+          .andWhere(`"userStatus" = :status`, { status: StatusGameEnum.Draw })
+          .getCount();
+
+        return {
+          sumScore: playerSumScores,
+          avgScores: playerAvgScores,
+          gamesCount: playerTotalGameCount,
+          winsCount: playerWinCount,
+          lossesCount: playerLossCount,
+          drawsCount: playerDrawsCount,
+          player: {
+            id: user!.id,
+            login: user!.login,
+          },
+        };
+      }),
     );
 
     const sortedItems = items
@@ -200,12 +222,12 @@ export class PairQuizGameProgressQueryRepository {
         }
         return 0;
       })
-      .slice((pageNumber - 1) * pageSize, pageNumber * pageSize);
+      .slice((+pageNumber - 1) * +pageSize, +pageNumber * +pageSize);
 	
     return {
       pagesCount: Math.ceil(totalCountQuery / +pageSize),
       page: +pageNumber,
-      pageSize,
+      pageSize: +pageSize,
       totalCount: totalCountQuery,
       items: sortedItems
     };

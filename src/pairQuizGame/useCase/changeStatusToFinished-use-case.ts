@@ -28,10 +28,10 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 		) {
 			const firstPlayerLastAnswer = sortAddedAt(firstPlayer.firstPlayerProgress.answers)[command.gameQuestions.length - 1]
 			const secondPlayerLastAnswer = sortAddedAt(secondPlayer.secondPlayerProgress.answers)[command.gameQuestions.length - 1]
-			if (firstPlayerLastAnswer.addedAt.toISOString() < secondPlayerLastAnswer.addedAt.toISOString()) {
+			if ((firstPlayerLastAnswer.addedAt.toISOString() < secondPlayerLastAnswer.addedAt.toISOString()) && firstPlayer.firstPlayerProgress.answers.length >= 1) {
 				command.game.firstPlayerProgress.score += 1
 				// await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.firstPlayerProgress.id)
-			} else if (firstPlayerLastAnswer.addedAt.toISOString() > secondPlayerLastAnswer.addedAt.toISOString()) {
+			} else if ((firstPlayerLastAnswer.addedAt.toISOString() > secondPlayerLastAnswer.addedAt.toISOString()) && secondPlayer.secondPlayerProgress.answers.length >= 1) {
 				command.game.secondPlayerProgress.score += 1
 				// await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.secondPlayerProgress.id)
 			}

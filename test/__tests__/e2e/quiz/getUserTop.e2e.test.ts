@@ -4,7 +4,7 @@ import { AppModule } from "../../../../src/app.module";
 import request from "supertest";
 import { appSettings } from "../../../../src/setting";
 import { PairQuizGame } from "../../../../src/pairQuizGame/domain/entity.pairQuezGame";
-import { GameTypeModel } from "../../../../src/pairQuizGame/type/typeViewModel";
+import { GameTypeModel, PlayerStatisticsView } from "../../../../src/pairQuizGame/type/typeViewModel";
 import { PaginationType } from "../../../../src/types/pagination.types";
 import { createAddUser, createQuestionsAndPublished, createToken, findAllGames, findGameById, sendAnswers, toCreatePair } from "../../../../src/helpers/helpers";
 import { questionsInMemory } from "../../../../src/helpers/questionMemory";
@@ -227,15 +227,27 @@ describe('/blogs', () => {
 
 		it('get all games', async () => {
 			const {status, body : allGames} = await findAllGames(server, user1Token)
+			// console.log("restult: ", allGames)
 			expect(status).toBe(200);
 			expect(allGames.items).toHaveLength(5)
 		})
-	})
+
+		it('get my statistic', async() => {
+			const getMyStatistics = await request(server)
+				.get(`/pair-game-quiz/users/my-statistic`)
+				.set(`Authorization`, `Bearer ${user1Token}`)
+
+				expect(getMyStatistics.status).toBe(200)
+				console.log("result: ", getMyStatistics.body)
+		})
 
 		it('get user top', async () => {
+			console.log('try:')
 			const getUserTop = await request(server)
-				.get(`pair-game-quiz/users/top`)
+				.get(`/pair-game-quiz/users/top`)
 			
+				// console.log("getUserTop: ", (getUserTop.body as Promise<PlayerStatisticsView | null>))
 			expect(getUserTop.status).toBe(200)
 		})
+	})
 })
