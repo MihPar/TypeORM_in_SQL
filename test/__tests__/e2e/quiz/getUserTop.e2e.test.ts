@@ -238,11 +238,11 @@ describe('/blogs', () => {
 				.set(`Authorization`, `Bearer ${user1Token}`)
 
 				expect(getMyStatistics.status).toBe(200)
-				console.log("result: ", getMyStatistics.body)
+				// console.log("result: ", getMyStatistics.body)
 		})
 
 		it('get user top', async () => {
-			console.log('try:')
+			// console.log('try:')
 			const getUserTop = await request(server)
 				.get(`/pair-game-quiz/users/top`)
 			

@@ -104,6 +104,7 @@ export class PairQuizGameProgressQueryRepository {
 	): Promise<PaginationType<TopUserView>> {
 		const stackAllGames = await this.pairQuizGameProgressPlayer.find({
 			relations: {user: true},
+			order: {addedAt: "ASC"}
 		})
 		// console.log("stackAllGames: ", stackAllGames)
 	// const stackAllGames = await this.pairQuizGameProgressPlayer
@@ -115,7 +116,7 @@ export class PairQuizGameProgressQueryRepository {
 	const uniqUserByIds = Array.from(new Set(stackAllGames.map(item => item.userId)))
 	// console.log('result: ', uniqUserByIds)
     const sortParam = sort.map((param) => param.replace(/\+/g, ' '));
-    // const userIds = stackAllGames.map((row) => row.user.id);
+	// console.log("sortParam: ", sortParam)
     const totalCountQuery = await uniqUserByIds.length;
 
     const items = await Promise.all(
@@ -128,6 +129,8 @@ export class PairQuizGameProgressQueryRepository {
           .where(`"userId" = :userId`, { userId })
           .getRawOne()
           .then((result) => parseInt(result.sumScore));
+
+		//   console.log("playerSumScores: ", typeof playerSumScores)
 
 		//   console.log("userId: ", userId)
 		//   console.log("playerSumScores: ", playerSumScores)
@@ -143,6 +146,8 @@ export class PairQuizGameProgressQueryRepository {
           .createQueryBuilder()
           .where(`"userId" = :userId`, { userId })
           .getCount();
+
+		//   console.log("playerTotalGameCount: ", typeof playerTotalGameCount)
 
         // const playerAvgScores = +(
         //   playerSumScores / playerTotalGameCount
@@ -184,9 +189,11 @@ export class PairQuizGameProgressQueryRepository {
       }),
     );
 
+	// console.log("items: ", items)
     const sortedItems = items
       .sort((a, b) => {
         for (const sortCriteria of sortParam) {
+			// console.log("sortCriteria: ", sortCriteria)
           const [fieldName, sortDirection] = sortCriteria.split(' ', 2);
           if (fieldName === 'avgScores') {
             if (a.avgScores > b.avgScores) {
