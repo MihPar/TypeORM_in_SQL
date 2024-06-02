@@ -28,18 +28,35 @@ export class PairQuizGameController {
   @Get('users/top')
   @HttpCode(HttpStatus.OK)
   async getTopUsers(
-	@Query()
-		query: {
-		sortBy: string;
-		pageNumber: string;
-		pageSize: string;
-		}
+	@Query('sort') sort: string[],
+	@Query('pageNumber') pageNumber: number,
+	@Query('pageSize') pageSize: number
   ): Promise<PaginationType<TopUserView>> {
-		const getUsersOfTop = await this.pairQuizGameProgressQueryRepository.getTopUsers(
-			query.pageNumber || '1',
-			query.pageSize || '10',
-			query.sortBy || 'pairCreatedDate',
-		)
+	if (!sort || sort.length === 0) {
+		sort = ['avgScores desc', 'sumScore desc'];
+	  } else if (typeof sort === 'string') {
+		sort = [sort];
+	  } else if (
+		typeof sort === 'object' &&
+		sort.length === 1 &&
+		typeof sort[0] === 'string'
+	  ) {
+		sort = [sort[0]];
+	  }
+	  const checkPageSize = +pageSize;
+	  if (!pageSize || !Number.isInteger(checkPageSize) || checkPageSize <= 0) {
+		pageSize = 10;
+	  }
+  
+	  const checkPageNumber = +pageNumber;
+	  if (
+		!pageNumber ||
+		!Number.isInteger(checkPageNumber) ||
+		checkPageNumber <= 0
+	  ) {
+		pageNumber = 1;
+	  }
+		const getUsersOfTop = await this.pairQuizGameProgressQueryRepository.getTopUsers(sort, pageNumber, pageSize)
 		return getUsersOfTop
   }
 
