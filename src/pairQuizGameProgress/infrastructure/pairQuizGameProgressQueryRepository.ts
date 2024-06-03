@@ -106,7 +106,6 @@ export class PairQuizGameProgressQueryRepository {
 			relations: {user: true},
 			order: {addedAt: "ASC"}
 		})
-		// console.log("stackAllGames: ", stackAllGamesByUser)
 	// const stackAllGamesByUser = await this.pairQuizGameProgressPlayer
 	// 		.createQueryBuilder()
 	// 		.select(`'userId'`)
