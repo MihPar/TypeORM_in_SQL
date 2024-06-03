@@ -102,18 +102,19 @@ export class PairQuizGameProgressQueryRepository {
 		pageSize: number,
 		
 	): Promise<PaginationType<TopUserView>> {
-		const stackAllGamesByUser = await this.pairQuizGameProgressPlayer.find({
-			relations: {user: true},
-			order: {addedAt: "ASC"}
-		})
-	// const stackAllGamesByUser = await this.pairQuizGameProgressPlayer
-	// 		.createQueryBuilder()
-	// 		.select(`'userId'`)
-	// 		.distinct(true)
-	// 		.getRawMany();
+		// const stackAllGamesByUser = await this.pairQuizGameProgressPlayer.find({
+		// 	relations: {user: true},
+		// 	order: {addedAt: "ASC"}
+		// })
+	const stackAllGamesByUser = await this.pairQuizGameProgressPlayer
+			.createQueryBuilder()
+			// .select(`'userId'`)
+			.distinct(true)
+			.getMany();
 
 	const uniqUserByIds = Array.from(new Set(stackAllGamesByUser.map(item => item.userId)))
-	// console.log('result: ', uniqUserByIds)
+	console.log(uniqUserByIds)
+	console.log('result: ', stackAllGamesByUser)
     const sortParam = sort.map((param) => param.replace(/\+/g, ' '));
 	// console.log("sortParam: ", sortParam)
     const totalCountQuery = await uniqUserByIds.length;
