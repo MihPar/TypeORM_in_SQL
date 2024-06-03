@@ -242,7 +242,6 @@ describe('/blogs', () => {
 
     
     it('send correct answer for first question by first player', async () => {
-
 		/** 1 **/
 		const questionOne = questionsInMemory.find((item) => {
 			return item.body === questionGame[0].body
@@ -252,7 +251,6 @@ describe('/blogs', () => {
       const payload1 = {
 		answer: questionOne.correctAnswers[0]
       };
-	//   console.log(payload1, " payload 1")
 	  const sendAnswer1 = await request(server)
         .post('/pair-game-quiz/pairs/my-current/answers')
         .set('Authorization', `Bearer ${tokenByUser}`)
@@ -269,19 +267,12 @@ describe('/blogs', () => {
         .get('/pair-game-quiz/pairs/my-current')
         .set('Authorization', `Bearer ${tokenByUser}`);
 
-	  //expect(questionOne).toEqual(questionGame[0])
       expect(getCurrentGame1.status).toBe(HttpStatus.OK);
-	//   let quest = getCurrentGame1.body.questions.map(item => {item.id})
-	//   console.log("id: ", getCurrentGame1.body.questions[0].id)
-	//   console.log("id: ", getCurrentGame1.body.questions[1].id)
-	//   console.log("id: ", getCurrentGame1.body.questions[2].id)
-	//   console.log("id: ", getCurrentGame1.body.questions[3].id)
-	//   console.log("id: ", getCurrentGame1.body.questions[4].id)
+	
 	  expect((getCurrentGame1.body as GameTypeModel).questions[0]).toEqual(questionGame[0])
 	  // проверка полей игры
 	  expect((getCurrentGame1.body as GameTypeModel).id).toEqual(getGameById.body.id)
 	  expect((getCurrentGame1.body as GameTypeModel).firstPlayerProgress).toEqual(getGameById.body.firstPlayerProgress)
-	  //expect((getCurrentGame1.body as GameTypeModel)).toEqual({})
 
 	  expect(sendAnswer1.status).toBe(HttpStatus.OK);
       expect(sendAnswer1.body).toEqual({
@@ -292,11 +283,7 @@ describe('/blogs', () => {
 
       let currentGame1 = getCurrentGame1.body;
 
-
-      
-
-expect(currentGame1.firstPlayerProgress.answers[0].answerStatus).toBe('Correct')
-
+	expect(currentGame1.firstPlayerProgress.answers[0].answerStatus).toBe('Correct')
     });
 
     it('send incorrect answer for first question second player', async () => {
@@ -327,9 +314,7 @@ expect(sendAnswer2.status).toBe(HttpStatus.OK);
 	expect(getCurrentGame2.status).toBe(HttpStatus.OK);
 	let currentGame2 = getCurrentGame2.body;
 	expect(currentGame2.secondPlayerProgress.answers[0].answerStatus).toBe('InCorrect')
-
 	
-// проверка, что у 1го игрока ничего не поменялось
 	  const getCurrentGame1 = await request(server)
         .get('/pair-game-quiz/pairs/my-current')
         .set('Authorization', `Bearer ${tokenByUser}`);
@@ -338,27 +323,6 @@ expect(sendAnswer2.status).toBe(HttpStatus.OK);
       let currentGame1 = getCurrentGame1.body;
 	  expect(currentGame1.firstPlayerProgress.answers[0].answerStatus).toBe('Correct')
     });
-
-	// it('get game by id of userOne', async () => {
-	// 	const getGameById = await request(server)
-	// 	  .get(`/pair-game-quiz/pairs/${gameId}`)
-	// 	  .set('Authorization', `Bearer ${tokenByUser}`);
-  
-	// 	expect(getGameById.status).toBe(HttpStatus.OK);
-	// 	// console.log("getGameById11: ", getGameById.body.firstPlayerProgress)
-	// 	// console.log("getGameById12: ", getGameById.body.secondPlayerProgress)
-	//   });
-  
-	//   it('get game by id of userTwo', async () => {
-	// 	  const getGameById2 = await request(server)
-	// 		.get(`/pair-game-quiz/pairs/${gameId}`)
-	// 		.set('Authorization', `Bearer ${tokenByUser2}`);
-	
-	// 	  expect(getGameById2.status).toBe(HttpStatus.OK);
-	// 	// console.log("getGameById21: ", getGameById2.body.firstPlayerProgress)
-	// 	// console.log("getGameById22: ", getGameById2.body.secondPlayerProgress)
-
-	// 	});
 
 	it('send correct answer for second question by second palyer', async () => {
 		/*2*/

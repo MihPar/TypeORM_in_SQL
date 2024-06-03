@@ -113,8 +113,8 @@ export class PairQuizGameProgressQueryRepository {
 			.getMany();
 
 	const uniqUserByIds = Array.from(new Set(stackAllGamesByUser.map(item => item.userId)))
-	console.log(uniqUserByIds)
-	console.log('result: ', stackAllGamesByUser)
+	// console.log(uniqUserByIds)
+	// console.log('result: ', stackAllGamesByUser)
     const sortParam = sort.map((param) => param.replace(/\+/g, ' '));
 	// console.log("sortParam: ", sortParam)
     const totalCountQuery = await uniqUserByIds.length;

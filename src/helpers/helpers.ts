@@ -239,6 +239,43 @@ export const sendAnswers = async (
   //   return sendAnswer.body
 };
 
+export const sendAnswersFirstPlayer = async (
+	server: any,
+	accessTokenOne: string,
+	str: string,
+	game: GameTypeModel,
+) => {
+		const payload = {
+		  answer: str
+		};
+		await delay(100);
+	
+		const sendAnswerFirstPlayer = await request(server)
+		  .post('/pair-game-quiz/pairs/my-current/answers')
+		  .set('Authorization', `Bearer ${accessTokenOne}`)
+		  .send(payload);
+	
+	  return sendAnswerFirstPlayer
+}
+export const sendAnswersSecondPlayer = async (
+	server: any,
+	accessTokenTwo: string,
+	str: string,
+	game: GameTypeModel,
+) => {
+		const payload = {
+		  answer: str
+		};
+		await delay(100);
+	
+		const sendAnswerSecondPlayer = await request(server)
+		.post('/pair-game-quiz/pairs/my-current/answers')
+		.set('Authorization', `Bearer ${accessTokenTwo}`)
+		.send(payload);
+
+	  return sendAnswerSecondPlayer
+}
+
 export const findGameById = async (
   server: any,
   id: string,

@@ -347,8 +347,8 @@ export class PairQuezGameQueryRepository {
 		  );
   }
 
-  async saveProgress(firstPlayerProgress: PairQuizGameProgressPlayer): Promise<void> {
-	await this.pairQuizGameProgressPlayer.save(firstPlayerProgress)
+  async saveProgress(playerProgress: PairQuizGameProgressPlayer): Promise<void> {
+	await this.pairQuizGameProgressPlayer.save(playerProgress)
 
 }
 
