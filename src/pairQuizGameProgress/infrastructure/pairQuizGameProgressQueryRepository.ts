@@ -102,18 +102,18 @@ export class PairQuizGameProgressQueryRepository {
 		pageSize: number,
 		
 	): Promise<PaginationType<TopUserView>> {
-		const stackAllGames = await this.pairQuizGameProgressPlayer.find({
+		const stackAllGamesByUser = await this.pairQuizGameProgressPlayer.find({
 			relations: {user: true},
 			order: {addedAt: "ASC"}
 		})
-		// console.log("stackAllGames: ", stackAllGames)
-	// const stackAllGames = await this.pairQuizGameProgressPlayer
+		// console.log("stackAllGames: ", stackAllGamesByUser)
+	// const stackAllGamesByUser = await this.pairQuizGameProgressPlayer
 	// 		.createQueryBuilder()
 	// 		.select(`'userId'`)
 	// 		.distinct(true)
 	// 		.getRawMany();
 
-	const uniqUserByIds = Array.from(new Set(stackAllGames.map(item => item.userId)))
+	const uniqUserByIds = Array.from(new Set(stackAllGamesByUser.map(item => item.userId)))
 	// console.log('result: ', uniqUserByIds)
     const sortParam = sort.map((param) => param.replace(/\+/g, ' '));
 	// console.log("sortParam: ", sortParam)
@@ -130,19 +130,7 @@ export class PairQuizGameProgressQueryRepository {
           .getRawOne()
           .then((result) => parseInt(result.sumScore));
 
-		//   console.log("playerSumScores: ", typeof playerSumScores)
-
-		//   console.log("userId: ", userId)
-		//   console.log("playerSumScores: ", playerSumScores)
-
-		//   const playerSumScores = await this.pairQuizGameProgressPlayer
-		//   .createQueryBuilder()
-		//   .select('SUM(score)', 'sumScore')
-		//   .where(`"userId" = :userId`, { userId })
-		//   .getRawOne()
-		//   .then((result) => parseInt(result.sumScore));
-
-        const playerTotalGameCount = await this.pairQuizGameProgressPlayer
+		  const playerTotalGameCount = await this.pairQuizGameProgressPlayer
           .createQueryBuilder()
           .where(`"userId" = :userId`, { userId })
           .getCount();
@@ -229,7 +217,7 @@ export class PairQuizGameProgressQueryRepository {
         }
         return 0;
       })
-      .slice((+pageNumber - 1) * +pageSize, +pageNumber * +pageSize);
+      //.slice((+pageNumber - 1) * +pageSize, +pageNumber * +pageSize);
 	
     return {
       pagesCount: Math.ceil(totalCountQuery / +pageSize),

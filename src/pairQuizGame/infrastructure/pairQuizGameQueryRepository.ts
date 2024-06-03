@@ -279,21 +279,6 @@ export class PairQuezGameQueryRepository {
       totalCount: +totalCount,
       items: await Promise.all(
         allGames.map(async (item: PairQuizGame) => {
-          // const findGameByUser = await this.pairQuezGame.findOne({
-          // 	relations: {
-          // 		firstPlayerProgress: {user: true, answers: true},
-          // 		secondPlayerProgress: {user: true, answers: true},
-          // 		questionGames: {question: {questionGame: true}}
-          // 	},
-          // 	where: [
-          // 		{firstPlayerProgress: {user: {id: userId}}},
-          // 		{secondPlayerProgress: {user: {id: userId}}}
-          // 	],
-          // 	order: {
-          // 		questionGames: {index: 'ASC'}
-          // 	}
-          // })
-
           return PairQuizGame.getViewModel(item);
         }),
       ),

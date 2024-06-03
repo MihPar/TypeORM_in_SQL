@@ -15,7 +15,6 @@ export class GetCurrectUserStatisticCommand {
 @CommandHandler(GetCurrectUserStatisticCommand)
 export class GetCurrectUserStatisticUseCase implements ICommandHandler<GetCurrectUserStatisticCommand> {
 	constructor(
-		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
 		protected readonly pairQuizGameRepository: PairQuizGameRepository
 	) {}
 	async execute(command: GetCurrectUserStatisticCommand): Promise<PlayerStatisticsView | null> {
