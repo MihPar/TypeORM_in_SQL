@@ -217,7 +217,7 @@ export class PairQuizGameProgressQueryRepository {
         }
         return 0;
       })
-      //.slice((+pageNumber - 1) * +pageSize, +pageNumber * +pageSize);
+      .slice((+pageNumber - 1) * +pageSize, +pageNumber * +pageSize);
 	
     return {
       pagesCount: Math.ceil(totalCountQuery / +pageSize),

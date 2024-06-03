@@ -28,7 +28,7 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 		protected readonly questionQueryRepository: QuestionQueryRepository,
 		protected readonly pairQuizGameRepository: PairQuizGameRepository,
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
-		protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
+		// protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
 		protected readonly commandBus: CommandBus
 	) {}
 	async execute(command: FirstPlayerSendAnswerCommand): Promise<any> {
@@ -36,7 +36,6 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 			throw new ForbiddenException('You already answered all questions')
 		} else {
 			const currentQuestionIndex: number = command.activeUserGame.firstPlayerProgress.answers.length
-			// console.log("currentQuestionIndex: ", currentQuestionIndex)
 			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex))
 			
 			if(!gameQuestion) return null

@@ -112,15 +112,15 @@ export class PairQuizGameRepository {
     const answersPlayer = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .update()
-      .set({ score: () => (Boolean(count) ? 'score + 1' : 'score + 0') })
+      .set({ score: () => (count ? 'score + 1' : 'score + 0') })
       .where({ userId, gameId })
       .execute();
 
-    const result = await this.pairQuizGameProgressPlayer
-      .createQueryBuilder()
-      .select()
-      .where({ userId })
-      .getOne();
+    // const result = await this.pairQuizGameProgressPlayer
+    //   .createQueryBuilder()
+    //   .select()
+    //   .where({ userId })
+    //   .getOne();
     //   console.log("result: ", result.score)
   }
 

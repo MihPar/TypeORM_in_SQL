@@ -25,6 +25,17 @@ export class PairQuizGameController {
 	protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository
   ) {}
 
+  @Get('pairs/all')
+  @HttpCode(HttpStatus.OK)
+  async geAllGames(
+  ): Promise<GameTypeModel[]> {
+	console.log(1)
+    const getAllPairs: GameTypeModel[] =
+      await this.pairQuezGameQueryRepository.getAllGames();
+   
+	  return getAllPairs;
+  }
+  
   @Get('users/top')
   @HttpCode(HttpStatus.OK)
   async getTopUsers(
@@ -125,6 +136,8 @@ export class PairQuizGameController {
       throw new ForbiddenException('403');
     return getActivePair;
   }
+
+  
 
   @Post('pairs/connection')
   @HttpCode(HttpStatus.OK)
