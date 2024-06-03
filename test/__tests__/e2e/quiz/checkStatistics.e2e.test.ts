@@ -417,8 +417,8 @@ describe('/blogs', () => {
 			// console.log("connectThreeAndFour: ", connectThreeAndOne)
 
 			const send1AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(server, user4Token, 'Incorrect', fivethGame)
-			const found1SecondGameThirdPlayer = await findGameById(server, fivethGame.id, user4Token)
-			console.log("found1SecondGameThirdPlayer: ", found1SecondGameThirdPlayer[1].secondPlayerProgress.score)
+			const found1FifthGameFourthPlayer = await findGameById(server, fivethGame.id, user4Token)
+			console.log("found1FifthGameThirdPlayer: ", found1FifthGameThirdPlayer[1].secondPlayerProgress.score)
 
 			const send2AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(server, user4Token, 'Incorrect', fivethGame)
 			const found2SecondGameThirdPlayer = await findGameById(server, fivethGame.id, user4Token)
