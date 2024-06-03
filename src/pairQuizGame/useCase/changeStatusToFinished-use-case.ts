@@ -3,7 +3,7 @@ import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { GameTypeModel } from "../type/typeViewModel";
-import { GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
+import { AnswerStatusEnum, GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
 import { sortAddedAt } from "../../helpers/helpers";
 
 export class ChangeStatusToFinishedCommand {
@@ -28,10 +28,10 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 		) {
 			const firstPlayerLastAnswer = sortAddedAt(firstPlayer.firstPlayerProgress.answers)[command.gameQuestions.length - 1]
 			const secondPlayerLastAnswer = sortAddedAt(secondPlayer.secondPlayerProgress.answers)[command.gameQuestions.length - 1]
-			if (firstPlayerLastAnswer.addedAt.toISOString() < secondPlayerLastAnswer.addedAt.toISOString()) {
+			if ((firstPlayerLastAnswer.addedAt.toISOString() < secondPlayerLastAnswer.addedAt.toISOString()) && firstPlayer.firstPlayerProgress.answers.some(item => item.answerStatus === AnswerStatusEnum.Correct)) {
 				command.game.firstPlayerProgress.score += 1
 				// await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.firstPlayerProgress.id)
-			} else if (firstPlayerLastAnswer.addedAt.toISOString() > secondPlayerLastAnswer.addedAt.toISOString()) {
+			} else if ((firstPlayerLastAnswer.addedAt.toISOString() > secondPlayerLastAnswer.addedAt.toISOString()) && secondPlayer.secondPlayerProgress.answers.some(item => item.answerStatus === AnswerStatusEnum.Correct)) {
 				command.game.secondPlayerProgress.score += 1
 				// await this.pairQuezGameQueryRepository.addBonusPalyer(command.game.secondPlayerProgress.id)
 			}
