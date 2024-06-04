@@ -173,6 +173,9 @@ export class PairQuizGameController {
       throw new ForbiddenException(
         'the game is not exist by userId and status',
       );
+
+	  console.log(JSON.stringify(activeUserGame), " active user game")
+	  console.log("req.body", DTO)
     const isFirstPlayer =
       activeUserGame.firstPlayerProgress.player.id === userId;
     const isSecondPlayer =
@@ -187,6 +190,8 @@ export class PairQuizGameController {
       );
     }
 
+	console.log(isFirstPlayer, "isFirstPlayer")
+	console.log(isSecondPlayer, "isSecondPlayer")
     if (isSecondPlayer && secondPlayerAswersCount === GAME_QUESTION_COUNT) {
       throw new ForbiddenException(
         'second player is not answer by all questions',

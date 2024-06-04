@@ -59,6 +59,9 @@ export class FirstPlayerSendAnswerUseCase implements ICommandHandler<FirstPlayer
 						gameId: command.game.id
 				}
 					)
+
+					command.game =  await this.pairQuezGameQueryRepository.getUnfinishedGame(command.game.firstPlayerProgress.user.id)//.secondPlayerProgress = progressAfterUpdate
+			
 				const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game, command.game.questionGames.map(item => item.question))
 				await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
 

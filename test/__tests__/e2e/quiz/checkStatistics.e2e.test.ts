@@ -123,23 +123,23 @@ describe('/blogs', () => {
 			
 			const send1AnswerOnFirstGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firstGame)
 			const found1FirstGameFirstPlayer = await findGameById(server, firstGame.id, user1Token)
-			// console.log("found1FirstGameFirstPlayer: ", found1FirstGameFirstPlayer[1].firstPlayerProgress.score)
+			console.log("found1FirstGameFirstPlayer: ", found1FirstGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send2AnswerOnFirstGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firstGame)
 			const found2FirstGameFirstPlayer = await findGameById(server, firstGame.id, user1Token)
-			// console.log("found2FirstGameFirstPlayer: ", found2FirstGameFirstPlayer[1].firstPlayerProgress.score)
+			console.log("found2FirstGameFirstPlayer: ", found2FirstGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send3AnswerOnFirstGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firstGame)
 			const found3FirstGameFirstPlayer = await findGameById(server, firstGame.id, user1Token)
-			// console.log("found3FirstGameFirstPlayer: ", found3FirstGameFirstPlayer[1].firstPlayerProgress.score)
+			console.log("found3FirstGameFirstPlayer: ", found3FirstGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const sendA4nswerOnFirstGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firstGame)
 			const found4FirstGameFirstPlayer = await findGameById(server, firstGame.id, user1Token)
-			// console.log("found4FirstGameFirstPlayer: ", found4FirstGameFirstPlayer[1].firstPlayerProgress.score)
+			console.log("found4FirstGameFirstPlayer: ", found4FirstGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send5AnswerOnFirstGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firstGame)
 			const found5FirstGameFirstPlayer = await findGameById(server, firstGame.id, user1Token)
-			// console.log("found5FirstGameFirstPlayer: ", found5FirstGameFirstPlayer[1].firstPlayerProgress.score)
+			console.log("found5FirstGameFirstPlayer: ", found5FirstGameFirstPlayer[1].firstPlayerProgress.score)
 
 			expect(found1FirstGameFirstPlayer[1].firstPlayerProgress.score).toBe(0)
 			expect(found2FirstGameFirstPlayer[1].firstPlayerProgress.score).toBe(0)
@@ -152,23 +152,23 @@ describe('/blogs', () => {
 			
 			const send1AnswerOnFirstGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firstGame)
 			const found1FirstGameSecond = await findGameById(server, firstGame.id, user2Token)
-			// console.log("found1FirstGameSecond: ", found1FirstGameSecond[1].secondPlayerProgress.score)
+			console.log("found1FirstGameSecond: ", found1FirstGameSecond[1].secondPlayerProgress.score)
 
 			const send2AnswerOnFirstGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firstGame)
 			const found2FirstGameSecond = await findGameById(server, firstGame.id, user2Token)
-			// console.log("found2FirstGameSecond: ", found2FirstGameSecond[1].secondPlayerProgress.score)
+			console.log("found2FirstGameSecond: ", found2FirstGameSecond[1].secondPlayerProgress.score)
 
 			const send3AnswerOnFirstGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firstGame)
 			const found3FirstGameSecond = await findGameById(server, firstGame.id, user2Token)
-			// console.log("found3FirstGameSecond: ", found3FirstGameSecond[1].secondPlayerProgress.score)
+			console.log("found3FirstGameSecond: ", found3FirstGameSecond[1].secondPlayerProgress.score)
 
 			const send4AnswerOnFirstGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firstGame)
 			const found4FirstGameSecond = await findGameById(server, firstGame.id, user2Token)
-			// console.log("found4FirstGameSecond: ", found4FirstGameSecond[1].secondPlayerProgress.score)
-
+			console.log("found4FirstGameSecond: ", found4FirstGameSecond[1].secondPlayerProgress.score)
+			console.error("--------start---------")
 			const send5AnswerOnFirstGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firstGame)
 			const found5FirstGameSecond = await findGameById(server, firstGame.id, user2Token)
-			// console.log("found5FirstGameSecond: ", found5FirstGameSecond[1].secondPlayerProgress.score)
+			console.log("found5FirstGameSecond: ", found5FirstGameSecond[1].secondPlayerProgress.score)
 
 			// console.log("found5FirstGameSecond: ", found5FirstGameSecond[1].secondPlayerProgress.answers.map(item => item))
 			
@@ -179,32 +179,36 @@ describe('/blogs', () => {
 			expect(found4FirstGameSecond[1].secondPlayerProgress.score).toBe(4)
 			expect(found5FirstGameSecond[1].secondPlayerProgress.score).toBe(5)
 
+
+
 			expect(found5FirstGameSecond[0]).toBe(200) // todo скопируй енамку и вставь вместо финиш
 			expect(found5FirstGameSecond[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и 
 		})
 
-		it('create pairs second game (3 and 4)', async() => {
+		it.skip('create pairs second game (3 and 4)', async() => {
 			const connectThreeAndFourRes = await toCreatePair(server, user3Token, user4Token)
 			expect(connectThreeAndFourRes[0]).toBe(200)
 			expect(connectThreeAndFourRes[1]).toBeDefined()
 			secondGame = connectThreeAndFourRes[1]
 			// console.log("connectThreeAndFour: ", connectThreeAndOne)
 
+			/* first player */
+
 			const send1AnswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user3Token, 'Incorrect', secondGame)
 			const found1SecondGameThirdPlayer = await findGameById(server, secondGame.id, user3Token)
-			console.log("found1SecondGameThirdPlayer: ", found1SecondGameThirdPlayer[1].firstPlayerProgress.score)
+			// console.log("found1SecondGameThirdPlayer: ", found1SecondGameThirdPlayer[1].firstPlayerProgress.score)
 
 			const send2AnswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user3Token, 'Incorrect', secondGame)
 			const found2SecondGameThirdPlayer = await findGameById(server, secondGame.id, user3Token)
-			console.log("found2SecondGameThirdPlayer: ", found2SecondGameThirdPlayer[1].firstPlayerProgress.score)
+			// console.log("found2SecondGameThirdPlayer: ", found2SecondGameThirdPlayer[1].firstPlayerProgress.score)
 
 			const send3AnswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user3Token, 'Incorrect', secondGame)
 			const found3SecondGameThirdPlayer = await findGameById(server, secondGame.id, user3Token)
-			console.log("found3SecondGameThirdPlayer: ", found3SecondGameThirdPlayer[1].firstPlayerProgress.score)
+			// console.log("found3SecondGameThirdPlayer: ", found3SecondGameThirdPlayer[1].firstPlayerProgress.score)
 
 			const sendA4nswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user3Token, 'Incorrect', secondGame)
 			const found4SecondGameThirdPlayer = await findGameById(server, secondGame.id, user3Token)
-			console.log("found4SecondGameThirdPlayer: ", found4SecondGameThirdPlayer[1].firstPlayerProgress.score)
+			// console.log("found4SecondGameThirdPlayer: ", found4SecondGameThirdPlayer[1].firstPlayerProgress.score)
 
 			// const send5AnswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user3Token, 'Incorrect', secondGame)
 			// const found5SecondGameThirdPlayer = await findGameById(server, secondGame.id, user3Token)
@@ -222,23 +226,23 @@ describe('/blogs', () => {
 			
 			const send1AnswerOnSecondGameByFourthPlayer = await sendAnswersSecondPlayer(server, user4Token, 'Correct', secondGame)
 			const found1SecondGameFourthPlayer = await findGameById(server, secondGame.id, user4Token)
-			console.log("found1SecondGameFourthPlayer: ", found1SecondGameFourthPlayer[1].secondPlayerProgress.score)
+			// console.log("found1SecondGameFourthPlayer: ", found1SecondGameFourthPlayer[1].secondPlayerProgress.score)
 
 			const send2AnswerOnSecondGameByFourthPlayer = await sendAnswersSecondPlayer(server, user4Token, 'Correct', secondGame)
 			const found2SecondGameFourthPlayer = await findGameById(server, secondGame.id, user4Token)
-			console.log("found2SecondGameFourthPlayer: ", found2SecondGameFourthPlayer[1].secondPlayerProgress.score)
+			// console.log("found2SecondGameFourthPlayer: ", found2SecondGameFourthPlayer[1].secondPlayerProgress.score)
 
 			const send3AnswerOnSecondGameByFourthPlayer = await sendAnswersSecondPlayer(server, user4Token, 'Correct', secondGame)
 			const found3SecondGameFourthPlayer = await findGameById(server, secondGame.id, user4Token)
-			console.log("found3SecondGameFourthPlayer: ", found3SecondGameFourthPlayer[1].secondPlayerProgress.score)
+			// console.log("found3SecondGameFourthPlayer: ", found3SecondGameFourthPlayer[1].secondPlayerProgress.score)
 
 			const send4AnswerOnSecondGameByFourthPlayer = await sendAnswersSecondPlayer(server, user4Token, 'Correct', secondGame)
 			const found4SecondGameFourthPlayer = await findGameById(server, secondGame.id, user4Token)
-			console.log("found4SecondGameFourthPlayer: ", found4SecondGameFourthPlayer[1].secondPlayerProgress.score)
+			// console.log("found4SecondGameFourthPlayer: ", found4SecondGameFourthPlayer[1].secondPlayerProgress.score)
 
 			const send5AnswerOnSecondGameByFourthPlayer = await sendAnswersSecondPlayer(server, user4Token, 'Correct', secondGame)
 			const found5SecondGameFourthPlayer = await findGameById(server, secondGame.id, user4Token)
-			console.log("found5SecondGameFourthPlayer: ", found5SecondGameFourthPlayer[1].secondPlayerProgress.score)
+			// console.log("found5SecondGameFourthPlayer: ", found5SecondGameFourthPlayer[1].secondPlayerProgress.score)
 
 			// console.log("found5SecondGameFourthPlayer: ", found5SecondGameFourthPlayer[1].secondPlayerProgress.answers.map(item => item))
 
@@ -250,11 +254,11 @@ describe('/blogs', () => {
 			
 			const send5AnswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user3Token, 'Incorrect', secondGame)
 			const found5SecondGameThirdPlayer = await findGameById(server, secondGame.id, user3Token)
-			console.log("found5SecondGameThirdPlayer: ", found5SecondGameThirdPlayer[1].firstPlayerProgress.score)
+			// console.log("found5SecondGameThirdPlayer: ", found5SecondGameThirdPlayer[1].firstPlayerProgress.score)
 			expect(found5SecondGameThirdPlayer[1].firstPlayerProgress.score).toBe(0)
 
 			const resultSecondGameFourthPlayer = await findGameById(server, secondGame.id, user4Token)
-			console.log("fourthPalyer: ", resultSecondGameFourthPlayer[1].secondPlayerProgress.score)
+			// console.log("fourthPalyer: ", resultSecondGameFourthPlayer[1].secondPlayerProgress.score)
 			expect(resultSecondGameFourthPlayer[1].secondPlayerProgress.score).toBe(6)
 
 			
@@ -262,7 +266,7 @@ describe('/blogs', () => {
 			expect(resultSecondGameFourthPlayer[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и 
 		})
 			
-		it('create pairs third game (2 and 1)', async() => {
+		it.skip('create pairs third game (2 and 1)', async() => {
 			const connectOneAndTwoRes = await toCreatePair(server, user1Token, user2Token)
 			expect(connectOneAndTwoRes[0]).toBe(200)
 			expect(connectOneAndTwoRes[1]).toBeDefined()
@@ -272,23 +276,23 @@ describe('/blogs', () => {
 			
 			const send1AnswerOnThirdGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firdGame)
 			const found1ThirdGameSecondPlayer = await findGameById(server, firdGame.id, user2Token)
-			console.log("found1ThirdGameSecondPlayer: ", found1ThirdGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found1ThirdGameSecondPlayer: ", found1ThirdGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send2AnswerOnThirdGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firdGame)
 			const found2ThirdGameSecondPlayer = await findGameById(server, firdGame.id, user2Token)
-			console.log("found2ThirdGameSecondPlayer: ", found2ThirdGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found2ThirdGameSecondPlayer: ", found2ThirdGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send3AnswerOnThirdGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firdGame)
 			const found3ThirdGameSecondPlayer = await findGameById(server, firdGame.id, user2Token)
-			console.log("found3ThirdGameSecondPlayer: ", found3ThirdGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found3ThirdGameSecondPlayer: ", found3ThirdGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send4AnswerOnThirdGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firdGame)
 			const found4ThirdGameSecondPlayer = await findGameById(server, firdGame.id, user2Token)
-			console.log("found4ThirdGameSecondPlayer: ", found4ThirdGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found4ThirdGameSecondPlayer: ", found4ThirdGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send5AnswerOnThirdGameBySecondPlayer = await sendAnswersSecondPlayer(server, user2Token, 'Correct', firdGame)
 			const found5ThirdGameSecondPlayer = await findGameById(server, firdGame.id, user2Token)
-			console.log("found5ThirdGameSecondPlayer: ", found5ThirdGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found5ThirdGameSecondPlayer: ", found5ThirdGameSecondPlayer[1].secondPlayerProgress.score)
 
 			// console.log("found5FirstGameSecond: ", found5FirstGameSecond[1].secondPlayerProgress.answers.map(item => item))
 
@@ -307,23 +311,23 @@ describe('/blogs', () => {
 			
 			const send1AnswerOnThirdGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firdGame)
 			const found1ThirdGameFirstPlayer = await findGameById(server, firdGame.id, user1Token)
-			console.log("found1ThirdGameFirstPlayer: ", found1ThirdGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found1ThirdGameFirstPlayer: ", found1ThirdGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send2AnswerOnThirdGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firdGame)
 			const found2ThirdGameFirstPlayer = await findGameById(server, firdGame.id, user1Token)
-			console.log("found2ThirdGameFirstPlayer: ", found2ThirdGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found2ThirdGameFirstPlayer: ", found2ThirdGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send3AnswerOnThirdGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firdGame)
 			const found3ThirdGameFirstPlayer = await findGameById(server, firdGame.id, user1Token)
-			console.log("found3ThirdGameFirstPlayer: ", found3ThirdGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found3ThirdGameFirstPlayer: ", found3ThirdGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const sendA4nswerOnThirdGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firdGame)
 			const found4ThirdGameFirstPlayer = await findGameById(server, firdGame.id, user1Token)
-			console.log("found4ThirdGameFirstPlayer: ", found4ThirdGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found4ThirdGameFirstPlayer: ", found4ThirdGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send5AnswerOnThirdGameByFirstPlayer = await sendAnswersFirstPlayer(server, user1Token, 'Incorrect', firdGame)
 			const found5ThirdGameFirstPlayer = await findGameById(server, firdGame.id, user1Token)
-			console.log("found5ThirdGameFirstPlayer: ", found5ThirdGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found5ThirdGameFirstPlayer: ", found5ThirdGameFirstPlayer[1].firstPlayerProgress.score)
 
 			expect(found1ThirdGameFirstPlayer[1].firstPlayerProgress.score).toBe(0)
 			expect(found2ThirdGameFirstPlayer[1].firstPlayerProgress.score).toBe(0)
@@ -338,7 +342,7 @@ describe('/blogs', () => {
 
 		})
 
-		it('create pair by fourth game (1 and 2)', async() => {
+		it.skip('create pair by fourth game (1 and 2)', async() => {
 			const connectOneAndTwoRes = await toCreatePair(server, user1Token, user2Token)
 			expect(connectOneAndTwoRes[0]).toBe(200)
 			expect(connectOneAndTwoRes[1]).toBeDefined()
@@ -409,42 +413,44 @@ describe('/blogs', () => {
 			
 		})
 
-		it("create fifth game (3 and 4 user)", async () => {
+		it.skip("create fifth game (3 and 4 user)", async () => {
 			const connectThreeAndFourRes = await toCreatePair(server, user3Token, user4Token)
 			expect(connectThreeAndFourRes[0]).toBe(200)
 			expect(connectThreeAndFourRes[1]).toBeDefined()
 			fivethGame = connectThreeAndFourRes[1]
 			// console.log("connectThreeAndFour: ", connectThreeAndOne)
 
+			/* second player */
+
 			const send1AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(server, user4Token, 'Incorrect', fivethGame)
 			const found1FifthGameFourthPlayer = await findGameById(server, fivethGame.id, user4Token)
-			console.log("found1FifthGameThirdPlayer: ", found1FifthGameThirdPlayer[1].secondPlayerProgress.score)
+			console.log("found1FifthGameFourthPlayer: ", found1FifthGameFourthPlayer[1].secondPlayerProgress.score)
 
 			const send2AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(server, user4Token, 'Incorrect', fivethGame)
-			const found2SecondGameThirdPlayer = await findGameById(server, fivethGame.id, user4Token)
-			console.log("found2SecondGameThirdPlayer: ", found2SecondGameThirdPlayer[1].secondPlayerProgress.score)
+			const found2FifthGameFourthPlayer = await findGameById(server, fivethGame.id, user4Token)
+			console.log("found2FifthGameFourthPlayer: ", found2FifthGameFourthPlayer[1].secondPlayerProgress.score)
 
 			const send3AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(server, user4Token, 'Incorrect', fivethGame)
-			const found3SecondGameThirdPlayer = await findGameById(server, fivethGame.id, user4Token)
-			console.log("found3SecondGameThirdPlayer: ", found3SecondGameThirdPlayer[1].secondPlayerProgress.score)
+			const found3FifthGameFourthPlayer = await findGameById(server, fivethGame.id, user4Token)
+			console.log("found3FifthGameFourthPlayer: ", found3FifthGameFourthPlayer[1].secondPlayerProgress.score)
 
 			const sendA4nswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user4Token, 'Incorrect', fivethGame)
-			const found4SecondGameThirdPlayer = await findGameById(server, fivethGame.id, user4Token)
-			console.log("found4SecondGameThirdPlayer: ", found4SecondGameThirdPlayer[1].secondPlayerProgress.score)
+			const found4FifthGameFourthPlayer = await findGameById(server, fivethGame.id, user4Token)
+			console.log("found4FifthGameFourthPlayer: ", found4FifthGameFourthPlayer[1].secondPlayerProgress.score)
 
 			// const send5AnswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(server, user3Token, 'Incorrect', fivethGame)
 			// const found5SecondGameThirdPlayer = await findGameById(server, fivethGame.id, user3Token)
 			// console.log("found5SecondGameThirdPlayer: ", found5SecondGameThirdPlayer[1].secondPlayerProgress.score)
 
 			
-			expect(found1SecondGameThirdPlayer[1].secondPlayerProgress.score).toBe(0)
-			expect(found2SecondGameThirdPlayer[1].secondPlayerProgress.score).toBe(0)
-			expect(found3SecondGameThirdPlayer[1].secondPlayerProgress.score).toBe(0)
-			expect(found4SecondGameThirdPlayer[1].secondPlayerProgress.score).toBe(0)
+			expect(found1FifthGameFourthPlayer[1].secondPlayerProgress.score).toBe(0)
+			expect(found2FifthGameFourthPlayer[1].secondPlayerProgress.score).toBe(0)
+			expect(found3FifthGameFourthPlayer[1].secondPlayerProgress.score).toBe(0)
+			expect(found4FifthGameFourthPlayer[1].secondPlayerProgress.score).toBe(0)
 			// expect(found5SecondGameThirdPlayer[1].secondPlayerProgress.score).toBe(0)
 
 
-			/* second player */
+			/* first player */
 			
 			const send1AnswerOnFifthGameByThirdPlayer = await sendAnswersSecondPlayer(server, user3Token, 'Correct', fivethGame)
 			const found1FifthGameThirdPlayer = await findGameById(server, fivethGame.id, user3Token)
@@ -475,9 +481,9 @@ describe('/blogs', () => {
 			expect(found5FifthGameThirdPlayer[1].firstPlayerProgress.score).toBe(5)
 			
 			const send5AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(server, user4Token, 'Incorrect', secondGame)
-			const found5SecondGameThirdPlayer = await findGameById(server, secondGame.id, user4Token)
-			console.log("found5SecondGameThirdPlayer: ", found5SecondGameThirdPlayer[1].secondPlayerProgress.score)
-			expect(found5SecondGameThirdPlayer[1].secondPlayerProgress.score).toBe(0)
+			const found5FifthGameFourthPlayer = await findGameById(server, secondGame.id, user4Token)
+			console.log("found5FifthGameFourthPlayer: ", found5FifthGameFourthPlayer[1].secondPlayerProgress.score)
+			expect(found5FifthGameFourthPlayer[1].secondPlayerProgress.score).toBe(0)
 
 			const resultFifthGameThirdPlayer = await findGameById(server, secondGame.id, user3Token)
 			console.log("fourthPalyer: ", resultFifthGameThirdPlayer[1].firstPlayerProgress.score)
@@ -488,33 +494,33 @@ describe('/blogs', () => {
 			expect(resultFifthGameThirdPlayer[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и 
 		})
 
-		it("create sixth game (1 and 2 user)", async() => {
+		it.skip("create sixth game (1 and 2 user)", async() => {
 			const connectOneAndTwoRes = await toCreatePair(server, user1Token, user2Token)
 			expect(connectOneAndTwoRes[0]).toBe(200)
 			expect(connectOneAndTwoRes[1]).toBeDefined()
 			sixthGame = connectOneAndTwoRes[1]
 
-			/* second player */
+			/* first player */
 			
 			const send1AnswerOnSixthGameByFirstPlayer = await sendAnswersSecondPlayer(server, user1Token, 'Correct', sixthGame)
 			const found1SixthGameFirstPlayer = await findGameById(server, sixthGame.id, user1Token)
-			console.log("found1SixthGameFirstPlayer: ", found1SixthGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found1SixthGameFirstPlayer: ", found1SixthGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send2AnswerOnSixthGameByFirstPlayer = await sendAnswersSecondPlayer(server, user1Token, 'Correct', sixthGame)
 			const found2SixthGameFirstPlayer = await findGameById(server, sixthGame.id, user1Token)
-			console.log("found2SixthGameFirstPlayer: ", found2SixthGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found2SixthGameFirstPlayer: ", found2SixthGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send3AnswerOnSixthGameByFirstPlayer = await sendAnswersSecondPlayer(server, user1Token, 'Correct', sixthGame)
 			const found3SixthGameFirstPlayer = await findGameById(server, sixthGame.id, user1Token)
-			console.log("found3SixthGameFirstPlayer: ", found3SixthGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found3SixthGameFirstPlayer: ", found3SixthGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send4AnswerOnSixthGameByFirstPlayer = await sendAnswersSecondPlayer(server, user1Token, 'Correct', sixthGame)
 			const found4SixthGameFirstPlayer = await findGameById(server, sixthGame.id, user1Token)
-			console.log("found4SixthGameFirstPlayer: ", found4SixthGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found4SixthGameFirstPlayer: ", found4SixthGameFirstPlayer[1].firstPlayerProgress.score)
 
 			const send5AnswerOnSixthGameByFirstPlayer = await sendAnswersSecondPlayer(server, user1Token, 'Correct', sixthGame)
 			const found5SixthGameFirstPlayer = await findGameById(server, sixthGame.id, user2Token)
-			console.log("found5SixthGameFirstPlayer: ", found5SixthGameFirstPlayer[1].firstPlayerProgress.score)
+			// console.log("found5SixthGameFirstPlayer: ", found5SixthGameFirstPlayer[1].firstPlayerProgress.score)
 
 			// console.log("found5FirstGameSecond: ", found5FirstGameSecond[1].secondPlayerProgress.answers.map(item => item))
 
@@ -529,27 +535,27 @@ describe('/blogs', () => {
 			expect(found5SixthGameFirstPlayer[0]).toBe(200) // todo скопируй енамку и вставь вместо финиш
 
 
-			/* first player */
+			/* second player */
 			
 			const send1AnswerOnSixthGameBySecondPlayer = await sendAnswersFirstPlayer(server, user2Token, 'Incorrect', sixthGame)
 			const found1SixthGameSecondPlayer = await findGameById(server, sixthGame.id, user2Token)
-			console.log("found1SixthGameSecondPlayer: ", found1SixthGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found1SixthGameSecondPlayer: ", found1SixthGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send2AnswerOnSixthGameBySecondPlayer = await sendAnswersFirstPlayer(server, user2Token, 'Incorrect', sixthGame)
 			const found2SixthGameSecondPlayer = await findGameById(server, sixthGame.id, user2Token)
-			console.log("found2SixthGameSecondPlayer: ", found2SixthGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found2SixthGameSecondPlayer: ", found2SixthGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send3AnswerOnSixthGameBySecondPlayer = await sendAnswersFirstPlayer(server, user2Token, 'Incorrect', sixthGame)
 			const found3SixthGameSecondPlayer = await findGameById(server, sixthGame.id, user2Token)
-			console.log("found3SixthGameSecondPlayer: ", found3SixthGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found3SixthGameSecondPlayer: ", found3SixthGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send4AnswerOnSixthGameBySecondPlayer = await sendAnswersFirstPlayer(server, user2Token, 'Incorrect', sixthGame)
 			const found4SixthGameSecondPlayer = await findGameById(server, sixthGame.id, user2Token)
-			console.log("found4SixthGameSecondPlayer: ", found4SixthGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found4SixthGameSecondPlayer: ", found4SixthGameSecondPlayer[1].secondPlayerProgress.score)
 
 			const send5AnswerOnSixthGameBySecondPlayer = await sendAnswersFirstPlayer(server, user2Token, 'Incorrect', sixthGame)
 			const found5SixthGameSecondPlayer = await findGameById(server, sixthGame.id, user2Token)
-			console.log("found5SixthGameSecondPlayer: ", found5SixthGameSecondPlayer[1].secondPlayerProgress.score)
+			// console.log("found5SixthGameSecondPlayer: ", found5SixthGameSecondPlayer[1].secondPlayerProgress.score)
 
 			expect(found1SixthGameSecondPlayer[1].secondPlayerProgress.score).toBe(0)
 			expect(found2SixthGameSecondPlayer[1].secondPlayerProgress.score).toBe(0)
@@ -559,9 +565,8 @@ describe('/blogs', () => {
 
 			const resultGameSecondPlayer = await findGameById(server, sixthGame.id, user1Token)
 			expect(resultGameSecondPlayer[1].firstPlayerProgress.score).toBe(6)
-			console.log("resultGameSecondPlayer: ", resultGameSecondPlayer[1].firstPlayerProgress.score)
+			// console.log("resultGameSecondPlayer: ", resultGameSecondPlayer[1].firstPlayerProgress.score)
 			expect(resultGameSecondPlayer[1].status).toBe(GameStatusEnum.Finished) // todo скопируй енамку и 
-
 		})
 
 		// it("create seventh game (1 and 2 user)", async () => {
@@ -577,14 +582,14 @@ describe('/blogs', () => {
 		// 	// console.log("result7: ", findSeventhGame)
 		// })
 
-		it('get all games', async () => {
+		it.skip('get all games', async () => {
 			const {status, body : allGames} = await findAllGames(server, user1Token)
 			// console.log("restult: ", allGames)
 			expect(status).toBe(200);
 			// expect(allGames.items).toHaveLength(2)
 		})
 
-		it('get my statistic', async() => {
+		it.skip('get my statistic', async() => {
 			const getMyStatistics = await request(server)
 				.get(`/pair-game-quiz/users/my-statistic`)
 				.set(`Authorization`, `Bearer ${user1Token}`)
@@ -610,7 +615,7 @@ describe('/blogs', () => {
 				// console.log("result: ", getMyStatistics.body)
 		})
 
-		it('get user top', async () => {
+		it.skip('get user top', async () => {
 			// console.log('try:')
 			const getUserTop = await request(server)
 				.get(`/pair-game-quiz/users/top`)

@@ -8,6 +8,7 @@ import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository
 import { FirstPlayerSendAnswerCommand } from "./firstPlayerSendAnswer-ues-case";
 import { SecondPlayerSendAnswerCommand } from "./secondPlayerSendAnswer-ues-case";
 import { GameAnswerDto } from "../dto/createPairQuizGame.dto";
+import { log } from "console";
 
 export class SendAnswerCommand {
 	constructor(
@@ -30,6 +31,7 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 		commandAnswer.userId
       );
 	if (commandAnswer.activeUserGame.firstPlayerProgress.player.id === commandAnswer.userId) {
+		console.log("sending answer as first player")
       const command = new FirstPlayerSendAnswerCommand(
 		game,
         commandAnswer.activeUserGame,
@@ -38,7 +40,8 @@ export class SendAnswerUseCase implements ICommandHandler<SendAnswerCommand> {
 	const result = await this.commandBus.execute<FirstPlayerSendAnswerCommand | AnswerType>(command);
       return result
     } else if (commandAnswer.activeUserGame.secondPlayerProgress.player.id === commandAnswer.userId) {
-      const command = new SecondPlayerSendAnswerCommand(
+		console.log("sending answer as second player")
+		const command = new SecondPlayerSendAnswerCommand(
 		game,
 		commandAnswer.activeUserGame,
         commandAnswer.DTO.answer,)

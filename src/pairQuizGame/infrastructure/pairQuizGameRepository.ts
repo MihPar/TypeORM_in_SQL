@@ -1,5 +1,5 @@
+import { PairQuizGameProgressPlayer } from './../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { stringify } from 'querystring';
-import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Question } from "../../question/domain/entity.question";
@@ -12,6 +12,12 @@ import { PlayerStatisticsView } from '../type/typeViewModel';
 
 @Injectable()
 export class PairQuizGameRepository {
+  async getProgressById(id: string) {
+	  return this.pairQuizGameProgressPlayer.findOne({
+		relations: {user: true},
+		where : {id}
+	  })
+  }
   constructor(
     @InjectRepository(Question)
     protected readonly question: Repository<Question>,
@@ -115,6 +121,8 @@ export class PairQuizGameRepository {
       .set({ score: () => (count ? 'score + 1' : 'score + 0') })
       .where({ userId, gameId })
       .execute();
+
+
 
     // const result = await this.pairQuizGameProgressPlayer
     //   .createQueryBuilder()

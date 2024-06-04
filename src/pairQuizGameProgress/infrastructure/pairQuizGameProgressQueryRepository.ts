@@ -142,7 +142,7 @@ export class PairQuizGameProgressQueryRepository {
         // ).toFixed(2);
 
 		const playerAvgScores =
-      Math.ceil((playerSumScores / playerTotalGameCount) * 100) / 100;
+      Math.round((playerSumScores / playerTotalGameCount) * 100) / 100;
 
         const playerWinCount = await this.pairQuizGameProgressPlayer
           .createQueryBuilder()

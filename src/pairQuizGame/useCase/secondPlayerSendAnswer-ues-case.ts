@@ -32,6 +32,7 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 		if(command.activeUserGame.secondPlayerProgress.answers.length > 4) {
 			throw new ForbiddenException('You already answered all questions')
 		} else {
+			console.log("start answering question")
 			const currentQuestionIndex: number = command.activeUserGame.secondPlayerProgress.answers.length
 			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index == currentQuestionIndex)
 			if(!gameQuestion) return null
@@ -44,9 +45,12 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 					command.inputAnswer,
 					command.game.secondPlayerProgress,
        		 	);
+			console.log("answer POJO", answer)
+
 			const answerPush = command.game.secondPlayerProgress.answers
 			answerPush.push(answer)
 			await this.pairQuezGameQueryRepository.createAnswers(answerPush)
+			console.log("answer POJO after saving", answer.progress)
 			await this.pairQuizGameRepository.sendAnswerPlayer(
 				{
 					userId: command.game.secondPlayerProgress.user.id,
@@ -54,8 +58,11 @@ export class SecondPlayerSendAnswerUseCase implements ICommandHandler<SecondPlay
 					gameId: command.game.id
 			}
 					)
+			const progressAfterUpdate = await this.pairQuizGameRepository.getProgressById(answer.progress.id)
+			console.log(progressAfterUpdate, "++++")
 
-					
+			command.game =  await this.pairQuezGameQueryRepository.getUnfinishedGame(command.game.secondPlayerProgress.user.id)//.secondPlayerProgress = progressAfterUpdate
+			
 			const changeStatusToFinishedCommand = new ChangeStatusToFinishedCommand(command.game, command.game.questionGames.map((item) => {return item.question}))
 			await this.commandBus.execute<ChangeStatusToFinishedCommand>(changeStatusToFinishedCommand)
 

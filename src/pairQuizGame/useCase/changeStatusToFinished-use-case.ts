@@ -1,3 +1,4 @@
+// import { PairQuizGameRepository } from './../infrastructure/pairQuizGameRepository';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
@@ -5,6 +6,7 @@ import { PairQuizGame } from "../domain/entity.pairQuezGame";
 import { GameTypeModel } from "../type/typeViewModel";
 import { AnswerStatusEnum, GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
 import { sortAddedAt } from "../../helpers/helpers";
+import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
 
 export class ChangeStatusToFinishedCommand {
 	constructor(
@@ -16,7 +18,8 @@ export class ChangeStatusToFinishedCommand {
 @CommandHandler(ChangeStatusToFinishedCommand)
 export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStatusToFinishedCommand> {
 	constructor(
-		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository
+		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
+		protected readonly pairQuizGameRepository: PairQuizGameRepository,
 	) {}
 	async execute(command: ChangeStatusToFinishedCommand): Promise<any> {
 		const firstPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.firstPlayerProgress.user.id, [GameStatusEnum.Active])
@@ -55,6 +58,10 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 			command.game.status = GameStatusEnum.Finished
 			 await this.pairQuezGameQueryRepository.saveProgress(command.game.firstPlayerProgress)
 			 await this.pairQuezGameQueryRepository.saveProgress(command.game.secondPlayerProgress)
+			 
+
+			//  const progressAfterUpdate = await this.pairQuizGameRepository.getProgressById(command.game.secondPlayerProgress.id)
+			// console.log(progressAfterUpdate, "++++")
 			return await this.pairQuezGameQueryRepository.saveGame(command.game)
 			//changeGameStatusToFinished(command.game.id)
 		}
