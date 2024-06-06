@@ -64,6 +64,14 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 			// console.log(progressAfterUpdate, "++++")
 			return await this.pairQuezGameQueryRepository.saveGame(command.game)
 			//changeGameStatusToFinished(command.game.id)
+		} else if(firstPlayer.firstPlayerProgress.answers.length === 5 && secondPlayer.secondPlayerProgress.answers.length <= 4) {
+			setTimeout(async() => {
+
+			}, 10000)
+		} else if(secondPlayer.secondPlayerProgress.answers.length === 5 && firstPlayer.firstPlayerProgress.answers.length) {
+			setTimeout(async() => {
+							
+			}, 10000)
 		}
 	}
 }

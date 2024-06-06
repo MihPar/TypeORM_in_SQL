@@ -25,16 +25,16 @@ export class PairQuizGameController {
 	protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository
   ) {}
 
-  @Get('pairs/all')
-  @HttpCode(HttpStatus.OK)
-  async geAllGames(
-  ): Promise<GameTypeModel[]> {
-	console.log(1)
-    const getAllPairs: GameTypeModel[] =
-      await this.pairQuezGameQueryRepository.getAllGames();
+//   @Get('pairs/all')
+//   @HttpCode(HttpStatus.OK)
+//   async geAllGames(
+//   ): Promise<GameTypeModel[]> {
+// 	console.log(1)
+//     const getAllPairs: GameTypeModel[] =
+//       await this.pairQuezGameQueryRepository.getAllGames();
    
-	  return getAllPairs;
-  }
+// 	  return getAllPairs;
+//   }
   
   @Get('users/top')
   @HttpCode(HttpStatus.OK)
@@ -174,8 +174,6 @@ export class PairQuizGameController {
         'the game is not exist by userId and status',
       );
 
-	  console.log(JSON.stringify(activeUserGame), " active user game")
-	  console.log("req.body", DTO)
     const isFirstPlayer =
       activeUserGame.firstPlayerProgress.player.id === userId;
     const isSecondPlayer =
@@ -190,8 +188,6 @@ export class PairQuizGameController {
       );
     }
 
-	console.log(isFirstPlayer, "isFirstPlayer")
-	console.log(isSecondPlayer, "isSecondPlayer")
     if (isSecondPlayer && secondPlayerAswersCount === GAME_QUESTION_COUNT) {
       throw new ForbiddenException(
         'second player is not answer by all questions',
