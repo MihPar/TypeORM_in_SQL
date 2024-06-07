@@ -25,6 +25,7 @@ import { QuestionQueryRepository } from '../question/infrastructury/questionQuer
 import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-ues-case';
 import { QuestionGame } from './domain/entity.questionGame';
 import { GetCurrectUserStatisticUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
+import { ScheduleModule } from '@nestjs/schedule';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -48,7 +49,7 @@ const useCase = [
   GetCurrectUserStatisticUseCase
 ];
 @Module({
-  imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question, QuestionGame]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question, QuestionGame]), CqrsModule,  ScheduleModule.forRoot()],
   controllers: [PairQuizGameController],
   providers: [...services, ...guards, ...repo, ...useCase],
 })
