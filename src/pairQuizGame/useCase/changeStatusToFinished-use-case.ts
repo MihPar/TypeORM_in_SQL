@@ -40,8 +40,6 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 
 		if(firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length && secondPlayer.secondPlayerProgress.answers.length <= command.gameQuestions.length) {
 				const handleCronSecondCommand = new CronSecondCommand(
-					firstPlayer,
-					secondPlayer,
 					command.game,
 					command.gameQuestions,
 					command.inputAnswer,

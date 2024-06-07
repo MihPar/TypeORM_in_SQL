@@ -15,8 +15,6 @@ import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository
 
 export class CronSecondCommand {
 	constructor(
-		public firstPlayer: PairQuizGame,
-		public secondPlayer: PairQuizGame,
 		public game: PairQuizGame,
 		public gameQuestions: Question[],
 		public inputAnswer: string,
