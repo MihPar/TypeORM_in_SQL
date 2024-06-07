@@ -26,6 +26,8 @@ import { SecondPlayerSendAnswerUseCase } from './useCase/secondPlayerSendAnswer-
 import { QuestionGame } from './domain/entity.questionGame';
 import { GetCurrectUserStatisticUseCase } from './useCase/changeAnswerStatusFirstPlayer-use-case';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CronSecondUseCase } from './useCase/handleCronSecon-use-case';
+import { CronFirstdUseCase } from './useCase/handleCronFirst-use-case';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -46,7 +48,9 @@ const useCase = [
   ChangeStatusToFinishedUseCase,
   SendAnswerUseCase,
 //   ChangeAnswerStatusPlayerUseCase,
-  GetCurrectUserStatisticUseCase
+  GetCurrectUserStatisticUseCase,
+  CronSecondUseCase,
+  CronFirstdUseCase
 ];
 @Module({
   imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question, QuestionGame]), CqrsModule,  ScheduleModule.forRoot()],

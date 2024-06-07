@@ -336,9 +336,9 @@ export class PairQuezGameQueryRepository {
     return result;
   }
 
-  async saveGame(game: PairQuizGame): Promise<void>  {
+  async saveGame(game: PairQuizGame): Promise<any>  {
 		const finishedGame = await this.pairQuezGame.save(game)
-		await this.pairQuezGame.update(
+		return await this.pairQuezGame.update(
 			{ id: finishedGame.id },
 			{
 			  status: GameStatusEnum.Finished,

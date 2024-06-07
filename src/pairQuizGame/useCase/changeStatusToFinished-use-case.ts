@@ -1,6 +1,7 @@
+import { Logger } from '@nestjs/common';
 import { QuestionQueryRepository } from './../../question/infrastructury/questionQueryRepository';
 // import { PairQuizGameRepository } from './../infrastructure/pairQuizGameRepository';
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { CommandBus, CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { Question } from "../../question/domain/entity.question";
 import { PairQuezGameQueryRepository } from "../infrastructure/pairQuizGameQueryRepository";
 import { PairQuizGame } from "../domain/entity.pairQuezGame";
@@ -8,16 +9,18 @@ import { GameTypeModel } from "../type/typeViewModel";
 import { AnswerStatusEnum, GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
 import { sortAddedAt } from "../../helpers/helpers";
 import { PairQuizGameRepository } from "../infrastructure/pairQuizGameRepository";
-import { Cron, CronExpression } from "@nestjs/schedule";
+import { Cron, CronExpression, Timeout } from "@nestjs/schedule";
 import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
 import { QuestionGame } from '../domain/entity.questionGame';
+import { CronSecondCommand, CronSecondUseCase } from './handleCronSecon-use-case';
+import { CronFirstCommand, CronFirstdUseCase } from './handleCronFirst-use-case';
 
 export class ChangeStatusToFinishedCommand {
 	constructor(
 		public game: PairQuizGame,
 		public gameQuestions: Question[],
 		public inputAnswer: string,
-		public activeUserGame: GameTypeModel
+		public activeUserGame: GameTypeModel,
 	) {}
 }
 
@@ -26,52 +29,32 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 	constructor(
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
 		protected readonly pairQuizGameRepository: PairQuizGameRepository,
-		protected readonly questionQueryRepository: QuestionQueryRepository
+		protected readonly questionQueryRepository: QuestionQueryRepository,
+		protected readonly commandBus: CommandBus
 	) {}
-	@Cron(new Date(Date.now() + 10 * 600000))
-	async handleCron(command: ChangeStatusToFinishedCommand): Promise<any> {
-		const firstPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.	game.id, command.game.firstPlayerProgress.user.id, [GameStatusEnum.Active])
-		const secondPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.secondPlayerProgress.user.id, [GameStatusEnum.Active])
-
-		if(firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length && secondPlayer.secondPlayerProgress.answers.length <= command.gameQuestions.length) {
-			const currentQuestionIndex: number = command.activeUserGame.secondPlayerProgress.answers.length
-			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex))
-			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.question.id)
-					const isIncludes = question!.correctAnswers.includes(command.inputAnswer)
-
-					const answer = AnswersPlayer.createAnswer(
-						question!.id,
-						isIncludes ? AnswerStatusEnum.Correct : AnswerStatusEnum.InCorrect,
-						command.inputAnswer,
-						command.game.secondPlayerProgress,
-					);
-					const answerPush = command.game.secondPlayerProgress.answers
-					answerPush.push(answer)
-				await this.pairQuezGameQueryRepository.createAnswers(answerPush)
-				return await this.pairQuezGameQueryRepository.saveGame(command.game)
-		} else if(secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length && firstPlayer.firstPlayerProgress.answers.length <= command.gameQuestions.length) {
-			const currentQuestionIndex: number = command.activeUserGame.firstPlayerProgress.answers.length
-			const gameQuestion: QuestionGame = command.game.questionGames.find((q) => q.index === (currentQuestionIndex))
-			const question = await this.questionQueryRepository.getQuestionById(gameQuestion.question.id)
-					const isIncludes = question!.correctAnswers.includes(command.inputAnswer)
-
-					const answer = AnswersPlayer.createAnswer(
-						question!.id,
-						isIncludes ? AnswerStatusEnum.Correct : AnswerStatusEnum.InCorrect,
-						command.inputAnswer,
-						command.game.firstPlayerProgress,
-					);
-					const answerPush = command.game.firstPlayerProgress.answers
-					answerPush.push(answer)
-				await this.pairQuezGameQueryRepository.createAnswers(answerPush)
-				return await this.pairQuezGameQueryRepository.saveGame(command.game)
-		}
-	}
+	
 	async execute(command: ChangeStatusToFinishedCommand): Promise<any> {
+		
 		const firstPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.firstPlayerProgress.user.id, [GameStatusEnum.Active])
 		const secondPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.secondPlayerProgress.user.id, [GameStatusEnum.Active])
 
-		if(
+		if(firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length && secondPlayer.secondPlayerProgress.answers.length <= command.gameQuestions.length) {
+				const handleCronSecondCommand = new CronSecondCommand(
+					firstPlayer,
+					secondPlayer,
+					command.game,
+					command.gameQuestions,
+					command.inputAnswer,
+					command.activeUserGame)
+				const cronSecond = await this.commandBus.execute<CronSecondCommand>(handleCronSecondCommand)
+		} else if(secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length && firstPlayer.firstPlayerProgress.answers.length <= command.gameQuestions.length) {
+				const handleCronFirstCommand = new CronFirstCommand(
+					command.game,
+					command.gameQuestions,
+					command.inputAnswer,
+					command.activeUserGame)
+				await this.commandBus.execute<CronFirstCommand>(handleCronFirstCommand)
+		} else if(
 			firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length &&
 			secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length
 		) {
