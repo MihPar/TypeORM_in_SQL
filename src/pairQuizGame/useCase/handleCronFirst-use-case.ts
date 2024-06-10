@@ -60,7 +60,7 @@ export class CronFirstdUseCase implements ICommandHandler<CronFirstCommand> {
 				)
 				command.game =  await this.pairQuezGameQueryRepository.getUnfinishedGame(command.game.firstPlayerProgress.user.id)
 				return await this.pairQuezGameQueryRepository.saveGame(command.game)
-		}, 10000)
+		}, 600000)
 		command.game.firstPlayerProgress.score += 1
 		return await this.pairQuezGameQueryRepository.saveGame(command.game)
 	}
