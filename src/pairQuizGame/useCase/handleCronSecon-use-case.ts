@@ -29,7 +29,7 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
 		protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
 		protected readonly pairQuizGameRepository: PairQuizGameRepository
 	) {}
-	// @Cron('* 10 * * * *', {
+	// @Cron('10 * * * * *', {
 	// 		name: 'notificationSecond',
 	// 	// 	timeZone: 'Russian'
 			
@@ -60,7 +60,7 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
 			)
 			command.game =  await this.pairQuezGameQueryRepository.getUnfinishedGame(command.game.secondPlayerProgress.user.id)
 			return await this.pairQuezGameQueryRepository.saveGame(command.game)
-		}, 600000)
+		}, 10000)
 		command.game.secondPlayerProgress.score += 1
 		return await this.pairQuezGameQueryRepository.saveGame(command.game)
 	}
