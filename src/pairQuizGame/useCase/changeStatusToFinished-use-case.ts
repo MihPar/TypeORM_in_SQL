@@ -38,21 +38,8 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 		const firstPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.firstPlayerProgress.user.id, [GameStatusEnum.Active])
 		const secondPlayer = await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(command.game.id, command.game.secondPlayerProgress.user.id, [GameStatusEnum.Active])
 
-		if(firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length && secondPlayer.secondPlayerProgress.answers.length <= command.gameQuestions.length) {
-				const handleCronSecondCommand = new CronSecondCommand(
-					command.game,
-					command.gameQuestions,
-					command.inputAnswer,
-					command.activeUserGame)
-				const cronSecond = await this.commandBus.execute<CronSecondCommand>(handleCronSecondCommand)
-		} else if(secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length && firstPlayer.firstPlayerProgress.answers.length <= command.gameQuestions.length) {
-				const handleCronFirstCommand = new CronFirstCommand(
-					command.game,
-					command.gameQuestions,
-					command.inputAnswer,
-					command.activeUserGame)
-				await this.commandBus.execute<CronFirstCommand>(handleCronFirstCommand)
-		} else if(
+		
+		if(
 			firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length &&
 			secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length
 		) {
@@ -91,6 +78,20 @@ export class ChangeStatusToFinishedUseCase implements ICommandHandler<ChangeStat
 			// console.log(progressAfterUpdate, "++++")
 			return await this.pairQuezGameQueryRepository.saveGame(command.game)
 			//changeGameStatusToFinished(command.game.id)
+		} else if(firstPlayer.firstPlayerProgress.answers.length === command.gameQuestions.length && secondPlayer.secondPlayerProgress.answers.length <= command.gameQuestions.length) {
+			const handleCronSecondCommand = new CronSecondCommand(
+				command.game,
+				command.gameQuestions,
+				command.inputAnswer,
+				command.activeUserGame)
+			const cronSecond = await this.commandBus.execute<CronSecondCommand>(handleCronSecondCommand)
+		} else if(secondPlayer.secondPlayerProgress.answers.length === command.gameQuestions.length && firstPlayer.firstPlayerProgress.answers.length <= command.gameQuestions.length) {
+				const handleCronFirstCommand = new CronFirstCommand(
+					command.game,
+					command.gameQuestions,
+					command.inputAnswer,
+					command.activeUserGame)
+				await this.commandBus.execute<CronFirstCommand>(handleCronFirstCommand)
 		} 
 	}
 }
