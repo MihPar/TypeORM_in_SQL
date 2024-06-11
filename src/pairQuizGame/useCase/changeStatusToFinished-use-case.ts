@@ -49,18 +49,18 @@ export class ChangeStatusToFinishedUseCase
         [GameStatusEnum.Active],
       );
 
+    const firstPlayerLastAnswer = sortAddedAt(
+      firstPlayer.firstPlayerProgress.answers,
+    )[command.gameQuestions.length - 1];
+    const secondPlayerLastAnswer = sortAddedAt(
+      secondPlayer.secondPlayerProgress.answers,
+    )[command.gameQuestions.length - 1];
     if (
       firstPlayer.firstPlayerProgress.answers.length ===
         command.gameQuestions.length &&
       secondPlayer.secondPlayerProgress.answers.length ===
         command.gameQuestions.length
     ) {
-      const firstPlayerLastAnswer = sortAddedAt(
-        firstPlayer.firstPlayerProgress.answers,
-      )[command.gameQuestions.length - 1];
-      const secondPlayerLastAnswer = sortAddedAt(
-        secondPlayer.secondPlayerProgress.answers,
-      )[command.gameQuestions.length - 1];
       if (
         firstPlayerLastAnswer.addedAt.toISOString() <
           secondPlayerLastAnswer.addedAt.toISOString() &&
@@ -112,29 +112,53 @@ export class ChangeStatusToFinishedUseCase
     } else if (
       firstPlayer.firstPlayerProgress.answers.length ===
         command.gameQuestions.length &&
-      secondPlayer.secondPlayerProgress.answers.length <=
+      secondPlayer.secondPlayerProgress.answers.length <
         command.gameQuestions.length
     ) {
+      if (
+        firstPlayer.firstPlayerProgress.answers.some(
+          (item) => item.answerStatus === AnswerStatusEnum.Correct,
+        )
+      ) {
+        command.game.firstPlayerProgress.score += 1;
+      }
       const handleCronSecondCommand = new CronSecondCommand(
+        secondPlayer.secondPlayerProgress.answers.length,
         command.game,
         command.gameQuestions,
         command.inputAnswer,
         command.activeUserGame,
       );
-      await this.commandBus.execute<CronSecondCommand>(handleCronSecondCommand);
+      setTimeout(async () => {
+        return await this.commandBus.execute<CronSecondCommand>(
+          handleCronSecondCommand,
+        );
+      }, 10000);
     } else if (
       secondPlayer.secondPlayerProgress.answers.length ===
         command.gameQuestions.length &&
-      firstPlayer.firstPlayerProgress.answers.length <=
+      firstPlayer.firstPlayerProgress.answers.length <
         command.gameQuestions.length
     ) {
+      if (
+        secondPlayer.secondPlayerProgress.answers.some(
+          (item) => item.answerStatus === AnswerStatusEnum.Correct,
+        )
+      ) {
+        command.game.secondPlayerProgress.score += 1;
+      }
       const handleCronFirstCommand = new CronFirstCommand(
+        firstPlayer.firstPlayerProgress.answers.length,
         command.game,
         command.gameQuestions,
         command.inputAnswer,
         command.activeUserGame,
       );
-      await this.commandBus.execute<CronFirstCommand>(handleCronFirstCommand);
+      setTimeout(async () => {
+        return await this.commandBus.execute<CronFirstCommand>(
+          handleCronFirstCommand,
+        );
+      }, 10000);
     }
   }
 }

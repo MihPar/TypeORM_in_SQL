@@ -14,57 +14,6 @@ import { GameStatusEnum } from '../enum/enumPendingPlayer';
 
 @Injectable()
 export class PairQuezGameQueryRepository {
-  //   async getAllGames(): Promise<GameTypeModel[]> {
-  // 	const getGames: PairQuizGame[] = await this.pairQuezGame.find({
-  // 		relations: {
-  // 		  firstPlayerProgress: { user: true, answers: { question: true } },
-  // 		  secondPlayerProgress: { user: true, answers: { question: true } },
-  // 		  questionGames: { question: { questionGame: true } },
-  // 		},
-
-  // 		order: { questionGames: { index: 'ASC' } },
-  // 	  });
-
-  // 	  if (!getGames) return null;
-  // 	  const res = await Promise.all(getGames.map(async game => {
-  // 		const currentUnFinishedGameFirstPlayer =
-  // 		await this.pairQuizGameProgressPlayer.findOne({
-  // 		  relations: {
-  // 			user: { progressPlayer: true },
-  // 			answers: { progress: true },
-  // 		  },
-  // 		  where: {
-  // 			gameId: game.id,
-  // 			user: { id: game.firstPlayerProgress.user.id },
-  // 		  },
-  // 		  order: { answers: { addedAt: 'ASC' } },
-  // 		});
-
-  // 	  const currentUnFinishedGameSecondPlayer = game.secondPlayerProgress
-  // 		? await this.pairQuizGameProgressPlayer.findOne({
-  // 			relations: {
-  // 			  user: { progressPlayer: true },
-  // 			  answers: { progress: true },
-  // 			},
-  // 			where: {
-  // 			  gameId: game.id,
-  // 			  user: { id: game.secondPlayerProgress.user.id },
-  // 			},
-  // 			order: { answers: { addedAt: 'ASC' } },
-  // 		  })
-  // 		: null;
-
-  // 	  return PairQuizGame.getViewModels(
-  // 		game,
-  // 		currentUnFinishedGameFirstPlayer,
-  // 		currentUnFinishedGameSecondPlayer,
-  // 	  );
-  // 	  }))
-
-  // 	  return res
-
-  //   }
-
   constructor(
     @InjectRepository(PairQuizGame)
     protected readonly pairQuezGame: Repository<PairQuizGame>,

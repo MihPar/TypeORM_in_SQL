@@ -1,65 +1,63 @@
 import { LikeForComment } from './../../likes/entity/likesForComment.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { UserViewType } from "../user.type";
-import { Device } from "../../security-devices/entities/security-device.entity";
-import { LikeForPost } from "../../likes/entity/likesForPost.entity";
-import { Blogs } from "../../blogs/entity/blogs.entity";
-import { Posts } from "../../posts/entity/entity.posts";
-import { Comments } from "../../comment/entity/comment.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { UserViewType } from '../user.type';
+import { Device } from '../../security-devices/entities/security-device.entity';
+import { LikeForPost } from '../../likes/entity/likesForPost.entity';
+import { Blogs } from '../../blogs/entity/blogs.entity';
+import { Posts } from '../../posts/entity/entity.posts';
+import { Comments } from '../../comment/entity/comment.entity';
 import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 
 @Entity()
 export class User {
-	@PrimaryGeneratedColumn("uuid")
-	id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-	@Column()
-	login: string
+  @Column()
+  login: string;
 
-	@Column()
-	email: string
+  @Column()
+  email: string;
 
-	@Column()
-	createdAt: Date
+  @Column()
+  createdAt: Date;
 
-	@Column()
-	passwordHash: string
+  @Column()
+  passwordHash: string;
 
-	@Column()
-	expirationDate: Date
+  @Column()
+  expirationDate: Date;
 
-	@Column()
-	confirmationCode: string
+  @Column()
+  confirmationCode: string;
 
-	@Column()
-	isConfirmed: boolean = false
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  @Column()
+  isConfirmed: boolean = false;
 
-	@OneToMany(() => Blogs, b => b.user)
-	blog: Blogs
+  @OneToMany(() => Blogs, (b) => b.user)
+  blog: Blogs;
 
-	@OneToMany(() => Posts, p => p.user)
-	post: Posts
+  @OneToMany(() => Posts, (p) => p.user)
+  post: Posts;
 
-	@OneToMany(() => Comments, c => c.user)
-	comment: Comments
+  @OneToMany(() => Comments, (c) => c.user)
+  comment: Comments;
 
-	@OneToMany(() => LikeForPost, lfp => lfp.user)
-	likeForPost: LikeForPost
+  @OneToMany(() => LikeForPost, (lfp) => lfp.user)
+  likeForPost: LikeForPost;
 
-	@OneToMany(() => Device, d => d.user, { onDelete: "CASCADE" })
-	device: Device[]
+  @OneToMany(() => Device, (d) => d.user, { onDelete: 'CASCADE' })
+  device: Device[];
 
-	@OneToMany(() => LikeForComment, c => c.user)
-	likeForComment: LikeForComment
-	
-	@Column({nullable: true, default: "None"})
-	LikeForComment: string
+  @OneToMany(() => LikeForComment, (c) => c.user)
+  likeForComment: LikeForComment;
 
-	@OneToMany(() => PairQuizGameProgressPlayer, pqg => pqg.user)
-	progressPlayer: PairQuizGameProgressPlayer[]
+  @Column({ nullable: true, default: 'None' })
+  LikeForComment: string;
 
-	// @OneToMany(() => PairQuizGameProgressSecondPlayer, pqg => pqg.userSecondPlyer)
-	// progressSecondPlayer: PairQuizGameProgressSecondPlayer[]
+  @OneToMany(() => PairQuizGameProgressPlayer, (pqg) => pqg.user)
+  progressPlayer: PairQuizGameProgressPlayer[];
 
   static getViewUser(user: User): UserViewType {
     return {

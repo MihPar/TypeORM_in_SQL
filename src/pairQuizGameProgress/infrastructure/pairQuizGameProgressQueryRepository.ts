@@ -1,128 +1,134 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { AnswersPlayer } from "../domain/entity.answersPlayer";
-import { PairQuizGameProgressPlayer } from "../domain/entity.pairQuizGameProgressPlayer";
-import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
-import { TopUserView } from "../../pairQuizGame/type/typeViewModel";
-import { PaginationType } from "../../types/pagination.types";
-import { UsersQueryRepository } from "../../users/users.queryRepository";
-import { StatusGameEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AnswersPlayer } from '../domain/entity.answersPlayer';
+import { PairQuizGameProgressPlayer } from '../domain/entity.pairQuizGameProgressPlayer';
+import { PairQuizGame } from '../../pairQuizGame/domain/entity.pairQuezGame';
+import { TopUserView } from '../../pairQuizGame/type/typeViewModel';
+import { PaginationType } from '../../types/pagination.types';
+import { UsersQueryRepository } from '../../users/users.queryRepository';
+import { StatusGameEnum } from '../../pairQuizGame/enum/enumPendingPlayer';
 
 @Injectable()
 export class PairQuizGameProgressQueryRepository {
-	constructor(
-		@InjectRepository(AnswersPlayer) protected readonly answersPlayer: Repository<AnswersPlayer>,
-		@InjectRepository(PairQuizGameProgressPlayer) protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
-		@InjectRepository(PairQuizGame) protected readonly pairQuizGame: Repository<PairQuizGame>,
-		protected readonly usersQueryRepository: UsersQueryRepository
-	) {}
-	async deleteAllAnswersFirstPlayer() {
-		await this.answersPlayer
-			.createQueryBuilder()
-			.delete()
-			.execute()
-			return true
-	}
+  constructor(
+    @InjectRepository(AnswersPlayer)
+    protected readonly answersPlayer: Repository<AnswersPlayer>,
+    @InjectRepository(PairQuizGameProgressPlayer)
+    protected readonly pairQuizGameProgressPlayer: Repository<PairQuizGameProgressPlayer>,
+    @InjectRepository(PairQuizGame)
+    protected readonly pairQuizGame: Repository<PairQuizGame>,
+    protected readonly usersQueryRepository: UsersQueryRepository,
+  ) {}
+  async deleteAllAnswersFirstPlayer() {
+    await this.answersPlayer.createQueryBuilder().delete().execute();
+    return true;
+  }
 
-	async deleteAllAnswersSecondPlayer() {
-		await this.answersPlayer
-			.createQueryBuilder()
-			.delete()
-			.execute()
-			return true
-	}
+  async deleteAllAnswersSecondPlayer() {
+    await this.answersPlayer.createQueryBuilder().delete().execute();
+    return true;
+  }
 
-	async deleteAllPairQuizGameProgressPlayerPlayer() {
-		await this.pairQuizGameProgressPlayer
-			.createQueryBuilder()
-			.delete()
-			.execute()
-			return true
-	}
+  async deleteAllPairQuizGameProgressPlayerPlayer() {
+    await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .delete()
+      .execute();
+    return true;
+  }
 
-	async deleteAllPairQuizGameProgressSecondPlayerPlayer() {
-		await this.pairQuizGameProgressPlayer
-			.createQueryBuilder()
-			.delete()
-			.execute()
-			return true
-	}
+  async deleteAllPairQuizGameProgressSecondPlayerPlayer() {
+    await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .delete()
+      .execute();
+    return true;
+  }
 
-	async getQuestionByIdForFirstPlayer(userId: string): Promise<PairQuizGameProgressPlayer | null> {
-		const getQuestion = await this.pairQuizGameProgressPlayer
-			.createQueryBuilder()
-			.select()
-			.where(`"userId" = :userId`, {userId})
-			.getOne()
+  async getQuestionByIdForFirstPlayer(
+    userId: string,
+  ): Promise<PairQuizGameProgressPlayer | null> {
+    const getQuestion = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .select()
+      .where(`"userId" = :userId`, { userId })
+      .getOne();
 
-			if(!getQuestion) return null
-			return getQuestion
-	}
+    if (!getQuestion) return null;
+    return getQuestion;
+  }
 
-	async getQuestionByIdForSecondPlayer(userId: string): Promise<PairQuizGameProgressPlayer | null> {
-		const getQuestion = await this.pairQuizGameProgressPlayer
-			.createQueryBuilder()
-			.select()
-			.where(`"userId" = :userId`, {userId})
-			.getOne()
+  async getQuestionByIdForSecondPlayer(
+    userId: string,
+  ): Promise<PairQuizGameProgressPlayer | null> {
+    const getQuestion = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      .select()
+      .where(`"userId" = :userId`, { userId })
+      .getOne();
 
-			if(!getQuestion) return null
-			return getQuestion
-	}
+    if (!getQuestion) return null;
+    return getQuestion;
+  }
 
-	async findAnswerFirstPlayer(progressId: string): Promise<AnswersPlayer | null> {
-		const getAnswer = await this.answersPlayer
-			.createQueryBuilder()
-			.select()
-			.where(`"progressId" = :progressId`, {progressId})
-			.getOne()
-			// .getOne()
+  async findAnswerFirstPlayer(
+    progressId: string,
+  ): Promise<AnswersPlayer | null> {
+    const getAnswer = await this.answersPlayer
+      .createQueryBuilder()
+      .select()
+      .where(`"progressId" = :progressId`, { progressId })
+      .getOne();
+    // .getOne()
 
-			// console.log("getAnswer: ", getAnswer)
+    // console.log("getAnswer: ", getAnswer)
 
-			if(!getAnswer) return null
-			return getAnswer
-	}
+    if (!getAnswer) return null;
+    return getAnswer;
+  }
 
-	async findAnswerSecondPlayer(progressId: string): Promise<AnswersPlayer | null> {
-		const getAnswer = await this.answersPlayer
-			.createQueryBuilder()
-			.select()
-			.where(`"progressId" = :progressId`, {progressId})
-			.getOne()
+  async findAnswerSecondPlayer(
+    progressId: string,
+  ): Promise<AnswersPlayer | null> {
+    const getAnswer = await this.answersPlayer
+      .createQueryBuilder()
+      .select()
+      .where(`"progressId" = :progressId`, { progressId })
+      .getOne();
 
-			if(!getAnswer) return null
-			return getAnswer
-	}
+    if (!getAnswer) return null;
+    return getAnswer;
+  }
 
-	async getTopUsers(
-		sort: string[],
-		pageNumber: number,
-		pageSize: number,
-		
-	): Promise<PaginationType<TopUserView>> {
-		// const stackAllGamesByUser = await this.pairQuizGameProgressPlayer.find({
-		// 	relations: {user: true},
-		// 	order: {addedAt: "ASC"}
-		// })
-	const stackAllGamesByUser = await this.pairQuizGameProgressPlayer
-			.createQueryBuilder()
-			// .select(`'userId'`)
-			.distinct(true)
-			.getMany();
+  async getTopUsers(
+    sort: string[],
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginationType<TopUserView>> {
+    // const stackAllGamesByUser = await this.pairQuizGameProgressPlayer.find({
+    // 	relations: {user: true},
+    // 	order: {addedAt: "ASC"}
+    // })
+    const stackAllGamesByUser = await this.pairQuizGameProgressPlayer
+      .createQueryBuilder()
+      // .select(`'userId'`)
+      .distinct(true)
+      .getMany();
 
-	const uniqUserByIds = Array.from(new Set(stackAllGamesByUser.map(item => item.userId)))
-	// console.log(uniqUserByIds)
-	// console.log('result: ', stackAllGamesByUser)
+    const uniqUserByIds = Array.from(
+      new Set(stackAllGamesByUser.map((item) => item.userId)),
+    );
+    // console.log(uniqUserByIds)
+    // console.log('result: ', stackAllGamesByUser)
     const sortParam = sort.map((param) => param.replace(/\+/g, ' '));
-	// console.log("sortParam: ", sortParam)
+    // console.log("sortParam: ", sortParam)
     const totalCountQuery = await uniqUserByIds.length;
 
     const items = await Promise.all(
-		uniqUserByIds.map(async (userId) => {
+      uniqUserByIds.map(async (userId) => {
         const user = await this.usersQueryRepository.findUserById(userId);
-		// console.log("user: ", user)
+        // console.log("user: ", user)
         const playerSumScores = await this.pairQuizGameProgressPlayer
           .createQueryBuilder()
           .select('SUM(score)', 'sumScore')
@@ -130,19 +136,19 @@ export class PairQuizGameProgressQueryRepository {
           .getRawOne()
           .then((result) => parseInt(result.sumScore));
 
-		  const playerTotalGameCount = await this.pairQuizGameProgressPlayer
+        const playerTotalGameCount = await this.pairQuizGameProgressPlayer
           .createQueryBuilder()
           .where(`"userId" = :userId`, { userId })
           .getCount();
 
-		//   console.log("playerTotalGameCount: ", typeof playerTotalGameCount)
+        //   console.log("playerTotalGameCount: ", typeof playerTotalGameCount)
 
         // const playerAvgScores = +(
         //   playerSumScores / playerTotalGameCount
         // ).toFixed(2);
 
-		const playerAvgScores =
-      Math.round((playerSumScores / playerTotalGameCount) * 100) / 100;
+        const playerAvgScores =
+          Math.round((playerSumScores / playerTotalGameCount) * 100) / 100;
 
         const playerWinCount = await this.pairQuizGameProgressPlayer
           .createQueryBuilder()
@@ -170,18 +176,20 @@ export class PairQuizGameProgressQueryRepository {
           lossesCount: playerLossCount,
           drawsCount: playerDrawsCount,
           player: {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             id: user!.id,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             login: user!.login,
           },
         };
       }),
     );
 
-	// console.log("items: ", items)
+    // console.log("items: ", items)
     const sortedItems = items
       .sort((a, b) => {
         for (const sortCriteria of sortParam) {
-			// console.log("sortCriteria: ", sortCriteria)
+          // console.log("sortCriteria: ", sortCriteria)
           const [fieldName, sortDirection] = sortCriteria.split(' ', 2);
           if (fieldName === 'avgScores') {
             if (a.avgScores > b.avgScores) {
@@ -218,13 +226,13 @@ export class PairQuizGameProgressQueryRepository {
         return 0;
       })
       .slice((+pageNumber - 1) * +pageSize, +pageNumber * +pageSize);
-	
+
     return {
       pagesCount: Math.ceil(totalCountQuery / +pageSize),
       page: +pageNumber,
       pageSize: +pageSize,
       totalCount: totalCountQuery,
-      items: sortedItems
+      items: sortedItems,
     };
-	}
+  }
 }

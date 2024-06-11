@@ -3,12 +3,18 @@ import { PairQuizGame } from '../domain/entity.pairQuezGame';
 import { Question } from '../../question/domain/entity.question';
 import { GameTypeModel } from '../type/typeViewModel';
 import { QuestionQueryRepository } from '../../question/infrastructury/questionQueryRepository';
-import { GameStatusEnum } from '../enum/enumPendingPlayer';
+import {
+  AnswerStatusEnum,
+  GameStatusEnum,
+  StatusGameEnum,
+} from '../enum/enumPendingPlayer';
 import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
+import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 
 export class CronSecondCommand {
   constructor(
+    public previous_score: number,
     public game: PairQuizGame,
     public gameQuestions: Question[],
     public inputAnswer: string,
@@ -35,12 +41,68 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
         command.game.secondPlayerProgress.user.id,
         [GameStatusEnum.Active],
       );
-    if (secondPlayer.status === GameStatusEnum.Finished) {
-      return;
-    } else if (secondPlayer.status === GameStatusEnum.Active) {
-      setTimeout(async () => {
-        return await this.pairQuezGameQueryRepository.saveGame(command.game);
-      }, 10000);
+    const firstPlayer =
+      await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(
+        command.game.id,
+        command.game.firstPlayerProgress.user.id,
+        [GameStatusEnum.Active],
+      );
+    if (
+      command.previous_score !==
+      secondPlayer.secondPlayerProgress.answers.length
+    ) {
+      return null;
     }
+    //if (secondPlayer.status === GameStatusEnum.Active) {
+    const secondPlayerAnswersAfterTenSeconds =
+      secondPlayer.secondPlayerProgress.answers.length;
+
+    const unAnswersQuestions = 5 - secondPlayerAnswersAfterTenSeconds;
+    for (let i = 0; i < unAnswersQuestions; i++) {
+      const noAnswers = AnswersPlayer.createAnswer(
+        command.gameQuestions[secondPlayerAnswersAfterTenSeconds + i].id,
+        AnswerStatusEnum.InCorrect,
+        // eslint-disable-next-line prettier/prettier
+        'answer was not provider',
+        secondPlayer.secondPlayerProgress,
+      );
+      const answerPush = command.game.firstPlayerProgress.answers;
+      answerPush.push(noAnswers);
+      await this.pairQuezGameQueryRepository.createAnswers(answerPush);
+      await this.pairQuizGameRepository.sendAnswerPlayer({
+        userId: command.game.secondPlayerProgress.user.id,
+        count: false,
+        gameId: command.game.id,
+      });
+      command.game = await this.pairQuezGameQueryRepository.getUnfinishedGame(
+        command.game.secondPlayerProgress.user.id,
+      );
+    }
+    const firstPlayerScore = firstPlayer.firstPlayerProgress.score;
+    const secondPalyerScore = secondPlayer.secondPlayerProgress.score;
+    if (firstPlayerScore > secondPalyerScore) {
+      secondPlayer.secondPlayerProgress.userStatus = StatusGameEnum.Loser;
+      firstPlayer.firstPlayerProgress.userStatus = StatusGameEnum.Winner;
+      // await this.pairQuezGameQueryRepository.makeFirstPlayerWin(secondPlayer)
+    }
+    if (firstPlayerScore < secondPalyerScore) {
+      secondPlayer.secondPlayerProgress.userStatus = StatusGameEnum.Winner;
+      firstPlayer.firstPlayerProgress.userStatus = StatusGameEnum.Loser;
+      // await this.pairQuezGameQueryRepository.makeSecondPlayerWin(secondPlayer);
+    }
+    if (firstPlayerScore === secondPalyerScore) {
+      secondPlayer.secondPlayerProgress.userStatus = StatusGameEnum.Draw;
+      firstPlayer.firstPlayerProgress.userStatus = StatusGameEnum.Draw;
+      // await this.pairQuezGameQueryRepository.notAWinner(secondPlayer);
+    }
+    command.game.status = GameStatusEnum.Finished;
+    // await this.pairQuezGameQueryRepository.saveProgress(
+    //   firstPlayer.firstPlayerProgress,
+    // );
+    await this.pairQuezGameQueryRepository.saveProgress(
+      command.game.secondPlayerProgress,
+    );
+    return await this.pairQuezGameQueryRepository.saveGame(command.game);
+    //}
   }
 }

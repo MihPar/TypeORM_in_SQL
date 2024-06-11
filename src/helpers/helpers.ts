@@ -1,13 +1,10 @@
 import request from 'supertest';
 import { InputModelClassCreateBody } from '../users/user.class';
-import { Posts } from '../posts/entity/entity.posts';
 import { LikeStatusEnum } from '../likes/likes.emun';
-import { PostsViewModel } from '../posts/posts.type';
 import { CommentViewModel } from '../comment/comment.type';
 import { Comments } from '../comment/entity/comment.entity';
-import { AnswersPlayer } from '../pairQuizGameProgress/domain/entity.answersPlayer';
 import { HttpStatus } from '@nestjs/common';
-import { QuestionMemory, questionsInMemory } from './questionMemory';
+import { QuestionMemory } from './questionMemory';
 import { GameTypeModel } from '../pairQuizGame/type/typeViewModel';
 
 export const commentDBToView = (
@@ -31,13 +28,13 @@ export const commentDBToView = (
   };
 };
 
-let answer: {
-  questionId: string;
-  answerStatus: string;
-  addedAt: string;
-};
+// let answer: {
+//   questionId: string;
+//   answerStatus: string;
+//   addedAt: string;
+// };
 
-let question: { body: string; correctAnswers: string[] }[];
+// let question: { body: string; correctAnswers: string[] }[];
 
 // export const commentByPostView = (
 // 	item: CommentClass,
@@ -86,15 +83,13 @@ export const aDescribe = (skip: boolean): jest.Describe => {
   return describe;
 };
 
-export const sortAddedAt = <T extends { addedAt:  Date }>(
+export const sortAddedAt = <T extends { addedAt: Date }>(
   arr: Array<T>,
 ): Array<T> => {
-  return arr.sort((a: T, b: T) =>
-    { 
-		// console.error(a.addedAt.toString(),  b.addedAt.toString())
-		return a.addedAt.toISOString() > b.addedAt.toISOString() ? 1 : -1
-	}
-  );
+  return arr.sort((a: T, b: T) => {
+    // console.error(a.addedAt.toString(),  b.addedAt.toString())
+    return a.addedAt.toISOString() > b.addedAt.toISOString() ? 1 : -1;
+  });
 };
 // type Arr = {
 // 		questionId: string,
@@ -199,7 +194,7 @@ export const findAllGames = async (server: any, accessToken: string) => {
     const getAllGames = await request(server)
       .get('/pair-game-quiz/pairs/my')
       .set(`Authorization`, `Bearer ${accessToken}`);
-    return {status: getAllGames.status, body:  getAllGames.body};
+    return { status: getAllGames.status, body: getAllGames.body };
   } catch (err) {
     console.log(err, 'do not have any games by exists user');
   }
@@ -213,7 +208,7 @@ export const sendAnswers = async (
   game: GameTypeModel,
 ) => {
   for (const questionInGame of game.questions) {
-    const index = game.questions.indexOf(questionInGame);
+    game.questions.indexOf(questionInGame);
     const answer = questions.find(
       (questionInMemory) => questionInMemory.body === questionInGame.body,
     ).correctAnswers[0];
@@ -223,14 +218,14 @@ export const sendAnswers = async (
     };
     await delay(100);
 
-    const sendAnswerFirstPlayer = await request(server)
+    await request(server)
       .post('/pair-game-quiz/pairs/my-current/answers')
       .set('Authorization', `Bearer ${accessTokenOne}`)
       .send(payload);
 
     await delay(100);
 
-    const sendAnswerSecondPlayer = await request(server)
+    await request(server)
       .post('/pair-game-quiz/pairs/my-current/answers')
       .set('Authorization', `Bearer ${accessTokenTwo}`)
       .send(payload);
@@ -240,41 +235,39 @@ export const sendAnswers = async (
 };
 
 export const sendAnswersFirstPlayer = async (
-	server: any,
-	accessTokenOne: string,
-	str: string,
-	game: GameTypeModel,
+  server: any,
+  accessTokenOne: string,
+  str: string,
 ) => {
-		const payload = {
-		  answer: str
-		};
-		await delay(100);
-	
-		const sendAnswerFirstPlayer = await request(server)
-		  .post('/pair-game-quiz/pairs/my-current/answers')
-		  .set('Authorization', `Bearer ${accessTokenOne}`)
-		  .send(payload);
-	
-	  return sendAnswerFirstPlayer
-}
-export const sendAnswersSecondPlayer = async (
-	server: any,
-	accessTokenTwo: string,
-	str: string,
-	game: GameTypeModel,
-) => {
-		const payload = {
-		  answer: str
-		};
-		await delay(100);
-	
-		const sendAnswerSecondPlayer = await request(server)
-		.post('/pair-game-quiz/pairs/my-current/answers')
-		.set('Authorization', `Bearer ${accessTokenTwo}`)
-		.send(payload);
+  const payload = {
+    answer: str,
+  };
+  await delay(100);
 
-	  return sendAnswerSecondPlayer
-}
+  const sendAnswerFirstPlayer = await request(server)
+    .post('/pair-game-quiz/pairs/my-current/answers')
+    .set('Authorization', `Bearer ${accessTokenOne}`)
+    .send(payload);
+
+  return sendAnswerFirstPlayer;
+};
+export const sendAnswersSecondPlayer = async (
+  server: any,
+  accessTokenTwo: string,
+  str: string,
+) => {
+  const payload = {
+    answer: str,
+  };
+  await delay(100);
+
+  const sendAnswerSecondPlayer = await request(server)
+    .post('/pair-game-quiz/pairs/my-current/answers')
+    .set('Authorization', `Bearer ${accessTokenTwo}`)
+    .send(payload);
+
+  return sendAnswerSecondPlayer;
+};
 
 export const findGameById = async (
   server: any,
@@ -288,7 +281,7 @@ export const findGameById = async (
 };
 
 export const delay = async (milliseconds: number): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
     }, milliseconds);

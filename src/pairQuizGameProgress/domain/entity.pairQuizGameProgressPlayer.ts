@@ -1,62 +1,52 @@
-import { Column, Entity, Index, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "../../users/entities/user.entity";
-import { AnswerStatusEnum, StatusGameEnum } from "../../pairQuizGame/enum/enumPendingPlayer";
-import { AnswersPlayer } from "./entity.answersPlayer";
-import { Question } from "../../question/domain/entity.question";
-import { PairQuizGame } from "../../pairQuizGame/domain/entity.pairQuezGame";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { AnswersPlayer } from './entity.answersPlayer';
+import { Question } from '../../question/domain/entity.question';
+import { PairQuizGame } from '../../pairQuizGame/domain/entity.pairQuezGame';
 
 @Entity()
 export class PairQuizGameProgressPlayer {
-	@PrimaryGeneratedColumn('uuid')
-	id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-	@OneToOne(() => PairQuizGame)
-	game: PairQuizGame
+  @OneToOne(() => PairQuizGame)
+  game: PairQuizGame;
 
-	@Column({nullable: true})
-	gameId: string
+  @Column({ nullable: true })
+  gameId: string;
 
-	@ManyToOne(() => User, u => u.progressPlayer)
-	user: User
+  @ManyToOne(() => User, (u) => u.progressPlayer)
+  user: User;
 
-	@Column({nullable: true})
-	userId: string
+  @Column({ nullable: true })
+  userId: string;
 
-	@OneToMany(() => Question, q => q.progressPlayer)
-	question: Question
+  @OneToMany(() => Question, (q) => q.progressPlayer)
+  question: Question;
 
-	@Column({nullable: true})
-	questionId: string
+  @Column({ nullable: true })
+  questionId: string;
 
-	// `@Column()
-	// questionNumber: number`
+  @Column()
+  addedAt: Date;
 
-	@Column()
-	addedAt: Date
+  @Column({ default: null })
+  // @Index()
+  userStatus: string;
 
-	@Column({default: null})
-	// @Index()
-  	userStatus: string;
+  @Column({ default: 0 })
+  score: number;
 
-	@Column({default: 0})
-	score: number
+  @Column({ default: 0 })
+  bonus_score: number;
 
-	@Column({default: 0})
-	bonus_score: number
-
-	@OneToMany(() => AnswersPlayer, a => a.progress)
-	answers: AnswersPlayer[]
-
-	// @Column({nullable: true})
-	// answerFinishDate: Date
-
-	// addAnswer(answer: string) {
-	// 	if(this.question.correctAnswers.includes(answer)) {
-	// 		this.answerStatus = AnswerStatusEnum.Correct
-	// 		this.score = 2
-	// 	} else {
-	// 		this.answerStatus = AnswerStatusEnum.InCorrect
-	// 	}
-	// 	this.addedAt = new Date()
-	// }
+  @OneToMany(() => AnswersPlayer, (a) => a.progress)
+  answers: AnswersPlayer[];
 }

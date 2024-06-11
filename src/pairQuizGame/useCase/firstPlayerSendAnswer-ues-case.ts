@@ -42,9 +42,11 @@ export class FirstPlayerSendAnswerUseCase
       const question = await this.questionQueryRepository.getQuestionById(
         gameQuestion.question.id,
       );
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const isIncludes = question!.correctAnswers.includes(command.inputAnswer);
 
       const answer = AnswersPlayer.createAnswer(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         question!.id,
         isIncludes ? AnswerStatusEnum.Correct : AnswerStatusEnum.InCorrect,
         command.inputAnswer,
