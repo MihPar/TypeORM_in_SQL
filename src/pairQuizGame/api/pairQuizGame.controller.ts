@@ -1,11 +1,32 @@
-import { Controller, Get, Post, Body, Param, HttpStatus, HttpCode, UseGuards, NotFoundException, ForbiddenException, ParseUUIDPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  HttpStatus,
+  HttpCode,
+  UseGuards,
+  NotFoundException,
+  ForbiddenException,
+  ParseUUIDPipe,
+  Query,
+} from '@nestjs/common';
 import { BearerTokenPairQuizGame } from '../guards/bearerTokenPairQuizGame';
-import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
+import {
+  UserDecorator,
+  UserIdDecorator,
+} from '../../users/infrastructure/decorators/decorator.user';
 import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateOrConnectGameCommand } from '../useCase/createOrConnection-use-case';
 import { GameAnswerDto } from '../dto/createPairQuizGame.dto';
-import { AnswerType, GameTypeModel, PlayerStatisticsView, TopUserView } from '../type/typeViewModel';
+import {
+  AnswerType,
+  GameTypeModel,
+  PlayerStatisticsView,
+  TopUserView,
+} from '../type/typeViewModel';
 import { GameStatusEnum } from '../enum/enumPendingPlayer';
 import { User } from '../../users/entities/user.entity';
 import { SendAnswerCommand } from '../useCase/createSendAnswer-use-case';
@@ -22,55 +43,59 @@ export class PairQuizGameController {
     protected readonly pairQuezGameQueryRepository: PairQuezGameQueryRepository,
     protected readonly pairQuizGameRepository: PairQuizGameRepository,
     protected readonly commandBus: CommandBus,
-	protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository
+    protected readonly pairQuizGameProgressQueryRepository: PairQuizGameProgressQueryRepository,
   ) {}
 
-//   @Get('pairs/all')
-//   @HttpCode(HttpStatus.OK)
-//   async geAllGames(
-//   ): Promise<GameTypeModel[]> {
-// 	console.log(1)
-//     const getAllPairs: GameTypeModel[] =
-//       await this.pairQuezGameQueryRepository.getAllGames();
-   
-// 	  return getAllPairs;
-//   }
-  
+  //   @Get('pairs/all')
+  //   @HttpCode(HttpStatus.OK)
+  //   async geAllGames(
+  //   ): Promise<GameTypeModel[]> {
+  // 	console.log(1)
+  //     const getAllPairs: GameTypeModel[] =
+  //       await this.pairQuezGameQueryRepository.getAllGames();
+
+  // 	  return getAllPairs;
+  //   }
+
   @Get('users/top')
   @HttpCode(HttpStatus.OK)
   async getTopUsers(
-	@Query('sort') sort: string[],
-	@Query('pageNumber') pageNumber: number,
-	@Query('pageSize') pageSize: number
+    @Query('sort') sort: string[],
+    @Query('pageNumber') pageNumber: number,
+    @Query('pageSize') pageSize: number,
   ): Promise<PaginationType<TopUserView>> {
-	if (!sort || sort.length === 0) {
-		sort = ['avgScores desc', 'sumScore desc'];
-	  } else if (typeof sort === 'string') {
-		sort = [sort];
-	  } else if (
-		typeof sort === 'object' &&
-		sort.length === 1 &&
-		typeof sort[0] === 'string'
-	  ) {
-		sort = [sort[0]];
-	  }
-	  const checkPageSize = +pageSize;
-	  if (!pageSize || !Number.isInteger(checkPageSize) || checkPageSize <= 0) {
-		pageSize = 10;
-	  }
-  
-	  const checkPageNumber = +pageNumber;
-	  if (
-		!pageNumber ||
-		!Number.isInteger(checkPageNumber) ||
-		checkPageNumber <= 0
-	  ) {
-		pageNumber = 1;
-	  }
-		const getUsersOfTop = await this.pairQuizGameProgressQueryRepository.getTopUsers(sort, pageNumber, pageSize)
-		return getUsersOfTop
-  }
+    if (!sort || sort.length === 0) {
+      sort = ['avgScores desc', 'sumScore desc'];
+    } else if (typeof sort === 'string') {
+      sort = [sort];
+    } else if (
+      typeof sort === 'object' &&
+      sort.length === 1 &&
+      typeof sort[0] === 'string'
+    ) {
+      sort = [sort[0]];
+    }
+    const checkPageSize = +pageSize;
+    if (!pageSize || !Number.isInteger(checkPageSize) || checkPageSize <= 0) {
+      pageSize = 10;
+    }
 
+    const checkPageNumber = +pageNumber;
+    if (
+      !pageNumber ||
+      !Number.isInteger(checkPageNumber) ||
+      checkPageNumber <= 0
+    ) {
+      pageNumber = 1;
+    }
+    const getUsersOfTop =
+      await this.pairQuizGameProgressQueryRepository.getTopUsers(
+        sort,
+        pageNumber,
+        pageSize,
+      );
+    return getUsersOfTop;
+  }
 
   @Get('pairs/my')
   @HttpCode(HttpStatus.OK)
@@ -98,11 +123,14 @@ export class PairQuizGameController {
   @Get('users/my-statistic')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
-  async getCurrectUserStatistic(@UserIdDecorator() userId: string): Promise<PlayerStatisticsView | null> {
+  async getCurrectUserStatistic(
+    @UserIdDecorator() userId: string,
+  ): Promise<PlayerStatisticsView | null> {
     const command = new GetCurrectUserStatisticCommand(userId);
-    const getStatisticOfCurrectUser = await this.commandBus
-      .execute<GetCurrectUserStatisticCommand | PlayerStatisticsView | null>(command);
-	if(!getStatisticOfCurrectUser) return null
+    const getStatisticOfCurrectUser = await this.commandBus.execute<
+      GetCurrectUserStatisticCommand | PlayerStatisticsView | null
+    >(command);
+    if (!getStatisticOfCurrectUser) return null;
     return getStatisticOfCurrectUser;
   }
 
@@ -137,8 +165,6 @@ export class PairQuizGameController {
     return getActivePair;
   }
 
-  
-
   @Post('pairs/connection')
   @HttpCode(HttpStatus.OK)
   @UseGuards(BearerTokenPairQuizGame)
@@ -153,7 +179,7 @@ export class PairQuizGameController {
     const createOrConnection = await this.commandBus.execute<
       CreateOrConnectGameCommand | GameTypeModel
     >(command);
-    
+
     return createOrConnection;
   }
 
@@ -168,7 +194,7 @@ export class PairQuizGameController {
       await this.pairQuezGameQueryRepository.getCurrentUnFinGame(userId, [
         GameStatusEnum.Active,
       ]);
-	//   console.log("activeUserGame: ", activeUserGame)
+    //   console.log("activeUserGame: ", activeUserGame)
     if (!activeUserGame)
       throw new ForbiddenException(
         'the game is not exist by userId and status',

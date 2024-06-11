@@ -1,72 +1,70 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { In, Not, Repository } from "typeorm";
-import { AnswerStatusEnum, GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
-import { GameTypeModel } from "../type/typeViewModel";
-import { UsersQueryRepository } from "../../users/users.queryRepository";
-import { PairQuizGameRepository } from "./pairQuizGameRepository";
-import { PairQuizGameProgressQueryRepository } from "../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository";
-import { PairQuizGameProgressPlayer } from "../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer";
-import { AnswersPlayer } from "../../pairQuizGameProgress/domain/entity.answersPlayer";
-import { QuestionGame } from "../domain/entity.questionGame";
-import { PaginationType } from "../../types/pagination.types";
-import { PairQuizGame } from "../domain/entity.pairQuezGame";
-
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import { GameTypeModel } from '../type/typeViewModel';
+import { UsersQueryRepository } from '../../users/users.queryRepository';
+import { PairQuizGameRepository } from './pairQuizGameRepository';
+import { PairQuizGameProgressQueryRepository } from '../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
+import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
+import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
+import { QuestionGame } from '../domain/entity.questionGame';
+import { PaginationType } from '../../types/pagination.types';
+import { PairQuizGame } from '../domain/entity.pairQuezGame';
+import { GameStatusEnum } from '../enum/enumPendingPlayer';
 
 @Injectable()
 export class PairQuezGameQueryRepository {
-//   async getAllGames(): Promise<GameTypeModel[]> {
-// 	const getGames: PairQuizGame[] = await this.pairQuezGame.find({
-// 		relations: {
-// 		  firstPlayerProgress: { user: true, answers: { question: true } },
-// 		  secondPlayerProgress: { user: true, answers: { question: true } },
-// 		  questionGames: { question: { questionGame: true } },
-// 		},
-		
-// 		order: { questionGames: { index: 'ASC' } },
-// 	  });
-  
-// 	  if (!getGames) return null;
-// 	  const res = await Promise.all(getGames.map(async game => {
-// 		const currentUnFinishedGameFirstPlayer =
-// 		await this.pairQuizGameProgressPlayer.findOne({
-// 		  relations: {
-// 			user: { progressPlayer: true },
-// 			answers: { progress: true },
-// 		  },
-// 		  where: {
-// 			gameId: game.id,
-// 			user: { id: game.firstPlayerProgress.user.id },
-// 		  },
-// 		  order: { answers: { addedAt: 'ASC' } },
-// 		});
-  
-// 	  const currentUnFinishedGameSecondPlayer = game.secondPlayerProgress
-// 		? await this.pairQuizGameProgressPlayer.findOne({
-// 			relations: {
-// 			  user: { progressPlayer: true },
-// 			  answers: { progress: true },
-// 			},
-// 			where: {
-// 			  gameId: game.id,
-// 			  user: { id: game.secondPlayerProgress.user.id },
-// 			},
-// 			order: { answers: { addedAt: 'ASC' } },
-// 		  })
-// 		: null;
-  
-// 	  return PairQuizGame.getViewModels(
-// 		game,
-// 		currentUnFinishedGameFirstPlayer,
-// 		currentUnFinishedGameSecondPlayer,
-// 	  );
-// 	  }))
+  //   async getAllGames(): Promise<GameTypeModel[]> {
+  // 	const getGames: PairQuizGame[] = await this.pairQuezGame.find({
+  // 		relations: {
+  // 		  firstPlayerProgress: { user: true, answers: { question: true } },
+  // 		  secondPlayerProgress: { user: true, answers: { question: true } },
+  // 		  questionGames: { question: { questionGame: true } },
+  // 		},
 
-// 	  return res
-	  
-//   }
-	
-	
+  // 		order: { questionGames: { index: 'ASC' } },
+  // 	  });
+
+  // 	  if (!getGames) return null;
+  // 	  const res = await Promise.all(getGames.map(async game => {
+  // 		const currentUnFinishedGameFirstPlayer =
+  // 		await this.pairQuizGameProgressPlayer.findOne({
+  // 		  relations: {
+  // 			user: { progressPlayer: true },
+  // 			answers: { progress: true },
+  // 		  },
+  // 		  where: {
+  // 			gameId: game.id,
+  // 			user: { id: game.firstPlayerProgress.user.id },
+  // 		  },
+  // 		  order: { answers: { addedAt: 'ASC' } },
+  // 		});
+
+  // 	  const currentUnFinishedGameSecondPlayer = game.secondPlayerProgress
+  // 		? await this.pairQuizGameProgressPlayer.findOne({
+  // 			relations: {
+  // 			  user: { progressPlayer: true },
+  // 			  answers: { progress: true },
+  // 			},
+  // 			where: {
+  // 			  gameId: game.id,
+  // 			  user: { id: game.secondPlayerProgress.user.id },
+  // 			},
+  // 			order: { answers: { addedAt: 'ASC' } },
+  // 		  })
+  // 		: null;
+
+  // 	  return PairQuizGame.getViewModels(
+  // 		game,
+  // 		currentUnFinishedGameFirstPlayer,
+  // 		currentUnFinishedGameSecondPlayer,
+  // 	  );
+  // 	  }))
+
+  // 	  return res
+
+  //   }
+
   constructor(
     @InjectRepository(PairQuizGame)
     protected readonly pairQuezGame: Repository<PairQuizGame>,
@@ -336,74 +334,75 @@ export class PairQuezGameQueryRepository {
     return result;
   }
 
-  async saveGame(game: PairQuizGame): Promise<any>  {
-		const finishedGame = await this.pairQuezGame.save(game)
-		return await this.pairQuezGame.update(
-			{ id: finishedGame.id },
-			{
-			  status: GameStatusEnum.Finished,
-			  finishGameDate: new Date().toISOString(),
-			},
-		  );
+  async saveGame(game: PairQuizGame): Promise<any> {
+    const finishedGame = await this.pairQuezGame.save(game);
+    return await this.pairQuezGame.update(
+      { id: finishedGame.id },
+      {
+        status: GameStatusEnum.Finished,
+        finishGameDate: new Date().toISOString(),
+      },
+    );
   }
 
-  async saveProgress(playerProgress: PairQuizGameProgressPlayer): Promise<void> {
-	await this.pairQuizGameProgressPlayer.save(playerProgress)
+  async saveProgress(
+    playerProgress: PairQuizGameProgressPlayer,
+  ): Promise<void> {
+    await this.pairQuizGameProgressPlayer.save(playerProgress);
+  }
 
-}
+  //   async makeFirstPlayerWin(game: PairQuizGame): Promise<void> {
+  //     const firstPalyer = await this.pairQuizGameProgressPlayer.findOne({
+  //       where: { id: game.firstPlayerProgress.id, gameId: game.id },
+  //     });
+  //     await this.pairQuizGameProgressPlayer.update(
+  //       { id: firstPalyer!.id },
+  //       { userStatus: StatusGameEnum.Winner },
+  //     );
 
-//   async makeFirstPlayerWin(game: PairQuizGame): Promise<void> {
-//     const firstPalyer = await this.pairQuizGameProgressPlayer.findOne({
-//       where: { id: game.firstPlayerProgress.id, gameId: game.id },
-//     });
-//     await this.pairQuizGameProgressPlayer.update(
-//       { id: firstPalyer!.id },
-//       { userStatus: StatusGameEnum.Winner },
-//     );
+  //     const secondtPalyer = await this.pairQuizGameProgressPlayer.findOne({
+  //       where: { id: game.secondPlayerProgress.id, gameId: game.id },
+  //     });
+  //     await this.pairQuizGameProgressPlayer.update(
+  //       { id: secondtPalyer!.id },
+  //       { userStatus: StatusGameEnum.Loser },
+  //     );
+  //   }
 
-//     const secondtPalyer = await this.pairQuizGameProgressPlayer.findOne({
-//       where: { id: game.secondPlayerProgress.id, gameId: game.id },
-//     });
-//     await this.pairQuizGameProgressPlayer.update(
-//       { id: secondtPalyer!.id },
-//       { userStatus: StatusGameEnum.Loser },
-//     );
-//   }
+  //   async makeSecondPlayerWin(game: PairQuizGame) {
+  //     const firstPalyer = await this.pairQuizGameProgressPlayer.findOne({
+  //       where: { id: game.firstPlayerProgress.id, gameId: game.id },
+  //     });
+  //     await this.pairQuizGameProgressPlayer.update(
+  //       { id: firstPalyer!.id },
+  //       { userStatus: StatusGameEnum.Loser },
+  //     );
 
-//   async makeSecondPlayerWin(game: PairQuizGame) {
-//     const firstPalyer = await this.pairQuizGameProgressPlayer.findOne({
-//       where: { id: game.firstPlayerProgress.id, gameId: game.id },
-//     });
-//     await this.pairQuizGameProgressPlayer.update(
-//       { id: firstPalyer!.id },
-//       { userStatus: StatusGameEnum.Loser },
-//     );
+  //     const secondtPalyer = await this.pairQuizGameProgressPlayer.findOne({
+  //       where: { id: game.secondPlayerProgress.id, gameId: game.id },
+  //     });
+  //     await this.pairQuizGameProgressPlayer.update(
+  //       { id: secondtPalyer!.id },
+  //       { userStatus: StatusGameEnum.Winner },
+  //     );
+  //   }
 
-//     const secondtPalyer = await this.pairQuizGameProgressPlayer.findOne({
-//       where: { id: game.secondPlayerProgress.id, gameId: game.id },
-//     });
-//     await this.pairQuizGameProgressPlayer.update(
-//       { id: secondtPalyer!.id },
-//       { userStatus: StatusGameEnum.Winner },
-//     );
-//   }
+  // async notAWinner(game: PairQuizGame) {
+  // 	const firstPlayer = await this.pairQuizGameProgressPlayer.findOne({
+  // 		where: {id: game.firstPlayerProgress.id, gameId: game.id },
+  // 	  });
+  // 	  await this.pairQuizGameProgressPlayer.update(
+  // 		{ id: firstPlayer!.id },
+  // 		{ userStatus: 'Draw' },
+  // 	  );
 
-// async notAWinner(game: PairQuizGame) {
-// 	const firstPlayer = await this.pairQuizGameProgressPlayer.findOne({
-// 		where: {id: game.firstPlayerProgress.id, gameId: game.id },
-// 	  });
-// 	  await this.pairQuizGameProgressPlayer.update(
-// 		{ id: firstPlayer!.id },
-// 		{ userStatus: 'Draw' },
-// 	  );
-  
-// 	  const secondPlayer = await this.pairQuizGameProgressPlayer.findOne({
-// 		where: {id: game.secondPlayerProgress.id, gameId: game.id},
-// 	  });
-  
-// 	  await this.pairQuizGameProgressPlayer.update(
-// 		{ id: secondPlayer!.id },
-// 		{ userStatus: 'Draw' },
-// 	  );
-// }
+  // 	  const secondPlayer = await this.pairQuizGameProgressPlayer.findOne({
+  // 		where: {id: game.secondPlayerProgress.id, gameId: game.id},
+  // 	  });
+
+  // 	  await this.pairQuizGameProgressPlayer.update(
+  // 		{ id: secondPlayer!.id },
+  // 		{ userStatus: 'Draw' },
+  // 	  );
+  // }
 }
