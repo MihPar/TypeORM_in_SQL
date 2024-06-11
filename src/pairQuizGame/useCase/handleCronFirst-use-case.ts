@@ -96,7 +96,6 @@ export class CronFirstdUseCase implements ICommandHandler<CronFirstCommand> {
     if (firstPlayerScore === secondPalyerScore) {
       secondPlayer.secondPlayerProgress.userStatus = StatusGameEnum.Draw;
       firstPlayer.firstPlayerProgress.userStatus = StatusGameEnum.Draw;
-      // await this.pairQuezGameQueryRepository.notAWinner(secondPlayer);
     }
     command.game.status = GameStatusEnum.Finished;
     await this.pairQuezGameQueryRepository.saveProgress(
