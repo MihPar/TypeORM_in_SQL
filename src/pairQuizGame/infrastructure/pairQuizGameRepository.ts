@@ -1,11 +1,10 @@
 import { PairQuizGameProgressPlayer } from './../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
-import { stringify } from 'querystring';
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Question } from "../../question/domain/entity.question";
-import { Repository } from "typeorm";
-import { PairQuizGame } from "../domain/entity.pairQuezGame";
-import { AnswerStatusEnum, GameStatusEnum, StatusGameEnum } from "../enum/enumPendingPlayer";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Question } from '../../question/domain/entity.question';
+import { Repository } from 'typeorm';
+import { PairQuizGame } from '../domain/entity.pairQuezGame';
+import { GameStatusEnum, StatusGameEnum } from '../enum/enumPendingPlayer';
 import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 import { QuestionGame } from '../domain/entity.questionGame';
 import { PlayerStatisticsView } from '../type/typeViewModel';
@@ -13,10 +12,10 @@ import { PlayerStatisticsView } from '../type/typeViewModel';
 @Injectable()
 export class PairQuizGameRepository {
   async getProgressById(id: string) {
-	  return this.pairQuizGameProgressPlayer.findOne({
-		relations: {user: true},
-		where : {id}
-	  })
+    return this.pairQuizGameProgressPlayer.findOne({
+      relations: { user: true },
+      where: { id },
+    });
   }
   constructor(
     @InjectRepository(Question)
@@ -115,14 +114,12 @@ export class PairQuizGameRepository {
     count: boolean;
     gameId: string;
   }) {
-    const answersPlayer = await this.pairQuizGameProgressPlayer
+    await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
       .update()
       .set({ score: () => (count ? 'score + 1' : 'score + 0') })
       .where({ userId, gameId })
       .execute();
-
-
 
     // const result = await this.pairQuizGameProgressPlayer
     //   .createQueryBuilder()

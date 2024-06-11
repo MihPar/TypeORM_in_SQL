@@ -3,14 +3,12 @@ import { AnswerStatusEnum } from '../enum/enumPendingPlayer';
 import { ForbiddenException } from '@nestjs/common';
 import { QuestionQueryRepository } from '../../question/infrastructury/questionQueryRepository';
 import { PairQuizGameRepository } from '../infrastructure/pairQuizGameRepository';
-import { PairQuizGameProgressQueryRepository } from '../../pairQuizGameProgress/infrastructure/pairQuizGameProgressQueryRepository';
 import { AnswersPlayer } from '../../pairQuizGameProgress/domain/entity.answersPlayer';
 import { PairQuezGameQueryRepository } from '../infrastructure/pairQuizGameQueryRepository';
 import { ChangeStatusToFinishedCommand } from './changeStatusToFinished-use-case';
 import { PairQuizGame } from '../domain/entity.pairQuezGame';
 import { QuestionGame } from '../domain/entity.questionGame';
 import { GameTypeModel } from '../type/typeViewModel';
-import { log } from 'console';
 
 export class FirstPlayerSendAnswerCommand {
   constructor(

@@ -9,7 +9,6 @@ import {
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../../users/users.queryRepository';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class BearerTokenPairQuizGame implements CanActivate {
@@ -17,9 +16,7 @@ export class BearerTokenPairQuizGame implements CanActivate {
     protected jwtServise: JwtService,
     protected usersQueryRepository: UsersQueryRepository,
   ) {}
-  async canActivate(
-	context: ExecutionContext
-	): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req: Request = context.switchToHttp().getRequest();
     if (!req.headers.authorization) throw new UnauthorizedException('401');
     const token = req.headers.authorization.split(' ')[1];
@@ -27,6 +24,7 @@ export class BearerTokenPairQuizGame implements CanActivate {
     try {
       userId = (
         await this.jwtServise.verifyAsync(token, {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           secret: process.env.JWT_SECRET!,
         })
       ).userId;

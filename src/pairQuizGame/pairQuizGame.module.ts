@@ -47,13 +47,23 @@ const useCase = [
   CreateOrConnectGameUseCase,
   ChangeStatusToFinishedUseCase,
   SendAnswerUseCase,
-//   ChangeAnswerStatusPlayerUseCase,
   GetCurrectUserStatisticUseCase,
   CronSecondUseCase,
-  CronFirstdUseCase
+  CronFirstdUseCase,
 ];
 @Module({
-  imports: [TypeOrmModule.forFeature([PairQuizGame, User, AnswersPlayer, PairQuizGameProgressPlayer, Question, QuestionGame]), CqrsModule,  ScheduleModule.forRoot()],
+  imports: [
+    TypeOrmModule.forFeature([
+      PairQuizGame,
+      User,
+      AnswersPlayer,
+      PairQuizGameProgressPlayer,
+      Question,
+      QuestionGame,
+    ]),
+    CqrsModule,
+    ScheduleModule.forRoot(),
+  ],
   controllers: [PairQuizGameController],
   providers: [...services, ...guards, ...repo, ...useCase],
 })

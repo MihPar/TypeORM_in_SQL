@@ -1,21 +1,21 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { PairQuizGame } from "./entity.pairQuezGame";
-import { Question } from "../../question/domain/entity.question";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { PairQuizGame } from './entity.pairQuezGame';
+import { Question } from '../../question/domain/entity.question';
 
 @Entity()
 export class QuestionGame {
-	@PrimaryGeneratedColumn("uuid")
-	id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-	@ManyToOne(() => PairQuizGame, g => g.questionGames)
-	pairQuizGame: PairQuizGame
+  @ManyToOne(() => PairQuizGame, (g) => g.questionGames)
+  pairQuizGame: PairQuizGame;
 
-	@Column()
-	pairQuizGameId: string
+  @Column()
+  pairQuizGameId: string;
 
-	@ManyToOne(() => Question, q => q.questionGame)
-	question: Question
+  @ManyToOne(() => Question, (q) => q.questionGame)
+  question: Question;
 
-	@Column()
-	index: number
+  @Column()
+  index: number;
 }

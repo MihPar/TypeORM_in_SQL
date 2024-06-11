@@ -1,8 +1,7 @@
-import { Controller, Delete, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { DeleteAllDevicesCommnad } from '../security-devices/useCase/deleteAllDevices-use-case';
 import { DeleteAllUsersCommnad } from '../users/useCase/deleteAllUsers-use-case';
-import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
 import { DeleteAllPostsComand } from '../posts/use-case/deleteAllPosts-use-case';
 import { DeleteAllBlogsCommnad } from '../blogs/use-case/deletAllBlogs-use-case';
 import { DeleteAllBlogsForSACommnad } from '../blogsForSA/use-case/deletAllBlogs-use-case';
@@ -18,26 +17,26 @@ import { DelectAllQuestionGamesCommand } from '../pairQuizGame/useCase/deleteAll
 // @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
 export class TestingController {
-  constructor(
-	protected readonly commandBus: CommandBus
-  ) {}
+  constructor(protected readonly commandBus: CommandBus) {}
 
   @Delete()
   @HttpCode(204)
-//   @SkipThrottle({default: true})
+  //   @SkipThrottle({default: true})
   async remove() {
-	await this.commandBus.execute(new DelectAllQuestionGamesCommand())
-	await this.commandBus.execute(new DeleteAllPairQuizGameCommnad())
-	await this.commandBus.execute(new DeleteAllAnswersPlayerCommand())
-	await this.commandBus.execute(new DeleteAllPairQuizGameProgressPlayerCommand())
-	await this.commandBus.execute(new DeleteAllQuestionCommand())
-    await this.commandBus.execute(new DeleteAllDevicesCommnad())
-    await this.commandBus.execute(new DeleteAllCommentLikesCommand())
-    await this.commandBus.execute(new DeleteAllPostLikesCommand())
-    await this.commandBus.execute(new DeleteAllCommentsCommand())
-    await this.commandBus.execute(new DeleteAllPostsComand())
-    await this.commandBus.execute(new DeleteAllBlogsCommnad())
-    await this.commandBus.execute(new DeleteAllBlogsForSACommnad())
-    await this.commandBus.execute(new DeleteAllUsersCommnad())
+    await this.commandBus.execute(new DelectAllQuestionGamesCommand());
+    await this.commandBus.execute(new DeleteAllPairQuizGameCommnad());
+    await this.commandBus.execute(new DeleteAllAnswersPlayerCommand());
+    await this.commandBus.execute(
+      new DeleteAllPairQuizGameProgressPlayerCommand(),
+    );
+    await this.commandBus.execute(new DeleteAllQuestionCommand());
+    await this.commandBus.execute(new DeleteAllDevicesCommnad());
+    await this.commandBus.execute(new DeleteAllCommentLikesCommand());
+    await this.commandBus.execute(new DeleteAllPostLikesCommand());
+    await this.commandBus.execute(new DeleteAllCommentsCommand());
+    await this.commandBus.execute(new DeleteAllPostsComand());
+    await this.commandBus.execute(new DeleteAllBlogsCommnad());
+    await this.commandBus.execute(new DeleteAllBlogsForSACommnad());
+    await this.commandBus.execute(new DeleteAllUsersCommnad());
   }
 }
