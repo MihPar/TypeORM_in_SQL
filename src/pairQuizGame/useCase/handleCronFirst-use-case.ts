@@ -46,15 +46,15 @@ export class CronFirstdUseCase implements ICommandHandler<CronFirstCommand> {
     //   );
 	//   console.log("command.previous_score: ", command.previous_score)
     if (
-      command.previous_score !== command.game?.firstPlayerProgress.answers.length + 1
+      command.previous_score !== command.game?.firstPlayerProgress.answers.length
     ) {
       return null;
     }
     const firstPlayerAnswersAfterTenSeconds =
 	command.game.secondPlayerProgress.answers.length;
 // console.log("1111111")
-    const unAnswersQuestions = 5 - firstPlayerAnswersAfterTenSeconds;
-    for (let i = 0; i < unAnswersQuestions; i++) {
+    const unAnswersQuestions = 4 - firstPlayerAnswersAfterTenSeconds;
+    for (let i = 0; i <= unAnswersQuestions; i++) {
       const noAnswers = AnswersPlayer.createAnswer(
         command.gameQuestions[firstPlayerAnswersAfterTenSeconds + i].id,
         AnswerStatusEnum.InCorrect,
