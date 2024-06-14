@@ -658,10 +658,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user2Token,
       );
-      console.log(
-        'found1FourthGameSecondPlayer: ',
-        found1FourthGameSecondPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found1FourthGameSecondPlayer: ',
+    //     found1FourthGameSecondPlayer[1].secondPlayerProgress.score,
+    //   );
 
       const send2AnswerOnFourthGameBySecondPlayer =
         await sendAnswersFirstPlayer(
@@ -675,10 +675,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user2Token,
       );
-      console.log(
-        'found2FourthGameSecondPlayer: ',
-        found2FourthGameSecondPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found2FourthGameSecondPlayer: ',
+    //     found2FourthGameSecondPlayer[1].secondPlayerProgress.score,
+    //   );
 
       const send3AnswerOnFourthGameBySecondPlayer =
         await sendAnswersFirstPlayer(
@@ -692,10 +692,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user2Token,
       );
-      console.log(
-        'found3FourthGameSecondPlayer: ',
-        found3FourthGameSecondPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found3FourthGameSecondPlayer: ',
+    //     found3FourthGameSecondPlayer[1].secondPlayerProgress.score,
+    //   );
 
       const sendA4nswerOnFourthGameBySecondPlayer =
         await sendAnswersFirstPlayer(
@@ -709,10 +709,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user2Token,
       );
-      console.log(
-        'found4FourthGameSecondPlayer: ',
-        found4FourthGameSecondPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found4FourthGameSecondPlayer: ',
+    //     found4FourthGameSecondPlayer[1].secondPlayerProgress.score,
+    //   );
 
       const send5AnswerOnFourthGameBySecondPlayer =
         await sendAnswersFirstPlayer(
@@ -756,10 +756,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user1Token,
       );
-      console.log(
-        'found1FourthGameFirstPlayer: ',
-        found1FourthGameFirstPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found1FourthGameFirstPlayer: ',
+    //     found1FourthGameFirstPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send2AnswerOnFourthGameByFirstPlayer =
         await sendAnswersSecondPlayer(server, user1Token, 'Correct');
@@ -768,10 +768,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user1Token,
       );
-      console.log(
-        'found2FourthGameFirstPlayer: ',
-        found2FourthGameFirstPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found2FourthGameFirstPlayer: ',
+    //     found2FourthGameFirstPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send3AnswerOnFourthGameByFirstPlayer =
         await sendAnswersSecondPlayer(server, user1Token, 'Correct');
@@ -780,10 +780,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user1Token,
       );
-      console.log(
-        'found3FourthGameFirstPlayer: ',
-        found3FourthGameFirstPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found3FourthGameFirstPlayer: ',
+    //     found3FourthGameFirstPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send4AnswerOnFourhtGameByFirstPlayer =
         await sendAnswersSecondPlayer(server, user1Token, 'Correct');
@@ -792,10 +792,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user1Token,
       );
-      console.log(
-        'found4FourthGameFirstPlayer: ',
-        found4FourthGameFirstPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found4FourthGameFirstPlayer: ',
+    //     found4FourthGameFirstPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send5AnswerOnFourhtGameByFirstPlayer =
         await sendAnswersSecondPlayer(server, user1Token, 'Correct');
@@ -804,10 +804,10 @@ describe('/blogs', () => {
         fourthGame.id,
         user1Token,
       );
-      console.log(
-        'found5FourthGameFirstPlayer: ',
-        found5FourthGameFirstPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found5FourthGameFirstPlayer: ',
+    //     found5FourthGameFirstPlayer[1].firstPlayerProgress.score,
+    //   );
 
       // console.log("found5FirstGameSecond: ", found5FirstGameSecond[1].secondPlayerProgress.answers.map(item => item))
 
@@ -852,10 +852,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user4Token,
       );
-      console.log(
-        'found1FifthGameFourthPlayer: ',
-        found1FifthGameFourthPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found1FifthGameFourthPlayer: ',
+    //     found1FifthGameFourthPlayer[1].secondPlayerProgress.score,
+    //   );
 
       const send2AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(
         server,
@@ -868,10 +868,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user4Token,
       );
-      console.log(
-        'found2FifthGameFourthPlayer: ',
-        found2FifthGameFourthPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found2FifthGameFourthPlayer: ',
+    //     found2FifthGameFourthPlayer[1].secondPlayerProgress.score,
+    //   );
 
       const send3AnswerOnFifthGameByFourthPlayer = await sendAnswersFirstPlayer(
         server,
@@ -884,10 +884,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user4Token,
       );
-      console.log(
-        'found3FifthGameFourthPlayer: ',
-        found3FifthGameFourthPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found3FifthGameFourthPlayer: ',
+    //     found3FifthGameFourthPlayer[1].secondPlayerProgress.score,
+    //   );
 
       const sendA4nswerOnSecondGameByThirdPlayer = await sendAnswersFirstPlayer(
         server,
@@ -939,10 +939,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user3Token,
       );
-      console.log(
-        'found1FifthGameThirdPlayer: ',
-        found1FifthGameThirdPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found1FifthGameThirdPlayer: ',
+    //     found1FifthGameThirdPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send2AnswerOnFifthGameByThirdPlayer = await sendAnswersSecondPlayer(
         server,
@@ -954,10 +954,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user3Token,
       );
-      console.log(
-        'found2FifthGameThirdPlayer: ',
-        found2FifthGameThirdPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found2FifthGameThirdPlayer: ',
+    //     found2FifthGameThirdPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send3AnswerOnFifthGameByThirdPlayer = await sendAnswersSecondPlayer(
         server,
@@ -969,10 +969,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user3Token,
       );
-      console.log(
-        'found3FifthGameThirdPlayer: ',
-        found3FifthGameThirdPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found3FifthGameThirdPlayer: ',
+    //     found3FifthGameThirdPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send4AnswerOnFifthGameByThirdPlayer = await sendAnswersSecondPlayer(
         server,
@@ -984,10 +984,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user3Token,
       );
-      console.log(
-        'found4FifthGameThirdPlayer: ',
-        found4FifthGameThirdPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found4FifthGameThirdPlayer: ',
+    //     found4FifthGameThirdPlayer[1].firstPlayerProgress.score,
+    //   );
 
       const send5AnswerOnFifthGameByThirdPlayer = await sendAnswersSecondPlayer(
         server,
@@ -999,10 +999,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user3Token,
       );
-      console.log(
-        'found5FifthGameThirdPlayer: ',
-        found5FifthGameThirdPlayer[1].firstPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found5FifthGameThirdPlayer: ',
+    //     found5FifthGameThirdPlayer[1].firstPlayerProgress.score,
+    //   );
 
       // console.log("found5SecondGameFourthPlayer: ", found5SecondGameFourthPlayer[1].firstPlayerProgress.answers.map(item => item))
 
@@ -1023,10 +1023,10 @@ describe('/blogs', () => {
         fivethGame.id,
         user4Token,
       );
-      console.log(
-        'found5FifthGameFourthPlayer: ',
-        found5FifthGameFourthPlayer[1].secondPlayerProgress.score,
-      );
+    //   console.log(
+    //     'found5FifthGameFourthPlayer: ',
+    //     found5FifthGameFourthPlayer[1].secondPlayerProgress.score,
+    //   );
     //   console.warn(
     //     found5FifthGameFourthPlayer[1],
     //     'found Game before last checking',
