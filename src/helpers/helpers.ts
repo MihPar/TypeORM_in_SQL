@@ -238,6 +238,7 @@ export const sendAnswersFirstPlayer = async (
   server: any,
   accessTokenOne: string,
   str: string,
+  firstGame: any,
 ) => {
   const payload = {
     answer: str,
