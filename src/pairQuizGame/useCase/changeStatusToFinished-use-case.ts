@@ -122,6 +122,7 @@ export class ChangeStatusToFinishedUseCase
       ) {
         command.game.firstPlayerProgress.score += 1;
       }
+	//   console.log("length: ", secondPlayer.secondPlayerProgress.answers.length)
       const handleCronSecondCommand = new CronSecondCommand(
         secondPlayer.secondPlayerProgress.answers.length,
         command.game,

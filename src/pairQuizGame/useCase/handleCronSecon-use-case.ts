@@ -35,28 +35,23 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
 
   // })
   async execute(command: CronSecondCommand): Promise<any> {
-	console.log("previous_score: ", command.previous_score)
-    // console.error("Handle cron second command invocation")
-    const foundGame =
-      await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(
-        command.game.id,
-        command.game.secondPlayerProgress.user.id,
-        [GameStatusEnum.Active],
-      );
-    // const firstPlayer =
+    // const foundGame =
     //   await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(
     //     command.game.id,
-    //     command.game.firstPlayerProgress.user.id,
+    //     command.game.secondPlayerProgress.user.id,
     //     [GameStatusEnum.Active],
     //   );
+	//   console.log("command.previous_score: ", command.previous_score)
+	//   console.log("length: ", command.game.secondPlayerProgress.answers.length)
+	//   console.log("compare: ", command.previous_score !== foundGame?.secondPlayerProgress.answers.length)
+
     if (
-      command.previous_score !== foundGame?.secondPlayerProgress.answers.length
+      command.previous_score !== command.game?.secondPlayerProgress.answers.length
     ) {
       return null;
     }
-    //if (secondPlayer.status === GameStatusEnum.Active) {
     const secondPlayerAnswersAfterTenSeconds =
-	foundGame.secondPlayerProgress.answers.length;
+	command.game?.secondPlayerProgress.answers.length;
 
     const unAnswersQuestions = 4 - secondPlayerAnswersAfterTenSeconds;
     for (let i = 0; i <= unAnswersQuestions; i++) {
@@ -64,48 +59,42 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
         command.gameQuestions[secondPlayerAnswersAfterTenSeconds + i].id,
         AnswerStatusEnum.InCorrect,
         'answer was not provider',
-        foundGame.secondPlayerProgress,
+        command.game.secondPlayerProgress,
       );
-      const answerPush = foundGame.firstPlayerProgress.answers;
+      const answerPush = command.game.firstPlayerProgress.answers;
       answerPush.push(noAnswers);
       await this.pairQuezGameQueryRepository.createAnswers(answerPush);
       await this.pairQuizGameRepository.sendAnswerPlayer({
-        userId: foundGame.secondPlayerProgress.user.id,
+        userId: command.game.secondPlayerProgress.user.id,
         count: false,
-        gameId: foundGame.id,
+        gameId: command.game.id,
       });
-      //   command.game = await this.pairQuezGameQueryRepository.getUnfinishedGame(
-      //     command.game.secondPlayerProgress.user.id,
-      //   );
     }
-    const firstPlayerScore = foundGame.firstPlayerProgress.score;
-    const secondPalyerScore = foundGame.secondPlayerProgress.score;
+	// console.log("73")
+    const firstPlayerScore = command.game?.firstPlayerProgress.score;
+    const secondPalyerScore = command.game?.secondPlayerProgress.score;
     if (firstPlayerScore > secondPalyerScore) {
-      foundGame.secondPlayerProgress.userStatus = StatusGameEnum.Loser;
-      foundGame.firstPlayerProgress.userStatus = StatusGameEnum.Winner;
-      // await this.pairQuezGameQueryRepository.makeFirstPlayerWin(secondPlayer)
+      command.game.secondPlayerProgress.userStatus = StatusGameEnum.Loser;
+      command.game.firstPlayerProgress.userStatus = StatusGameEnum.Winner;
     }
     if (firstPlayerScore < secondPalyerScore) {
-      foundGame.secondPlayerProgress.userStatus = StatusGameEnum.Winner;
-      foundGame.firstPlayerProgress.userStatus = StatusGameEnum.Loser;
-      // await this.pairQuezGameQueryRepository.makeSecondPlayerWin(secondPlayer);
+      command.game.secondPlayerProgress.userStatus = StatusGameEnum.Winner;
+      command.game.firstPlayerProgress.userStatus = StatusGameEnum.Loser;
     }
     if (firstPlayerScore === secondPalyerScore) {
-      foundGame.secondPlayerProgress.userStatus = StatusGameEnum.Draw;
-      foundGame.firstPlayerProgress.userStatus = StatusGameEnum.Draw;
-      // await this.pairQuezGameQueryRepository.notAWinner(secondPlayer);
+      command.game.secondPlayerProgress.userStatus = StatusGameEnum.Draw;
+      command.game.firstPlayerProgress.userStatus = StatusGameEnum.Draw;
     }
-    // secondPlayer.status = GameStatusEnum.Finished;
+	// console.log("88")
+
     // await this.pairQuezGameQueryRepository.saveProgress(
-    //   firstPlayer.firstPlayerProgress,
+    //   command.game?.secondPlayerProgress,
     // );
-    await this.pairQuezGameQueryRepository.saveProgress(
-      foundGame?.secondPlayerProgress,
-    );
-    await this.pairQuezGameQueryRepository.saveProgress(
-      foundGame?.firstPlayerProgress,
-    );
-    return await this.pairQuezGameQueryRepository.saveGame(foundGame);
+    // await this.pairQuezGameQueryRepository.saveProgress(
+    //   command.game?.firstPlayerProgress,
+    // );
+	// console.log("try end two")
+    return await this.pairQuezGameQueryRepository.saveGame(command.game);
     //}
   }
 }
