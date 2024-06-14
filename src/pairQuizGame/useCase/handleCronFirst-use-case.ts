@@ -59,8 +59,8 @@ export class CronFirstdUseCase implements ICommandHandler<CronFirstCommand> {
     const firstPlayerAnswersAfterTenSeconds =
 	foundGame.secondPlayerProgress.answers.length;
 
-    const unAnswersQuestions = 5 - firstPlayerAnswersAfterTenSeconds;
-    for (let i = 0; i < unAnswersQuestions; i++) {
+    const unAnswersQuestions = 4 - firstPlayerAnswersAfterTenSeconds;
+    for (let i = 0; i <= unAnswersQuestions; i++) {
       const noAnswers = AnswersPlayer.createAnswer(
         command.gameQuestions[firstPlayerAnswersAfterTenSeconds + i].id,
         AnswerStatusEnum.InCorrect,

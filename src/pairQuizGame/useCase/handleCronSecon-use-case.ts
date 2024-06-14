@@ -58,12 +58,11 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
     const secondPlayerAnswersAfterTenSeconds =
 	foundGame.secondPlayerProgress.answers.length;
 
-    const unAnswersQuestions = 5 - secondPlayerAnswersAfterTenSeconds;
-    for (let i = 0; i < unAnswersQuestions; i++) {
+    const unAnswersQuestions = 4 - secondPlayerAnswersAfterTenSeconds;
+    for (let i = 0; i <= unAnswersQuestions; i++) {
       const noAnswers = AnswersPlayer.createAnswer(
         command.gameQuestions[secondPlayerAnswersAfterTenSeconds + i].id,
         AnswerStatusEnum.InCorrect,
-        // eslint-disable-next-line prettier/prettier
         'answer was not provider',
         foundGame.secondPlayerProgress,
       );
