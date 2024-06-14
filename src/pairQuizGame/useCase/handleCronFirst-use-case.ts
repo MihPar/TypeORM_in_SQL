@@ -85,13 +85,12 @@ export class CronFirstdUseCase implements ICommandHandler<CronFirstCommand> {
 		command.game.secondPlayerProgress.userStatus = StatusGameEnum.Draw;
 		command.game.firstPlayerProgress.userStatus = StatusGameEnum.Draw;
     }
-    // command.game.status = GameStatusEnum.Finished;
-    // await this.pairQuezGameQueryRepository.saveProgress(
-    //   command.game?.firstPlayerProgress,
-    // );
-    // await this.pairQuezGameQueryRepository.saveProgress(
-	// 	command.game?.secondPlayerProgress,
-    // );
+    await this.pairQuezGameQueryRepository.saveProgress(
+      command.game?.firstPlayerProgress,
+    );
+    await this.pairQuezGameQueryRepository.saveProgress(
+		command.game?.secondPlayerProgress,
+    );
     return await this.pairQuezGameQueryRepository.saveGame(command.game);
   }
 }

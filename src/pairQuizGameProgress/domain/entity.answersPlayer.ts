@@ -12,7 +12,7 @@ export class AnswersPlayer {
   @ManyToOne(() => PairQuizGameProgressPlayer, (p) => p.answers)
   progress: PairQuizGameProgressPlayer;
 
-  @Column()
+  @Column({nullable: true})
   progressId: string;
 
   @ManyToOne(() => Question, (q) => q.answersPlayer)

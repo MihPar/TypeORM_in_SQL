@@ -35,16 +35,6 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
 
   // })
   async execute(command: CronSecondCommand): Promise<any> {
-    // const foundGame =
-    //   await this.pairQuezGameQueryRepository.getGameByUserIdAndStatuses(
-    //     command.game.id,
-    //     command.game.secondPlayerProgress.user.id,
-    //     [GameStatusEnum.Active],
-    //   );
-	//   console.log("command.previous_score: ", command.previous_score)
-	//   console.log("length: ", command.game.secondPlayerProgress.answers.length)
-	//   console.log("compare: ", command.previous_score !== foundGame?.secondPlayerProgress.answers.length)
-
     if (
       command.previous_score !== command.game?.secondPlayerProgress.answers.length
     ) {
@@ -70,9 +60,8 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
         gameId: command.game.id,
       });
     }
-	// console.log("73")
-    const firstPlayerScore = command.game?.firstPlayerProgress.score;
-    const secondPalyerScore = command.game?.secondPlayerProgress.score;
+    const firstPlayerScore = command.game.firstPlayerProgress.score;
+    const secondPalyerScore = command.game.secondPlayerProgress.score;
     if (firstPlayerScore > secondPalyerScore) {
       command.game.secondPlayerProgress.userStatus = StatusGameEnum.Loser;
       command.game.firstPlayerProgress.userStatus = StatusGameEnum.Winner;
@@ -85,16 +74,13 @@ export class CronSecondUseCase implements ICommandHandler<CronSecondCommand> {
       command.game.secondPlayerProgress.userStatus = StatusGameEnum.Draw;
       command.game.firstPlayerProgress.userStatus = StatusGameEnum.Draw;
     }
-	// console.log("88")
 
-    // await this.pairQuezGameQueryRepository.saveProgress(
-    //   command.game?.secondPlayerProgress,
-    // );
-    // await this.pairQuezGameQueryRepository.saveProgress(
-    //   command.game?.firstPlayerProgress,
-    // );
-	// console.log("try end two")
+    await this.pairQuezGameQueryRepository.saveProgress(
+      command.game.secondPlayerProgress,
+    );
+    await this.pairQuezGameQueryRepository.saveProgress(
+      command.game.firstPlayerProgress,
+    );
     return await this.pairQuezGameQueryRepository.saveGame(command.game);
-    //}
   }
 }

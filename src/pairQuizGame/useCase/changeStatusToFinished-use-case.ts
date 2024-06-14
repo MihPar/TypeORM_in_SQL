@@ -122,7 +122,6 @@ export class ChangeStatusToFinishedUseCase
       ) {
         command.game.firstPlayerProgress.score += 1;
       }
-	//   console.log("length: ", secondPlayer.secondPlayerProgress.answers.length)
       const handleCronSecondCommand = new CronSecondCommand(
         secondPlayer.secondPlayerProgress.answers.length,
         command.game,
@@ -134,7 +133,7 @@ export class ChangeStatusToFinishedUseCase
         return await this.commandBus.execute<CronSecondCommand>(
           handleCronSecondCommand,
         );
-      }, 10000);
+      }, 9800);
     } else if (
       secondPlayer.secondPlayerProgress.answers.length ===
         command.gameQuestions.length &&
@@ -159,7 +158,7 @@ export class ChangeStatusToFinishedUseCase
         return await this.commandBus.execute<CronFirstCommand>(
           handleCronFirstCommand,
         );
-      }, 10000);
+      }, 9800);
     }
   }
 }
