@@ -78,7 +78,7 @@ export class BlogsQueryRepositoryForSA {
 			pageSize: +pageSize,
 			totalCount: +totalCount,
 			items: await Promise.all(findAllBlogs.map(async (item) => {
-				const user = await this.userQueryRepository.findUserById(item.id)
+				const user = await this.userQueryRepository.findUserByIdBlogger(item.bloggerId)
 				return Blogs.findBlogForSAWithInfoBan(item, user)
 			}
 			))

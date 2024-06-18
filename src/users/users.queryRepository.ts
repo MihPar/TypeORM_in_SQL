@@ -119,5 +119,18 @@ export class UsersQueryRepository {
 		return user;
 	}
 
+	async findUserByIdBlogger(bloggerId: string): Promise<User | null> {
+		let user: User | null = await this.userRepository
+			.createQueryBuilder("user")
+			.select("user")
+			.where("user.id = :id", { id: bloggerId})
+			.getOne()
+
+		// const sqlRequest = user.getSql()
+		// await writeSql(sqlRequest)
+
+		return user;
+	}
+
 
 }

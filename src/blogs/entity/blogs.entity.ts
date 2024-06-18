@@ -60,7 +60,7 @@ export class Blogs {
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,
 			createdAt: inputBlog.createdAt,
-			isMembership: true,
+			isMembership: false,
 			blogOwnerInfo: {
 				userId: user!.id,
 				userLogin: user!.login,
