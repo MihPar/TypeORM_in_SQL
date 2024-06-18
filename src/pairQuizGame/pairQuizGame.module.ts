@@ -28,6 +28,8 @@ import { GetCurrectUserStatisticUseCase } from './useCase/changeAnswerStatusFirs
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronSecondUseCase } from './useCase/handleCronSecon-use-case';
 import { CronFirstdUseCase } from './useCase/handleCronFirst-use-case';
+import { BlogsRepository } from '../blogs/blogs.repository';
+import { Blogs } from '../blogs/entity/blogs.entity';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -40,6 +42,7 @@ const repo = [
   QuestionRepository,
   PairQuizGameProgressQueryRepository,
   QuestionQueryRepository,
+  BlogsRepository
 ];
 const useCase = [
   FirstPlayerSendAnswerUseCase,
@@ -60,6 +63,7 @@ const useCase = [
       PairQuizGameProgressPlayer,
       Question,
       QuestionGame,
+	  Blogs
     ]),
     CqrsModule,
     ScheduleModule.forRoot(),

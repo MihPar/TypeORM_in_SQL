@@ -20,11 +20,12 @@ import { UsersQueryRepository } from "../users/users.queryRepository";
 import { CreateNewCommentByPostIdUseCase } from "./use-case/createNewCommentByPotsId-use-case";
 import { DeleteAllCommentsUseCase } from "./use-case/deleteAllComments-use-case";
 import { UpdateCommentByCommentIdUseCase } from "./use-case/updateCommentByCommentId-use-case";
+import { BlogsRepository } from "../blogs/blogs.repository";
 
 const useCase = [UpdateLikestatusForCommentUseCase, CreateNewCommentByPostIdUseCase, DeleteAllCommentsUseCase, UpdateCommentByCommentIdUseCase]
 const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGet]
 const adapter = []
-const repo = [CommentQueryRepository, CommentRepository, LikesRepository, UsersQueryRepository]
+const repo = [CommentQueryRepository, CommentRepository, LikesRepository, UsersQueryRepository, BlogsRepository]
 const manager = []
 const service = [JwtService]
 const validator = [];
@@ -36,7 +37,8 @@ const validator = [];
       LikeForComment,
 	  LikeForPost,
       Comments,
-	  User
+	  User,
+	  Blogs
     ]),
     CqrsModule,
   ],

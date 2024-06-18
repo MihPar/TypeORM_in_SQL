@@ -16,6 +16,8 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
 import { UsersRepository } from '../users/users.repository';
 import { User } from '../users/entities/user.entity';
+import { BlogsRepository } from '../blogs/blogs.repository';
+import { Blogs } from '../blogs/entity/blogs.entity';
 
 const useCase = [
   DeleteAllDevicesUseCase,
@@ -26,13 +28,13 @@ const useCase = [
 
 const guard = [CheckRefreshToken, ForbiddenCalss]
 
-const repo = [DeviceRepository, DeviceQueryRepository, UsersQueryRepository, UsersRepository, UsersRepository];
+const repo = [DeviceRepository, DeviceQueryRepository, UsersQueryRepository, UsersRepository, UsersRepository, BlogsRepository];
 
 const adapter = [PayloadAdapter]
 const service = [JwtService]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Blogs]), CqrsModule],
   controllers: [SecurityDeviceController],
   providers: [...useCase, ...repo, ...guard, ...adapter, ...service],
 })

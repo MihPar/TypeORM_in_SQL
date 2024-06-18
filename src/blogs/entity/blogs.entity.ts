@@ -30,6 +30,15 @@ export class Blogs {
 	@Column({nullable: true})
 	userId: string
 
+	@Column()
+	bloggerId: string
+
+	@Column({nullable: true})
+	isBanned: boolean
+
+	@Column({default: null})
+	banDate: string
+
 	@OneToMany(() => Posts, p => p.blog)
 	post: Posts[]
 
@@ -40,7 +49,26 @@ export class Blogs {
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,
 			createdAt: inputBlog.createdAt,
-			isMembership: false
+			isMembership: true
+		}
+	}
+
+	static findBlogForSAWithInfoBan(inputBlog: Blogs, user: User) {
+		return {
+			id: inputBlog.id,
+			name: inputBlog.name,
+			description: inputBlog.description,
+			websiteUrl: inputBlog.websiteUrl,
+			createdAt: inputBlog.createdAt,
+			isMembership: inputBlog.isMembership,
+			blogOwnerInfo: {
+				userId: user!.id,
+				userLogin: user!.login,
+			  },
+			  banInfo: {
+				isBanned: inputBlog.isBanned,
+				banDate: inputBlog.banDate,
+			  },
 		}
 	}
 

@@ -17,6 +17,7 @@ import { CommentsModule } from './comment/comments.module';
 import { QuestionModule } from './question/question.module';
 import { PairQuizGameProgressModule } from './pairQuizGameProgress/pairQuizGameProgress.module';
 import { PairQuizGameModule } from './pairQuizGame/pairQuizGame.module';
+import { BloggerModule } from './blogger/blogger.module';
 
 @Module({
   imports: [
@@ -49,7 +50,8 @@ import { PairQuizGameModule } from './pairQuizGame/pairQuizGame.module';
 	CommentsModule,
 	QuestionModule,
 	PairQuizGameModule,
-	PairQuizGameProgressModule
+	PairQuizGameProgressModule,
+	BloggerModule
   ]
 })
 export class AppModule {}

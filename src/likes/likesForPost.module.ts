@@ -15,6 +15,7 @@ import { LikeForComment } from "./entity/likesForComment.entity";
 import { Comments } from "../comment/entity/comment.entity";
 import { Blogs } from "../blogs/entity/blogs.entity";
 import { DeleteAllPostLikesUseCase } from "./use-case/deleteAllPostLikes-use-case";
+import { BlogsRepository } from "../blogs/blogs.repository";
 
 const userCase = [
 	UpdateLikeStatusForPostUseCase,
@@ -27,6 +28,7 @@ const repo = [
 	BlogsQueryRepository,
 	CommentQueryRepository,
 	LikesRepository,
+	BlogsRepository
 ];
 
 const adapter = [];

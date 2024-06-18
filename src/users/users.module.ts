@@ -17,6 +17,7 @@ import { GenerateHashAdapter } from '../auth/adapter/generateHashAdapter';
 import { JwtService } from '@nestjs/jwt';
 import { EmailAdapter } from '../auth/adapter/email.adapter';
 import { EmailManager } from '../auth/adapter/email.manager';
+import { Blogs } from '../blogs/entity/blogs.entity';
 
 const userCase = [
   CreateNewUserUseCase,
@@ -38,7 +39,7 @@ const manager = [EmailManager];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, Blogs]), CqrsModule],
   controllers: [UsersController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })

@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource, InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { add } from 'date-fns';
 import { UsersQueryRepository } from './users.queryRepository';
 import { User } from './entities/user.entity';
+import { Blogs } from '../blogs/entity/blogs.entity';
+import { BlogsRepository } from '../blogs/blogs.repository';
 
 @Injectable()
 export class UsersRepository {
@@ -12,7 +14,8 @@ export class UsersRepository {
     protected readonly usersQueryRepository: UsersQueryRepository,
 	@InjectEntityManager()
     private readonly entityManager: EntityManager,
-	@InjectDataSource() protected dataSource: DataSource
+	@InjectDataSource() protected dataSource: DataSource,
+	@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>
   ) {}
 
   async passwordRecovery(id: any, recoveryCode: string): Promise<boolean> {
@@ -124,4 +127,33 @@ export class UsersRepository {
 		.execute()
     return true;
   }
+
+  async findBlogByIdAndUserId(id: string, userId: string): Promise<Blogs> {
+	const findBlog = await this.blogsRepository.findOne({
+		relations: { user: true },
+		where: [{ id }, { userId }]
+	})
+	if (!findBlog) {
+		throw new NotFoundException([
+			{ message: 'Blog by id and userId not found' }
+		])
+	}
+	return findBlog
+}
+
+async bindBlogByIdUserId(id: string, userId: string): Promise<boolean> {
+	const updateBlogByBind = await this.blogsRepository
+		.createQueryBuilder()
+		.update(Blogs)
+		.set({
+			isBanned: false,
+			banDate: new Date().toISOString()	
+		})
+		.where("id = :id", {id})
+		.andWhere("userId = :useId", {userId})
+		.execute()
+	
+	if(!updateBlogByBind) throw new Error('does not update blogs by bind')
+	return true
+}
 }

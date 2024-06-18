@@ -58,7 +58,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment, Blogs]), CqrsModule],
   controllers: [BlogsController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })

@@ -14,6 +14,8 @@ import { Posts } from '../posts/entity/entity.posts';
 import { LikeForPost } from './entity/likesForPost.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
+import { BlogsRepository } from '../blogs/blogs.repository';
+import { Blogs } from '../blogs/entity/blogs.entity';
 
 const userCase = [
 	UpdateLikestatusForCommentUseCase
@@ -23,7 +25,8 @@ const repo = [
 	LikesRepository,
 	CommentRepository,
 	CommentQueryRepository,
-	UsersQueryRepository
+	UsersQueryRepository,
+	BlogsRepository
 ];
 
 const useGuard = [CheckRefreshTokenForComments]
@@ -33,7 +36,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device, LikeForComment, Comments, Posts, LikeForPost]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, LikeForComment, Comments, Posts, LikeForPost, Blogs]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })

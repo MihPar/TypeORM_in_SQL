@@ -26,6 +26,7 @@ import { LikeForPost } from '../likes/entity/likesForPost.entity';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { Comments } from '../comment/entity/comment.entity';
+import { BandBlogUseCase } from './use-case/updateBlogByBindWithUser-use-case';
 
 const guards = [
 	CheckRefreshTokenForSA
@@ -37,7 +38,8 @@ const useCase = [
 	CreateNewBlogForSAUseCase,
 	CreateNewPostForBlogUseCase,
 	UpdateExistingPostByIdWithBlogIdUseCase,
-	DeletePostByIdCommandUseCase
+	DeletePostByIdCommandUseCase,
+	BandBlogUseCase
 ];
 
 const adapter = [];

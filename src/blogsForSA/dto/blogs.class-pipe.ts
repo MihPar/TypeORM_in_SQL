@@ -34,6 +34,14 @@ export class inputModelClass {
 	blogId: string
 }
 
+export class inputModelBlogIdClass {
+	@IsString()
+	@Trim()
+	@IsUUID()
+	// @IsNumber()
+	id: string
+}
+
 export class inputModelUpdataPost {
 	@IsString()
 	@Trim()
