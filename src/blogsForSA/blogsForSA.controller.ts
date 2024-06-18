@@ -58,6 +58,7 @@ export class BlogsControllerForSA {
 			pageSize: string;
 		},
 	) {
+		// console.log("try sa blogs")
 		const getAllBlogs: PaginationType<BlogsViewWithBanType> =
 			await this.blogsQueryRepositoryForSA.getAllBlogsWithInfoBan(
 				query.searchNameTerm,
@@ -66,6 +67,7 @@ export class BlogsControllerForSA {
 				(query.pageNumber || '1'),
 				(query.pageSize || '10'),
 			);
+			// console.log("getAllBlogs: ", getAllBlogs)
 		return getAllBlogs;
 	}
 

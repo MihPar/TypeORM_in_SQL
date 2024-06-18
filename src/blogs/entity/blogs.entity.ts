@@ -30,8 +30,8 @@ export class Blogs {
 	@Column({nullable: true})
 	userId: string
 
-	@Column()
-	bloggerId: string
+	// @Column()
+	// bloggerId: string
 
 	@Column({nullable: true})
 	isBanned: boolean
@@ -49,7 +49,7 @@ export class Blogs {
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,
 			createdAt: inputBlog.createdAt,
-			isMembership: true
+			isMembership: false
 		}
 	}
 

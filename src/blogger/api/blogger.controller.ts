@@ -25,7 +25,9 @@ import { PostsViewModel } from '../../posts/posts.type';
 import { UpdateExistingPostByIdWithBlogIdCommand } from '../../blogsForSA/use-case/updatePostByIdWithBlogId-use-case';
 import { UpdateExistingPostByIdWithBlogIdBloggerCommand } from '../use-case/updatePostByBlogIdBlogger-use-case';
 import { CreateNewBlogForSACommand } from '../../blogsForSA/use-case/createNewBlog-use-case';
+import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
 
+@UseGuards(BearerTokenPairQuizGame)
 @Controller('blogger/blogs')
 export class BloggerController {
 	constructor(
@@ -37,7 +39,6 @@ export class BloggerController {
 	@Put(':id')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	@HttpCode(HttpStatus.CREATED)
-	@UseGuards(CheckRefreshTokenForSA)
 	async updateBlogsById(
 		@Param() dto: inputModelBlogIdClass,
 		@Body() inputDateMode: BodyBlogsModel,
@@ -52,7 +53,6 @@ export class BloggerController {
 
 	@Delete(':id')
 	@HttpCode(HttpStatus.NO_CONTENT)
-	@UseGuards(CheckRefreshTokenForSA)
 	async deleteBlogsById(
 		@Param('id') id: string,
 		@UserDecorator() user: User,
@@ -64,7 +64,6 @@ export class BloggerController {
 
 	@Post(':blogId/posts')
 	@HttpCode(HttpStatus.CREATED)
-	@UseGuards(CheckRefreshTokenForSA)
 	async createPostByBlogId(
 		@Param() dto: inputModelClass,
 		@Body() inputDataModel: bodyPostsModelClass,
@@ -79,7 +78,6 @@ export class BloggerController {
 
 	@Get(':blogId/posts')
 	@HttpCode(HttpStatus.OK)
-	@UseGuards(CheckRefreshTokenForSA)
 	async getPostsByBlogId(
 		@Param() dto: inputModelClass,
 		@UserIdDecorator() userId: string | null,
@@ -108,7 +106,6 @@ export class BloggerController {
 
 	@Put(':blogId/posts/:postId')
 	@HttpCode(HttpStatus.NO_CONTENT)
-	@UseGuards(CheckRefreshTokenForSA)
 	async updatePostByIdWithModel(
 		@Param() dto: inputModelUpdataPost,
 		@Body() inputModel: bodyPostsModelClass,
@@ -121,7 +118,6 @@ export class BloggerController {
 
 	@Delete(':blogId/posts/:postId')
 	@HttpCode(HttpStatus.NO_CONTENT)
-	@UseGuards(CheckRefreshTokenForSA)
 	async deletePostByIdWithBlogId(
 		@Param() dto: inputModelUpdataPost,
 		@UserIdDecorator() userId: string | null
@@ -133,7 +129,6 @@ export class BloggerController {
 
 	@Get()
 	@HttpCode(HttpStatus.OK)
-	@UseGuards(CheckRefreshTokenForSA)
 	async getBlogsWithPagin(
 		@Query()
 		query: {
@@ -154,12 +149,12 @@ export class BloggerController {
 				(query.pageSize || '10'),
 				userId
 			);
+			// console.log("getAllBlogs: ", getAllBlogs)
 		return getAllBlogs;
 	}
 
 	@Post()
 	@HttpCode(HttpStatus.CREATED)
-	@UseGuards(CheckRefreshTokenForSA)
 	async createBlog(
 		@Body() inputDateModel: BodyBlogsModel,
 		@UserIdDecorator() userId: string,

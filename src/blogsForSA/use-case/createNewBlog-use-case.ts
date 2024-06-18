@@ -24,7 +24,7 @@ export class CreateNewBlogForSAUseCase
       newBlog.name = command.inputDateModel.name,
       newBlog.description = command.inputDateModel.description,
       newBlog.websiteUrl = command.inputDateModel.websiteUrl,
-	  newBlog.bloggerId = command.userId;
+	  newBlog.userId = command.userId;
       newBlog.isMembership = false
 	  
     const createBlog: Blogs | null =
