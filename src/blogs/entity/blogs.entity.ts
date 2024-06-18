@@ -60,15 +60,15 @@ export class Blogs {
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,
 			createdAt: inputBlog.createdAt,
-			isMembership: inputBlog.isMembership,
+			isMembership: true,
 			blogOwnerInfo: {
 				userId: user!.id,
 				userLogin: user!.login,
 			  },
-			  banInfo: {
-				isBanned: inputBlog.isBanned,
-				banDate: inputBlog.banDate,
-			  },
+			//   banInfo: {
+			// 	isBanned: inputBlog.isBanned,
+			// 	banDate: inputBlog.banDate,
+			//   },
 		}
 	}
 
