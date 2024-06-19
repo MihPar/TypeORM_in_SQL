@@ -9,6 +9,7 @@ import { LikeStatusEnum } from '../likes/likes.emun';
 
 @Injectable()
 export class PostsRepository {
+	
   constructor(
 	@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>,
 	@InjectRepository(LikeForPost) protected readonly likeForPostRepository: Repository<LikeForPost>
@@ -162,6 +163,19 @@ async increaseDislike(postId: string, likeStatus: string, userId: string) {
 
     return findPostById;
   }
+
+  async bindPostByUserId(userId: string) {
+	const updatePostByBind = await this.postsRepository
+		.createQueryBuilder()
+		.update(Posts)
+		.set({
+			isBanned: false,
+			banDate: new Date().toISOString()	
+		})
+		// .where("id = :id", {id})
+		.where("userId = :useId", {userId})
+		.execute()
+}
 
 //   async findPostById(id: string) {
 //     const query = `

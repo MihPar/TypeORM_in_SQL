@@ -6,11 +6,15 @@ import { User } from "../../users/entities/user.entity";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { NotFoundException } from "@nestjs/common";
 import { UsersRepository } from "../../users/users.repository";
+import { BlogsRepository } from "../../blogs/blogs.repository";
+import { BanBlogInputModel } from "../dto/blogs.class-pipe";
+import { PostsRepository } from "../../posts/posts.repository";
 
 export class BandBlogCommand {
 	constructor(
 		public id: string,
-		public userId: string
+		public userId: string,
+		// public ban: BanBlogInputModel
 	) { }
 }
 
@@ -18,10 +22,12 @@ export class BandBlogCommand {
 export class BandBlogUseCase implements ICommandHandler<BandBlogCommand> {
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA,
-		@InjectRepository(User) protected readonly usersQueryRepository: UsersQueryRepository,
-		@InjectRepository(User) protected readonly usersRepository: UsersRepository
+			protected readonly usersQueryRepository: UsersQueryRepository,
+			protected readonly usersRepository: UsersRepository,
+			protected readonly blogsRepository: BlogsRepository,
+			protected readonly postsRepository: PostsRepository
 	) { }
-	async execute(command: BandBlogCommand): Promise<boolean | null> {
+	async execute(command: BandBlogCommand): Promise<void | null> {
 		const blogById = await this.usersRepository.findBlogByIdAndUserId(command.id, command.userId)
 		if (!blogById) {
 				throw new NotFoundException(
@@ -31,12 +37,17 @@ export class BandBlogUseCase implements ICommandHandler<BandBlogCommand> {
 				)
 			}
 		
-		const bindBlogById = await this.usersRepository.bindBlogByIdUserId(command.id, command.userId)
+		const bindBlogById = await this.blogsRepository.bindBlogByIdUserId(command.id, command.userId)
 			if(!bindBlogById) {
 				throw new NotFoundException([
 					{message: 'Blog did not binded'}
 				])
 			}
-		return bindBlogById
+
+		await this.postsRepository.bindPostByUserId(
+			bindBlogById.userId,
+			// command.ban.isBanned
+		)
+		return
 	}
 }

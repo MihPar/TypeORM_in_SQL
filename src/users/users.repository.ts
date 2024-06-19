@@ -141,19 +141,5 @@ export class UsersRepository {
 	return findBlog
 }
 
-async bindBlogByIdUserId(id: string, userId: string): Promise<boolean> {
-	const updateBlogByBind = await this.blogsRepository
-		.createQueryBuilder()
-		.update(Blogs)
-		.set({
-			isBanned: false,
-			banDate: new Date().toISOString()	
-		})
-		.where("id = :id", {id})
-		.andWhere("userId = :useId", {userId})
-		.execute()
-	
-	if(!updateBlogByBind) throw new Error('does not update blogs by bind')
-	return true
-}
+
 }

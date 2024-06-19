@@ -17,6 +17,26 @@ export class BlogsRepository {
     return true;
   }
 
+  async bindBlogByIdUserId(id: string, userId: string): Promise<Blogs> {
+	const updateBlogByBind = await this.blogsRepository
+		.createQueryBuilder()
+		.update(Blogs)
+		.set({
+			isBanned: false,
+			banDate: new Date().toISOString()	
+		})
+		.where("id = :id", {id})
+		.andWhere("userId = :useId", {userId})
+		.execute()
+
+	const getBinBlog = await this.blogsRepository
+		.createQueryBuilder()
+		.where("id = :id", {id})
+		.getOne()
+	
+	if(!getBinBlog) throw new Error('does not update blogs by bind')
+	return getBinBlog
+}
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
 // 	try {
 // 		const result = await this.blogModel.create(newBlog);

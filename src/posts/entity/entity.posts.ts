@@ -46,6 +46,15 @@ export class Posts {
 	@ManyToOne(() => User, u => u.post)
 	user: User
 
+	@Column()
+	userId: string
+
+	@Column()
+	isBanned: boolean
+
+	@Column()
+	banDate: string
+
 	@OneToMany(() => LikeForPost, lp => lp.post, {onDelete: "CASCADE"})
 	extendedLikesInfo: LikeForPost[]
 

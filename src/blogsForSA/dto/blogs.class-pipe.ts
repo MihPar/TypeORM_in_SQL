@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsNumber, IsString, IsUUID, IsUrl, MaxLength } from "class-validator";
+import { IsBoolean, IsMongoId, IsNotEmpty, IsNumber, IsString, IsUUID, IsUrl, MaxLength } from "class-validator";
 import { Transform, TransformFnParams } from "class-transformer";
 import { applyDecorators } from "@nestjs/common";
 
@@ -55,3 +55,9 @@ export class inputModelUpdataPost {
 	// @IsNumber()
 	postId: string
 }
+
+export class BanBlogInputModel {
+	@IsNotEmpty()
+	@IsBoolean()
+	isBanned: boolean;
+  }

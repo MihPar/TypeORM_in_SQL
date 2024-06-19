@@ -1,6 +1,6 @@
 import { CommandBus } from '@nestjs/cqrs';
 import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import { BodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
+import { BanBlogInputModel, BodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
 import {BlogsRepositoryForSA } from "./blogsForSA.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
 import { PaginationType } from "../types/pagination.types";
@@ -38,11 +38,10 @@ export class BlogsControllerForSA {
   @HttpCode(HttpStatus.NO_CONTENT)
   async updateBlogByIdWithUser(
 	@Param('id') id: string,
-	@Param('userId') userId: string
+	@Param('userId') userId: string,
   ) {
 	const command = new BandBlogCommand(id, userId)
-	const bindBlogWithUser = await this.commandBus.execute<BandBlogCommand, boolean | null>(command)
-	if(!bindBlogWithUser) throw new Error('blogs not bind')
+	const bindBlogWithUser = await this.commandBus.execute<BandBlogCommand, void | null>(command)
 	return 
   }
 
