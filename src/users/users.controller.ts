@@ -1,15 +1,19 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Query, UseFilters, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, UseFilters, UseGuards } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AuthBasic } from './gards/basic.auth';
 import { DeleteUserByIdCommand } from './useCase/deleteUserById-use-case';
 import { InputDataReqClass } from '../auth/dto/auth.class.pipe';
 import { RegistrationCommand } from './useCase/registration-use-case';
 import { CreateNewUserCommand } from './useCase/createNewUser-use-case';
-import { DtoType } from './user.class';
+import { BanInputModel, DtoType } from './user.class';
 import { SkipThrottle } from '@nestjs/throttler';
 import { UsersQueryRepository } from './users.queryRepository';
 import { HttpExceptionFilter } from '../exeption/exceptionFilter';
-import { UserViewType } from './user.type';
+import { UserBanViewType, UserViewType } from './user.type';
+import { BanUnbanUserCommand } from './useCase/banUnbanUser-use-case';
+import { UserIdDecorator } from './infrastructure/decorators/decorator.user';
+import { BanStatus } from './enum';
+import { PaginationType } from '../types/pagination.types';
 
 // @SkipThrottle()
 @UseGuards(AuthBasic)
@@ -20,11 +24,23 @@ export class UsersController {
 	protected commandBus: CommandBus
 	) {}
 
+@Put(':id/ban')
+@HttpCode(HttpStatus.NO_CONTENT)
+async banUnbanUser(
+	@Param('id') id: string,
+	@Body() banInputInfo: BanInputModel,
+) {
+	const command = new BanUnbanUserCommand(id, banInputInfo)
+	await this.commandBus.execute<BanUnbanUserCommand, void >(command)
+	return
+}
+
   @Get()
   @HttpCode(HttpStatus.OK)
   async getAllUsers(
     @Query()
     query: {
+	  banStatus: BanStatus;
       sortBy: string;
       sortDirection: string;
       pageNumber: string;
@@ -32,7 +48,8 @@ export class UsersController {
       searchLoginTerm: string;
       searchEmailTerm: string;
     },
-  ) {
+  ):  Promise<PaginationType<UserBanViewType>> {
+		query.banStatus = query.banStatus || BanStatus.all
 		query.sortBy = query.sortBy || 'createdAt'
 		query.sortDirection = query.sortDirection || "desc"
 		query.pageNumber = query.pageNumber || '1'
@@ -41,6 +58,7 @@ export class UsersController {
 		query.searchEmailTerm = query.searchEmailTerm || ''
 		
     const users = await this.usersQueryRepository.getAllUsers(
+		query.banStatus,
 		query.sortBy,
 		query.sortDirection,
 		query.pageNumber,

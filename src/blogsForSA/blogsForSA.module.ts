@@ -27,6 +27,7 @@ import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { Comments } from '../comment/entity/comment.entity';
 import { BandBlogUseCase } from './use-case/updateBlogByBindWithUser-use-case';
+import { UsersRepository } from '../users/users.repository';
 
 const guards = [
 	CheckRefreshTokenForSA
@@ -52,6 +53,7 @@ const repo = [
 	UsersQueryRepository,
 	BlogsRepository,
 	PostsQueryRepository,
+	UsersRepository
 ];
 
 const manager = [];

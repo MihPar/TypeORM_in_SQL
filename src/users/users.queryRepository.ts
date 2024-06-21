@@ -3,10 +3,11 @@ import "reflect-metadata"
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserViewType } from './user.type';
+import { UserBanViewType, UserViewType } from './user.type';
 import { PaginationType } from "../types/pagination.types";
 import { User } from "./entities/user.entity";
 import { Blogs } from "../blogs/entity/blogs.entity";
+import { BanStatus } from './enum';
 
 @Injectable()
 export class UsersQueryRepository {
@@ -15,18 +16,20 @@ export class UsersQueryRepository {
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 	) { }
 	async getAllUsers(
+		banStatus: BanStatus,
 		sortBy: string,
 		sortDirection: string,
 		pageNumber: string,
 		pageSize: string,
 		searchLoginTerm: string,
 		searchEmailTerm: string
-	): Promise<PaginationType<UserViewType>> {
+	): Promise<PaginationType<UserBanViewType>> {
 
 		const users = await this.userRepository
 			.createQueryBuilder('user')
 			.select(['user'])
 			.where('user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm', { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
+			.andWhere(`"banStatus" =: banStatus`, {banStatus})
 			.orderBy(`"user"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)
@@ -38,6 +41,7 @@ export class UsersQueryRepository {
 
 		const totalCount = await queryBuilderTotalCount
 			.where("user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm", { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
+			.andWhere(`"banStatus" =: banStatus`, {banStatus})
 			.getCount();
 
 		const pagesCount = Math.ceil(totalCount / +pageSize);
@@ -47,11 +51,16 @@ export class UsersQueryRepository {
 			pageSize: +pageSize,
 			totalCount: totalCount,
 			items: users.map(
-				(user: User): UserViewType => ({
+				(user: User): UserBanViewType => ({
 					id: user.id,
 					login: user.login,
 					email: user.email,
 					createdAt: user.createdAt,
+					banInfo: {
+						isBanned: true,
+						banDate: user.banDate,
+						banReason: user.banReason
+					  }
 				})
 			),
 		};

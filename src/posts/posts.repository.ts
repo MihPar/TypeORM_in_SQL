@@ -164,7 +164,7 @@ async increaseDislike(postId: string, likeStatus: string, userId: string) {
     return findPostById;
   }
 
-  async bindPostByUserId(userId: string) {
+  async bindPostByUserId(userId: string): Promise<void> {
 	const updatePostByBind = await this.postsRepository
 		.createQueryBuilder()
 		.update(Posts)
@@ -175,6 +175,9 @@ async increaseDislike(postId: string, likeStatus: string, userId: string) {
 		// .where("id = :id", {id})
 		.where("userId = :useId", {userId})
 		.execute()
+
+	if(!updatePostByBind) throw new Error('Post does not exist')
+		return
 }
 
 //   async findPostById(id: string) {

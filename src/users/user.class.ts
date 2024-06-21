@@ -48,3 +48,8 @@ export class DtoType {
 	// @IsNumber()
 	id: string
 }
+
+export class BanInputModel {
+	isBanned: boolean
+  	banReason: string
+}

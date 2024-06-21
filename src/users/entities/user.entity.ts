@@ -7,6 +7,7 @@ import { Blogs } from '../../blogs/entity/blogs.entity';
 import { Posts } from '../../posts/entity/entity.posts';
 import { Comments } from '../../comment/entity/comment.entity';
 import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
+import { BanStatus } from '../enum';
 
 @Entity()
 export class User {
@@ -34,6 +35,18 @@ export class User {
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   @Column()
   isConfirmed: boolean = false;
+
+  @Column({nullable: true})
+  isBanned: boolean
+
+  @Column({nullable: true})
+  banReason: string
+
+  @Column({default: null})
+  banDate: string
+
+  @Column({default: BanStatus.all})
+  banStatus: BanStatus
 
   @OneToMany(() => Blogs, (b) => b.user)
   blog: Blogs;

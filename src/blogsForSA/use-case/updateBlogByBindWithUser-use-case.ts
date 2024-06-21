@@ -44,10 +44,7 @@ export class BandBlogUseCase implements ICommandHandler<BandBlogCommand> {
 				])
 			}
 
-		await this.postsRepository.bindPostByUserId(
-			bindBlogById.userId,
-			// command.ban.isBanned
-		)
+		// await this.postsRepository.bindPostByUserId(bindBlogById.userId,)
 		return
 	}
 }

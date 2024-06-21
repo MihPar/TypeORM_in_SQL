@@ -18,6 +18,7 @@ import { JwtService } from '@nestjs/jwt';
 import { EmailAdapter } from '../auth/adapter/email.adapter';
 import { EmailManager } from '../auth/adapter/email.manager';
 import { Blogs } from '../blogs/entity/blogs.entity';
+import { BanUnbanUserUseCase } from './useCase/banUnbanUser-use-case';
 
 const userCase = [
   CreateNewUserUseCase,
@@ -25,7 +26,8 @@ const userCase = [
   DeleteUserByIdUseCase,
   RegistrationConfirmationUseCase,
   RegistrationUseCase,
-  RegistrationEmailResendingUseCase
+  RegistrationEmailResendingUseCase,
+  BanUnbanUserUseCase
 ];
 
 const repo = [

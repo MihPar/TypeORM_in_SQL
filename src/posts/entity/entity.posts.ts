@@ -46,13 +46,13 @@ export class Posts {
 	@ManyToOne(() => User, u => u.post)
 	user: User
 
-	@Column()
+	@Column({nullable: true})
 	userId: string
 
-	@Column()
+	@Column({nullable: true})
 	isBanned: boolean
 
-	@Column()
+	@Column({default: null})
 	banDate: string
 
 	@OneToMany(() => LikeForPost, lp => lp.post, {onDelete: "CASCADE"})
