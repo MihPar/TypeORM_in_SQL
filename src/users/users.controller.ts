@@ -5,7 +5,7 @@ import { DeleteUserByIdCommand } from './useCase/deleteUserById-use-case';
 import { InputDataReqClass } from '../auth/dto/auth.class.pipe';
 import { RegistrationCommand } from './useCase/registration-use-case';
 import { CreateNewUserCommand } from './useCase/createNewUser-use-case';
-import { BanInputModel, DtoType } from './user.class';
+import { BanInputModel, DtoType, EmailDto, LoginDto, PasswordDto } from './user.class';
 import { SkipThrottle } from '@nestjs/throttler';
 import { UsersQueryRepository } from './users.queryRepository';
 import { HttpExceptionFilter } from '../exeption/exceptionFilter';
@@ -73,9 +73,14 @@ async banUnbanUser(
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseFilters(new HttpExceptionFilter())
-  async createUser(@Body() inputDataReq: InputDataReqClass) {
-	const command = new CreateNewUserCommand(inputDataReq)
-	const createdUser = await this.commandBus.execute<CreateNewUserCommand, UserViewType | null>(command)
+  async createUser(
+	@Param() loginDto: LoginDto,
+	@Param() passwordDto: PasswordDto,
+	@Param() emailDto: EmailDto,
+	// @Body() inputDataReq: InputDataReqClass
+) {
+	const command = new CreateNewUserCommand(loginDto, passwordDto, emailDto)
+	const createdUser = await this.commandBus.execute<CreateNewUserCommand, UserBanViewType | null>(command)
 	if(!createdUser) throw new BadRequestException("400")
 	return createdUser
   }

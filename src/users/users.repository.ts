@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { BanInputModel } from './user.class';
+import { UserBanViewType, UserViewType } from './user.type';
 
 @Injectable()
 export class UsersRepository {
@@ -63,8 +64,8 @@ export class UsersRepository {
 		return true;
 	}
 
-	async createUser(newUser: User) {
-		const insertUser = await this.userRepository
+	async createUser(newUser: User): Promise<User> {
+		await this.userRepository
 			.createQueryBuilder()
 			.insert()
 			.into(User)
@@ -76,11 +77,21 @@ export class UsersRepository {
 					createdAt: newUser.createdAt,
 					confirmationCode: newUser.confirmationCode,
 					expirationDate: newUser.expirationDate,
-					isConfirmed: newUser.isConfirmed
+					isConfirmed: newUser.isConfirmed,
+					isBanned: newUser.isBanned,
+					banReason: newUser.banReason,
+					banDate: newUser.banDate,
+					banStatus: newUser.banStatus
 				}
 			])
 			.execute()
-		return insertUser
+
+		const user = await this.userRepository
+			.createQueryBuilder()
+			.select()
+			.where("id =: id", {id: newUser.id})
+			.getOne()
+		return user
 	}
 
 	async updateUserConfirmation(

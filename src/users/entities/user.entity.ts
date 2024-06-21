@@ -1,6 +1,6 @@
 import { LikeForComment } from './../../likes/entity/likesForComment.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { UserViewType } from '../user.type';
+import { UserBanViewType, UserViewType } from '../user.type';
 import { Device } from '../../security-devices/entities/security-device.entity';
 import { LikeForPost } from '../../likes/entity/likesForPost.entity';
 import { Blogs } from '../../blogs/entity/blogs.entity';
@@ -72,12 +72,17 @@ export class User {
   @OneToMany(() => PairQuizGameProgressPlayer, (pqg) => pqg.user)
   progressPlayer: PairQuizGameProgressPlayer[];
 
-  static getViewUser(user: User): UserViewType {
+  static getViewUser(user: User): UserBanViewType {
     return {
       id: user.id,
       login: user.login,
       email: user.email,
       createdAt: user.createdAt,
+	  banInfo: {
+		isBanned: user.isBanned,
+		banDate: user.banDate,
+		banReason: user.banReason
+	  }
     };
   }
 }
