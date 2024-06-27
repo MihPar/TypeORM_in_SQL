@@ -82,4 +82,16 @@ export class DeviceRepository {
     if (!deleteDevice) return false;
     return true;
   }
+
+async deleteAllSessions(id: string) {
+	const deletedAllSessions = await this.deviceRepository.delete({
+		userId: id,
+	  });
+  
+	  return (
+		deletedAllSessions.affected !== null &&
+		deletedAllSessions.affected !== undefined &&
+		deletedAllSessions.affected > 0
+	  );
+}
 }

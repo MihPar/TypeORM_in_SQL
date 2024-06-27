@@ -12,7 +12,7 @@ export class PostsRepository {
 	
   constructor(
 	@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>,
-	@InjectRepository(LikeForPost) protected readonly likeForPostRepository: Repository<LikeForPost>
+	@InjectRepository(LikeForPost) protected readonly likeForPostRepository: Repository<LikeForPost>,
 	) {}
 
   async createNewPosts(newPost: Posts) {
@@ -178,6 +178,36 @@ async increaseDislike(postId: string, likeStatus: string, userId: string) {
 
 	if(!updatePostByBind) throw new Error('Post does not exist')
 		return
+}
+
+async banPostByUserId(id: string, ban: boolean): Promise<boolean> {
+	const postBanned = await this.postsRepository.update(
+		{ userId: id },
+		{
+		  isBanned: ban,
+		},
+	  );
+  
+	  return (
+		postBanned.affected !== null &&
+		postBanned.affected !== undefined &&
+		postBanned.affected > 0
+	  );
+}
+
+async banPostLikes(id: string, ban: boolean) {
+	const postLikeBanned = await this.likeForPostRepository.update(
+		{ userId: id },
+		{
+		  isBanned: ban,
+		},
+	  );
+  
+	  return (
+		postLikeBanned.affected !== null &&
+		postLikeBanned.affected !== undefined &&
+		postLikeBanned.affected > 0
+	  );
 }
 
 //   async findPostById(id: string) {

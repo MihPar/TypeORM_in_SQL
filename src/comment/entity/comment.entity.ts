@@ -20,6 +20,9 @@ export class Comments {
 	@Column()
 	userLogin: string
 
+	@Column({ nullable: true })
+  	isBanned: boolean;
+
 	@Column({nullable: true, default: 0})
 	likesCount: number
 

@@ -125,6 +125,21 @@ export class LikesRepository {
 		return updateLikeStatus
 	}
 
+	async banCommentLikes(id: string, ban: boolean) {
+		const commentsLikeBanned = await this.likeForCommentRepository.update(
+			{ userId: id },
+			{
+			  isBanned: ban,
+			},
+		  );
+	  
+		  return (
+			commentsLikeBanned.affected !== null &&
+			commentsLikeBanned.affected !== undefined &&
+			commentsLikeBanned.affected > 0
+		  );
+	}
+
 	// async getNewLike(postId: string, blogId: string) {
 	// 	const NewestLikesQuery = `
 	// 		select *

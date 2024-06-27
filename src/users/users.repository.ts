@@ -8,6 +8,8 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { BanInputModel } from './user.class';
 import { UserBanViewType, UserViewType } from './user.type';
+import { PostsRepository } from '../posts/posts.repository';
+import { strict } from 'assert';
 
 @Injectable()
 export class UsersRepository {
@@ -18,7 +20,7 @@ export class UsersRepository {
 		@InjectEntityManager()
 		private readonly entityManager: EntityManager,
 		@InjectDataSource() protected dataSource: DataSource,
-		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>
+		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 	) { }
 
 	async passwordRecovery(id: any, recoveryCode: string): Promise<boolean> {
@@ -65,33 +67,36 @@ export class UsersRepository {
 	}
 
 	async createUser(newUser: User): Promise<User> {
-		await this.userRepository
-			.createQueryBuilder()
-			.insert()
-			.into(User)
-			.values([
-				{
-					login: newUser.login,
-					email: newUser.email,
-					passwordHash: newUser.passwordHash,
-					createdAt: newUser.createdAt,
-					confirmationCode: newUser.confirmationCode,
-					expirationDate: newUser.expirationDate,
-					isConfirmed: newUser.isConfirmed,
-					isBanned: newUser.isBanned,
-					banReason: newUser.banReason,
-					banDate: newUser.banDate,
-					banStatus: newUser.banStatus
-				}
-			])
-			.execute()
+		const userCreatingResult = await this.userRepository.save(newUser)
+		return userCreatingResult
+			// .createQueryBuilder()
+		// 	.insert()
+		// 	.into(User)
+		// 	.values([
+		// 		{
+		// 			login: newUser.login,
+		// 			email: newUser.email,
+		// 			passwordHash: newUser.passwordHash,
+		// 			createdAt: newUser.createdAt,
+		// 			confirmationCode: newUser.confirmationCode,
+		// 			expirationDate: newUser.expirationDate,
+		// 			isConfirmed: newUser.isConfirmed,
+		// 			isBanned: newUser.isBanned,
+		// 			banReason: newUser.banReason,
+		// 			banDate: newUser.banDate,
+		// 			banStatus: newUser.banStatus
+		// 		}
+		// 	])
+		// 	.execute()
+		// 	.catch(e => console.error("error upon creating user", e))
 
-		const user = await this.userRepository
-			.createQueryBuilder()
-			.select()
-			.where("id =: id", {id: newUser.id})
-			.getOne()
-		return user
+		// console.log(userCreatingResult, "id")
+		// const user = await this.userRepository
+		// 	.createQueryBuilder()
+		// 	.select()
+		// 	.where("id = :id", {id: newUser.id})
+		// 	.getOne()
+		// return user
 	}
 
 	async updateUserConfirmation(
@@ -155,15 +160,26 @@ export class UsersRepository {
 	}
 
 	async banUser(id: string, banInputInfo: BanInputModel): Promise<boolean> {
+		const {isBanned, banReason} = banInputInfo
 		const banUser = await this.userRepository
 			.createQueryBuilder()
 			.update(User)
-			.set({ isBanned: banInputInfo.isBanned, banDate: new Date().toISOString(), banReason: banInputInfo.banReason })
+			.set({ 
+				isBanned, 
+				banDate: isBanned ? new Date().toISOString() : null, 
+				banReason: isBanned ? banInputInfo.banReason : null})
 			.where({id})
 			.execute()
 
+		
 		if(!banUser) throw new Error('Ban user is not update in user repository')
-		return true
+		
+		
+		return (
+			banUser.affected !== null &&
+			banUser.affected !== undefined &&
+			banUser.affected > 0
+		  );
 	}
 
 }

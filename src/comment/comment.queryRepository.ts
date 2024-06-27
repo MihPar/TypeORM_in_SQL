@@ -23,10 +23,10 @@ export class CommentQueryRepository {
 		const findCommentById = await this.commentRepository
 			.createQueryBuilder()
 			.select()
-			.where("id = :commentId", {commentId})
+			.where(`id = :commentId`, {commentId})
 			.getOne()
 
-		const commentLikeStatus = await this.likeForCommentRepository
+			const commentLikeStatus = await this.likeForCommentRepository
 			.createQueryBuilder()
 			.select()
 			.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
@@ -36,6 +36,7 @@ export class CommentQueryRepository {
 		if(userId) {
 			myStatus = commentLikeStatus ? (commentLikeStatus?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
+
 	return commentDBToView(findCommentById, myStatus);
     } catch (e) {
       return null;

@@ -79,10 +79,12 @@ export class CommentsController {
     @UserDecorator() user: User,
     @UserIdDecorator() userId: string | null,
   ) {
+	const findComment = await this.commentQueryRepository.findCommentByCommentId(Dto.id)
+	if(findComment.isBanned === null) throw new NotFoundException('Blog not found, 404')
     const getCommentById: CommentViewModel | null =
       await this.commentQueryRepository.findCommentById(Dto.id, userId);
     if (!getCommentById) throw new NotFoundException('Blogs by id not found');
-	console.log("getCommentById: ", getCommentById)
+	// console.log("getCommentById in 85 strict: ", getCommentById)
     return getCommentById;
   }
 }

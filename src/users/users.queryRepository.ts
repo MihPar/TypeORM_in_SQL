@@ -29,7 +29,7 @@ export class UsersQueryRepository {
 			.createQueryBuilder('user')
 			.select(['user'])
 			.where('user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm', { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
-			.andWhere(`"banStatus" =: banStatus`, {banStatus})
+			.andWhere(`"banStatus" = :banStatus`, {banStatus})
 			.orderBy(`"user"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)
@@ -41,7 +41,7 @@ export class UsersQueryRepository {
 
 		const totalCount = await queryBuilderTotalCount
 			.where("user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm", { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
-			.andWhere(`"banStatus" =: banStatus`, {banStatus})
+			.andWhere(`"banStatus" = :banStatus`, {banStatus})
 			.getCount();
 
 		const pagesCount = Math.ceil(totalCount / +pageSize);
@@ -57,7 +57,7 @@ export class UsersQueryRepository {
 					email: user.email,
 					createdAt: user.createdAt,
 					banInfo: {
-						isBanned: true,
+						isBanned: user.isBanned,
 						banDate: user.banDate,
 						banReason: user.banReason
 					  }

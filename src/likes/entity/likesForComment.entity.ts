@@ -17,6 +17,9 @@ export class LikeForComment {
 	@Column()
 	commentId: string
 
+	@Column({ nullable: true })
+	isBanned: boolean;
+
 	@ManyToOne(() => Comments, c => c.LikeForComment)
 	comment: Comments
 

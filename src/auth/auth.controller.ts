@@ -61,7 +61,7 @@ export class AuthController {
 		@Res({passthrough: true}) res: Response) {
 		const command = new CreateLoginCommand(inutDataModel)
 		const user: User | null = await this.commandBus.execute(command);
-		  if (!user) {
+		  if (!user || user.isBanned) {
 			throw new UnauthorizedException("Not authorization 401")
 		  } else {
 			const command = new CreateDeviceCommand(IP, deviceName, user)

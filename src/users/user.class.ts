@@ -7,6 +7,8 @@ import {
 	IsUUID,
 	MinLength,
 	IsNumber,
+	isBoolean,
+	IsBoolean,
 } from "class-validator";
 import { UserViewType } from "./user.type";
 
@@ -77,6 +79,12 @@ export class DtoType {
 }
 
 export class BanInputModel {
+	@IsBoolean()
 	isBanned: boolean
+
+	@IsString()
+	@Trim()
+	@MinLength(6)
+	@IsNotEmpty()
 	banReason: string
 }

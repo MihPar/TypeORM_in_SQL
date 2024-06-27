@@ -73,13 +73,11 @@ async banUnbanUser(
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @UseFilters(new HttpExceptionFilter())
-  async createUser(
-	@Param() loginDto: LoginDto,
-	@Param() passwordDto: PasswordDto,
-	@Param() emailDto: EmailDto,
-	// @Body() inputDataReq: InputDataReqClass
+  async createUser( // возможна ошибка с тестами икубатора когда у нас неправильные несколько полей
+	@Body() inputDataReq: InputDataReqClass
 ) {
-	const command = new CreateNewUserCommand(loginDto, passwordDto, emailDto)
+	const {login, password, email} = inputDataReq
+	const command = new CreateNewUserCommand(login, password, email)
 	const createdUser = await this.commandBus.execute<CreateNewUserCommand, UserBanViewType | null>(command)
 	if(!createdUser) throw new BadRequestException("400")
 	return createdUser

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Post } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { User } from './entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -19,6 +19,16 @@ import { EmailAdapter } from '../auth/adapter/email.adapter';
 import { EmailManager } from '../auth/adapter/email.manager';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { BanUnbanUserUseCase } from './useCase/banUnbanUser-use-case';
+import { PostsRepository } from '../posts/posts.repository';
+import { Posts } from '../posts/entity/entity.posts';
+import { CommentRepository } from '../comment/comment.repository';
+import { Comments } from '../comment/entity/comment.entity';
+import { LikesRepository } from '../likes/likes.repository';
+import { Like } from 'typeorm';
+import { LikeStatusEnum } from '../likes/likes.emun';
+import { LikeForComment } from '../likes/entity/likesForComment.entity';
+import { LikeForPost } from '../likes/entity/likesForPost.entity';
+import { DeviceRepository } from '../security-devices/security-device.repository';
 
 const userCase = [
   CreateNewUserUseCase,
@@ -34,6 +44,10 @@ const repo = [
   UsersRepository,
   UsersQueryRepository,
   PayloadAdapter,
+  PostsRepository,
+  CommentRepository,
+  LikesRepository,
+  DeviceRepository
 ];
 
 const adapter = [GenerateHashAdapter, EmailAdapter];
@@ -41,7 +55,7 @@ const manager = [EmailManager];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device, Blogs]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, Blogs, Posts, Comments, LikeForComment, LikeForPost]), CqrsModule],
   controllers: [UsersController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })

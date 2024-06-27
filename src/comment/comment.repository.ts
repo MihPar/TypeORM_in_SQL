@@ -2,10 +2,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { Comments } from "./entity/comment.entity";
+import { CommentViewModel } from "./comment.type";
+import { LikeForComment } from "../likes/entity/likesForComment.entity";
 
 export class CommentRepository {
 	constructor(
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
+		// @InjectRepository(LikeForComment) protected readonly likeForCommentRepository: Repository<LikeForComment>
 	) {}
 
 	async deleteAllComments() {
@@ -96,5 +99,19 @@ export class CommentRepository {
 			console.log(error, 'error in create post');
 			return null;
 		  }
+	  }
+	  async banComments(id: string, ban: boolean) {
+		const commentBanned = await this.commentsRepository.update(
+			{ userId: id },
+			{
+			  isBanned: ban,
+			},
+		  );
+	  
+		  return (
+			commentBanned.affected !== null &&
+			commentBanned.affected !== undefined &&
+			commentBanned.affected > 0
+		  );
 	  }
 }

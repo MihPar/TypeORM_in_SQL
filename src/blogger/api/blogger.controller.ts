@@ -1,9 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, NotFoundException, ForbiddenException, Query } from '@nestjs/common';
-import { BloggerService } from '../blogger.service';
-import { CreateBloggerDto } from '../dto/create-blogger.dto';
-import { UpdateBloggerDto } from '../dto/update-blogger.dto';
-import { bodyBlogsModel } from '../../blogs/dto/blogs.class.pipe';
-import { CheckRefreshTokenForSA } from '../../blogsForSA/guards/bearer.authGetComment';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, NotFoundException, Query } from '@nestjs/common';
 import { BodyBlogsModel, inputModelBlogIdClass, inputModelClass, inputModelUpdataPost } from '../../blogsForSA/dto/blogs.class-pipe';
 import { User } from '../../users/entities/user.entity';
 import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
@@ -13,16 +8,13 @@ import { CommandBus } from '@nestjs/cqrs';
 import { DeletePostByIdCommand } from '../../blogsForSA/use-case/deletPostById-use-case';
 import { UpdateBlogBloggerForSACommand } from '../use-case/updataBlogByIdBlogger-use-case';
 import { PostsQueryRepository } from '../../posts/postQuery.repository';
-import { DeleteBlogByIdForSACommnad } from '../../blogsForSA/use-case/deleteBlogById-use-case';
 import { bodyPostsModelClass } from '../../posts/dto/posts.class.pipe';
 import { Posts } from '../../posts/entity/entity.posts';
 import { DeleteBlogByIdBloggerForSACommnad } from '../use-case/deleteBlogBlogger-use-case';
-import { BlogsViewType, BlogsViewTypeWithUserId } from '../../blogs/blogs.type';
-import { CreateNewPostForBlogCommand } from '../../blogsForSA/use-case/createNewPostForBlog-use-case';
+import { BlogsViewType } from '../../blogs/blogs.type';
 import { CreateNewPostForBlogBloggerCommand } from '../use-case/createNewPostByBlogIdBlogger-use-case';
 import { PaginationType } from '../../types/pagination.types';
 import { PostsViewModel } from '../../posts/posts.type';
-import { UpdateExistingPostByIdWithBlogIdCommand } from '../../blogsForSA/use-case/updatePostByIdWithBlogId-use-case';
 import { UpdateExistingPostByIdWithBlogIdBloggerCommand } from '../use-case/updatePostByBlogIdBlogger-use-case';
 import { CreateNewBlogForSACommand } from '../../blogsForSA/use-case/createNewBlog-use-case';
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
@@ -158,7 +150,7 @@ export class BloggerController {
 	async createBlog(
 		@Body() inputDateModel: BodyBlogsModel,
 		@UserIdDecorator() userId: string,
-	) {
+	): Promise<BlogsViewType | null> {
 		const command = new CreateNewBlogForSACommand(inputDateModel, userId)
 		const createBlog: BlogsViewType | null = await this.commandBus.execute<CreateNewBlogForSACommand, BlogsViewType | null>(command)
 		return createBlog;

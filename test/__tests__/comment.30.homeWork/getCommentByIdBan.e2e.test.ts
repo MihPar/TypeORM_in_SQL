@@ -1,0 +1,181 @@
+import { strict } from 'assert';
+import { HttpStatus, INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import request from 'supertest';
+import { delay } from 'rxjs';
+import { AppModule } from '../../../src/app.module';
+import { appSettings } from '../../../src/setting';
+import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
+import { createAddUser, createBlogBlogger, createCom, createPostBlogger, createToken, getCom, updateUserByIdBan } from '../../../src/helpers/helpers';
+import { BanInputModel } from '../../../src/users/user.class';
+import { User } from '../../../src/users/entities/user.entity';
+import { UserBanViewType } from '../../../src/users/user.type';
+import { InputDataModelClassAuth } from '../../../src/auth/dto/auth.class.pipe';
+import { BodyBlogsModel } from '../../../src/blogsForSA/dto/blogs.class-pipe';
+import { bodyPostsModelClass } from '../../../src/posts/dto/posts.class.pipe';
+import { PostsViewModel } from '../../../src/posts/posts.type';
+import { BlogsViewType } from '../../../src/blogs/blogs.type';
+import { CommentViewModel } from '../../../src/comment/comment.type';
+
+export interface Content {
+	content: string
+}
+
+describe('/blogs', () => {
+	let app: INestApplication;
+	let server: any;
+	beforeAll(async () => {
+		const moduleFixture: TestingModule = await Test.createTestingModule({
+			imports: [AppModule],
+		}).compile();
+
+		app = moduleFixture.createNestApplication();
+		appSettings(app);
+		await app.init();
+		server = app.getHttpServer();
+
+		const wipeAllRes = await request(server).delete('/testing/all-data').send();
+		expect(wipeAllRes.status).toBe(HttpStatus.NO_CONTENT);
+	});
+
+	afterAll(async () => {
+		await app.close();
+	});
+
+	afterAll((done) => {
+		done();
+	});
+
+	// eslint-disable-next-line prefer-const
+	let user1Creds = {
+		login: '1Mickle',
+		password: '1qwerty',
+		email: '1mpara7473@gmail.com',
+	};
+	// eslint-disable-next-line prefer-const
+	let user2Creds = {
+		login: 'Boris',
+		password: '2qwerty',
+		email: '2mpara7473@gmail.com',
+	};
+	// eslint-disable-next-line prefer-const
+	let user3Creds = {
+		login: 'Alex',
+		password: '3qwerty',
+		email: '3mpara7473@gmail.com',
+	};
+	// eslint-disable-next-line prefer-const
+	let user4Creds = {
+		login: 'Pet',
+		password: '4qwerty',
+		email: '4mpara7473@gmail.com',
+	};
+
+	let user1Token: string;
+	let user2Token: string;
+	let user3Token: string;
+	let user4Token: string;
+
+	let connectOneAndTwo: GameTypeModel;
+	let connectThreeAndFour: GameTypeModel;
+	let connectThreeAndOne: GameTypeModel;
+
+	let requestBody: {
+		body: string;
+		correctAnswers: string[];
+	};
+	let answer: {
+		questionId: string;
+		answerStatus: string;
+		addedAt: string;
+	};
+	let firstGame: any;
+	let secondGame: any;
+	let firdGame: any;
+	let fourthGame: any;
+	let fivethGame: any;
+	let sixthGame: any;
+	let seventhGame: any;
+
+	let sendAnswerByFirstGame: any;
+	let sendAnswerBySecondGame: any;
+	let body: BanInputModel
+	let firstUser: UserBanViewType
+
+	describe('some description', () => {
+		it('creting users in db', async () => {
+			expect(server).toBeDefined();
+			firstUser = await createAddUser(server, user1Creds);
+			await createAddUser(server, user2Creds);
+			await createAddUser(server, user3Creds);
+			await createAddUser(server, user4Creds);
+		});
+
+		it('logining users in db', async () => {
+			user1Token = (
+				await createToken(server, user1Creds.login, user1Creds.password)
+			).body.accessToken;
+
+			user2Token = (
+				await createToken(server, user2Creds.login, user2Creds.password)
+			).body.accessToken;
+
+			user3Token = (
+				await createToken(server, user3Creds.login, user3Creds.password)
+			).body.accessToken;
+
+			user4Token = (
+				await createToken(server, user4Creds.login, user4Creds.password)
+			).body.accessToken;
+
+			// console.log("user1Token: ", user1Token)
+		});
+
+		it('update user by id for ban current user', async () => {
+			body = {
+				isBanned: true,
+				banReason: "ban user because is null"
+			}
+			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		})
+
+		let createBlog: BlogsViewType
+		it('create blog by blogger', async () => {
+			const requestBodyAuthLogin: BodyBlogsModel = {
+				name: "Lerning",
+				description: "skdjfksjfksjfksfj",
+				websiteUrl: `https://learn.javascript.ru`
+			}
+			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
+			// console.log("createBlog: ", createBlog)
+		})
+
+		let createPost: PostsViewModel
+		it('create post by blogId by blogger', async() => {
+			const blogId = createBlog.id
+			const inputDateModel: bodyPostsModelClass = {
+				title: "title",
+  				shortDescription: "Big content",
+  				content: "Content content content"
+				}
+			createPost = await createPostBlogger(server, blogId, inputDateModel, user1Token)
+			// console.log("createPost: ", createPost)
+		})
+		
+		let createCommnets: CommentViewModel
+		it('create comments by postId', async() => {
+			const postId = createPost.id
+			const content: Content = {
+				content: "string string string string string"
+			}
+			createCommnets = await createCom(server, postId, content, user1Token)
+			// console.log("createCommnets: ", createCommnets)
+		})
+
+		it('get comments by id', async () => {
+			const id = createCommnets.id
+			const getCommentById = await getCom(server, id)
+			console.log("getCommentById: ", getCommentById)
+		})
+	})
+})

@@ -4,6 +4,10 @@ import { UsersQueryRepository } from "../users.queryRepository";
 import { NotFoundException } from "@nestjs/common";
 import { UsersRepository } from "../users.repository";
 import { BanInputModel } from "../user.class";
+import { PostsRepository } from "../../posts/posts.repository";
+import { CommentRepository } from "../../comment/comment.repository";
+import { LikesRepository } from "../../likes/likes.repository";
+import { DeviceRepository } from "../../security-devices/security-device.repository";
 
 export class BanUnbanUserCommand {
 	constructor(
@@ -17,7 +21,11 @@ export class BanUnbanUserCommand {
 export class BanUnbanUserUseCase implements ICommandHandler<BanUnbanUserCommand> {
 	constructor(
 		protected readonly usersQueryRepository: UsersQueryRepository,
-		protected readonly usersRepository: UsersRepository
+		protected readonly usersRepository: UsersRepository,
+		private readonly postsRepository: PostsRepository,
+		private readonly commentRepository: CommentRepository,
+		private readonly likesRepository: LikesRepository,
+		private readonly deviceRepository: DeviceRepository
 	) {}
 	async execute(command: BanUnbanUserCommand): Promise<void> {
 		const findUserById = await this.usersQueryRepository.findUserById(command.id)
@@ -27,6 +35,12 @@ export class BanUnbanUserUseCase implements ICommandHandler<BanUnbanUserCommand>
 			])
 		}
 		const banUser = await this.usersRepository.banUser(command.id, command.banInputInfo)
+
+		await this.deviceRepository.deleteAllSessions(command.id);
+		await this.postsRepository.banPostByUserId(command.id, command.banInputInfo.isBanned)
+		await this.commentRepository.banComments(command.id, command.banInputInfo.isBanned);
+		await this.likesRepository.banCommentLikes(command.id, command.banInputInfo.isBanned);
+		await this.postsRepository.banPostLikes(command.id, command.banInputInfo.isBanned);
 		return 
 	}
 }

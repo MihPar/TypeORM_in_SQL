@@ -7,13 +7,13 @@ import { UsersRepository } from '../users.repository';
 import { GenerateHashAdapter } from '../../auth/adapter/generateHashAdapter';
 import { User } from '../entities/user.entity';
 import { EmailManager } from '../../auth/adapter/email.manager';
+import { log } from 'console';
 
 export class CreateNewUserCommand {
   constructor(
-	public loginDto: LoginDto,
-	public passwordDto: PasswordDto,
-	public emailDto: EmailDto,
-	// public body: InputModelClassCreateBody
+	public login: string,
+	public password: string,
+	public email: string,
 ) {}
 }
 
@@ -26,23 +26,22 @@ export class CreateNewUserUseCase implements ICommandHandler<CreateNewUserComman
   ) {}
   async execute(command: CreateNewUserCommand): Promise<UserBanViewType | null> {
     const passwordHash = await this.generateHashAdapter._generateHash(
-      command.passwordDto.password
+      command.password
     );
     const newUser = new User()
 	
-    newUser.login = command.loginDto.login
-    newUser.email = command.emailDto.email
+    newUser.login = command.login
+    newUser.email = command.email
 	newUser.createdAt = new Date()
 	newUser.passwordHash = passwordHash,
 	newUser.expirationDate = add(new Date(), {hours: 1, minutes: 10})
 	newUser.confirmationCode = uuidv4()
 	newUser.isConfirmed = false
-	newUser.isBanned = true
-	newUser.banDate = new Date().toISOString()
+	newUser.isBanned = false
+	newUser.banDate = null
 	newUser.banReason = null
 
     const user: any = await this.usersRepository.createUser(newUser);
-	
     try {
       await this.emailManager.sendEamilConfirmationMessage(
         newUser.email,
