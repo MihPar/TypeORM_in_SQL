@@ -36,6 +36,8 @@ export class UsersQueryRepository {
 			.offset((+pageNumber - 1) * +pageSize)
 			.getMany();
 
+			// console.log("user: ", users)
+
 
 		const queryBuilderTotalCount =
 			this.userRepository.createQueryBuilder('user');

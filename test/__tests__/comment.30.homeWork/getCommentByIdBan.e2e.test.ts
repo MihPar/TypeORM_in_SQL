@@ -17,6 +17,7 @@ import { PostsViewModel } from '../../../src/posts/posts.type';
 import { BlogsViewType } from '../../../src/blogs/blogs.type';
 import { CommentViewModel } from '../../../src/comment/comment.type';
 import { NewPasswordUseCase } from '../../../src/auth/useCase.ts/createNewPassword-use-case';
+import { PaginationType } from '../../../src/types/pagination.types';
 
 export interface Content {
 	content: string
@@ -131,9 +132,9 @@ describe('/blogs', () => {
 		it('creting users in db', async () => {
 			expect(server).toBeDefined();
 			firstUser = await createAddUser(server, user1Creds);
-			await createAddUser(server, user2Creds);
-			await createAddUser(server, user3Creds);
-			await createAddUser(server, user4Creds);
+			// await createAddUser(server, user2Creds);
+			// await createAddUser(server, user3Creds);
+			// await createAddUser(server, user4Creds);
 		});
 
 		it('logining users in db', async () => {
@@ -155,6 +156,26 @@ describe('/blogs', () => {
 
 			// console.log("user1Token: ", user1Token)
 		});
+		
+		/*  GET -> "/sa/users": should return status 200; content: users array with pagination; used additional methods: POST -> /sa/users, PUT -> /sa/users/:id/ban;  */
+
+		it('update user by id for ban current user', async () => {
+			// потом банишь автора
+			body = {
+				isBanned: true,
+				banReason: "ban user because is null"
+			}
+			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		})
+
+		it('get users', async () => {
+			const getUsers = await request(server)
+				.get('/sa/users')
+				.auth('admin', 'qwerty')
+			
+			console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>).items.map(item => item.banInfo))
+		})
+
 
 		
 
@@ -225,25 +246,59 @@ describe('/blogs', () => {
 			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
 		})
 
+		it('get users', async () => {
+			const getUsers = await request(server)
+				.get('/sa/users')
+				.auth('admin', 'qwerty')
+			
+			// console.log("getUsers: ", getUsers.body)
+		})
+
 		it('get ban blog', async () => {
 			const getBlog = await getBlogByUseTwo(server, createBlog.id)
-			console.log("getBlog: ", getBlog)
+			// console.log("getBlog: ", getBlog)
 		})
 
 		it('find post', async () => {
 			const getPost = await findPost(server, createPost.id)
-			console.log("findPost: ", getPost)
+			// console.log("findPost: ", getPost)
 		})
 
 		it('find comment', async() => {
 			const id = createCommnets.id
 			const getCommentById = await getCom(server, id)
-			console.log("getComment: ", getCommentById)
+			// console.log("getComment: ", getCommentById)
 		})
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента но на все 404 либо если на все блоги или посты запрос то они просто не находятся
+		it('update user by id for ban current user', async () => {
 // потом снимаешь бан с пользователя автора
+			body = {
+				isBanned: false,
+				banReason: "ban user because is null"
+			}
+			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		})
+
+
+		
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
-			
+		it('get ban blog', async () => {
+			const getBlog = await getBlogByUseTwo(server, createBlog.id)
+			// console.log("getBlog: ", getBlog)
+		})
+
+		it('find post', async () => {
+			const getPost = await findPost(server, createPost.id)
+			// console.log("findPost: ", getPost)
+		})
+
+		it('find comment', async() => {
+			const id = createCommnets.id
+			const getCommentById = await getCom(server, id)
+			// console.log("getComment: ", getCommentById)
+		})
+
+
 	})
 })

@@ -67,6 +67,8 @@ async banUnbanUser(
 		query.searchEmailTerm
     );
 
+	// console.log("users 70: ", users.items.map(item => item.banInfo))
+
 	return users
   }
 

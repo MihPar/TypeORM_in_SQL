@@ -65,6 +65,11 @@ export class inputModelPostClass {
 	postId: string
   }
 
+  export class InputModelClassId {
+	@IsUUID()
+	id: string
+  }
+
   export class InputModelContentePostClass {
 	@IsString()
 	@Trim() 

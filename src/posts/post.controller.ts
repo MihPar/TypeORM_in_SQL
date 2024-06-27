@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PaginationType } from '../types/pagination.types';
-import { InputModelClassPostId, InputModelContentePostClass } from './dto/posts.class.pipe';
+import { InputModelClassId, InputModelClassPostId, InputModelContentePostClass } from './dto/posts.class.pipe';
 import { PostsQueryRepository } from './postQuery.repository';
 import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
 import { CommandBus } from '@nestjs/cqrs';
@@ -42,12 +42,12 @@ export class PostController {
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForPost)
   async updateLikeStatus(
-	@Param() dto: InputModelClassPostId, 
+	@Param() Dto: InputModelClassPostId, 
 	@Body() status: InputModelLikeStatusClass,
 	@UserDecorator() user: User,
     @UserIdDecorator() userId: string | null,
 	) {
-	const commnad = new UpdateLikeStatusCommand(status, dto.postId, userId, user)
+	const commnad = new UpdateLikeStatusCommand(status, Dto.postId, userId, user)
 	const result = await this.commandBus.execute(commnad)
     if (!result) throw new NotFoundException('404')
 	return
@@ -57,7 +57,7 @@ export class PostController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getCommentByPostId(
-    @Param() dto: InputModelClassPostId, 
+    @Param() Dto: InputModelClassPostId, 
     @UserIdDecorator() userId: string | null,
     @UserDecorator() user: User,
     @Query()
@@ -68,11 +68,11 @@ export class PostController {
       sortDirection: string;
     }
   ) {
-    const isExistPots: PostsViewModel | boolean= await this.postsQueryRepository.getPostById(dto.postId);
+    const isExistPots: PostsViewModel | boolean= await this.postsQueryRepository.getPostById(Dto.postId);
     if (!isExistPots) throw new NotFoundException('Blogs by id not found');
     const commentByPostsId: PaginationType<CommentViewModel> | null =
       await this.commentQueryRepository.findCommentsByPostId(
-        dto.postId,
+        Dto.postId,
         (query.pageNumber || '1'),
         (query.pageSize || '10'),
         (query.sortBy || 'createdAt'),
@@ -128,18 +128,17 @@ export class PostController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostById(
-    @Param('id') id: string, 
+    @Param() Dto: InputModelClassId, 
 	@UserIdDecorator() userId: string | null,
-	@UserDecorator() user: User
   ) {
-	const findPostByBan = await this.postsRepository.findPostByIdUserId(id)
+	const findPostByBan = await this.postsRepository.findPostByIdUserId(Dto.id)
 
 	// console.log("findPostByBan: ", findPostByBan)
 
 	if(findPostByBan.isBanned) throw new NotFoundException('Post id ban');
 
     const getPostById: PostsViewModel | null =
-      await this.postsQueryRepository.findPostsById(id, userId);
+      await this.postsQueryRepository.findPostsById(Dto.id, userId);
     if (!getPostById) {
       throw new NotFoundException('Post by id not found');
     }
