@@ -62,7 +62,6 @@ const adapter = [PayloadAdapter, GenerateHashAdapter, EmailAdapter];
 const repo = [
   DeviceRepository,
   UsersQueryRepository,
-  UsersRepository,
   DeviceQueryRepository,
   AuthRepository,
   UsersRepository,

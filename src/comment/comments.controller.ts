@@ -76,15 +76,19 @@ export class CommentsController {
   @UseGuards(CheckRefreshTokenForGet)
   async getCommentById(
     @Param() Dto: inputModelId,
-    @UserDecorator() user: User,
     @UserIdDecorator() userId: string | null,
   ) {
-	const findComment = await this.commentQueryRepository.findCommentByCommentId(Dto.id)
-	if(findComment.isBanned === null) throw new NotFoundException('Blog not found, 404')
+	// console.log("try")
+	const findComment = await this.commentQueryRepository.findCommentByCommentId(Dto.id, userId)
+	// console.log("try 83")
+
+	if(findComment.isBanned) throw new NotFoundException('404')
+	// console.log("try 84")
+
     const getCommentById: CommentViewModel | null =
       await this.commentQueryRepository.findCommentById(Dto.id, userId);
-    if (!getCommentById) throw new NotFoundException('Blogs by id not found');
-	// console.log("getCommentById in 85 strict: ", getCommentById)
+    if (!getCommentById) throw new NotFoundException('Comments by id not found');
+	console.log("getCommentById in 86 strict: ", getCommentById)
     return getCommentById;
   }
 }

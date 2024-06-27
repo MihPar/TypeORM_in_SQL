@@ -51,7 +51,7 @@ import { BloggerModule } from './blogger/blogger.module';
 	QuestionModule,
 	PairQuizGameModule,
 	PairQuizGameProgressModule,
-	BloggerModule
+	BloggerModule,
   ]
 })
 export class AppModule {}

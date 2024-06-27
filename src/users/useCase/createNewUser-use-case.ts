@@ -42,14 +42,14 @@ export class CreateNewUserUseCase implements ICommandHandler<CreateNewUserComman
 	newUser.banReason = null
 
     const user: any = await this.usersRepository.createUser(newUser);
-    try {
-      await this.emailManager.sendEamilConfirmationMessage(
-        newUser.email,
-        newUser.confirmationCode
-      );
-    } catch (error) {
-      console.log(error, "error with send mail");
-    }
+    // try {
+    //   await this.emailManager.sendEamilConfirmationMessage(
+    //     newUser.email,
+    //     newUser.confirmationCode
+    //   );
+    // } catch (error) {
+    //   console.log(error, "error with send mail");
+    // }
     return User.getViewUser(user);
   }
 }

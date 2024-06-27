@@ -32,8 +32,11 @@ export class BearerTokenPairQuizGame implements CanActivate {
       throw new UnauthorizedException('401');
     }
     if (userId) {
-      const user = await this.usersQueryRepository.findUserById(userId);
-      if (user) {
+		// проверка на сессии в базе  ( добавить )
+		// поменять запрос ниже на нахождение пользователя по айди вместе со всеми его сессиями 
+		// users JOIN devices
+      const user = await this.usersQueryRepository.findUserAndDevicesById(userId);
+      if (user && !user.isBanned) {
         req['user'] = user;
         return true;
       }

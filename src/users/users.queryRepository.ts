@@ -28,8 +28,8 @@ export class UsersQueryRepository {
 		const users = await this.userRepository
 			.createQueryBuilder('user')
 			.select(['user'])
-			.where('user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm', { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
-			.andWhere(`"banStatus" = :banStatus`, {banStatus})
+			.where('(user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm)', { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
+			.andWhere(banStatus !== BanStatus.all ? `"isBanned" = :isBanned` : "", {isBanned: banStatus === BanStatus.banned })		
 			.orderBy(`"user"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)
@@ -120,6 +120,21 @@ export class UsersQueryRepository {
 			.createQueryBuilder("user")
 			.select("user")
 			.where("user.id = :id", { id })
+			.getOne()
+
+		// const sqlRequest = user.getSql()
+		// await writeSql(sqlRequest)
+
+		return user;
+	}
+
+	async findUserAndDevicesById(id: string): Promise<User | null> {
+		let user: User | null = await this.userRepository
+			.createQueryBuilder("user")
+			.select("user")
+			//.leftJoinAndSelect("device", "d")
+			.where("user.id = :id", { id })
+			// .andWhere("d.")
 			.getOne()
 
 		// const sqlRequest = user.getSql()

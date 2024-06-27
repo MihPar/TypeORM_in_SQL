@@ -16,6 +16,7 @@ import { bodyPostsModelClass } from '../../../src/posts/dto/posts.class.pipe';
 import { PostsViewModel } from '../../../src/posts/posts.type';
 import { BlogsViewType } from '../../../src/blogs/blogs.type';
 import { CommentViewModel } from '../../../src/comment/comment.type';
+import { NewPasswordUseCase } from '../../../src/auth/useCase.ts/createNewPassword-use-case';
 
 export interface Content {
 	content: string
@@ -25,9 +26,33 @@ describe('/blogs', () => {
 	let app: INestApplication;
 	let server: any;
 	beforeAll(async () => {
+		// const fooMock = () => {
+		// 	sendMessage: jest.fn().mockImplementation(async () => {
+		// 	  console.log('Call mock create new password');
+		// 	  return true;
+		// 	});
+		//   };
+
+		// class MockClass {
+		// 	constructor(
+		// 		private newPasswordUseCase: NewPasswordUseCase
+		// 	) {}
+		// 	sendMessage: () => true
+		// }
+
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [AppModule],
-		}).compile();
+		})
+		// .overrideProvider(NewPasswordUseCase)
+		// //   .useValue(fooMock)
+		// //   .useClass(MockClass)
+		//   .useFactory({
+		// 	factory: (userCase: NewPasswordUseCase) => {
+		// 		return new MockClass(userCase)
+		// 	},
+		// 	inject: [NewPasswordUseCase]
+		//   })
+		.compile();
 
 		app = moduleFixture.createNestApplication();
 		appSettings(app);
@@ -131,13 +156,7 @@ describe('/blogs', () => {
 			// console.log("user1Token: ", user1Token)
 		});
 
-		it('update user by id for ban current user', async () => {
-			body = {
-				isBanned: true,
-				banReason: "ban user because is null"
-			}
-			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
-		})
+		
 
 		let createBlog: BlogsViewType
 		it('create blog by blogger', async () => {
@@ -147,7 +166,7 @@ describe('/blogs', () => {
 				websiteUrl: `https://learn.javascript.ru`
 			}
 			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
-			// console.log("createBlog: ", createBlog)
+			 console.log("createBlog: ", createBlog)
 		})
 
 		let createPost: PostsViewModel
@@ -159,23 +178,41 @@ describe('/blogs', () => {
   				content: "Content content content"
 				}
 			createPost = await createPostBlogger(server, blogId, inputDateModel, user1Token)
-			// console.log("createPost: ", createPost)
+			 console.log("createPost: ", createPost)
 		})
 		
 		let createCommnets: CommentViewModel
 		it('create comments by postId', async() => {
 			const postId = createPost.id
+
 			const content: Content = {
 				content: "string string string string string"
 			}
 			createCommnets = await createCom(server, postId, content, user1Token)
-			// console.log("createCommnets: ", createCommnets)
+			console.log("createCommnets: ", createCommnets)
 		})
 
 		it('get comments by id', async () => {
 			const id = createCommnets.id
+			console.log(id, "id in test")
 			const getCommentById = await getCom(server, id)
 			console.log("getCommentById: ", getCommentById)
 		})
+
+		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
+			
+		it('update user by id for ban current user', async () => {
+			// потом банишь автора
+			body = {
+				isBanned: true,
+				banReason: "ban user because is null"
+			}
+			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		})
+
+		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента но на все 404 либо если на все блоги или посты запрос то они просто не находятся
+// потом снимаешь бан с пользователя автора
+		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
+			
 	})
 })
