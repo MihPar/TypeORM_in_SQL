@@ -28,8 +28,9 @@ export class UsersQueryRepository {
 		const users = await this.userRepository
 			.createQueryBuilder('user')
 			.select(['user'])
-			.where('(user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm)', { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
-			.andWhere(banStatus !== BanStatus.all ? `"isBanned" = :isBanned` : "", {isBanned: banStatus === BanStatus.banned })		
+			.where('user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm', { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
+			.andWhere(`"banStatus" = :banStatus`, {banStatus})
+			// .andWhere(banStatus !== BanStatus.all ? `"isBanned" = :isBanned` : "", {isBanned: banStatus === BanStatus.banned })		
 			.orderBy(`"user"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)

@@ -25,7 +25,7 @@ export class CommentQueryRepository {
 			.select()
 			.where(`id = :commentId`, {commentId})
 			.getOne()
-console.log("find 28: ", findCommentById)
+// console.log("find 28: ", findCommentById)
 // console.log("find 29: ",)
 			const commentLikeStatus = await this.likeForCommentRepository
 			.createQueryBuilder()

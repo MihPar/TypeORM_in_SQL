@@ -166,7 +166,7 @@ describe('/blogs', () => {
 				websiteUrl: `https://learn.javascript.ru`
 			}
 			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
-			 console.log("createBlog: ", createBlog)
+			//  console.log("createBlog: ", createBlog)
 		})
 
 		let createPost: PostsViewModel
@@ -178,7 +178,7 @@ describe('/blogs', () => {
   				content: "Content content content"
 				}
 			createPost = await createPostBlogger(server, blogId, inputDateModel, user1Token)
-			 console.log("createPost: ", createPost)
+			//  console.log("createPost: ", createPost)
 		})
 		
 		let createCommnets: CommentViewModel
@@ -194,9 +194,9 @@ describe('/blogs', () => {
 
 		it('get comments by id', async () => {
 			const id = createCommnets.id
-			console.log(id, "id in test")
+			// console.log(id, "id in test")
 			const getCommentById = await getCom(server, id)
-			console.log("getCommentById: ", getCommentById)
+			// console.log("getCommentById: ", getCommentById)
 		})
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
