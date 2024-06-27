@@ -2,9 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { Blogs } from "./entity/blogs.entity";
+import { BanInputModel } from "../users/user.class";
 
 @Injectable()
 export class BlogsRepository {
+	
+	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>
 	) {}
@@ -37,6 +40,30 @@ export class BlogsRepository {
 	if(!getBinBlog) throw new Error('does not update blogs by bind')
 	return getBinBlog
 }
+
+async findBlogById(id: any): Promise<Blogs | null> {
+	const getBlog = await this.blogsRepository
+		.createQueryBuilder()
+		.where("id = :id", {id})
+		.getOne()
+		return getBlog
+}
+
+async banBlogByUserId(id: string, ban: boolean) {
+	const postBanned = await this.blogsRepository.update(
+		{ userId: id },
+		{
+		  isBanned: ban,
+		},
+	  );
+  
+	  return (
+		postBanned.affected !== null &&
+		postBanned.affected !== undefined &&
+		postBanned.affected > 0
+	  );
+}
+
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
 // 	try {
 // 		const result = await this.blogModel.create(newBlog);

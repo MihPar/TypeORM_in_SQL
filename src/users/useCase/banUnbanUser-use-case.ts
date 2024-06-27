@@ -8,6 +8,7 @@ import { PostsRepository } from "../../posts/posts.repository";
 import { CommentRepository } from "../../comment/comment.repository";
 import { LikesRepository } from "../../likes/likes.repository";
 import { DeviceRepository } from "../../security-devices/security-device.repository";
+import { BlogsRepository } from "../../blogs/blogs.repository";
 
 export class BanUnbanUserCommand {
 	constructor(
@@ -25,7 +26,8 @@ export class BanUnbanUserUseCase implements ICommandHandler<BanUnbanUserCommand>
 		private readonly postsRepository: PostsRepository,
 		private readonly commentRepository: CommentRepository,
 		private readonly likesRepository: LikesRepository,
-		private readonly deviceRepository: DeviceRepository
+		private readonly deviceRepository: DeviceRepository,
+		private readonly blogsRepository: BlogsRepository
 	) {}
 	async execute(command: BanUnbanUserCommand): Promise<void> {
 		const findUserById = await this.usersQueryRepository.findUserById(command.id)
@@ -37,6 +39,7 @@ export class BanUnbanUserUseCase implements ICommandHandler<BanUnbanUserCommand>
 		const banUser = await this.usersRepository.banUser(command.id, command.banInputInfo)
 
 		await this.deviceRepository.deleteAllSessions(command.id);
+		await this.blogsRepository.banBlogByUserId(command.id, command.banInputInfo.isBanned)
 		await this.postsRepository.banPostByUserId(command.id, command.banInputInfo.isBanned)
 		await this.commentRepository.banComments(command.id, command.banInputInfo.isBanned);
 		await this.likesRepository.banCommentLikes(command.id, command.banInputInfo.isBanned);

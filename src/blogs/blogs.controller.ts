@@ -7,6 +7,7 @@ import { CheckRefreshTokenForGet } from './use-case/bearer.authGetComment';
 import { UserDecorator, UserIdDecorator } from '../users/infrastructure/decorators/decorator.user';
 import { PostsQueryRepository } from "../posts/postQuery.repository";
 import { User } from "../users/entities/user.entity";
+import { BlogsRepository } from "./blogs.repository";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -14,6 +15,7 @@ export class BlogsController {
   constructor(
     protected blogsQueryRepository: BlogsQueryRepository,
     protected postsQueryRepository: PostsQueryRepository,
+	protected readonly blogsRepository: BlogsRepository
   ) {}
 
   @Get()
@@ -43,7 +45,7 @@ export class BlogsController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostsByBlogId(
-    @Param() dto: inputModelClass,
+    @Param() Dto: inputModelClass,
 	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string | null,
     @Query()
@@ -59,7 +61,7 @@ export class BlogsController {
 	query.sortBy = query.sortBy || 'createdAt'
 	query.sortDirection = query.sortDirection || "desc"
 
-    const blog = await this.blogsQueryRepository.findBlogById(dto.blogId);
+    const blog = await this.blogsQueryRepository.findBlogById(Dto.blogId);
     if (!blog) throw new NotFoundException('Blogs by id not found');
     const getPosts =
       await this.postsQueryRepository.findPostsByBlogsId(
@@ -67,7 +69,7 @@ export class BlogsController {
         query.pageSize,
         query.sortBy,
         query.sortDirection,
-        dto.blogId,
+        Dto.blogId,
 		userId
       );
     if (!getPosts) throw new NotFoundException('Blogs by id not found');
@@ -77,10 +79,15 @@ export class BlogsController {
   @Get(':blogId')
   @HttpCode(200)
   async getBlogsById(
-    @Param() dto: inputModelClass,
+    @Param() Dto: inputModelClass,
   ): Promise<BlogsViewType | null> {
+	const findBlog = await this.blogsRepository.findBlogById(Dto.blogId)
+
+	// console.log("findBlog: ", findBlog)
+	if(findBlog.isBanned) throw new NotFoundException('404')
+
     const blogById: BlogsViewType | null =
-      await this.blogsQueryRepository.findBlogById(dto.blogId);
+      await this.blogsQueryRepository.findBlogById(Dto.blogId);
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');
     return blogById;
   }

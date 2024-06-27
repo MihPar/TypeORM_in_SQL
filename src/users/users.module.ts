@@ -24,11 +24,10 @@ import { Posts } from '../posts/entity/entity.posts';
 import { CommentRepository } from '../comment/comment.repository';
 import { Comments } from '../comment/entity/comment.entity';
 import { LikesRepository } from '../likes/likes.repository';
-import { Like } from 'typeorm';
-import { LikeStatusEnum } from '../likes/likes.emun';
 import { LikeForComment } from '../likes/entity/likesForComment.entity';
 import { LikeForPost } from '../likes/entity/likesForPost.entity';
 import { DeviceRepository } from '../security-devices/security-device.repository';
+import { BlogsRepository } from '../blogs/blogs.repository';
 
 const userCase = [
   CreateNewUserUseCase,
@@ -47,7 +46,8 @@ const repo = [
   PostsRepository,
   CommentRepository,
   LikesRepository,
-  DeviceRepository
+  DeviceRepository,
+  BlogsRepository
 ];
 
 const adapter = [GenerateHashAdapter, EmailAdapter];

@@ -25,6 +25,7 @@ import { User } from '../users/entities/user.entity';
 import { UpdateLikeStatusCommand } from './use-case/updateLikeStatus-use-case';
 import { CommentViewModel } from '../comment/comment.type';
 import { CreateNewCommentByPostIdCommnad } from '../comment/use-case/createNewCommentByPotsId-use-case';
+import { PostsRepository } from './posts.repository';
 
 // @SkipThrottle()
 @Controller('posts')
@@ -33,6 +34,7 @@ export class PostController {
     protected postsQueryRepository: PostsQueryRepository,
     protected blogsQueryRepository: BlogsQueryRepository,
 	protected commentQueryRepository: CommentQueryRepository,
+	protected postsRepository: PostsRepository,
 	protected commandBus: CommandBus
   ) {}
 
@@ -130,6 +132,12 @@ export class PostController {
 	@UserIdDecorator() userId: string | null,
 	@UserDecorator() user: User
   ) {
+	const findPostByBan = await this.postsRepository.findPostByIdUserId(id)
+
+	// console.log("findPostByBan: ", findPostByBan)
+
+	if(findPostByBan.isBanned) throw new NotFoundException('Post id ban');
+
     const getPostById: PostsViewModel | null =
       await this.postsQueryRepository.findPostsById(id, userId);
     if (!getPostById) {

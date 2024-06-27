@@ -35,6 +35,7 @@ export class CreateNewPostForBlogBloggerUseCase
       newPost.content = command.inputDataModel.content,
       newPost.blogId = command.blogId,
       newPost.blogName = findBlog.name,
+	  newPost.userId = command.userId,
       0, 0
 
 	  const createPost: any = await this.postsRepository.createNewPosts(newPost)

@@ -6,7 +6,7 @@ import { delay } from 'rxjs';
 import { AppModule } from '../../../src/app.module';
 import { appSettings } from '../../../src/setting';
 import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
-import { createAddUser, createBlogBlogger, createCom, createPostBlogger, createToken, getCom, updateUserByIdBan } from '../../../src/helpers/helpers';
+import { createAddUser, createBlogBlogger, createCom, createPostBlogger, createToken, findPost, getBlogByUseTwo, getCom, updateUserByIdBan } from '../../../src/helpers/helpers';
 import { BanInputModel } from '../../../src/users/user.class';
 import { User } from '../../../src/users/entities/user.entity';
 import { UserBanViewType } from '../../../src/users/user.type';
@@ -189,17 +189,32 @@ describe('/blogs', () => {
 				content: "string string string string string"
 			}
 			createCommnets = await createCom(server, postId, content, user1Token)
-			console.log("createCommnets: ", createCommnets)
+			// console.log("createCommnets: ", createCommnets)
 		})
 
 		it('get comments by id', async () => {
 			const id = createCommnets.id
-			// console.log(id, "id in test")
 			const getCommentById = await getCom(server, id)
-			// console.log("getCommentById: ", getCommentById)
 		})
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
+
+		it('find blog, and return status 200', async() => {
+			const getBlog = await getBlogByUseTwo(server, createBlog.id)
+			// console.log("getBlog: ", getBlog)
+		})
+
+		it('find post', async () => {
+			const getPost = await findPost(server, createPost.id)
+			// console.log("findPost: ", getPost)
+		})
+
+		it('find comment', async() => {
+			const id = createCommnets.id
+			const getCommentById = await getCom(server, id)
+			// console.log("getComment: ", getCommentById)
+		})
+
 			
 		it('update user by id for ban current user', async () => {
 			// потом банишь автора
@@ -208,6 +223,22 @@ describe('/blogs', () => {
 				banReason: "ban user because is null"
 			}
 			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		})
+
+		it('get ban blog', async () => {
+			const getBlog = await getBlogByUseTwo(server, createBlog.id)
+			console.log("getBlog: ", getBlog)
+		})
+
+		it('find post', async () => {
+			const getPost = await findPost(server, createPost.id)
+			console.log("findPost: ", getPost)
+		})
+
+		it('find comment', async() => {
+			const id = createCommnets.id
+			const getCommentById = await getCom(server, id)
+			console.log("getComment: ", getCommentById)
 		})
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента но на все 404 либо если на все блоги или посты запрос то они просто не находятся

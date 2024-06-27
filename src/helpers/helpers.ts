@@ -108,6 +108,17 @@ export const getCom = async(server: any, id: string) => {
 	return getCommentsById.body
 }
 
+export const getBlogByUseTwo = async(server: any, id: string) => {
+	const getBlog = await request(server).get(`/blogs/${id}`)
+	return getBlog.body
+}
+
+export const findPost = async(server: any, id: string) => {
+	const findPost = await request(server).get(`/posts/${id}`)
+	// console.log("findPost: ", findPost.body)
+	return findPost.body
+}
+
 export const aDescribe = (skip: boolean): jest.Describe => {
 	if (skip) {
 		return describe.skip;
