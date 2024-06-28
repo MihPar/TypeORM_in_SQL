@@ -119,6 +119,17 @@ export const findPost = async(server: any, id: string) => {
 	return findPost.body
 }
 
+export const findSABlog = async(server: any) => {
+	const findBlog = await request(server).get('/sa/blogs').query({
+		searchNameTerm: "",
+		sortBy: "createdAt",
+		sortDirection: 'desc',
+		pageNumber: '1',
+		pageSize: '10'
+	}).auth('admin', 'qwerty')
+	return findBlog.body
+}
+
 export const aDescribe = (skip: boolean): jest.Describe => {
 	if (skip) {
 		return describe.skip;
