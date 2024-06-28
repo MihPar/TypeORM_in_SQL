@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, Put, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, ParseUUIDPipe, Put, UseGuards, ValidationPipe } from '@nestjs/common';
 import { CommentQueryRepository } from './comment.queryRepository';
 import { CommentViewModel } from './comment.type';
 import { InputModelContent, InputModelLikeStatusClass, inputModelCommentId, inputModelId } from './dto/comment.class-pipe';
@@ -28,7 +28,6 @@ export class CommentsController {
   async updateByCommentIdLikeStatus(
     @Body() status: InputModelLikeStatusClass,
     @Param() dto: inputModelCommentId,
-    @UserDecorator() user: User,
     @UserIdDecorator() userId: string,
   ) {
 	const command = new UpdateLikestatusCommand(status, dto.commentId, userId)
@@ -43,7 +42,6 @@ export class CommentsController {
   async updataCommetById(
 	@Param() id: inputModelCommentId, 
 	@Body() Dto: InputModelContent,
-	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string,
 	) {
     const isExistComment: Comments | null = await this.commentQueryRepository.findCommentByCommentId(id.commentId);
@@ -75,17 +73,19 @@ export class CommentsController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getCommentById(
-    @Param() Dto: inputModelId,
+    @Param('id', ParseUUIDPipe) id: string,
     @UserIdDecorator() userId: string | null,
   ) {
-	const findComment = await this.commentQueryRepository.findCommentByCommentId(Dto.id)
+	// console.log("try")
+	// console.log("id: ", id)
+	const findComment = await this.commentQueryRepository.findCommentByCommentId(id)
 
 	if(findComment.isBanned) throw new NotFoundException('404')
 
     const getCommentById: CommentViewModel | null =
-      await this.commentQueryRepository.findCommentById(Dto.id, userId);
+      await this.commentQueryRepository.findCommentById(id, userId);
     if (!getCommentById) throw new NotFoundException('Comments by id not found');
-	// console.log("getCommentById in 86 strict: ", getCommentById)
+	console.log("getCommentById in 86 strict: ", getCommentById)
     return getCommentById;
   }
 }

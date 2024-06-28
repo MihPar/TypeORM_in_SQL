@@ -55,7 +55,7 @@ export class SecurityDeviceController {
 
   @Delete(':deviceId')
   @HttpCode(204)
-  @SkipThrottle({default: true})
+//   @SkipThrottle({default: true})
   @UseGuards(CheckRefreshToken, ForbiddenCalss)
   async terminateSessionById(@Param('deviceId') deviceId: string) {
 	const deleteDeviceById = await this.deviceRepository.terminateSession(deviceId);

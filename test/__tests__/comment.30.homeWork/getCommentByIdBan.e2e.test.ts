@@ -132,7 +132,7 @@ describe('/blogs', () => {
 		it('creting users in db', async () => {
 			expect(server).toBeDefined();
 			firstUser = await createAddUser(server, user1Creds);
-			// await createAddUser(server, user2Creds);
+			await createAddUser(server, user2Creds);
 			// await createAddUser(server, user3Creds);
 			// await createAddUser(server, user4Creds);
 		});
@@ -168,15 +168,13 @@ describe('/blogs', () => {
 			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
 		})
 
-		it('get users', async () => {
-			const getUsers = await request(server)
-				.get('/sa/users')
-				.auth('admin', 'qwerty')
+		// it('get users', async () => {
+		// 	const getUsers = await request(server)
+		// 		.get('/sa/users')
+		// 		.auth('admin', 'qwerty')
 			
-			console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>).items.map(item => item.banInfo))
-		})
-
-
+		// 	// console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>).items.map(item => item.banInfo))
+		// })
 		
 
 		let createBlog: BlogsViewType
@@ -193,6 +191,7 @@ describe('/blogs', () => {
 		let createPost: PostsViewModel
 		it('create post by blogId by blogger', async() => {
 			const blogId = createBlog.id
+			// console.log("blogId: ", blogId)
 			const inputDateModel: bodyPostsModelClass = {
 				title: "title",
   				shortDescription: "Big content",
@@ -205,6 +204,7 @@ describe('/blogs', () => {
 		let createCommnets: CommentViewModel
 		it('create comments by postId', async() => {
 			const postId = createPost.id
+			// console.log("postId: ", postId)
 
 			const content: Content = {
 				content: "string string string string string"
@@ -215,89 +215,91 @@ describe('/blogs', () => {
 
 		it('get comments by id', async () => {
 			const id = createCommnets.id
+			// console.log("id: ", id)
 			const getCommentById = await getCom(server, id)
+			// console.log("getCommentById: ", getCommentById)
 		})
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
 
-		it('find blog, and return status 200', async() => {
-			const getBlog = await getBlogByUseTwo(server, createBlog.id)
-			// console.log("getBlog: ", getBlog)
-		})
+		// it('find blog, and return status 200', async() => {
+		// 	const getBlog = await getBlogByUseTwo(server, createBlog.id)
+		// 	// console.log("getBlog: ", getBlog)
+		// })
 
-		it('find post', async () => {
-			const getPost = await findPost(server, createPost.id)
-			// console.log("findPost: ", getPost)
-		})
+		// it('find post', async () => {
+		// 	const getPost = await findPost(server, createPost.id)
+		// 	// console.log("findPost: ", getPost)
+		// })
 
-		it('find comment', async() => {
-			const id = createCommnets.id
-			const getCommentById = await getCom(server, id)
-			// console.log("getComment: ", getCommentById)
-		})
+		// it('find comment', async() => {
+		// 	const id = createCommnets.id
+		// 	const getCommentById = await getCom(server, id)
+		// 	// console.log("getComment: ", getCommentById)
+		// })
 
 			
-		it('update user by id for ban current user', async () => {
-			// потом банишь автора
-			body = {
-				isBanned: true,
-				banReason: "ban user because is null"
-			}
-			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
-		})
+// 		it('update user by id for ban current user', async () => {
+// 			// потом банишь автора
+// 			body = {
+// 				isBanned: true,
+// 				banReason: "ban user because is null"
+// 			}
+// 			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+// 		})
 
-		it('get users', async () => {
-			const getUsers = await request(server)
-				.get('/sa/users')
-				.auth('admin', 'qwerty')
+// 		it('get users', async () => {
+// 			const getUsers = await request(server)
+// 				.get('/sa/users')
+// 				.auth('admin', 'qwerty')
 			
-			// console.log("getUsers: ", getUsers.body)
-		})
+// 			// console.log("getUsers: ", getUsers.body)
+// 		})
 
-		it('get ban blog', async () => {
-			const getBlog = await getBlogByUseTwo(server, createBlog.id)
-			// console.log("getBlog: ", getBlog)
-		})
+// 		it('get ban blog', async () => {
+// 			const getBlog = await getBlogByUseTwo(server, createBlog.id)
+// 			// console.log("getBlog: ", getBlog)
+// 		})
 
-		it('find post', async () => {
-			const getPost = await findPost(server, createPost.id)
-			// console.log("findPost: ", getPost)
-		})
+// 		it('find post', async () => {
+// 			const getPost = await findPost(server, createPost.id)
+// 			// console.log("findPost: ", getPost)
+// 		})
 
-		it('find comment', async() => {
-			const id = createCommnets.id
-			const getCommentById = await getCom(server, id)
-			// console.log("getComment: ", getCommentById)
-		})
+// 		it('find comment by id', async() => {
+// 			const id = createCommnets.id
+// 			const getCommentById = await getCom(server, id)
+// 			// console.log("getComment: ", getCommentById)
+// 		})
 
-		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента но на все 404 либо если на все блоги или посты запрос то они просто не находятся
-		it('update user by id for ban current user', async () => {
-// потом снимаешь бан с пользователя автора
-			body = {
-				isBanned: false,
-				banReason: "ban user because is null"
-			}
-			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
-		})
+// 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента но на все 404 либо если на все блоги или посты запрос то они просто не находятся
+// 		it('update user by id for ban current user', async () => {
+// // потом снимаешь бан с пользователя автора
+// 			body = {
+// 				isBanned: false,
+// 				banReason: "ban user because is null"
+// 			}
+// 			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+// 		})
 
 
 		
-		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
-		it('get ban blog', async () => {
-			const getBlog = await getBlogByUseTwo(server, createBlog.id)
-			// console.log("getBlog: ", getBlog)
-		})
+// 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
+// 		it('get ban blog', async () => {
+// 			const getBlog = await getBlogByUseTwo(server, createBlog.id)
+// 			// console.log("getBlog: ", getBlog)
+// 		})
 
-		it('find post', async () => {
-			const getPost = await findPost(server, createPost.id)
-			// console.log("findPost: ", getPost)
-		})
+// 		it('find post', async () => {
+// 			const getPost = await findPost(server, createPost.id)
+// 			// console.log("findPost: ", getPost)
+// 		})
 
-		it('find comment', async() => {
-			const id = createCommnets.id
-			const getCommentById = await getCom(server, id)
-			// console.log("getComment: ", getCommentById)
-		})
+// 		it('find comment', async() => {
+// 			const id = createCommnets.id
+// 			const getCommentById = await getCom(server, id)
+// 			// console.log("getComment: ", getCommentById)
+// 		})
 
 
 	})
