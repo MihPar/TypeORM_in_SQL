@@ -177,6 +177,15 @@ describe('/blogs', () => {
 		it('get users', async () => {
 			const getUsers = await request(server)
 				.get('/sa/users')
+				.query({
+					banStatus: 'all' || 'banned' || 'notBanned',
+					searchLoginTerm: "",
+					searchEmailTerm: "",
+					sortBy: "createdAt",
+					sortDirection: 'desc',
+					pageNumber: '1',
+					pageSize: '10'
+				})
 				.auth('admin', 'qwerty')
 			
 			console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>)

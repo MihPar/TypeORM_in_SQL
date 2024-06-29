@@ -59,6 +59,7 @@ async banUnbanUser(
     //   searchEmailTerm: string;
     // },
   ):  Promise<PaginationType<UserBanViewType>> {
+	console.log('try')
 	if (!banStatus) {
 		banStatus = 'all';
 	  }
