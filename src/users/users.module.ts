@@ -28,6 +28,7 @@ import { LikeForComment } from '../likes/entity/likesForComment.entity';
 import { LikeForPost } from '../likes/entity/likesForPost.entity';
 import { DeviceRepository } from '../security-devices/security-device.repository';
 import { BlogsRepository } from '../blogs/blogs.repository';
+import { GetAllUsersUseCase } from './useCase/getAllUsers-use-case';
 
 const userCase = [
   CreateNewUserUseCase,
@@ -36,7 +37,8 @@ const userCase = [
   RegistrationConfirmationUseCase,
   RegistrationUseCase,
   RegistrationEmailResendingUseCase,
-  BanUnbanUserUseCase
+  BanUnbanUserUseCase,
+  GetAllUsersUseCase
 ];
 
 const repo = [

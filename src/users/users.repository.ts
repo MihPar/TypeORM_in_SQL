@@ -10,10 +10,12 @@ import { BanInputModel } from './user.class';
 import { UserBanViewType, UserViewType } from './user.type';
 import { PostsRepository } from '../posts/posts.repository';
 import { strict } from 'assert';
+import { PaginationType } from '../types/pagination.types';
 
 @Injectable()
 export class UsersRepository {
-
+	
+	
 	constructor(
 		@InjectRepository(User) protected readonly userRepository: Repository<User>,
 		protected readonly usersQueryRepository: UsersQueryRepository,
@@ -181,5 +183,124 @@ export class UsersRepository {
 			banUser.affected > 0
 		  );
 	}
+
+	async findAllUsers(
+		searchLoginTerm: string | null,
+		searchEmailTerm: string | null,
+		sortBy: string,
+		sortDirection: 'asc' | 'desc',
+		pageSize: string,
+		pageNumber: string,
+	  ): Promise<PaginationType<UserBanViewType>> {
+		const queryBuilder = this.userRepository
+		  .createQueryBuilder('UserTrm')
+		  .where(
+			`${
+			  searchLoginTerm
+				? 'UserTrm.login ilike :searchLoginTerm'
+				: 'UserTrm.login is not null'
+			}`,
+			{ searchLoginTerm: `%${searchLoginTerm}%` },
+		  )
+		  .orWhere(
+			`${
+			  searchEmailTerm
+				? 'UserTrm.email ilike :searchEmailTerm'
+				: 'UserTrm.email is not null'
+			}`,
+			{ searchEmailTerm: `%${searchEmailTerm}%` },
+		  )
+		  .orderBy(
+			'UserTrm.' + sortBy,
+			sortDirection.toUpperCase() as 'ASC' | 'DESC',
+		  )
+		  .take(+pageSize)
+		  .skip((+pageNumber - 1) * +pageSize);
+	
+		const users = await queryBuilder.getMany();
+		const totalCountQuery = await queryBuilder.getCount();
+	
+		const items = users.map(
+			(user: User): UserBanViewType => {
+				return {
+				id: user.id,
+				login: user.login,
+				email: user.email,
+				createdAt: user.createdAt,
+				banInfo: {
+					isBanned: user.isBanned,
+					banDate: user.isBanned ? user.banDate : null,
+					banReason: user.isBanned ? user.banReason : null,
+				},
+				};
+		  });
+	
+		return {
+		  pagesCount: Math.ceil(totalCountQuery / +pageSize),
+		  page: +pageNumber,
+		  pageSize: +pageSize,
+		  totalCount: totalCountQuery,
+		  items,
+		};
+	  }
+
+	  async findBannedUsers(
+		banStatus: boolean,
+		searchLoginTerm: string | null,
+		searchEmailTerm: string | null,
+		sortBy: string,
+		sortDirection: 'asc' | 'desc',
+		pageSize: string,
+		pageNumber: string,
+	  ): Promise<PaginationType<UserBanViewType>> {
+		console.log(banStatus, 'status repo');
+	
+		const queryBuilder = this.userRepository
+		  .createQueryBuilder('UserTrm')
+		  .where('UserTrm.isBanned =:status', { status: banStatus })
+		  .andWhere(
+			`${
+			  searchLoginTerm || searchEmailTerm
+				? 'UserTrm.login ilike :searchLoginTerm OR UserTrm.email ilike :searchEmailTerm'
+				: 'UserTrm.login is not null'
+			}`,
+			{
+			  searchLoginTerm: `%${searchLoginTerm}%`,
+			  searchEmailTerm: `%${searchEmailTerm}%`,
+			},
+		  )
+	
+		  .orderBy(
+			'UserTrm.' + sortBy,
+			sortDirection.toUpperCase() as 'ASC' | 'DESC',
+		  )
+		  .take(+pageSize)
+		  .skip((+pageNumber - 1) * +pageSize);
+	
+		const users = await queryBuilder.getMany();
+		const totalCountQuery = await queryBuilder.getCount();
+	
+		const items = users.map((user: User): UserBanViewType => {
+			return {
+			id: user.id,
+			login: user.login,
+			email: user.email,
+			createdAt: user.createdAt,
+			banInfo: {
+				isBanned: user.isBanned,
+				banDate: user.isBanned ? user.banDate : null,
+				banReason: user.isBanned ? user.banReason : null,
+			},
+			};
+	  });
+	
+		return {
+		  pagesCount: Math.ceil(totalCountQuery / +pageSize),
+		  page: +pageNumber,
+		  pageSize: +pageSize,
+		  totalCount: totalCountQuery,
+		  items,
+		};
+	  }
 
 }

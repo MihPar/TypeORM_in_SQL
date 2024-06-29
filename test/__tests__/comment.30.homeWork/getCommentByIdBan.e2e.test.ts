@@ -179,7 +179,10 @@ describe('/blogs', () => {
 				.get('/sa/users')
 				.auth('admin', 'qwerty')
 			
-			console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>).items.map(item => item.banInfo))
+			console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>)
+			// .items
+			// .map(item => item.banInfo)
+		)
 		})
 		
 
