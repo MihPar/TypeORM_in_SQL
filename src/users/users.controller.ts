@@ -116,7 +116,7 @@ async banUnbanUser(
 			pageSize,
 			pageNumber,
 		  ),
-		);
+		)
 	  } else {
 		console.log(banStatus, 'status controller not all');
 		return await this.commandBus.execute(
@@ -129,7 +129,7 @@ async banUnbanUser(
 			pageSize,
 			pageNumber,
 		  ),
-		);
+		)
 	}
 	// 	query.banStatus = query.banStatus || BanStatus.all
 	// 	query.sortBy = query.sortBy || 'createdAt'

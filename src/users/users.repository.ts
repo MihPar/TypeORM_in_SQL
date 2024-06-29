@@ -282,15 +282,15 @@ export class UsersRepository {
 	
 		const items = users.map((user: User): UserBanViewType => {
 			return {
-			id: user.id,
-			login: user.login,
-			email: user.email,
-			createdAt: user.createdAt,
-			banInfo: {
-				isBanned: user.isBanned,
-				banDate: user.isBanned ? user.banDate : null,
-				banReason: user.isBanned ? user.banReason : null,
-			},
+				id: user.id,
+				login: user.login,
+				email: user.email,
+				createdAt: user.createdAt,
+				banInfo: {
+					isBanned: user.isBanned,
+					banDate: user.isBanned ? user.banDate : null,
+					banReason: user.isBanned ? user.banReason : null,
+				},
 			};
 	  });
 	
