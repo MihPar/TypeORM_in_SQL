@@ -106,7 +106,7 @@ async banUnbanUser(
 	  }
   
 	  if (banStatus === 'all') {
-		console.log(banStatus, 'status controller all ');
+		// console.log(banStatus, 'status controller all ');
 		return await this.commandBus.execute(
 		  new GetAllUsersCommand(
 			searchLoginTerm,
@@ -118,7 +118,7 @@ async banUnbanUser(
 		  ),
 		)
 	  } else {
-		console.log(banStatus, 'status controller not all');
+		// console.log(banStatus, 'status controller not all');
 		return await this.commandBus.execute(
 		  new GetBannedUsersCommand(
 			banStatus,
