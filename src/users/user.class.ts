@@ -84,7 +84,7 @@ export class BanInputModel {
 
 	@IsString()
 	@Trim()
-	@MinLength(6)
+	@MinLength(20)
 	@IsNotEmpty()
 	banReason: string
 }

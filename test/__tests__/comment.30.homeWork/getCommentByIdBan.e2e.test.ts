@@ -159,14 +159,14 @@ describe('/blogs', () => {
 		
 		/*  GET -> "/sa/users": should return status 200; content: users array with pagination; used additional methods: POST -> /sa/users, PUT -> /sa/users/:id/ban;  */
 
-		// it('update user by id for ban current user', async () => {
-		// 	// потом банишь автора
-		// 	body = {
-		// 		isBanned: true,
-		// 		banReason: "ban user because is null"
-		// 	}
-		// 	const updateUser = await updateUserByIdBan(server, firstUser.id, body)
-		// })
+		it('update user by id for ban current user', async () => {
+			// потом банишь автора
+			body = {
+				isBanned: true,
+				banReason: "ban user because is null"
+			}
+			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		})
 
 		// it('logining users in db', async () => {
 		// 	user1Token = (
@@ -174,25 +174,25 @@ describe('/blogs', () => {
 		// 	).body.accessToken;
 		// })
 
-		// it('get users', async () => {
-		// 	const getUsers = await request(server)
-		// 		.get('/sa/users')
-		// 		.auth('admin', 'qwerty')
+		it('get users', async () => {
+			const getUsers = await request(server)
+				.get('/sa/users')
+				.auth('admin', 'qwerty')
 			
-		// 	console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>).items.map(item => item.banInfo))
-		// })
+			console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>).items.map(item => item.banInfo))
+		})
 		
 
-		let createBlog: BlogsViewType
-		it('create blog by blogger', async () => {
-			const requestBodyAuthLogin: BodyBlogsModel = {
-				name: "Lerning",
-				description: "skdjfksjfksjfksfj",
-				websiteUrl: `https://learn.javascript.ru`
-			}
-			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
-			 console.log("createBlog: ", createBlog)
-		})
+		// let createBlog: BlogsViewType
+		// it('create blog by blogger', async () => {
+		// 	const requestBodyAuthLogin: BodyBlogsModel = {
+		// 		name: "Lerning",
+		// 		description: "skdjfksjfksjfksfj",
+		// 		websiteUrl: `https://learn.javascript.ru`
+		// 	}
+		// 	createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
+		// 	 console.log("createBlog: ", createBlog)
+		// })
 
 		// let createPost: PostsViewModel
 		// it('create post by blogId by blogger', async() => {
@@ -233,10 +233,10 @@ describe('/blogs', () => {
 		// 	// console.log("getBlog: ", getBlog)
 		// })
 
-		it('find sa blogs', async () => {
-			const findSA = await findSABlog(server)
-			console.log("findSA: ", (findSA as PaginationType<BlogsViewWithBanType>).items)
-		})
+		// it('find sa blogs', async () => {
+		// 	const findSA = await findSABlog(server)
+		// 	console.log("findSA: ", (findSA as PaginationType<BlogsViewWithBanType>).items)
+		// })
 
 		// it('find post', async () => {
 		// 	const getPost = await findPost(server, createPost.id)
