@@ -25,7 +25,7 @@ export class CreateNewBlogForSAUseCase
       newBlog.description = command.inputDateModel.description,
       newBlog.websiteUrl = command.inputDateModel.websiteUrl,
 	  newBlog.userId = command.userId;
-      newBlog.isMembership = true
+      newBlog.isMembership = false
 	  
     const createBlog: Blogs | null =
       await this.blogsRepositoryForSA.createNewBlogs(newBlog);
