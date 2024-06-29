@@ -117,7 +117,7 @@ async banUnbanUser(
 			pageNumber,
 		  ),
 		)
-	  } else {
+	  } else  if(banStatus === ('banned' || 'notBanned')) {
 		// console.log(banStatus, 'status controller not all');
 		return await this.commandBus.execute(
 		  new GetBannedUsersCommand(
