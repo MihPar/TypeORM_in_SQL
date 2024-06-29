@@ -253,7 +253,7 @@ export class UsersRepository {
 		pageSize: string,
 		pageNumber: string,
 	  ): Promise<PaginationType<UserBanViewType>> {
-		console.log(banStatus, 'status repo');
+		// console.log(banStatus, 'status repo');
 	
 		const queryBuilder = this.userRepository
 		  .createQueryBuilder('UserTrm')
