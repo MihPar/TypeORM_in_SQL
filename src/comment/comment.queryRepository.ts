@@ -99,12 +99,6 @@ export class CommentQueryRepository {
 		.where(`id = :id`, {id: commentId})
 		.getOne()
 
-	const commentLikeStatus = await this.likeForCommentRepository
-		.createQueryBuilder()
-		.select()
-		.where(`"commentId" = :commentId`, {commentId})
-		.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
-		.getOne()
 
     if (!findCommentById) {
       return null;
