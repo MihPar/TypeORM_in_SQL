@@ -76,9 +76,9 @@ export class CommentsController {
     @Param('id', ParseUUIDPipe) id: string,
     @UserIdDecorator() userId: string | null,
   ) {
-	// const findComment = await this.commentQueryRepository.findCommentByCommentId(id)
+	const findComment = await this.commentQueryRepository.findCommentByCommentId(id)
 
-	// if(findComment.isBanned) throw new NotFoundException('404')
+	if(findComment.isBanned) throw new NotFoundException('404')
 
     const getCommentById: CommentViewModel | null =
       await this.commentQueryRepository.findCommentById(id, userId);

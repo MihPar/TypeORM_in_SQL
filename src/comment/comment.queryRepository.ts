@@ -97,7 +97,8 @@ export class CommentQueryRepository {
 	const findCommentById = await this.commentRepository
 		.createQueryBuilder()
 		.select()
-		.where(`id = :id`, {id: commentId})
+		.where(`id = :id AND "isBanned" = :isBanned`, {id: commentId, isBanned: false})
+
 		.getOne()
 
 
