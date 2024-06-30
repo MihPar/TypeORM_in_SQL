@@ -216,7 +216,7 @@ async findPostByIdUserId(id: string, userId?: string) {
 	const getPost = await this.postsRepository
 		.createQueryBuilder()
 		.select()
-		.where(`"id" = :id AND "userId" = :userId`, {id, userId})
+		.where(`"id" = :id`, {id})
 		.getOne()
 	return getPost
 }
