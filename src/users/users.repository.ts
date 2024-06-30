@@ -168,7 +168,7 @@ export class UsersRepository {
 			.update(User)
 			.set({ 
 				isBanned, 
-				banDate: isBanned ? new Date().toISOString() : null, 
+				banDate: isBanned ? new Date().toISOString() : null,
 				banReason: isBanned ? banInputInfo.banReason : null})
 			.where({id})
 			.execute()

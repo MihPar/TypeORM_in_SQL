@@ -131,7 +131,7 @@ export class PostController {
     @Param() Dto: InputModelClassId, 
 	@UserIdDecorator() userId: string | null,
   ) {
-	const findPostByBan = await this.postsRepository.findPostByIdUserId(Dto.id)
+	const findPostByBan = await this.postsRepository.findPostByIdUserId(Dto.id, userId)
 
 	// console.log("findPostByBan: ", findPostByBan)
 
