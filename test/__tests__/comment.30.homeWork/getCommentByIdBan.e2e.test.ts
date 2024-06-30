@@ -132,6 +132,7 @@ describe('/blogs', () => {
 		it('creting users in db', async () => {
 			expect(server).toBeDefined();
 			firstUser = await createAddUser(server, user1Creds);
+			// console.log("user: ", firstUser)
 			// await createAddUser(server, user2Creds);
 			// await createAddUser(server, user3Creds);
 			// await createAddUser(server, user4Creds);
@@ -197,20 +198,21 @@ describe('/blogs', () => {
 
 		let createBlog: BlogsViewType
 		it('create blog by blogger', async () => {
-			console.log("user1Token: ", user1Token)
+			// console.log("user1Token: ", user1Token)
 			const requestBodyAuthLogin: BodyBlogsModel = {
 				name: "Lerning",
 				description: "skdjfksjfksjfksfj",
 				websiteUrl: `https://learn.javascript.ru`
 			}
 			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
+
 			//  console.log("createBlog: ", createBlog)
 		})
 
 		let createPost: PostsViewModel
 		it('create post by blogId by blogger', async() => {
 			const blogId = createBlog.id
-			console.log("blogId: ", blogId)
+			// console.log("blogId: ", blogId)
 			const inputDateModel: bodyPostsModelClass = {
 				title: "title",
   				shortDescription: "Big content",
@@ -252,9 +254,9 @@ describe('/blogs', () => {
 		// })
 
 		it('find post', async () => {
-			console.log("id: ", createPost.id)
+			// console.log("id: ", createPost.id)
 			const getPost = await findPost(server, createPost.id)
-			console.log("findPost: ", getPost)
+			// console.log("findPost: ", getPost)
 		})
 
 		// it('find comment', async() => {

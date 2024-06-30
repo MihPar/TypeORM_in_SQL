@@ -85,7 +85,8 @@ export const createToken = async (
 
 export const updateUserByIdBan = async (server: any, id: string, body: BanInputModel) => {
 	const updateUser = await request(server).put(`/sa/users/${id}/ban`).auth('admin', 'qwerty').send(body)
-	return updateUser
+	console.log("updateUser: ", updateUser.body)
+	return updateUser.body
 }
 
 export const createBlogBlogger = async (server: any, requestBodyAuthLogin: BodyBlogsModel, token: string): Promise<BlogsViewType | null> => {

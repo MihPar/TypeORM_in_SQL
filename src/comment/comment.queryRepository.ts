@@ -1,5 +1,5 @@
 import { commentDBToView } from '../helpers/helpers';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CommentViewModel } from './comment.type';
 import { PaginationType } from '../types/pagination.types';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -38,6 +38,8 @@ export class CommentQueryRepository {
 		if(userId) {
 			myStatus = commentLikeStatus ? (commentLikeStatus?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
+
+	if(commentLikeStatus.isBanned) throw new NotFoundException("404")
 
 	return commentDBToView(findCommentById, myStatus);
     } catch (e) {

@@ -19,7 +19,7 @@ export class CreateNewBlogForSAUseCase
   async execute(
     command: CreateNewBlogForSACommand
   ): Promise<BlogsViewType | null> {
-    const newBlog: Blogs = new Blogs()
+    const newBlog = new Blogs()
 
       newBlog.name = command.inputDateModel.name,
       newBlog.description = command.inputDateModel.description,
@@ -29,6 +29,7 @@ export class CreateNewBlogForSAUseCase
 	  
     const createBlog: Blogs | null =
       await this.blogsRepositoryForSA.createNewBlogs(newBlog);
+	//   console.log("id: ", createBlog.id)
     if (!createBlog) return null;
     return Blogs.createNewBlogForSA(createBlog)
   }

@@ -173,6 +173,12 @@ export class UsersRepository {
 			.where({id})
 			.execute()
 
+// const result = await this.userRepository.findOne({
+// 	where: {id}
+// })
+		
+// 	console.log("user: ", result)
+
 		
 		if(!banUser) throw new Error('Ban user is not update in user repository')
 		
