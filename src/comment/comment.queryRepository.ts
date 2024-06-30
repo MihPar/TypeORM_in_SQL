@@ -24,6 +24,7 @@ export class CommentQueryRepository {
 			.createQueryBuilder()
 			.select()
 			.where(`id = :commentId`, {commentId})
+			.andWhere(`isBanned = :isBanned`, {isBanned: false})
 			.getOne()
 // console.log("find 28: ", findCommentById)
 // console.log("find 29: ",)

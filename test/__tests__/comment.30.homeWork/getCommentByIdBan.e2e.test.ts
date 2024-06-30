@@ -129,13 +129,14 @@ describe('/blogs', () => {
 	let sendAnswerBySecondGame: any;
 	let body: BanInputModel
 	let firstUser: UserBanViewType
+	let secondUser: UserBanViewType
 
 	describe('some description', () => {
 		it('creting users in db', async () => {
 			expect(server).toBeDefined();
 			firstUser = await createAddUser(server, user1Creds);
 			// console.log("user: ", firstUser)
-			await createAddUser(server, user2Creds);
+			secondUser = await createAddUser(server, user2Creds);
 			// await createAddUser(server, user3Creds);
 			// await createAddUser(server, user4Creds);
 		});
@@ -206,7 +207,7 @@ describe('/blogs', () => {
 				description: "skdjfksjfksjfksfj",
 				websiteUrl: `https://learn.javascript.ru`
 			}
-			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user2Token)
+			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
 
 			//  console.log("createBlog: ", createBlog)
 		})
@@ -220,7 +221,7 @@ describe('/blogs', () => {
   				shortDescription: "Big content",
   				content: "Content content content"
 				}
-			createPost = await createPostBlogger(server, blogId, inputDateModel, user2Token)
+			createPost = await createPostBlogger(server, blogId, inputDateModel, user1Token)
 			//  console.log("createPost: ", createPost)
 		})
 		
@@ -232,24 +233,24 @@ describe('/blogs', () => {
 			const content: Content = {
 				content: "string string string string string"
 			}
-			createCommnets = await createCom(server, postId, content, user2Token)
+			createCommnets = await createCom(server, postId, content, user1Token)
 			// console.log("createCommnets: ", createCommnets)
 		})
 
 		it('update like for comments', async () => {
 			const id = createCommnets.id
 			// console.log("id: ", id)
-			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Like}
+			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Dislike}
 
-			const updateLikeForCommmnent = await createLike(server, id, status, user1Token)
+			const updateLikeForCommmnent = await createLike(server, id, status, user2Token)
 			// console.log("updateLikeForCommmnent: ", updateLikeForCommmnent)
 		})
 
 		it('update like for post', async() => {
-			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Like}
+			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Dislike}
 			const postId = createPost.id
 			// console.log('postId: ', postId)
-			const updateLikePost = await request(server).put(`/posts/${postId}/like-status`).send(status).set('Authorization', `Bearer ${user1Token}`)
+			const updateLikePost = await request(server).put(`/posts/${postId}/like-status`).send(status).set('Authorization', `Bearer ${user2Token}`)
 			// console.log("updateLikePost:  ", updateLikePost.body)
 		})
 
@@ -260,6 +261,7 @@ describe('/blogs', () => {
 			const getCommentById = await getCom(server, id)
 			// console.log("getCommentById: ", getCommentById)
 		})
+
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
 
@@ -273,11 +275,11 @@ describe('/blogs', () => {
 		// 	console.log("findSA: ", (findSA as PaginationType<BlogsViewWithBanType>).items)
 		// })
 
-		// it('find post', async () => {
-		// 	// console.log("id: ", createPost.id)
-		// 	const getPost = await findPost(server, createPost.id)
-		// 	// console.log("findPost: ", getPost)
-		// })
+		it('find post', async () => {
+			// console.log("id: ", createPost.id)
+			const getPost = await findPost(server, createPost.id)
+			// console.log("findPost: ", getPost)
+		})
 
 		// it('find comment', async() => {
 		// 	const id = createCommnets.id
@@ -292,14 +294,14 @@ describe('/blogs', () => {
 				isBanned: true,
 				banReason: "ban user because is null"
 			}
-			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+			const updateUser = await updateUserByIdBan(server, secondUser.id, body)
 		})
 
 		it('get comments by id', async () => {
 			const id = createCommnets.id
 			// console.log("id: ", id)
 			const getCommentById = await getCom(server, id)
-			// console.log("getCommentById: ", getCommentById)
+			console.log("getCommentById: ", getCommentById)
 		})
 
 // 		it('get users', async () => {
@@ -315,10 +317,10 @@ describe('/blogs', () => {
 // 			// console.log("getBlog: ", getBlog)
 // 		})
 
-// 		it('find post', async () => {
-// 			const getPost = await findPost(server, createPost.id)
-// 			// console.log("findPost: ", getPost)
-// 		})
+		it('find post', async () => {
+			const getPost = await findPost(server, createPost.id)
+			console.log("findPost: ", getPost)
+		})
 
 // 		it('find comment by id', async() => {
 // 			const id = createCommnets.id
