@@ -47,7 +47,7 @@ export class RegistrationUseCase
     } catch (error) {
       console.log(error, "error with send mail");
     }
-    newUser.id = userId.generatedMaps[0].id;
+    newUser.id = userId.id;
     return User.getViewUser(newUser);
   }
 }

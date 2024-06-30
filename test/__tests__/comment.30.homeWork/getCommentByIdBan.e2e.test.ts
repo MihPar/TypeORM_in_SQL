@@ -174,50 +174,50 @@ describe('/blogs', () => {
 		// 	).body.accessToken;
 		// })
 
-		it('get users', async () => {
-			const getUsers = await request(server)
-				.get('/sa/users')
-				.query({
-					banStatus: 'all' || 'banned' || 'notBanned',
-					searchLoginTerm: "",
-					searchEmailTerm: "",
-					sortBy: "createdAt",
-					sortDirection: 'desc',
-					pageNumber: '1',
-					pageSize: '10'
-				})
-				.auth('admin', 'qwerty')
+		// it('get users', async () => {
+		// 	const getUsers = await request(server)
+		// 		.get('/sa/users')
+		// 		.query({
+		// 			banStatus: 'all' || 'banned' || 'notBanned',
+		// 			searchLoginTerm: "",
+		// 			searchEmailTerm: "",
+		// 			sortBy: "createdAt",
+		// 			sortDirection: 'desc',
+		// 			pageNumber: '1',
+		// 			pageSize: '10'
+		// 		})
+		// 		.auth('admin', 'qwerty')
 			
-			console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>)
-			// .items
-			// .map(item => item.banInfo)
-		)
-		})
+		// 	console.log("getUsers: ", (getUsers.body as PaginationType<UserBanViewType>)
+		// 	// .items
+		// 	// .map(item => item.banInfo)
+		// )
+		// })
 		
 
-		// let createBlog: BlogsViewType
-		// it('create blog by blogger', async () => {
-		// 	const requestBodyAuthLogin: BodyBlogsModel = {
-		// 		name: "Lerning",
-		// 		description: "skdjfksjfksjfksfj",
-		// 		websiteUrl: `https://learn.javascript.ru`
-		// 	}
-		// 	createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
-		// 	 console.log("createBlog: ", createBlog)
-		// })
+		let createBlog: BlogsViewType
+		it('create blog by blogger', async () => {
+			const requestBodyAuthLogin: BodyBlogsModel = {
+				name: "Lerning",
+				description: "skdjfksjfksjfksfj",
+				websiteUrl: `https://learn.javascript.ru`
+			}
+			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
+			 console.log("createBlog: ", createBlog)
+		})
 
-		// let createPost: PostsViewModel
-		// it('create post by blogId by blogger', async() => {
-		// 	const blogId = createBlog.id
-		// 	// console.log("blogId: ", blogId)
-		// 	const inputDateModel: bodyPostsModelClass = {
-		// 		title: "title",
-  		// 		shortDescription: "Big content",
-  		// 		content: "Content content content"
-		// 		}
-		// 	createPost = await createPostBlogger(server, blogId, inputDateModel, user1Token)
-		// 	//  console.log("createPost: ", createPost)
-		// })
+		let createPost: PostsViewModel
+		it('create post by blogId by blogger', async() => {
+			const blogId = createBlog.id
+			// console.log("blogId: ", blogId)
+			const inputDateModel: bodyPostsModelClass = {
+				title: "title",
+  				shortDescription: "Big content",
+  				content: "Content content content"
+				}
+			createPost = await createPostBlogger(server, blogId, inputDateModel, user1Token)
+			//  console.log("createPost: ", createPost)
+		})
 		
 		// let createCommnets: CommentViewModel
 		// it('create comments by postId', async() => {
@@ -250,10 +250,10 @@ describe('/blogs', () => {
 		// 	console.log("findSA: ", (findSA as PaginationType<BlogsViewWithBanType>).items)
 		// })
 
-		// it('find post', async () => {
-		// 	const getPost = await findPost(server, createPost.id)
-		// 	// console.log("findPost: ", getPost)
-		// })
+		it('find post', async () => {
+			const getPost = await findPost(server, createPost.id)
+			// console.log("findPost: ", getPost)
+		})
 
 		// it('find comment', async() => {
 		// 	const id = createCommnets.id
