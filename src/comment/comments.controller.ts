@@ -78,7 +78,7 @@ export class CommentsController {
   ) {
 	// console.log("try")
 	// console.log("id: ", id)
-	const findComment = await this.commentQueryRepository.findCommentByCommentId(id)
+	const findComment = await this.commentQueryRepository.findCommentByCommentId(id, userId)
 
 	if(findComment.isBanned) throw new NotFoundException('404')
 
