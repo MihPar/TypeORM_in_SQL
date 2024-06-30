@@ -36,10 +36,10 @@ export class User {
   @Column()
   isConfirmed: boolean = false;
 
-  @Column({nullable: true})
+  @Column({ default: false })
   isBanned: boolean
 
-  @Column({nullable: true})
+  @Column({default: null})
   banReason: string
 
   @Column({default: null})

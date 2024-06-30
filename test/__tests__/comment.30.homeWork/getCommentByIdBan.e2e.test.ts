@@ -288,14 +288,14 @@ describe('/blogs', () => {
 		// })
 
 			
-		// it('update user by id for ban current user', async () => {
-		// 	// потом банишь автора
-		// 	body = {
-		// 		isBanned: true,
-		// 		banReason: "ban user because is null"
-		// 	}
-		// 	const updateUser = await updateUserByIdBan(server, secondUser.id, body)
-		// })
+		it('update user by id for ban current user', async () => {
+			// потом банишь автора
+			body = {
+				isBanned: true,
+				banReason: "ban user because is null"
+			}
+			const updateUser = await updateUserByIdBan(server, secondUser.id, body)
+		})
 
 		it('get comments by id', async () => {
 			const id = createCommnets.id

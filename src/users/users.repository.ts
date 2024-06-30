@@ -134,7 +134,7 @@ export class UsersRepository {
 		return findBlog
 	}
 
-	async banUser(id: string, banInputInfo: BanInputModel): Promise<boolean> {
+	async banUser(id: string, banInputInfo: BanInputModel): Promise<User> {
 		const {isBanned, banReason} = banInputInfo
 
 		
@@ -148,21 +148,21 @@ export class UsersRepository {
 			.where({id})
 			.execute()
 
-		// const result = await this.userRepository.findOne({
-		// 	where: {id}
-		// })
+		const result = await this.userRepository.findOne({
+			where: {id}
+		})
 				
 		// 	console.log("user: ", result)
 
+		return result
+		// if(!banUser) throw new Error('Ban user is not update in user repository')
 		
-		if(!banUser) throw new Error('Ban user is not update in user repository')
 		
-		
-		return (
-			banUser.affected !== null &&
-			banUser.affected !== undefined &&
-			banUser.affected > 0
-		  );
+		// return (
+		// 	banUser.affected !== null &&
+		// 	banUser.affected !== undefined &&
+		// 	banUser.affected > 0
+		//   );
 	}
 
 	async findAllUsers(

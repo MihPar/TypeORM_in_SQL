@@ -49,7 +49,7 @@ export class Posts {
 	@Column({nullable: true})
 	userId: string
 
-	@Column({nullable: true})
+	@Column({ default: false })
 	isBanned: boolean
 
 	@Column({default: null})
