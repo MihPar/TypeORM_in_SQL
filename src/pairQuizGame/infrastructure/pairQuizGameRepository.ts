@@ -45,18 +45,10 @@ export class PairQuizGameRepository {
           firstPlayerProgress: { user: { id: userId } },
           status: GameStatusEnum.Active,
         },
-        // {
-        //   firstPlayerProgress: { user: { id: userId } },
-        //   status: GameStatusEnum.PendingSecondPlayer,
-        // },
         {
           secondPlayerProgress: { user: { id: userId } },
           status: GameStatusEnum.Active,
         },
-        // {
-        //   secondPlayerProgress: { user: { id: userId } },
-        //   status: GameStatusEnum.PendingSecondPlayer,
-        // },
       ],
     });
     if (!foundGameByUserId) return null;
@@ -120,13 +112,6 @@ export class PairQuizGameRepository {
       .set({ score: () => (count ? 'score + 1' : 'score + 0') })
       .where({ userId, gameId })
       .execute();
-
-    // const result = await this.pairQuizGameProgressPlayer
-    //   .createQueryBuilder()
-    //   .select()
-    //   .where({ userId })
-    //   .getOne();
-    //   console.log("result: ", result.score)
   }
 
   async createQuestions(createQuestions: QuestionGame[]) {

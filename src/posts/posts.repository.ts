@@ -205,6 +205,7 @@ async banPostLikes(id: string, ban: boolean) {
 		},
 	  );
   
+	//   console.log("result: ", await this.likeForPostRepository.createQueryBuilder().where({userId: id}).getOne())
 	  return (
 		postLikeBanned.affected !== null &&
 		postLikeBanned.affected !== undefined &&

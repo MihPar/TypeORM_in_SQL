@@ -106,29 +106,22 @@ export class PairQuizGameProgressQueryRepository {
     pageNumber: number,
     pageSize: number,
   ): Promise<PaginationType<TopUserView>> {
-    // const stackAllGamesByUser = await this.pairQuizGameProgressPlayer.find({
-    // 	relations: {user: true},
-    // 	order: {addedAt: "ASC"}
-    // })
+    
     const stackAllGamesByUser = await this.pairQuizGameProgressPlayer
       .createQueryBuilder()
-      // .select(`'userId'`)
       .distinct(true)
       .getMany();
 
     const uniqUserByIds = Array.from(
       new Set(stackAllGamesByUser.map((item) => item.userId)),
     );
-    // console.log(uniqUserByIds)
-    // console.log('result: ', stackAllGamesByUser)
+    
     const sortParam = sort.map((param) => param.replace(/\+/g, ' '));
-    // console.log("sortParam: ", sortParam)
     const totalCountQuery = await uniqUserByIds.length;
 
     const items = await Promise.all(
       uniqUserByIds.map(async (userId) => {
         const user = await this.usersQueryRepository.findUserById(userId);
-        // console.log("user: ", user)
         const playerSumScores = await this.pairQuizGameProgressPlayer
           .createQueryBuilder()
           .select('SUM(score)', 'sumScore')
@@ -140,12 +133,6 @@ export class PairQuizGameProgressQueryRepository {
           .createQueryBuilder()
           .where(`"userId" = :userId`, { userId })
           .getCount();
-
-        //   console.log("playerTotalGameCount: ", typeof playerTotalGameCount)
-
-        // const playerAvgScores = +(
-        //   playerSumScores / playerTotalGameCount
-        // ).toFixed(2);
 
         const playerAvgScores =
           Math.round((playerSumScores / playerTotalGameCount) * 100) / 100;
@@ -176,20 +163,16 @@ export class PairQuizGameProgressQueryRepository {
           lossesCount: playerLossCount,
           drawsCount: playerDrawsCount,
           player: {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             id: user!.id,
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             login: user!.login,
           },
         };
       }),
     );
 
-    // console.log("items: ", items)
     const sortedItems = items
       .sort((a, b) => {
         for (const sortCriteria of sortParam) {
-          // console.log("sortCriteria: ", sortCriteria)
           const [fieldName, sortDirection] = sortCriteria.split(' ', 2);
           if (fieldName === 'avgScores') {
             if (a.avgScores > b.avgScores) {

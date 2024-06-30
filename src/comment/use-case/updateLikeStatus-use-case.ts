@@ -28,7 +28,6 @@ export class UpdateLikestatusForCommentUseCase implements ICommandHandler<Update
       await this.commentQueryRepository.findCommentByCommentId(command.id, command.userId);
     if (!findCommentById) throw new NotFoundException('404');
 		const findLike = await this.likesRepository.findLikeByCommentIdBy(command.id, command.userId)
-		// console.log("findLike: ", findLike)
 	if(!findLike) {
 		await this.likesRepository.saveLikeForComment(command.id, command.userId, command.status.likeStatus)
 		const resultCheckLikeOrDislike = await this.commentRepositoriy.increase(command.id, command.status.likeStatus)
@@ -65,6 +64,7 @@ export class UpdateLikestatusForCommentUseCase implements ICommandHandler<Update
 		const increaseDislikeCount = await this.commentRepositoriy.increaseDislike(command.id, command.status.likeStatus)
 		return true
 	}
+	console.log("findLike 68: ", findLike)
 	return true
 	}
 }

@@ -6,7 +6,7 @@ import { delay, find } from 'rxjs';
 import { AppModule } from '../../../src/app.module';
 import { appSettings } from '../../../src/setting';
 import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
-import { createAddUser, createBlogBlogger, createCom, createPostBlogger, createToken, findPost, findSABlog, getBlogByUseTwo, getCom, updateUserByIdBan } from '../../../src/helpers/helpers';
+import { createAddUser, createBlogBlogger, createCom, createLike, createPostBlogger, createToken, findPost, findSABlog, getBlogByUseTwo, getCom, updateUserByIdBan } from '../../../src/helpers/helpers';
 import { BanInputModel } from '../../../src/users/user.class';
 import { User } from '../../../src/users/entities/user.entity';
 import { UserBanViewType } from '../../../src/users/user.type';
@@ -18,6 +18,8 @@ import { BlogsViewType, BlogsViewWithBanType } from '../../../src/blogs/blogs.ty
 import { CommentViewModel } from '../../../src/comment/comment.type';
 import { NewPasswordUseCase } from '../../../src/auth/useCase.ts/createNewPassword-use-case';
 import { PaginationType } from '../../../src/types/pagination.types';
+import { InputModelLikeStatusClass } from '../../../src/comment/dto/comment.class-pipe';
+import { LikeStatusEnum } from '../../../src/likes/likes.emun';
 
 export interface Content {
 	content: string
@@ -133,7 +135,7 @@ describe('/blogs', () => {
 			expect(server).toBeDefined();
 			firstUser = await createAddUser(server, user1Creds);
 			// console.log("user: ", firstUser)
-			// await createAddUser(server, user2Creds);
+			await createAddUser(server, user2Creds);
 			// await createAddUser(server, user3Creds);
 			// await createAddUser(server, user4Creds);
 		});
@@ -160,14 +162,14 @@ describe('/blogs', () => {
 		
 		/*  GET -> "/sa/users": should return status 200; content: users array with pagination; used additional methods: POST -> /sa/users, PUT -> /sa/users/:id/ban;  */
 
-		it('update user by id for ban current user', async () => {
-			// потом банишь автора
-			body = {
-				isBanned: true,
-				banReason: "ban user because is null"
-			}
-			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
-		})
+		// it('update user by id for ban current user', async () => {
+		// 	// потом банишь автора
+		// 	body = {
+		// 		isBanned: true,
+		// 		banReason: "ban user because is null"
+		// 	}
+		// 	const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		// })
 
 		// it('logining users in db', async () => {
 		// 	user1Token = (
@@ -204,7 +206,7 @@ describe('/blogs', () => {
 				description: "skdjfksjfksjfksfj",
 				websiteUrl: `https://learn.javascript.ru`
 			}
-			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
+			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user2Token)
 
 			//  console.log("createBlog: ", createBlog)
 		})
@@ -218,21 +220,39 @@ describe('/blogs', () => {
   				shortDescription: "Big content",
   				content: "Content content content"
 				}
-			createPost = await createPostBlogger(server, blogId, inputDateModel, user1Token)
+			createPost = await createPostBlogger(server, blogId, inputDateModel, user2Token)
 			//  console.log("createPost: ", createPost)
 		})
 		
 		let createCommnets: CommentViewModel
 		it('create comments by postId', async() => {
 			const postId = createPost.id
-			console.log("postId: ", postId)
+			// console.log("postId: ", postId)
 
 			const content: Content = {
 				content: "string string string string string"
 			}
-			createCommnets = await createCom(server, postId, content, user1Token)
-			console.log("createCommnets: ", createCommnets)
+			createCommnets = await createCom(server, postId, content, user2Token)
+			// console.log("createCommnets: ", createCommnets)
 		})
+
+		it('update like for comments', async () => {
+			const id = createCommnets.id
+			// console.log("id: ", id)
+			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Like}
+
+			const updateLikeForCommmnent = await createLike(server, id, status, user1Token)
+			// console.log("updateLikeForCommmnent: ", updateLikeForCommmnent)
+		})
+
+		it('update like for post', async() => {
+			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Like}
+			const postId = createPost.id
+			// console.log('postId: ', postId)
+			const updateLikePost = await request(server).put(`/posts/${postId}/like-status`).send(status).set('Authorization', `Bearer ${user1Token}`)
+			// console.log("updateLikePost:  ", updateLikePost.body)
+		})
+
 
 		it('get comments by id', async () => {
 			const id = createCommnets.id
@@ -266,14 +286,21 @@ describe('/blogs', () => {
 		// })
 
 			
-// 		it('update user by id for ban current user', async () => {
-// 			// потом банишь автора
-// 			body = {
-// 				isBanned: true,
-// 				banReason: "ban user because is null"
-// 			}
-// 			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
-// 		})
+		it('update user by id for ban current user', async () => {
+			// потом банишь автора
+			body = {
+				isBanned: true,
+				banReason: "ban user because is null"
+			}
+			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
+		})
+
+		it('get comments by id', async () => {
+			const id = createCommnets.id
+			// console.log("id: ", id)
+			const getCommentById = await getCom(server, id)
+			// console.log("getCommentById: ", getCommentById)
+		})
 
 // 		it('get users', async () => {
 // 			const getUsers = await request(server)

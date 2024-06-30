@@ -1,3 +1,4 @@
+import { strict } from 'assert';
 import request from 'supertest';
 import { BanInputModel, InputModelClassCreateBody } from '../users/user.class';
 import { LikeStatusEnum } from '../likes/likes.emun';
@@ -13,6 +14,7 @@ import { bodyPostsModelClass } from '../posts/dto/posts.class.pipe';
 import { PostsViewModel } from '../posts/posts.type';
 import { BlogsViewType } from '../blogs/blogs.type';
 import { Content } from '../../test/__tests__/comment.30.homeWork/getCommentByIdBan.e2e.test';
+import { InputModelLikeStatusClass } from '../comment/dto/comment.class-pipe';
 
 export const commentDBToView = (
 	item: Comments,
@@ -85,7 +87,7 @@ export const createToken = async (
 
 export const updateUserByIdBan = async (server: any, id: string, body: BanInputModel) => {
 	const updateUser = await request(server).put(`/sa/users/${id}/ban`).auth('admin', 'qwerty').send(body)
-	console.log("updateUser: ", updateUser.body)
+	// console.log("updateUser: ", updateUser.body)
 	return updateUser.body
 }
 
@@ -107,6 +109,12 @@ export const createCom = async(server: any, postId: string, content: Content, to
 export const getCom = async(server: any, id: string) => {
 	const getCommentsById = await request(server).get(`/comments/${id}`)
 	return getCommentsById.body
+}
+
+
+export const createLike = async(server: any, id: string, status: InputModelLikeStatusClass, token: string) => {
+	const createLike = await request(server).put(`/comments/${id}/like-status`).send(status).set('Authorization', `Bearer ${token}`)
+	return createLike.body
 }
 
 export const getBlogByUseTwo = async(server: any, id: string) => {

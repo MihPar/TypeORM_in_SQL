@@ -1,3 +1,4 @@
+import { LikeForPost } from './../likes/entity/likesForPost.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource, InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
@@ -71,34 +72,6 @@ export class UsersRepository {
 	async createUser(newUser: User): Promise<User> {
 		const userCreatingResult = await this.userRepository.save(newUser)
 		return userCreatingResult
-			// .createQueryBuilder()
-		// 	.insert()
-		// 	.into(User)
-		// 	.values([
-		// 		{
-		// 			login: newUser.login,
-		// 			email: newUser.email,
-		// 			passwordHash: newUser.passwordHash,
-		// 			createdAt: newUser.createdAt,
-		// 			confirmationCode: newUser.confirmationCode,
-		// 			expirationDate: newUser.expirationDate,
-		// 			isConfirmed: newUser.isConfirmed,
-		// 			isBanned: newUser.isBanned,
-		// 			banReason: newUser.banReason,
-		// 			banDate: newUser.banDate,
-		// 			banStatus: newUser.banStatus
-		// 		}
-		// 	])
-		// 	.execute()
-		// 	.catch(e => console.error("error upon creating user", e))
-
-		// console.log(userCreatingResult, "id")
-		// const user = await this.userRepository
-		// 	.createQueryBuilder()
-		// 	.select()
-		// 	.where("id = :id", {id: newUser.id})
-		// 	.getOne()
-		// return user
 	}
 
 	async updateUserConfirmation(
@@ -163,6 +136,8 @@ export class UsersRepository {
 
 	async banUser(id: string, banInputInfo: BanInputModel): Promise<boolean> {
 		const {isBanned, banReason} = banInputInfo
+
+		
 		const banUser = await this.userRepository
 			.createQueryBuilder()
 			.update(User)
@@ -173,11 +148,11 @@ export class UsersRepository {
 			.where({id})
 			.execute()
 
-// const result = await this.userRepository.findOne({
-// 	where: {id}
-// })
-		
-// 	console.log("user: ", result)
+		// const result = await this.userRepository.findOne({
+		// 	where: {id}
+		// })
+				
+		// 	console.log("user: ", result)
 
 		
 		if(!banUser) throw new Error('Ban user is not update in user repository')

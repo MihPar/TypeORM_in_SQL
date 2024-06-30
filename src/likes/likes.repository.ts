@@ -132,6 +132,8 @@ export class LikesRepository {
 			  isBanned: ban,
 			},
 		  );
+
+		//   console.log("result: ", await this.likeForCommentRepository.createQueryBuilder().where({userId: id}).getOne())
 	  
 		  return (
 			commentsLikeBanned.affected !== null &&
