@@ -33,7 +33,7 @@ export class Blogs {
 	// @Column()
 	// bloggerId: string
 
-	@Column({default: false})
+	@Column({ nullable: true })
 	isBanned: boolean
 
 	@Column({default: null})

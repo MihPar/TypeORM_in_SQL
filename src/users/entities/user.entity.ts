@@ -36,7 +36,7 @@ export class User {
   @Column()
   isConfirmed: boolean = false;
 
-  @Column({ default: false })
+  @Column({ nullable: true })
   isBanned: boolean
 
   @Column({default: null})
