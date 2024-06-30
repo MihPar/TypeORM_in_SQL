@@ -132,11 +132,11 @@ export class PostController {
     @Param('id', ParseUUIDPipe) id: string, 
 	@UserIdDecorator() userId: string | null,
   ) {
-	const findPostByBan = await this.postsRepository.findPostByIdUserId(id)
+	// const findPostByBan = await this.postsRepository.findPostByIdUserId(id)
 
-	// console.log("findPostByBan: ", findPostByBan)
+	// // console.log("findPostByBan: ", findPostByBan)
 
-	if(findPostByBan.isBanned) throw new NotFoundException('Post id ban');
+	// if(findPostByBan.isBanned) throw new NotFoundException('Post id ban');
 
     const getPostById: PostsViewModel | null =
       await this.postsQueryRepository.findPostsById(id, userId);
