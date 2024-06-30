@@ -39,8 +39,6 @@ export class CommentQueryRepository {
 			myStatus = commentLikeStatus ? (commentLikeStatus?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 		}
 
-	if(commentLikeStatus.isBanned) throw new NotFoundException("404")
-
 	return commentDBToView(findCommentById, myStatus);
     } catch (e) {
       return null;
