@@ -32,7 +32,8 @@ export class PostsQueryRepository {
 				.find({
 					where: {
 						postId: postId,
-						myStatus: "Like"
+						myStatus: "Like",
+						isBanned: false
 					},
 					order: {
 						addedAt: "DESC"

@@ -24,7 +24,7 @@ export class CommentQueryRepository {
 			.createQueryBuilder()
 			.select()
 			.where(`id = :commentId`, {commentId})
-			.andWhere(`isBanned = :isBanned`, {isBanned: false})
+			.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 			.getOne()
 // console.log("find 28: ", findCommentById)
 // console.log("find 29: ",)
@@ -97,10 +97,10 @@ export class CommentQueryRepository {
 	const findCommentById = await this.commentRepository
 		.createQueryBuilder()
 		.select()
-		.where(`id = :id AND "isBanned" = :isBanned`, {id: commentId, isBanned: false})
-
+		.where(`id = :id`, {id: commentId})
 		.getOne()
 
+		// console.log("findCommentById: ", findCommentById)
 
     if (!findCommentById) {
       return null;

@@ -237,30 +237,30 @@ describe('/blogs', () => {
 			// console.log("createCommnets: ", createCommnets)
 		})
 
-		it('update like for comments', async () => {
-			const id = createCommnets.id
-			// console.log("id: ", id)
-			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Dislike}
+		// it('update like for comments', async () => {
+		// 	const id = createCommnets.id
+		// 	// console.log("id: ", id)
+		// 	const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Dislike}
 
-			const updateLikeForCommmnent = await createLike(server, id, status, user2Token)
-			// console.log("updateLikeForCommmnent: ", updateLikeForCommmnent)
-		})
+		// 	const updateLikeForCommmnent = await createLike(server, id, status, user2Token)
+		// 	// console.log("updateLikeForCommmnent: ", updateLikeForCommmnent)
+		// })
 
-		it('update like for post', async() => {
-			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Dislike}
-			const postId = createPost.id
-			// console.log('postId: ', postId)
-			const updateLikePost = await request(server).put(`/posts/${postId}/like-status`).send(status).set('Authorization', `Bearer ${user2Token}`)
-			// console.log("updateLikePost:  ", updateLikePost.body)
-		})
+		// it('update like for post', async() => {
+		// 	const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Dislike}
+		// 	const postId = createPost.id
+		// 	// console.log('postId: ', postId)
+		// 	const updateLikePost = await request(server).put(`/posts/${postId}/like-status`).send(status).set('Authorization', `Bearer ${user2Token}`)
+		// 	// console.log("updateLikePost:  ", updateLikePost.body)
+		// })
 
 
-		it('get comments by id', async () => {
-			const id = createCommnets.id
-			// console.log("id: ", id)
-			const getCommentById = await getCom(server, id)
-			// console.log("getCommentById: ", getCommentById)
-		})
+		// it('get comments by id', async () => {
+		// 	const id = createCommnets.id
+		// 	console.log("id: ", id)
+		// 	const getCommentById = await getCom(server, id)
+		// 	console.log("getCommentById: ", getCommentById)
+		// })
 
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
@@ -275,11 +275,11 @@ describe('/blogs', () => {
 		// 	console.log("findSA: ", (findSA as PaginationType<BlogsViewWithBanType>).items)
 		// })
 
-		it('find post', async () => {
-			// console.log("id: ", createPost.id)
-			const getPost = await findPost(server, createPost.id)
-			// console.log("findPost: ", getPost)
-		})
+		// it('find post', async () => {
+		// 	// console.log("id: ", createPost.id)
+		// 	const getPost = await findPost(server, createPost.id)
+		// 	console.log("findPost: ", getPost)
+		// })
 
 		// it('find comment', async() => {
 		// 	const id = createCommnets.id

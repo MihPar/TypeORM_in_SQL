@@ -217,8 +217,11 @@ async findPostByIdUserId(id: string, userId?: string) {
 	const getPost = await this.postsRepository
 		.createQueryBuilder()
 		.select()
-		.where(`"id" = :id AND "isBanned" = :isBanned`, {id, isBanned: false})
+		.where(`"id" = :id`, {id})
+		// .andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 		.getOne()
+
+		// console.log("getPOst: ", getPost)
 	return getPost
 }
 
