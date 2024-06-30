@@ -222,24 +222,24 @@ describe('/blogs', () => {
 			//  console.log("createPost: ", createPost)
 		})
 		
-		// let createCommnets: CommentViewModel
-		// it('create comments by postId', async() => {
-		// 	const postId = createPost.id
-		// 	console.log("postId: ", postId)
+		let createCommnets: CommentViewModel
+		it('create comments by postId', async() => {
+			const postId = createPost.id
+			console.log("postId: ", postId)
 
-		// 	const content: Content = {
-		// 		content: "string string string string string"
-		// 	}
-		// 	createCommnets = await createCom(server, postId, content, user1Token)
-		// 	console.log("createCommnets: ", createCommnets)
-		// })
+			const content: Content = {
+				content: "string string string string string"
+			}
+			createCommnets = await createCom(server, postId, content, user1Token)
+			console.log("createCommnets: ", createCommnets)
+		})
 
-		// it('get comments by id', async () => {
-		// 	const id = createCommnets.id
-		// 	// console.log("id: ", id)
-		// 	const getCommentById = await getCom(server, id)
-		// 	// console.log("getCommentById: ", getCommentById)
-		// })
+		it('get comments by id', async () => {
+			const id = createCommnets.id
+			// console.log("id: ", id)
+			const getCommentById = await getCom(server, id)
+			// console.log("getCommentById: ", getCommentById)
+		})
 
 		// вторым пользователем делаешь гет запросы на получение блога/ блогов, поста/постов, коммента все 200
 
@@ -253,11 +253,11 @@ describe('/blogs', () => {
 		// 	console.log("findSA: ", (findSA as PaginationType<BlogsViewWithBanType>).items)
 		// })
 
-		it('find post', async () => {
-			// console.log("id: ", createPost.id)
-			const getPost = await findPost(server, createPost.id)
-			// console.log("findPost: ", getPost)
-		})
+		// it('find post', async () => {
+		// 	// console.log("id: ", createPost.id)
+		// 	const getPost = await findPost(server, createPost.id)
+		// 	// console.log("findPost: ", getPost)
+		// })
 
 		// it('find comment', async() => {
 		// 	const id = createCommnets.id

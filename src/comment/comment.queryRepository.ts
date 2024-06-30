@@ -99,10 +99,37 @@ export class CommentQueryRepository {
 		.where(`id = :id`, {id: commentId})
 		.getOne()
 
+	const commentLikeStatus = await this.likeForCommentRepository
+		.createQueryBuilder()
+		.select()
+		.where(`"commentId" = :commentId`, {commentId})
+		.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
+		.getOne()
+
     if (!findCommentById) {
       return null;
     }
 	return findCommentById
+  }
+
+  async findCommentByLikeCommentId(commentId: string, userId?: string | null) {
+	// const findCommentById = await this.commentRepository
+	// 	.createQueryBuilder()
+	// 	.select()
+	// 	.where(`id = :id`, {id: commentId})
+	// 	.getOne()
+
+	const commentLikeStatus = await this.likeForCommentRepository
+		.createQueryBuilder()
+		.select()
+		.where(`"commentId" = :commentId`, {commentId})
+		.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
+		.getOne()
+
+    if (!commentLikeStatus) {
+      return null;
+    }
+	return commentLikeStatus
   }
 
 //   async getCommentsByPostId(postId: string): Promise<CommentClass | null> {
