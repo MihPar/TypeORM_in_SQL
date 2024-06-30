@@ -139,7 +139,7 @@ export class PostController {
 	if(findPostByBan.isBanned) throw new NotFoundException('Post id ban');
 
     const getPostById: PostsViewModel | null =
-      await this.postsQueryRepository.findPostsById(id);
+      await this.postsQueryRepository.findPostsById(id, userId);
     if (!getPostById) {
       throw new NotFoundException('Post by id not found');
     }
