@@ -17,7 +17,7 @@ export class CommentQueryRepository {
 
   async findCommentById(
     commentId: string,
-    userId: string | null,
+    userId?: string | null,
   ): Promise<CommentViewModel | null> {
     try {
 		const findCommentById = await this.commentRepository
@@ -30,7 +30,8 @@ export class CommentQueryRepository {
 			const commentLikeStatus = await this.likeForCommentRepository
 			.createQueryBuilder()
 			.select()
-			.where(`"commentId" = :commentId AND "userId" = :userId`, {commentId, userId})
+			.where(`"commentId" = :commentId`, {commentId})
+			.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 			.getOne()
 	
    let myStatus: LikeStatusEnum = LikeStatusEnum.None;

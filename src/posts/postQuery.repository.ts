@@ -42,7 +42,8 @@ export class PostsQueryRepository {
 			const likeQuery = await this.LikeForPostRepository
 				.createQueryBuilder()
 				.select()
-				.where(`"postId" = :postId AND "userId" = :userId`, { postId, userId })
+				.where(`"postId" = :postId`, { postId })
+				.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 				.getOne()
 
 			let myStatus: LikeStatusEnum = LikeStatusEnum.None;

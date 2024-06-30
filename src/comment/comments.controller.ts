@@ -83,9 +83,9 @@ export class CommentsController {
 	if(findComment.isBanned) throw new NotFoundException('404')
 
     const getCommentById: CommentViewModel | null =
-      await this.commentQueryRepository.findCommentById(id, userId);
+      await this.commentQueryRepository.findCommentById(id);
     if (!getCommentById) throw new NotFoundException('Comments by id not found');
-	console.log("getCommentById in 86 strict: ", getCommentById)
+	// console.log("getCommentById in 86 strict: ", getCommentById)
     return getCommentById;
   }
 }

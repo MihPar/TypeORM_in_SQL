@@ -5,6 +5,7 @@ import {
   HttpCode,
   NotFoundException,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   Query,
@@ -128,17 +129,17 @@ export class PostController {
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGet)
   async getPostById(
-    @Param() Dto: InputModelClassId, 
+    @Param('id', ParseUUIDPipe) id: string, 
 	@UserIdDecorator() userId: string | null,
   ) {
-	const findPostByBan = await this.postsRepository.findPostByIdUserId(Dto.id)
+	const findPostByBan = await this.postsRepository.findPostByIdUserId(id)
 
 	// console.log("findPostByBan: ", findPostByBan)
 
 	if(findPostByBan.isBanned) throw new NotFoundException('Post id ban');
 
     const getPostById: PostsViewModel | null =
-      await this.postsQueryRepository.findPostsById(Dto.id, userId);
+      await this.postsQueryRepository.findPostsById(id);
     if (!getPostById) {
       throw new NotFoundException('Post by id not found');
     }
