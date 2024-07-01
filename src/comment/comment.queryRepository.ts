@@ -97,7 +97,7 @@ export class CommentQueryRepository {
 		.createQueryBuilder()
 		.select()
 		.where(`id = :id`, {id: commentId})
-		// .andWhere(`"isBanned" = :isBanned`, {isBanned: false})
+		.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 		.getOne()
 
 		// console.log("result: ", findCommentById)
