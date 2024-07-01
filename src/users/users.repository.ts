@@ -136,8 +136,6 @@ export class UsersRepository {
 
 	async banUser(id: string, banInputInfo: BanInputModel): Promise<User> {
 		const {isBanned, banReason} = banInputInfo
-
-		
 		const banUser = await this.userRepository
 			.createQueryBuilder()
 			.update(User)
@@ -152,7 +150,7 @@ export class UsersRepository {
 			where: {id}
 		})
 				
-		// 	console.log("user: ", result)
+			console.log("user: ", result)
 
 		return result
 		// if(!banUser) throw new Error('Ban user is not update in user repository')

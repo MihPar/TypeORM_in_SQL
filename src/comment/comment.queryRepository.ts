@@ -19,7 +19,7 @@ export class CommentQueryRepository {
     commentId: string,
     userId?: string | null,
   ): Promise<CommentViewModel | null> {
-	console.log('commentId: ', commentId)
+	// console.log('commentId: ', commentId)
 
     try {
 		const findCommentById = await this.commentRepository
