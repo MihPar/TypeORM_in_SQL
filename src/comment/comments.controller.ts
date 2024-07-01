@@ -76,10 +76,10 @@ export class CommentsController {
     @Param('id', ParseUUIDPipe) id: string,
     @UserIdDecorator() userId: string | null,
   ) {
-	// const findComment = await this.commentQueryRepository.findCommentByCommentId(id)
-	// // console.log("findComment: ", findComment)
+	const findComment = await this.commentQueryRepository.findCommentByCommentId(id)
+	// console.log("findComment: ", findComment)
 
-	// if(findComment) throw new NotFoundException('Comment not found')
+	if(findComment) throw new NotFoundException('Comment not found')
 
     const getCommentById: CommentViewModel | null =
       await this.commentQueryRepository.findCommentById(id, userId);
