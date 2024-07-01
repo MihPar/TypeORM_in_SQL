@@ -218,7 +218,7 @@ async findPostByIdUserId(id: string, userId?: string) {
 		.createQueryBuilder()
 		.select()
 		.where(`"id" = :id`, {id})
-		// .andWhere(`"isBanned" = :isBanned`, {isBanned: false})
+		.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 		.getOne()
 
 		// console.log("getPOst: ", getPost)

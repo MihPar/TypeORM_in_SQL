@@ -19,12 +19,14 @@ export class CommentQueryRepository {
     commentId: string,
     userId?: string | null,
   ): Promise<CommentViewModel | null> {
+	console.log('commentId: ', commentId)
+
     try {
 		const findCommentById = await this.commentRepository
 			.createQueryBuilder()
 			.select()
 			.where(`id = :commentId`, {commentId})
-			// .andWhere(`"isBanned" = :isBanned`, {isBanned: false})
+			.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 			.getOne()
 
 		const commentLikeStatus = await this.likeForCommentRepository
