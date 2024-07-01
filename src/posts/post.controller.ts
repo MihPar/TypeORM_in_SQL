@@ -134,7 +134,7 @@ export class PostController {
   ) {
 	const findPostByBan = await this.postsRepository.findPostByIdUserId(id)
 
-	if(findPostByBan) throw new NotFoundException('Post id ban');
+	if(findPostByBan) throw new NotFoundException('404');
 
     const getPostById: PostsViewModel | null =
       await this.postsQueryRepository.findPostsById(id, userId);
