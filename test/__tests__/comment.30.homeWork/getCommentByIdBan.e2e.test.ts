@@ -294,7 +294,7 @@ describe('/blogs', () => {
 				isBanned: true,
 				banReason: "ban user because is null"
 			}
-			const updateUser = await updateUserByIdBan(server, secondUser.id, body)
+			const updateUser = await updateUserByIdBan(server, firstUser.id, body)
 		})
 
 		it('get comments by id', async () => {

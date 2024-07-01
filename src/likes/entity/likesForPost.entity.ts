@@ -22,7 +22,7 @@ export class LikeForPost {
 	@Column()
 	login: string
 
-	@Column({ nullable: true })
+	@Column({ default: false })
 	isBanned: boolean
 
 	@ManyToOne(() => Posts, lfp => lfp.extendedLikesInfo, {onDelete: "CASCADE" })

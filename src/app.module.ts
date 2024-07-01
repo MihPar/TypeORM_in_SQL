@@ -32,7 +32,7 @@ import { BloggerModule } from './blogger/blogger.module';
 	//   }]),
 	TypeOrmModule.forRootAsync({
 		useFactory(config: ConfigService<DatabaseConfig>) {
-			return config.get('database', {infer: true})
+			return {...config.get('database', {infer: true}), synchronize: true}
 		},
 		inject: [
 			ConfigService,

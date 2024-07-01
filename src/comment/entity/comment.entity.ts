@@ -20,7 +20,7 @@ export class Comments {
 	@Column()
 	userLogin: string
 
-	@Column({ nullable: true })
+	@Column({ default: false })
   	isBanned: boolean;
 
 	@Column({nullable: true, default: 0})
