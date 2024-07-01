@@ -20,7 +20,7 @@
     "test:e2e": "jest --config test/jest-e2e.json --runInBand --detectOpenHandles",
     "serveoNeon": "ssh -R 80:ep-weathered-mouse-a5h47925.us-east-2.aws.neon.tech:5432 serveo.net",
     "serveo": "ssh -R 80:localhost:4000 serveo.net",
-    "serveo1": "ssh -R 80:localhost:8080 localhost.run",
+    "serveo1": "ssh -R 80:localhost:4000 localhost.run",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d typeorm.config.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d typeorm.config.ts",
     "migration:create": "typeorm-ts-node-commonjs migration:create",
