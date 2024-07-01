@@ -24,7 +24,7 @@ export class CommentQueryRepository {
 			.createQueryBuilder()
 			.select()
 			.where(`id = :commentId`, {commentId})
-			.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
+			// .andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 			.getOne()
 
 		const commentLikeStatus = await this.likeForCommentRepository

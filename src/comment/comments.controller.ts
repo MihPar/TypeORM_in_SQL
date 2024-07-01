@@ -79,7 +79,7 @@ export class CommentsController {
 	const findComment = await this.commentQueryRepository.findCommentByCommentId(id)
 	// console.log("findComment: ", findComment)
 
-	if(findComment.isBanned) throw new NotFoundException('Comment not found')
+	if(findComment) throw new NotFoundException('Comment not found')
 
     const getCommentById: CommentViewModel | null =
       await this.commentQueryRepository.findCommentById(id, userId);
