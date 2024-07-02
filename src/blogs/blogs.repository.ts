@@ -49,7 +49,7 @@ async findBlogById(id: any): Promise<Blogs | null> {
 		return getBlog
 }
 
-async banBlogByUserId(id: string, ban: boolean) {
+async banUnbanBlogByUserId(id: string, ban: boolean) {
 	const postBanned = await this.blogsRepository.update(
 		{ userId: id },
 		{

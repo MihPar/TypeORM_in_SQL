@@ -243,7 +243,7 @@ describe('/blogs', () => {
 			const status: InputModelLikeStatusClass = {likeStatus: LikeStatusEnum.Dislike}
 
 			const updateLikeForCommmnent = await createLike(server, id, status, user2Token)
-			console.log("updateLikeForCommmnent: ", updateLikeForCommmnent)
+			// console.log("updateLikeForCommmnent: ", updateLikeForCommmnent)
 		})
 
 		it('update like for post', async() => {
@@ -251,7 +251,7 @@ describe('/blogs', () => {
 			const postId = createPost.id
 			// console.log('postId: ', postId)
 			const updateLikePost = await request(server).put(`/posts/${postId}/like-status`).send(status).set('Authorization', `Bearer ${user2Token}`)
-			console.log("updateLikePost:  ", updateLikePost.body)
+			// console.log("updateLikePost:  ", updateLikePost.body)
 		})
 
 
@@ -356,6 +356,12 @@ describe('/blogs', () => {
 // 			const getCommentById = await getCom(server, id)
 // 			// console.log("getComment: ", getCommentById)
 // 		})
+
+// 1 создаешь блог пост коммент первым юзером
+// 2 создаешь второго юзера
+// делаешь лайк для коммента и поста (владелец - перый юзер ) вторым юзером
+// потом банишь второго юзера
+// и находишь пост и коммент который лайканый => пост и коммент должен найтись но без учета лайка второго пользователяs
 
 
 	})

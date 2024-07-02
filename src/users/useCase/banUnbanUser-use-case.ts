@@ -25,7 +25,6 @@ export class BanUnbanUserUseCase implements ICommandHandler<BanUnbanUserCommand>
 		protected readonly usersRepository: UsersRepository,
 		private readonly postsRepository: PostsRepository,
 		private readonly commentRepository: CommentRepository,
-		private readonly likesRepository: LikesRepository,
 		private readonly deviceRepository: DeviceRepository,
 		private readonly blogsRepository: BlogsRepository
 	) {}
@@ -39,21 +38,20 @@ export class BanUnbanUserUseCase implements ICommandHandler<BanUnbanUserCommand>
 		const banUser = await this.usersRepository.banUser(command.id, command.banInputInfo)
 		if(banUser.isBanned) {
 			await this.deviceRepository.deleteAllSessions(command.id);
-			await this.blogsRepository.banBlogByUserId(command.id, command.banInputInfo.isBanned)
-			await this.postsRepository.banPostByUserId(command.id, command.banInputInfo.isBanned)
-			await this.commentRepository.banComments(command.id, command.banInputInfo.isBanned);
-			await this.likesRepository.banCommentLikes(command.id, command.banInputInfo.isBanned);
+			await this.blogsRepository.banUnbanBlogByUserId(command.id, command.banInputInfo.isBanned)
+			await this.postsRepository.banUnbanPostByUserId(command.id, command.banInputInfo.isBanned)
+			await this.commentRepository.banUnbanComments(command.id, command.banInputInfo.isBanned);
+			await this.commentRepository.banCommentLikes(command.id, command.banInputInfo.isBanned);
 			await this.postsRepository.banPostLikes(command.id, command.banInputInfo.isBanned);
 			return 
 		} else {
-			// await this.deviceRepository.deleteAllSessions(command.id);
-			await this.blogsRepository.banBlogByUserId(command.id, command.banInputInfo.isBanned)
-			await this.postsRepository.banPostByUserId(command.id, command.banInputInfo.isBanned)
-			await this.commentRepository.banComments(command.id, command.banInputInfo.isBanned);
-			await this.likesRepository.banCommentLikes(command.id, command.banInputInfo.isBanned);
-			await this.postsRepository.banPostLikes(command.id, command.banInputInfo.isBanned);
+			await this.blogsRepository.banUnbanBlogByUserId(command.id, command.banInputInfo.isBanned)
+			await this.postsRepository.banUnbanPostByUserId(command.id, command.banInputInfo.isBanned)
+			await this.commentRepository.banUnbanComments(command.id, command.banInputInfo.isBanned);
+			await this.commentRepository.unbanCommentLikes(command.id, command.banInputInfo.isBanned);
+			await this.postsRepository.unbanPostLikes(command.id, command.banInputInfo.isBanned);
 			return 
 		}
-		return 
 	}
+
 }

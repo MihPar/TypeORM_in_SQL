@@ -8,7 +8,7 @@ import { LikeForComment } from "../likes/entity/likesForComment.entity";
 export class CommentRepository {
 	constructor(
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
-		// @InjectRepository(LikeForComment) protected readonly likeForCommentRepository: Repository<LikeForComment>
+		@InjectRepository(LikeForComment) protected readonly likeForCommentRepository: Repository<LikeForComment>
 	) {}
 
 	async deleteAllComments() {
@@ -100,7 +100,7 @@ export class CommentRepository {
 			return null;
 		  }
 	  }
-	  async banComments(id: string, ban: boolean) {
+	  async banUnbanComments(id: string, ban: boolean) {
 		const commentBanned = await this.commentsRepository.update(
 			{ userId: id },
 			{
@@ -114,4 +114,96 @@ export class CommentRepository {
 			commentBanned.affected > 0
 		  );
 	  }
+
+	  async banCommentLikes(id: string, ban: boolean) {
+		// сначала находишь все лайки пользователя которого хотим забанить
+		const findLikeByUser = await this.likeForCommentRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"userId" = :id`, {id})
+			.getMany()
+			// console.log("likeComments: ", findLikeByUser)
+		// для кождго лайка который ты нашел достаешь статус и айди старшей сущности (здесь это айди коммента )
+
+
+		// const result = findLikeByUser.map(item => {item.id, item.myStatus})
+		// console.log("result: ", result)
+
+		for(let i = 0; i < findLikeByUser.length; i++) {
+			const commentId = findLikeByUser[i].id
+			const myStatus = findLikeByUser[i].myStatus
+					if(myStatus === LikeStatusEnum.Dislike) {
+						const updateLikeCount = await this.commentsRepository
+							.decrement({id: commentId}, "dislikesCount", 1)
+							if(!updateLikeCount) return false
+							return true
+					} else {
+						const updateLikeCount = await this.commentsRepository
+							.decrement({id: commentId}, "likesCount", 1)
+						if(!updateLikeCount) return false
+							return true
+					} 
+		}
+
+		// и в зависисимости от статуса просто делаешь декремент счетчика то есть если лайк имеет статус DISLIKE то просто уменьшаешь на один счет дизлайков
+
+		const commentsLikeBanned = await this.likeForCommentRepository.update(
+			{ userId: id },
+			{
+			  isBanned: ban,
+			},
+		  );
+
+		//   console.log("result: ", await this.likeForCommentRepository.createQueryBuilder().where({userId: id}).getOne())
+	  
+		  return (
+			commentsLikeBanned.affected !== null &&
+			commentsLikeBanned.affected !== undefined &&
+			commentsLikeBanned.affected > 0
+		  );
+	}
+
+	async unbanCommentLikes(id: string, ban: boolean) {
+		// сначала находишь все лайки пользователя которого хотим забанить
+		const findLikeByUser = await this.likeForCommentRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"userId" = :id`, {id})
+			.getMany()
+			// console.log("likeComments: ", findLikeByUser)
+		// для кождго лайка который ты нашел достаешь статус и айди старшей сущности (здесь это айди коммента )
+
+
+		// const result = findLikeByUser.map(item => {item.id, item.myStatus})
+		// console.log("result: ", result)
+
+		for (let i = 0; i < findLikeByUser.length; i++) {
+			const commentId = findLikeByUser[i].id
+			const myStatus = findLikeByUser[i].myStatus
+			if (myStatus === LikeStatusEnum.Dislike) {
+				const incDislike = await this.commentsRepository
+					.increment({ id: commentId }, "dislikesCount", 1)
+			} else {
+				const incLike = await this.commentsRepository
+					.increment({ id: commentId }, "likesCount", 1)
+			}
+		}
+
+		// и в зависисимости от статуса просто делаешь декремент счетчика то есть если лайк имеет статус DISLIKE то просто уменьшаешь на один счет дизлайков
+
+		const commentsLikeBanned = await this.likeForCommentRepository.update(
+			{ userId: id },
+			{
+			  isBanned: ban,
+			},
+		  );
+
+		//   console.log("result: ", await this.likeForCommentRepository.createQueryBuilder().where({userId: id}).getOne())
+	  
+		  return (
+			commentsLikeBanned.affected !== null &&
+			commentsLikeBanned.affected !== undefined &&
+			commentsLikeBanned.affected > 0
+		  );
+	}
 }

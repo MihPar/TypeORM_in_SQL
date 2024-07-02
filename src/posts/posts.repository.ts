@@ -181,7 +181,7 @@ async increaseDislike(postId: string, likeStatus: string, userId: string) {
 		return
 }
 
-async banPostByUserId(id: string, ban: boolean): Promise<boolean> {
+async banUnbanPostByUserId(id: string, ban: boolean): Promise<boolean> {
 	const postBanned = await this.postsRepository.update(
 		{ userId: id },
 		{
@@ -198,6 +198,71 @@ async banPostByUserId(id: string, ban: boolean): Promise<boolean> {
 }
 
 async banPostLikes(id: string, ban: boolean) {
+
+	const findLikeByUser = await this.likeForPostRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"userId" = :id`, {id})
+			.getMany()
+			// console.log("likePosts: ", findLikeByUser)
+
+			for(let i = 0; i < findLikeByUser.length; i++) {
+				const commentId = findLikeByUser[i].id
+				const myStatus = findLikeByUser[i].myStatus
+						if(myStatus === LikeStatusEnum.Dislike) {
+							const updateLikeCount = await this.postsRepository
+								.decrement({id: commentId}, "dislikesCount", 1)
+								if(!updateLikeCount) return false
+								return true
+						} else {
+							const updateLikeCount = await this.postsRepository
+								.decrement({id: commentId}, "likesCount", 1)
+							if(!updateLikeCount) return false
+								return true
+						} 
+			}
+
+	const postLikeBanned = await this.likeForPostRepository.update(
+		{ userId: id },
+		{
+		  isBanned: ban,
+		},
+	  );
+  
+	//   console.log("result: ", await this.likeForPostRepository.createQueryBuilder().where({userId: id}).getOne())
+	  return (
+		postLikeBanned.affected !== null &&
+		postLikeBanned.affected !== undefined &&
+		postLikeBanned.affected > 0
+	  );
+}
+
+
+async unbanPostLikes(id: string, ban: boolean) {
+
+	const findLikeByUser = await this.likeForPostRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"userId" = :id`, {id})
+			.getMany()
+			// console.log("likePosts: ", findLikeByUser)
+
+			for(let i = 0; i < findLikeByUser.length; i++) {
+				const commentId = findLikeByUser[i].id
+				const myStatus = findLikeByUser[i].myStatus
+						if(myStatus === LikeStatusEnum.Dislike) {
+							const updateLikeCount = await this.postsRepository
+								.increment({id: commentId}, "dislikesCount", 1)
+								if(!updateLikeCount) return false
+								return true
+						} else {
+							const updateLikeCount = await this.postsRepository
+								.increment({id: commentId}, "likesCount", 1)
+							if(!updateLikeCount) return false
+								return true
+						} 
+			}
+
 	const postLikeBanned = await this.likeForPostRepository.update(
 		{ userId: id },
 		{

@@ -108,6 +108,7 @@ export const createCom = async(server: any, postId: string, content: Content, to
 
 export const getCom = async(server: any, id: string) => {
 	const getCommentsById = await request(server).get(`/comments/${id}`)
+	// return (getCommentsById.body as CommentViewModel).commentatorInfo.userLogin
 	return getCommentsById.body
 }
 
@@ -125,6 +126,7 @@ export const getBlogByUseTwo = async(server: any, id: string) => {
 export const findPost = async(server: any, id: string) => {
 	const findPost = await request(server).get(`/posts/${id}`)
 	// console.log("findPost: ", findPost.body)
+	// return (findPost.body as PostsViewModel).id
 	return findPost.body
 }
 

@@ -150,7 +150,7 @@ export class UsersRepository {
 			where: {id}
 		})
 				
-			console.log("user: ", result)
+			// console.log("user: ", result)
 
 		return result
 		// if(!banUser) throw new Error('Ban user is not update in user repository')

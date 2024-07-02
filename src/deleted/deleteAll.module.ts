@@ -39,6 +39,7 @@ import { PairQuizGameProgressPlayer } from '../pairQuizGameProgress/domain/entit
 import { DeleteAllPairQuizGameProgressPlayerUseCase } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
 import { DelectAllQuestionGamesUseCase } from '../pairQuizGame/useCase/deleteAllQuestionGames-use-case';
 import { QuestionGame } from '../pairQuizGame/domain/entity.questionGame';
+import { Comments } from '../comment/entity/comment.entity';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -69,11 +70,11 @@ const repo = [
   BlogsRepositoryForSA,
   PairQuezGameQueryRepository,
   PairQuizGameProgressQueryRepository,
-  PairQuizGameRepository
+  PairQuizGameRepository,
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersPlayer, AnswersPlayer, PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, QuestionGame]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersPlayer, AnswersPlayer, PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, QuestionGame, Comments]), CqrsModule],
   controllers: [TestingController],
   providers: [...useCase, ...repo],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]

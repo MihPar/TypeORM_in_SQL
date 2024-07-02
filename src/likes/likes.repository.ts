@@ -5,13 +5,15 @@ import { Posts } from "../posts/entity/entity.posts";
 import { LikeForPost } from './entity/likesForPost.entity';
 import { LikeForComment } from './entity/likesForComment.entity';
 import { LikeStatusEnum } from "./likes.emun";
+import { Comments } from "../comment/entity/comment.entity";
 
 @Injectable()
 export class LikesRepository {
 	constructor(
 		@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>,
 		@InjectRepository(LikeForPost) protected readonly likeForPostRepository: Repository<LikeForPost>,
-		@InjectRepository(LikeForComment) protected readonly likeForCommentRepository: Repository<LikeForComment>
+		@InjectRepository(LikeForComment) protected readonly likeForCommentRepository: Repository<LikeForComment>,
+		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
 	) {}
 
 	async deletePostLikes() {
@@ -125,22 +127,7 @@ export class LikesRepository {
 		return updateLikeStatus
 	}
 
-	async banCommentLikes(id: string, ban: boolean) {
-		const commentsLikeBanned = await this.likeForCommentRepository.update(
-			{ userId: id },
-			{
-			  isBanned: ban,
-			},
-		  );
-
-		//   console.log("result: ", await this.likeForCommentRepository.createQueryBuilder().where({userId: id}).getOne())
-	  
-		  return (
-			commentsLikeBanned.affected !== null &&
-			commentsLikeBanned.affected !== undefined &&
-			commentsLikeBanned.affected > 0
-		  );
-	}
+	
 
 	// async getNewLike(postId: string, blogId: string) {
 	// 	const NewestLikesQuery = `
