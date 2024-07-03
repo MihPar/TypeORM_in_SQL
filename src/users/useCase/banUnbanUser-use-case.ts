@@ -29,27 +29,28 @@ export class BanUnbanUserUseCase implements ICommandHandler<BanUnbanUserCommand>
 		private readonly blogsRepository: BlogsRepository
 	) {}
 	async execute(command: BanUnbanUserCommand): Promise<void> {
+		const  {id, banInputInfo: {isBanned}}  = command
 		const findUserById = await this.usersQueryRepository.findUserById(command.id)
 		if(!findUserById) {
 			throw new NotFoundException([
 				{message: 'User not found in banUnbanUser use case'}
 			])
 		}
-		const banUser = await this.usersRepository.banUser(command.id, command.banInputInfo)
+		const banUser = await this.usersRepository.banUser(id, command.banInputInfo)
 		if(banUser.isBanned) {
-			await this.deviceRepository.deleteAllSessions(command.id);
-			await this.blogsRepository.banUnbanBlogByUserId(command.id, command.banInputInfo.isBanned)
-			await this.postsRepository.banUnbanPostByUserId(command.id, command.banInputInfo.isBanned)
-			await this.commentRepository.banUnbanComments(command.id, command.banInputInfo.isBanned);
-			await this.commentRepository.banCommentLikes(command.id, command.banInputInfo.isBanned);
-			await this.postsRepository.banPostLikes(command.id, command.banInputInfo.isBanned);
+			await this.deviceRepository.deleteAllSessions(id);
+			await this.blogsRepository.banUnbanBlogByUserId(id, isBanned)
+			await this.postsRepository.banUnbanPostByUserId(id, isBanned)
+			await this.commentRepository.banUnbanComments(id, isBanned);
+			await this.commentRepository.banCommentLikes(id, isBanned);
+			await this.postsRepository.banPostLikes(id, isBanned);
 			return 
 		} else {
-			await this.blogsRepository.banUnbanBlogByUserId(command.id, command.banInputInfo.isBanned)
-			await this.postsRepository.banUnbanPostByUserId(command.id, command.banInputInfo.isBanned)
-			await this.commentRepository.banUnbanComments(command.id, command.banInputInfo.isBanned);
-			await this.commentRepository.unbanCommentLikes(command.id, command.banInputInfo.isBanned);
-			await this.postsRepository.unbanPostLikes(command.id, command.banInputInfo.isBanned);
+			await this.blogsRepository.banUnbanBlogByUserId(id, isBanned)
+			await this.postsRepository.banUnbanPostByUserId(id, isBanned)
+			await this.commentRepository.banUnbanComments(id, isBanned);
+			await this.commentRepository.unbanCommentLikes(id, isBanned);
+			await this.postsRepository.unbanPostLikes(id, isBanned);
 			return 
 		}
 	}

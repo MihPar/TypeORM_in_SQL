@@ -198,37 +198,38 @@ async banUnbanPostByUserId(id: string, ban: boolean): Promise<boolean> {
 }
 
 async banPostLikes(id: string, ban: boolean) {
-
-	const findLikeByUser = await this.likeForPostRepository
-			.createQueryBuilder()
-			.select()
-			.where(`"userId" = :id`, {id})
-			.getMany()
-			// console.log("likePosts: ", findLikeByUser)
-
-			for(let i = 0; i < findLikeByUser.length; i++) {
-				const commentId = findLikeByUser[i].id
-				const myStatus = findLikeByUser[i].myStatus
-						if(myStatus === LikeStatusEnum.Dislike) {
-							const updateLikeCount = await this.postsRepository
-								.decrement({id: commentId}, "dislikesCount", 1)
-								if(!updateLikeCount) return false
-								return true
-						} else {
-							const updateLikeCount = await this.postsRepository
-								.decrement({id: commentId}, "likesCount", 1)
-							if(!updateLikeCount) return false
-								return true
-						} 
-			}
-
+	
 	const postLikeBanned = await this.likeForPostRepository.update(
 		{ userId: id },
 		{
 		  isBanned: ban,
 		},
 	  );
-  
+
+	const findLikeByUser = await this.likeForPostRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"userId" = :id`, {id})
+			.getMany()
+			console.log("likePosts: ", findLikeByUser)
+
+			for(let i = 0; i < findLikeByUser.length; i++) {
+				const commentId = findLikeByUser[i].postId
+				const myStatus = findLikeByUser[i].myStatus
+						if(myStatus === LikeStatusEnum.Dislike) {
+							const updateLikeCount = await this.postsRepository
+								.decrement({id: commentId}, "dislikesCount", 1)
+								// if(!updateLikeCount) return false
+								// return true
+						} else {
+							const updateLikeCount = await this.postsRepository
+								.decrement({id: commentId}, "likesCount", 1)
+							// if(!updateLikeCount) return false
+							// 	return true
+						} 
+			}
+			
+	
 	//   console.log("result: ", await this.likeForPostRepository.createQueryBuilder().where({userId: id}).getOne())
 	  return (
 		postLikeBanned.affected !== null &&
@@ -239,6 +240,12 @@ async banPostLikes(id: string, ban: boolean) {
 
 
 async unbanPostLikes(id: string, ban: boolean) {
+	const postLikeBanned = await this.likeForPostRepository.update(
+		{ userId: id },
+		{
+		  isBanned: ban,
+		},
+	  );
 
 	const findLikeByUser = await this.likeForPostRepository
 			.createQueryBuilder()
@@ -248,27 +255,22 @@ async unbanPostLikes(id: string, ban: boolean) {
 			// console.log("likePosts: ", findLikeByUser)
 
 			for(let i = 0; i < findLikeByUser.length; i++) {
-				const commentId = findLikeByUser[i].id
+				const postId = findLikeByUser[i].postId
 				const myStatus = findLikeByUser[i].myStatus
 						if(myStatus === LikeStatusEnum.Dislike) {
 							const updateLikeCount = await this.postsRepository
-								.increment({id: commentId}, "dislikesCount", 1)
-								if(!updateLikeCount) return false
-								return true
+								.increment({id: postId}, "dislikesCount", 1)
+								// if(!updateLikeCount) return false
+								// return true
 						} else {
 							const updateLikeCount = await this.postsRepository
-								.increment({id: commentId}, "likesCount", 1)
-							if(!updateLikeCount) return false
-								return true
+								.increment({id: postId}, "likesCount", 1)
+							// if(!updateLikeCount) return false
+							// 	return true
 						} 
 			}
 
-	const postLikeBanned = await this.likeForPostRepository.update(
-		{ userId: id },
-		{
-		  isBanned: ban,
-		},
-	  );
+	
   
 	//   console.log("result: ", await this.likeForPostRepository.createQueryBuilder().where({userId: id}).getOne())
 	  return (

@@ -116,37 +116,6 @@ export class CommentRepository {
 	  }
 
 	  async banCommentLikes(id: string, ban: boolean) {
-		// сначала находишь все лайки пользователя которого хотим забанить
-		const findLikeByUser = await this.likeForCommentRepository
-			.createQueryBuilder()
-			.select()
-			.where(`"userId" = :id`, {id})
-			.getMany()
-			// console.log("likeComments: ", findLikeByUser)
-		// для кождго лайка который ты нашел достаешь статус и айди старшей сущности (здесь это айди коммента )
-
-
-		// const result = findLikeByUser.map(item => {item.id, item.myStatus})
-		// console.log("result: ", result)
-
-		for(let i = 0; i < findLikeByUser.length; i++) {
-			const commentId = findLikeByUser[i].id
-			const myStatus = findLikeByUser[i].myStatus
-					if(myStatus === LikeStatusEnum.Dislike) {
-						const updateLikeCount = await this.commentsRepository
-							.decrement({id: commentId}, "dislikesCount", 1)
-							if(!updateLikeCount) return false
-							return true
-					} else {
-						const updateLikeCount = await this.commentsRepository
-							.decrement({id: commentId}, "likesCount", 1)
-						if(!updateLikeCount) return false
-							return true
-					} 
-		}
-
-		// и в зависисимости от статуса просто делаешь декремент счетчика то есть если лайк имеет статус DISLIKE то просто уменьшаешь на один счет дизлайков
-
 		const commentsLikeBanned = await this.likeForCommentRepository.update(
 			{ userId: id },
 			{
@@ -154,6 +123,39 @@ export class CommentRepository {
 			},
 		  );
 
+		
+		// сначала находишь все лайки пользователя которого хотим забанить
+		const findLikeByUser = await this.likeForCommentRepository
+			.createQueryBuilder()
+			.select()
+			.where(`"userId" = :id`, {id})
+			.getMany()
+			console.log("likeComments: ", findLikeByUser)
+		// для кождго лайка который ты нашел достаешь статус и айди старшей сущности (здесь это айди коммента )
+
+
+		// const result = findLikeByUser.map(item => {item.id, item.myStatus})
+		// console.log("result: ", result)
+
+		for(let i = 0; i < findLikeByUser.length; i++) {
+			const commentId = findLikeByUser[i].commentId
+			const myStatus = findLikeByUser[i].myStatus
+					if(myStatus === LikeStatusEnum.Dislike) {
+						const updateLikeCount = await this.commentsRepository
+							.decrement({id: commentId}, "dislikesCount", 1)
+							// if(!updateLikeCount) return false
+							// return true
+					} else {
+						const updateLikeCount = await this.commentsRepository
+							.decrement({id: commentId}, "likesCount", 1)
+						// if(!updateLikeCount) return false
+						// 	return true
+					} 
+		}
+
+		// и в зависисимости от статуса просто делаешь декремент счетчика то есть если лайк имеет статус DISLIKE то просто уменьшаешь на один счет дизлайков
+
+		
 		//   console.log("result: ", await this.likeForCommentRepository.createQueryBuilder().where({userId: id}).getOne())
 	  
 		  return (
@@ -164,6 +166,14 @@ export class CommentRepository {
 	}
 
 	async unbanCommentLikes(id: string, ban: boolean) {
+
+		const commentsLikeBanned = await this.likeForCommentRepository.update(
+			{ userId: id },
+			{
+			  isBanned: ban,
+			},
+		  );
+
 		// сначала находишь все лайки пользователя которого хотим забанить
 		const findLikeByUser = await this.likeForCommentRepository
 			.createQueryBuilder()
@@ -178,7 +188,7 @@ export class CommentRepository {
 		// console.log("result: ", result)
 
 		for (let i = 0; i < findLikeByUser.length; i++) {
-			const commentId = findLikeByUser[i].id
+			const commentId = findLikeByUser[i].commentId
 			const myStatus = findLikeByUser[i].myStatus
 			if (myStatus === LikeStatusEnum.Dislike) {
 				const incDislike = await this.commentsRepository
@@ -191,13 +201,7 @@ export class CommentRepository {
 
 		// и в зависисимости от статуса просто делаешь декремент счетчика то есть если лайк имеет статус DISLIKE то просто уменьшаешь на один счет дизлайков
 
-		const commentsLikeBanned = await this.likeForCommentRepository.update(
-			{ userId: id },
-			{
-			  isBanned: ban,
-			},
-		  );
-
+		
 		//   console.log("result: ", await this.likeForCommentRepository.createQueryBuilder().where({userId: id}).getOne())
 	  
 		  return (

@@ -27,7 +27,7 @@ export class PostsQueryRepository {
 				.where("id = :id", { id: postId })
 				.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 				.getOne()
-
+// console.log("userId: ", findPostById.userId)
 			const newestLikesQuery = await this.LikeForPostRepository
 				.find({
 					where: {

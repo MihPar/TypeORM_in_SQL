@@ -301,7 +301,7 @@ describe('/blogs', () => {
 			const id = createCommnets.id
 			// console.log("id: ", id)
 			const getCommentById = await getCom(server, id)
-			console.log("getCommentById: ", getCommentById)
+			// console.log("getCommentById: ", getCommentById)
 		})
 
 // 		it('get users', async () => {
@@ -319,7 +319,7 @@ describe('/blogs', () => {
 
 		it('find post', async () => {
 			const getPost = await findPost(server, createPost.id)
-			console.log("findPost: ", getPost)
+			// console.log("findPost: ", getPost)
 		})
 
 // 		it('find comment by id', async() => {
