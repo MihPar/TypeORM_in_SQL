@@ -41,6 +41,8 @@ export class CreateNewUserUseCase implements ICommandHandler<CreateNewUserComman
 	newUser.banDate = null
 	newUser.banReason = null
 
+	// console.log("newUser: ", newUser)
+
     const user: any = await this.usersRepository.createUser(newUser);
     // try {
     //   await this.emailManager.sendEamilConfirmationMessage(

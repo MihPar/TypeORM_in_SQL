@@ -30,6 +30,7 @@ import { CronSecondUseCase } from './useCase/handleCronSecon-use-case';
 import { CronFirstdUseCase } from './useCase/handleCronFirst-use-case';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
+import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -63,7 +64,8 @@ const useCase = [
       PairQuizGameProgressPlayer,
       Question,
       QuestionGame,
-	  Blogs
+	  Blogs,
+	  UserBlogger
     ]),
     CqrsModule,
     ScheduleModule.forRoot(),

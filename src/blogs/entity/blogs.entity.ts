@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, Prima
 import { Posts } from "../../posts/entity/entity.posts";
 import { BlogsViewType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
+import { UserBlogger } from "../../blogger/domain/entity.userBlogger";
 
 @Entity()
 export class Blogs {
@@ -43,6 +44,9 @@ export class Blogs {
 
 	@OneToMany(() => Posts, p => p.blog)
 	post: Posts[]
+
+	@OneToMany(() => UserBlogger, b => b.blog)
+	userBlogger: UserBlogger
 
 	static createNewBlogForSA(inputBlog: Blogs) {
 		return {

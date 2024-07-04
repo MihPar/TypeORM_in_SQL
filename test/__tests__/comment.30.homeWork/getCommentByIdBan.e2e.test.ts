@@ -135,7 +135,7 @@ describe('/blogs', () => {
 		it('creting users in db', async () => {
 			expect(server).toBeDefined();
 			firstUser = await createAddUser(server, user1Creds);
-			// console.log("user: ", firstUser)
+			console.log("user: ", firstUser)
 			secondUser = await createAddUser(server, user2Creds);
 			// await createAddUser(server, user3Creds);
 			// await createAddUser(server, user4Creds);

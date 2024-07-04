@@ -28,6 +28,7 @@ import { LikeForComment } from '../likes/entity/likesForComment.entity';
 import { BlogsController } from './blogs.controller';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
+import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 
 const userCase = [
   UpdateBlogForSAUseCase,
@@ -58,7 +59,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment, Blogs]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment, Blogs, UserBlogger]), CqrsModule],
   controllers: [BlogsController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })

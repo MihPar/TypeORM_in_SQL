@@ -21,6 +21,7 @@ import { JwtService } from "@nestjs/jwt";
 import { UsersQueryRepository } from "../users/users.queryRepository";
 import { PostController } from "./post.controller";
 import { CheckRefreshTokenForGet } from "./guards/bearer.authGetComment";
+import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 
 const userCase = [
 	DeleteAllPostsUseCase,
@@ -42,7 +43,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs, UserBlogger]), CqrsModule],
   controllers: [PostController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...userGuard],
 })

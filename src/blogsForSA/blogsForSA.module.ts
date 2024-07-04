@@ -28,6 +28,7 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { Comments } from '../comment/entity/comment.entity';
 import { BandBlogUseCase } from './use-case/updateBlogByBindWithUser-use-case';
 import { UsersRepository } from '../users/users.repository';
+import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 
 const guards = [
 	CheckRefreshTokenForSA
@@ -62,7 +63,7 @@ const service = [JwtService];
 const validator = [CustomLoginvalidation, CustomEmailvalidation]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForComment, LikeForPost, Blogs, Comments]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForComment, LikeForPost, Blogs, Comments, UserBlogger]), CqrsModule],
   controllers: [BlogsControllerForSA],
   providers: [
     ...useCase,

@@ -5,6 +5,7 @@ import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { NotFoundException } from "@nestjs/common";
 import { User } from "../../users/entities/user.entity";
 import { UsersRepository } from "../../users/users.repository";
+import { UserBlogger } from "../domain/entity.userBlogger";
 
 export class UpdateUserDataCommand {
 	constructor(
@@ -30,14 +31,14 @@ export class UpdateUserDataUseCase implements ICommandHandler<UpdateUserDataComm
 		])
 
 		if(command.banUserForBlogDto.isBanned) {
-			const banUser = new User()
-			banUser.id = command.id
+			const banUser = new UserBlogger()
+			banUser.userId = command.id
 			banUser.blogId = command.banUserForBlogDto.blogId
 			banUser.banReason = command.banUserForBlogDto.banReason
 			banUser.isBanned = command.banUserForBlogDto.isBanned
 			banUser.banDate = new Date().toISOString()
 
-			await this.usersRepository.createUser(banUser)
+			await this.usersRepository.createBanUser(banUser)
 		} else if(!command.banUserForBlogDto.isBanned) {
 			await this.usersRepository.unbannedUser(command.id, command.banUserForBlogDto.blogId)
 		}

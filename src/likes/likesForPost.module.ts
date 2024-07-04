@@ -16,6 +16,7 @@ import { Comments } from "../comment/entity/comment.entity";
 import { Blogs } from "../blogs/entity/blogs.entity";
 import { DeleteAllPostLikesUseCase } from "./use-case/deleteAllPostLikes-use-case";
 import { BlogsRepository } from "../blogs/blogs.repository";
+import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 
 const userCase = [
 	UpdateLikeStatusForPostUseCase,
@@ -36,7 +37,7 @@ const manager = [];
 const service = [];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LikeForPost, User, Device, Posts, LikeForComment, Comments, Blogs]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([LikeForPost, User, Device, Posts, LikeForComment, Comments, Blogs, UserBlogger]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })

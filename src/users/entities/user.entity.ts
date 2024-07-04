@@ -8,6 +8,7 @@ import { Posts } from '../../posts/entity/entity.posts';
 import { Comments } from '../../comment/entity/comment.entity';
 import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { BanStatus } from '../enum';
+import { UserBlogger } from '../../blogger/domain/entity.userBlogger';
 
 @Entity()
 export class User {
@@ -74,6 +75,9 @@ export class User {
 
   @OneToMany(() => PairQuizGameProgressPlayer, (pqg) => pqg.user)
   progressPlayer: PairQuizGameProgressPlayer[];
+
+  @OneToMany(() => UserBlogger, u => u.user)
+  userBlogger: UserBlogger
 
   static getViewUser(user: User): UserBanViewType {
     return {

@@ -3,11 +3,13 @@ import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { Blogs } from "./entity/blogs.entity";
 import { BanInputModel } from "../users/user.class";
+import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 
 @Injectable()
 export class BlogsRepository {
 	constructor(
-		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>
+		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
+		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>
 	) {}
   async deleteRepoBlogs() {
     await this.blogsRepository
@@ -78,6 +80,15 @@ async findBlogByUserIdBlogId(userId: string, blogId: string) {
 			{message: 'You are not allowed'}
 		])
 	}
+}
+
+async deleteUserBanBlogger() {
+	await this.userBloggerRepository
+		.createQueryBuilder()
+		.delete()
+		.execute()
+		
+    return true;
 }
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
 // 	try {

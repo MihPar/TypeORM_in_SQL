@@ -38,16 +38,16 @@ export class RegistrationUseCase
 	newUser.confirmationCode = uuidv4()
 	newUser.isConfirmed = false
 
-    const userId: any = await this.usersRepository.createUser(newUser);
-    try {
-      await this.emailManager.sendEamilConfirmationMessage(
-        newUser.email,
-        newUser.confirmationCode
-      );
-    } catch (error) {
-      console.log(error, "error with send mail");
-    }
-    newUser.id = userId.id;
+    const saveUser: any = await this.usersRepository.createUser(newUser);
+    // try {
+    //   await this.emailManager.sendEamilConfirmationMessage(
+    //     newUser.email,
+    //     newUser.confirmationCode
+    //   );
+    // } catch (error) {
+    //   console.log(error, "error with send mail");
+    // }
+    newUser.id = saveUser.id;
     return User.getViewUser(newUser);
   }
 }

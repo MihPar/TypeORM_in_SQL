@@ -8,6 +8,7 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { BanInputModel } from './user.class';
 import { UserBanBloggerViewType, UserBanViewType } from './user.type';
 import { PaginationType } from '../types/pagination.types';
+import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 
 @Injectable()
 export class UsersRepository {
@@ -19,6 +20,7 @@ export class UsersRepository {
 		private readonly entityManager: EntityManager,
 		@InjectDataSource() protected dataSource: DataSource,
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
+		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>
 	) { }
 
 	async passwordRecovery(id: any, recoveryCode: string): Promise<boolean> {
@@ -66,7 +68,14 @@ export class UsersRepository {
 
 	async createUser(newUser: User): Promise<User> {
 		const userCreatingResult = await this.userRepository.save(newUser)
+		// console.log("resutl: ", userCreatingResult)
 		return userCreatingResult
+	}
+
+	async createBanUser(newUser: UserBlogger): Promise<void> {
+		const userCreatingResult = await this.userBloggerRepository.save(newUser)
+		console.log("userCreatingResult: ", userCreatingResult)
+		return
 	}
 
 	async updateUserConfirmation(
@@ -278,7 +287,7 @@ export class UsersRepository {
 	  }
 
 	  async unbannedUser(id: string, blogId: string): Promise<void> {
-		await this.userRepository.delete({id, blogId})
+		await this.userBloggerRepository.delete({id, blogId})
 		return
 	}
 

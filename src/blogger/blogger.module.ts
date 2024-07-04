@@ -23,15 +23,17 @@ import { UpdateExistingPostByIdWithBlogIdBloggerUseCase } from './use-case/updat
 import { UpdateUserDataUseCase } from './use-case/updateUserDate-use-case';
 import { FindBannedUserSpecifyBloggerUserCase } from './use-case/getBannedUserSpecifyBlogger-use-case';
 import { BlogsRepository } from '../blogs/blogs.repository';
+import { UserBlogger } from './domain/entity.userBlogger';
+import { DeleteUserBloggerUseCase } from './use-case/deleteUserBlogger-use-case';
 
-const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase
+const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase
 ]
 
 const service = [JwtService];
 const repo = [BlogsRepository]
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Blogs, User, LikeForComment, LikeForPost, Posts, Comments]), CqrsModule],
+	imports: [TypeOrmModule.forFeature([Blogs, User, LikeForComment, LikeForPost, Posts, Comments, UserBlogger]), CqrsModule],
 	controllers: [BloggerController],
 	providers: [...useCase, ...service, ...repo],
 })

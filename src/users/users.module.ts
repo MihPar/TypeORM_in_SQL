@@ -30,6 +30,7 @@ import { DeviceRepository } from '../security-devices/security-device.repository
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { GetAllUsersUseCase } from './useCase/getAllUsers-use-case';
 import { GetBannedUsersUseCase } from './useCase/getBannedUsers-use-case';
+import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 
 const userCase = [
   CreateNewUserUseCase,
@@ -51,7 +52,7 @@ const repo = [
   CommentRepository,
   LikesRepository,
   DeviceRepository,
-  BlogsRepository
+  BlogsRepository,
 ];
 
 const adapter = [GenerateHashAdapter, EmailAdapter];
@@ -59,7 +60,7 @@ const manager = [EmailManager];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device, Blogs, Posts, Comments, LikeForComment, LikeForPost]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, Blogs, Posts, Comments, LikeForComment, LikeForPost, UserBlogger]), CqrsModule],
   controllers: [UsersController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })
