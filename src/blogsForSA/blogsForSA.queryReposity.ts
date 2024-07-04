@@ -119,21 +119,7 @@ export class BlogsQueryRepositoryForSA {
 		return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
 	}
 
-	async findBlogByIdBlogger(
-		blogId: string,
-		userId?: string
-	): Promise<BlogsViewTypeWithUserId | null> {
-		const findBlogId = await this.blogsRepository
-			.findOneBy({ id: blogId })
-		if (!findBlogId) throw new NotFoundException([
-			{ message: 'Blog not found' }
-		])
-		if (findBlogId?.userId !== userId) throw new ForbiddenException([
-			{ message: 'This user does not have access in blog, 403' }
-		])
-		return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
-	}
-
+	
 	async deletedBlog(id: string): Promise<boolean | null> {
 		const deleteBlog = await this.blogsRepository
 			.delete({ id })

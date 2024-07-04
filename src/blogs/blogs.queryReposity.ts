@@ -29,21 +29,21 @@ export class BlogsQueryRepository {
 		.getMany()
 
 	
-const totalCount = await this.blogsRepository
-	.createQueryBuilder()
-	.where("name ILIKE :name", {name: `%${searchNameTerm}%`})
-	.getCount()
-    
-    const pagesCount: number = Math.ceil(totalCount / +pageSize);
+	const totalCount = await this.blogsRepository
+		.createQueryBuilder()
+		.where("name ILIKE :name", {name: `%${searchNameTerm}%`})
+		.getCount()
+		
+		const pagesCount: number = Math.ceil(totalCount / +pageSize);
 
-    const result: PaginationType<BlogsViewType> = {
-      pagesCount: pagesCount,
-      page: +pageNumber,
-      pageSize: +pageSize,
-      totalCount: +totalCount,
-      items: findAllBlogs.map((item) => Blogs.createNewBlogForSA(item)),
-    };
-    return result;
+		const result: PaginationType<BlogsViewType> = {
+		pagesCount: pagesCount,
+		page: +pageNumber,
+		pageSize: +pageSize,
+		totalCount: +totalCount,
+		items: findAllBlogs.map((item) => Blogs.createNewBlogForSA(item)),
+		};
+		return result;
   }
 
   // async findRawBlogById(blogId: string, userId?: string): Promise<BlogClass | null> {

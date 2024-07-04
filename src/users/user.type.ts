@@ -31,3 +31,9 @@ export type UserBanViewType = {
 	createdAt: Date;
 	banInfo: BanInfo
 }
+
+export type UserBanBloggerViewType = {
+	id: string;
+	login: string;
+	banInfo: BanInfo
+}

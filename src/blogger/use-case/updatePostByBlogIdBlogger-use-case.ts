@@ -3,11 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostsViewModel } from '../../posts/posts.type';
 import { bodyPostsModelClass } from '../../posts/dto/posts.class.pipe';
 import { Posts } from '../../posts/entity/entity.posts';
-import { LikeForPost } from '../../likes/entity/likesForPost.entity';
-import { BlogsQueryRepositoryForSA } from '../../blogsForSA/blogsForSA.queryReposity';
-import { PostsQueryRepository } from '../../posts/postQuery.repository';
-import { NotFoundException } from '@nestjs/common';
 import { inputModelUpdataPost } from '../../blogsForSA/dto/blogs.class-pipe';
+import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
 
 export class UpdateExistingPostByIdWithBlogIdBloggerCommand {
 	constructor(
@@ -22,11 +19,12 @@ export class UpdateExistingPostByIdWithBlogIdBloggerUseCase
 	implements ICommandHandler<UpdateExistingPostByIdWithBlogIdBloggerCommand> {
 	constructor(
 		protected postsRepository: PostsRepository,
-		protected readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA,
-		protected readonly postsQueryRepository: PostsQueryRepository
+		private readonly blogsRepositoryForSA: BlogsRepositoryForSA,
+
+		
 	) { }
 	async execute(command: UpdateExistingPostByIdWithBlogIdBloggerCommand): Promise<PostsViewModel | null> {
-		const blog = await this.blogsQueryRepositoryForSA.findBlogByIdBlogger(command.dto.blogId, command.userId);
+		const blog = await this.blogsRepositoryForSA.findBlogByIdBlogger(command.dto.blogId, command.userId);
 		// const findPost = await this.postsQueryRepository.findPostsById(command.dto.postId)
 		// if (!findPost) throw new NotFoundException("404")
 

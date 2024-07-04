@@ -1,4 +1,3 @@
-import { Cipher } from "crypto";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "../../posts/entity/entity.posts";
 import { BlogsViewType } from "../blogs.type";
@@ -38,6 +37,9 @@ export class Blogs {
 
 	@Column({default: null})
 	banDate: string
+
+	@Column({default: null})
+	banReason: string
 
 	@OneToMany(() => Posts, p => p.blog)
 	post: Posts[]

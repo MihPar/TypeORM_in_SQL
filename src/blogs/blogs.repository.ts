@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { Blogs } from "./entity/blogs.entity";
@@ -6,8 +6,6 @@ import { BanInputModel } from "../users/user.class";
 
 @Injectable()
 export class BlogsRepository {
-	
-	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>
 	) {}
@@ -64,6 +62,23 @@ async banUnbanBlogByUserId(id: string, ban: boolean) {
 	  );
 }
 
+async findBlogByUserIdBlogId(userId: string, blogId: string) {
+	const findBlog = await this.blogsRepository
+		.createQueryBuilder()
+		.select()
+		.where(`"id" = :blogId AND "userId" = userId`, {blogId, userId})
+		.getOne()
+
+	if(!findBlog) throw new NotFoundException([
+		{message: 'Blog not found'}
+	])
+
+	if(findBlog.userId !== userId) {
+		throw new ForbiddenException([
+			{message: 'You are not allowed'}
+		])
+	}
+}
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
 // 	try {
 // 		const result = await this.blogModel.create(newBlog);

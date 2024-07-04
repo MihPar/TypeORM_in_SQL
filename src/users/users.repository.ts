@@ -1,4 +1,3 @@
-import { LikeForPost } from './../likes/entity/likesForPost.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectDataSource, InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
@@ -6,16 +5,12 @@ import { add } from 'date-fns';
 import { UsersQueryRepository } from './users.queryRepository';
 import { User } from './entities/user.entity';
 import { Blogs } from '../blogs/entity/blogs.entity';
-import { BlogsRepository } from '../blogs/blogs.repository';
 import { BanInputModel } from './user.class';
-import { UserBanViewType, UserViewType } from './user.type';
-import { PostsRepository } from '../posts/posts.repository';
-import { strict } from 'assert';
+import { UserBanBloggerViewType, UserBanViewType } from './user.type';
 import { PaginationType } from '../types/pagination.types';
 
 @Injectable()
 export class UsersRepository {
-	
 	
 	constructor(
 		@InjectRepository(User) protected readonly userRepository: Repository<User>,
@@ -282,4 +277,58 @@ export class UsersRepository {
 		};
 	  }
 
+	  async unbannedUser(id: string, blogId: string): Promise<void> {
+		await this.userRepository.delete({id, blogId})
+		return
+	}
+
+	async findAllBannedUserSpecifyBlogger(
+		searchLoginTerm: string, 
+		sortBy: string, 
+		sortDirection: string, 
+		pageSize: number, 
+		pageNumber: number, 
+		blogId: string
+	): Promise<PaginationType<UserBanBloggerViewType | null>> {
+		const findBannedUserBlog = await this.blogsRepository.findBy({id: blogId})
+		const userIds = findBannedUserBlog.map(item => {return item.userId})
+		const query = await this.userRepository
+			.createQueryBuilder('u')
+			.where(`"u.id" = any(:userIds)`, {userIds: userIds})
+			.orderBy(
+				'u.' + sortBy,
+				sortDirection.toUpperCase() as 'ASC' | 'DESC',
+			  )
+			  .take(pageSize)
+			  .skip((pageNumber - 1) * pageSize);
+
+		const users = await query.getMany()
+		const count = await query.getCount();
+
+		const items = await Promise.all(
+			users.map(async (item) => {
+			const banUser = await this.blogsRepository
+				.createQueryBuilder('BannedUsersInBlogsEntityTrm')
+				.where('BannedUsersInBlogsEntityTrm.userId = :userId', {
+				userId: item.id
+				})
+				.getOne();
+		  return {
+			id: item.id,
+			login: item.login,
+			banInfo: {
+			  isBanned: banUser!.isBanned,
+			  banDate: banUser!.banDate,
+			  banReason: banUser!.banReason,
+			},
+		  }}))
+
+		  return {
+			pagesCount: Math.ceil(count / pageSize),
+			page: pageNumber,
+			pageSize,
+			totalCount: count,
+			items,
+		  };
+	}
 }

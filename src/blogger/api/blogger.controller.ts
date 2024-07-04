@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, NotFoundException, Query, ParseUUIDPipe } from '@nestjs/common';
 import { BodyBlogsModel, inputModelBlogIdClass, inputModelClass, inputModelUpdataPost } from '../../blogsForSA/dto/blogs.class-pipe';
 import { User } from '../../users/entities/user.entity';
 import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
@@ -18,17 +18,23 @@ import { PostsViewModel } from '../../posts/posts.type';
 import { UpdateExistingPostByIdWithBlogIdBloggerCommand } from '../use-case/updatePostByBlogIdBlogger-use-case';
 import { CreateNewBlogForSACommand } from '../../blogsForSA/use-case/createNewBlog-use-case';
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
+import { BanUserForBlogInputModel } from '../dto-class';
+import { UpdateUserDataCommand } from '../use-case/updateUserDate-use-case';
+import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
+import { FindBannedUserSpecifyBloggerCommand } from '../use-case/getBannedUserSpecifyBlogger-use-case';
+import { UserBanBloggerViewType } from '../../users/user.type';
 
 @UseGuards(BearerTokenPairQuizGame)
-@Controller('blogger/blogs')
+@Controller('blogger')
 export class BloggerController {
 	constructor(
 		private readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA,
+		private readonly blogsRepositoryForSA: BlogsRepositoryForSA,
 		private readonly postsQueryRepository: PostsQueryRepository,
 		protected commandBus: CommandBus
 	) { }
 
-	@Put(':id')
+	@Put('blogs/:id')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	@HttpCode(HttpStatus.CREATED)
 	async updateBlogsById(
@@ -43,7 +49,7 @@ export class BloggerController {
 		return true
 	}
 
-	@Delete(':id')
+	@Delete('blogs/:id')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async deleteBlogsById(
 		@Param('id') id: string,
@@ -54,7 +60,7 @@ export class BloggerController {
 		return isDeleted;
 	}
 
-	@Post(':blogId/posts')
+	@Post('blogs/:blogId/posts')
 	@HttpCode(HttpStatus.CREATED)
 	async createPostByBlogId(
 		@Param() dto: inputModelClass,
@@ -68,7 +74,7 @@ export class BloggerController {
 		return createNewPost;
 	}
 
-	@Get(':blogId/posts')
+	@Get('blogs/:blogId/posts')
 	@HttpCode(HttpStatus.OK)
 	async getPostsByBlogId(
 		@Param() dto: inputModelClass,
@@ -81,7 +87,7 @@ export class BloggerController {
 			sortDirection: string;
 		},
 	) {
-		const blog = await this.blogsQueryRepositoryForSA.findBlogByIdBlogger(dto.blogId);
+		const blog = await this.blogsRepositoryForSA.findBlogByIdBlogger(dto.blogId);
 
 		const getPosts: PaginationType<PostsViewModel> =
 			await this.postsQueryRepository.findPostsByBlogsId(
@@ -96,7 +102,7 @@ export class BloggerController {
 		return getPosts;
 	}
 
-	@Put(':blogId/posts/:postId')
+	@Put('blogs/:blogId/posts/:postId')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async updatePostByIdWithModel(
 		@Param() dto: inputModelUpdataPost,
@@ -108,7 +114,7 @@ export class BloggerController {
 		return
 	}
 
-	@Delete(':blogId/posts/:postId')
+	@Delete('blogs/:blogId/posts/:postId')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async deletePostByIdWithBlogId(
 		@Param() dto: inputModelUpdataPost,
@@ -119,7 +125,7 @@ export class BloggerController {
 		if (!deletePostById) throw new NotFoundException("Post not find")
 	}
 
-	@Get()
+	@Get('blogs')
 	@HttpCode(HttpStatus.OK)
 	async getBlogsWithPagin(
 		@Query()
@@ -145,7 +151,7 @@ export class BloggerController {
 		return getAllBlogs;
 	}
 
-	@Post()
+	@Post('blogs')
 	@HttpCode(HttpStatus.CREATED)
 	async createBlog(
 		@Body() inputDateModel: BodyBlogsModel,
@@ -156,4 +162,59 @@ export class BloggerController {
 		return createBlog;
 	}
 
+	@Put('users/:id/ban')
+	@HttpCode(HttpStatus.NO_CONTENT)
+	async updateUserData(
+		@Param('id', ParseUUIDPipe) id: string,
+		@Body() banUserForBlogDto: BanUserForBlogInputModel,
+	) {
+		const command = new UpdateUserDataCommand(id, banUserForBlogDto)
+		return await this.commandBus.execute<UpdateUserDataCommand, void>(command)
+	}
+
+	@Get('users/blog/:id')
+	@HttpCode(HttpStatus.OK)
+	async getBannedUserByBlog(
+		@Query('searchLoginTerm') searchLoginTerm: string | null,
+		@Query('sortBy') sortBy: string,
+		@Query('sortDirection') sortDirection: 'desc' | 'asc',
+		@Query('pageNumber') pageNumber: number,
+		@Query('pageSize') pageSize: number,
+		@Param('id', ParseUUIDPipe) id: string,
+		@UserIdDecorator() userId: string,
+	): Promise<PaginationType<UserBanBloggerViewType | null>>{
+		if(!searchLoginTerm) {
+			searchLoginTerm = null
+		}
+		if(!sortBy) {
+			sortBy = 'createdAt'
+		}
+		if(sortBy === 'login') {
+			sortBy = 'login'
+		}
+		if(sortBy === 'email') {
+			sortBy = 'email'
+		}
+		if(!sortDirection || sortDirection.toUpperCase() !== 'asc') {
+			sortDirection = 'desc'
+		}
+		if(!+pageSize || !Number.isInteger(+pageSize) || +pageSize <= 0) {
+			pageSize = 10
+		}
+		if(!+pageNumber || !Number.isInteger(+pageNumber) || +pageNumber <= 0) {
+			pageNumber = 1
+		}
+		const command = new FindBannedUserSpecifyBloggerCommand(
+			searchLoginTerm,
+			sortBy,
+			sortDirection,
+			pageSize,
+			pageNumber,
+			id,
+			userId
+		)
+
+		const getBannedUser = await this.commandBus.execute<FindBannedUserSpecifyBloggerCommand, PaginationType<UserBanBloggerViewType | null>>(command)
+		return getBannedUser
+	}
 }

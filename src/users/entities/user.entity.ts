@@ -51,6 +51,9 @@ export class User {
   @OneToMany(() => Blogs, (b) => b.user)
   blog: Blogs;
 
+  @Column({default: null})
+  blogId: string
+
   @OneToMany(() => Posts, (p) => p.user)
   post: Posts;
 

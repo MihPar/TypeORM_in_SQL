@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BlogsQueryRepositoryForSA } from '../../blogsForSA/blogsForSA.queryReposity';
 import { NotFoundException } from '@nestjs/common';
+import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
 
 export class DeleteBlogByIdBloggerForSACommnad {
   constructor(
@@ -11,10 +12,11 @@ export class DeleteBlogByIdBloggerForSACommnad {
 @CommandHandler(DeleteBlogByIdBloggerForSACommnad)
 export class DeleteBlogByIdBloggerForSAUseCase implements ICommandHandler<DeleteBlogByIdBloggerForSACommnad> {
   constructor(
-	protected readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA
+	protected readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA,
+	protected readonly blogsRepositoryForSA: BlogsRepositoryForSA,
 ) {}
   async execute(command: DeleteBlogByIdBloggerForSACommnad): Promise<boolean | null> {
-	await this.blogsQueryRepositoryForSA.findBlogByIdBlogger(command.id, command.userId)
+	await this.blogsRepositoryForSA.findBlogByIdBlogger(command.id, command.userId)
 
     const deleteId: boolean | null = await this.blogsQueryRepositoryForSA.deletedBlog(
       command.id,
