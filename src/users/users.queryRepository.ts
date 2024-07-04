@@ -125,9 +125,9 @@ export class UsersQueryRepository {
 			.where("user.id = :id", { id })
 			.getOne()
 
+		if(!user) return null
 		// const sqlRequest = user.getSql()
 		// await writeSql(sqlRequest)
-
 		return user;
 	}
 

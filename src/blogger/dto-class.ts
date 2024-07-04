@@ -8,7 +8,7 @@ export class BanUserForBlogInputModel {
   
 	@IsString()
 	@IsNotEmpty()
-	@Length(20, 1000)
+	@Length(20)
 	@Transform(({ value }) => value.trim())
 	banReason: string;
   

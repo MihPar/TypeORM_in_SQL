@@ -36,6 +36,17 @@ export class BlogsRepositoryForSA {
 	return findBlogId ? Blogs.getBlogsViewModel(findBlogId) : null;
 }
 
+async findBlogByIdBanUser(blogId: string, userId: string) {
+	const findBlogByIdUserId = await this.blogsRepository
+		.createQueryBuilder()
+		.where(`"id" = :blogId`, {blogId})
+		.getOne()
+
+	if(!findBlogByIdUserId) throw new NotFoundException([{message: 'Blog not found'}])
+	if(findBlogByIdUserId.userId !== userId) throw new ForbiddenException([{message: 'This user does not have access in blog, 403'}])
+		return findBlogByIdUserId
+}
+
 
   async updateBlogById(
     blogId: string,

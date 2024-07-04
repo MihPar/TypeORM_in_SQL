@@ -68,13 +68,11 @@ export class UsersRepository {
 
 	async createUser(newUser: User): Promise<User> {
 		const userCreatingResult = await this.userRepository.save(newUser)
-		// console.log("resutl: ", userCreatingResult)
 		return userCreatingResult
 	}
 
 	async createBanUser(newUser: UserBlogger): Promise<void> {
 		const userCreatingResult = await this.userBloggerRepository.save(newUser)
-		console.log("userCreatingResult: ", userCreatingResult)
 		return
 	}
 
@@ -236,7 +234,6 @@ export class UsersRepository {
 		pageSize: string,
 		pageNumber: string,
 	  ): Promise<PaginationType<UserBanViewType>> {
-		// console.log(banStatus, 'status repo');
 	
 		const queryBuilder = this.userRepository
 		  .createQueryBuilder('UserTrm')
@@ -302,10 +299,10 @@ export class UsersRepository {
 		const findBannedUserBlog = await this.blogsRepository.findBy({id: blogId})
 		const userIds = findBannedUserBlog.map(item => {return item.userId})
 		const query = await this.userRepository
-			.createQueryBuilder('u')
-			.where(`"u.id" = any(:userIds)`, {userIds: userIds})
+			.createQueryBuilder()
+			.where(`"id" = any(:userIds)`, {userIds: userIds})
 			.orderBy(
-				'u.' + sortBy,
+				`"${sortBy}"`,
 				sortDirection.toUpperCase() as 'ASC' | 'DESC',
 			  )
 			  .take(pageSize)

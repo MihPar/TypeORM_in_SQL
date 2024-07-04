@@ -1,5 +1,7 @@
 import { BanUserForBlogInputModel } from "../blogger/dto-class";
 import request from 'supertest';
+import { PaginationType } from "../types/pagination.types";
+import { UserBanBloggerViewType } from "../users/user.type";
 
 export const banUserSpecifyBlog = async (
 	server: any, 
@@ -14,3 +16,12 @@ export const banUserSpecifyBlog = async (
 
 		return banUser.body
 }
+
+export const getAllBanUsers = async (server: any, blogId: string, token: string) => {
+	const getAllBanUsers = await request(server)
+		.get(`/blogger/users/blog/${blogId}`)
+		.set('Authorization', `Bearer ${token}`)
+
+		console.log((getAllBanUsers.body as PaginationType<UserBanBloggerViewType | null>).items.map(item => item.banInfo))
+		return getAllBanUsers.body
+	}

@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { BanUserForBlogInputModel } from "../dto-class";
 import { BlogsRepositoryForSA } from "../../blogsForSA/blogsForSA.repository";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
-import { NotFoundException } from "@nestjs/common";
+import { ForbiddenException, NotFoundException } from "@nestjs/common";
 import { User } from "../../users/entities/user.entity";
 import { UsersRepository } from "../../users/users.repository";
 import { UserBlogger } from "../domain/entity.userBlogger";
@@ -11,7 +11,7 @@ export class UpdateUserDataCommand {
 	constructor(
 		public id: string,
 		public banUserForBlogDto: BanUserForBlogInputModel,
-	) { }
+	) {}
 }
 
 @CommandHandler(UpdateUserDataCommand)
@@ -22,7 +22,7 @@ export class UpdateUserDataUseCase implements ICommandHandler<UpdateUserDataComm
 		protected readonly usersRepository: UsersRepository
 	) { }
 	async execute(command: UpdateUserDataCommand): Promise<void> {
-		await this.blogsRepositoryForSA.findBlogByIdBlogger(command.banUserForBlogDto.blogId, command.id)
+		await this.blogsRepositoryForSA.findBlogByIdBanUser(command.banUserForBlogDto.blogId, command.id)
 
 		const findUserById = await this.usersQueryRepository.findUserById(command.id)
 
