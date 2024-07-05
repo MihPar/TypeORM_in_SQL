@@ -22,6 +22,7 @@ import { UsersQueryRepository } from "../users/users.queryRepository";
 import { PostController } from "./post.controller";
 import { CheckRefreshTokenForGet } from "./guards/bearer.authGetComment";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
+import { UsersRepository } from "../users/users.repository";
 
 const userCase = [
 	DeleteAllPostsUseCase,
@@ -35,7 +36,8 @@ const repo = [
 	CommentQueryRepository,
 	LikesRepository,
 	BlogsRepository,
-	UsersQueryRepository
+	UsersQueryRepository,
+	UsersRepository
 ];
 const userGuard = [CheckRefreshTokenForPost, CheckRefreshTokenForGet]
 const adapter = [];

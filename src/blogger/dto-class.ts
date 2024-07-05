@@ -17,4 +17,10 @@ export class BanUserForBlogInputModel {
 	@Transform(({ value }) => value.trim())
 	blogId: string;
   }
+
+  export class BannedType {
+	@IsNotEmpty()
+	@IsBoolean()
+	isBanned: boolean
+  }
   

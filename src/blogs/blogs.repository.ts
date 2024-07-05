@@ -7,6 +7,7 @@ import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 
 @Injectable()
 export class BlogsRepository {
+	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>
@@ -73,11 +74,11 @@ async findBlogByUserIdBlogId(userId: string, blogId: string) {
 
 		// console.log("findBlog: ", findBlog)
 
-	if(!findBlog) throw new NotFoundException([
+	if(!findBlog) {
+		throw new NotFoundException([
 		{message: 'Blog not found'}
 	])
-	// return
-
+}
 	if(findBlog.userId !== userId) {
 		throw new ForbiddenException([
 			{message: 'You are not allowed'}
@@ -92,6 +93,19 @@ async deleteUserBanBlogger() {
 		.execute()
 		
     return true;
+}
+
+async banBlog(id: string, isBanned: boolean, date: string) {
+	const blogBanned = await this.blogsRepository.update(
+		{ id },
+		{ isBanned, banDate: date },
+	  );
+  
+	  return (
+		blogBanned.affected !== null &&
+		blogBanned.affected !== undefined &&
+		blogBanned.affected > 0
+	  );
 }
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
 // 	try {

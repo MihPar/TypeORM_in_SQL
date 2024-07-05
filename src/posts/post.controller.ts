@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  ForbiddenException,
   Get,
   HttpCode,
   NotFoundException,
@@ -27,6 +28,8 @@ import { UpdateLikeStatusCommand } from './use-case/updateLikeStatus-use-case';
 import { CommentViewModel } from '../comment/comment.type';
 import { CreateNewCommentByPostIdCommnad } from '../comment/use-case/createNewCommentByPotsId-use-case';
 import { PostsRepository } from './posts.repository';
+import { UsersRepository } from '../users/users.repository';
+import { Posts } from './entity/entity.posts';
 
 // @SkipThrottle()
 @Controller('posts')
@@ -36,6 +39,7 @@ export class PostController {
     protected blogsQueryRepository: BlogsQueryRepository,
 	protected commentQueryRepository: CommentQueryRepository,
 	protected postsRepository: PostsRepository,
+	protected usersRepository: UsersRepository,
 	protected commandBus: CommandBus
   ) {}
 
@@ -93,8 +97,10 @@ export class PostController {
   	@UserDecorator() user: User,
 	@UserIdDecorator() userId: string | null
 	) {
-    const post: PostsViewModel | boolean = await this.postsQueryRepository.getPostById(postId)
-    if (!post) throw new NotFoundException('Blogs by id not found 404')
+    const post: Posts | boolean = await this.postsQueryRepository.findPostById(postId)
+    if (!post) throw new NotFoundException('Post by id not found 404')
+	const banByBlogger = await this.usersRepository.getBloggerBan(post.blogId, userId)
+	if(banByBlogger) throw new ForbiddenException("You are banned for the blog of this user. Comment creation forbidden")
 	const command = new CreateNewCommentByPostIdCommnad(postId, inputModelContent, user)
 	const createNewCommentByPostId: CommentViewModel | null = await this.commandBus.execute(command)
 	return createNewCommentByPostId

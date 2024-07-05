@@ -22,6 +22,7 @@ export const getAllBanUsers = async (server: any, blogId: string, token: string)
 		.get(`/blogger/users/blog/${blogId}`)
 		.set('Authorization', `Bearer ${token}`)
 
-		console.log((getAllBanUsers.body as PaginationType<UserBanBloggerViewType | null>).items.map(item => item.banInfo))
+		// console.log((getAllBanUsers.body as PaginationType<UserBanBloggerViewType | null>).items.map(item => item.banInfo))
+		console.log("getAllBanUsers.body: ", getAllBanUsers.body)
 		return getAllBanUsers.body
 	}

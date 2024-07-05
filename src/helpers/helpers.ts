@@ -13,7 +13,7 @@ import { BodyBlogsModel } from '../blogsForSA/dto/blogs.class-pipe';
 import { bodyPostsModelClass } from '../posts/dto/posts.class.pipe';
 import { PostsViewModel } from '../posts/posts.type';
 import { BlogsViewType } from '../blogs/blogs.type';
-import { Content } from '../../test/__tests__/comment.30.homeWork/getCommentByIdBan.e2e.test';
+import { Content } from '../../test/__tests__/comment.30.homeWorkBan/getCommentByIdBan.e2e.test';
 import { InputModelLikeStatusClass } from '../comment/dto/comment.class-pipe';
 
 export const commentDBToView = (
@@ -91,7 +91,7 @@ export const updateUserByIdBan = async (server: any, id: string, body: BanInputM
 	return updateUser.body
 }
 
-export const createBlogBlogger = async (server: any, requestBodyAuthLogin: BodyBlogsModel, token: string): Promise<BlogsViewType | null> => {
+export const createBlogBlogger = async (server: any, requestBodyAuthLogin: BodyBlogsModel, token: string): Promise<BlogsViewType> => {
 	const createBloByBlogger = await request(server).post('/blogger/blogs').send(requestBodyAuthLogin).set('Authorization', `Bearer ${token}`);
 	return createBloByBlogger.body
 }

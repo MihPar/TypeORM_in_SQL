@@ -160,7 +160,7 @@ export class PostsQueryRepository {
 		};
 		return result;
 	}
-
+	// !important rename
 	async getPostById(
 		postId: string,
 	): Promise<PostsViewModel | boolean> {
@@ -172,5 +172,18 @@ export class PostsQueryRepository {
 
 		if (!post) return false
 		return true
+	}
+
+	async findPostById(
+		postId: string,
+	): Promise<Posts | false> {
+		const post = await this.postRepository
+			.createQueryBuilder()
+			.select()
+			.where("id = :id", { id: postId })
+			.getOne()
+
+		if (!post) return false
+		return post
 	}
 }

@@ -13,6 +13,7 @@ import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 @Injectable()
 export class UsersRepository {
 	
+	
 	constructor(
 		@InjectRepository(User) protected readonly userRepository: Repository<User>,
 		protected readonly usersQueryRepository: UsersQueryRepository,
@@ -349,5 +350,23 @@ export class UsersRepository {
 			totalCount: count,
 			items,
 		  };
+	}
+
+	async getBloggerBan(blogId: any, userId: string) {
+		return this.userBloggerRepository.findOne({
+			relations: {
+				user: true,
+				blog: true
+			}	,
+			where: {
+				user: {
+					id: userId
+				},
+				blog: {
+					id: blogId
+				}
+			}
+		}
+		)
 	}
 }

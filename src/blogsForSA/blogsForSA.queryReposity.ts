@@ -87,6 +87,8 @@ export class BlogsQueryRepositoryForSA {
 		const totalCount = findBlogs[1]
 
 		// console.log("findAllBlogs: ", findAllBlogs)
+		// console.log("findAllBlogs: ", findBlogs[0].length)
+		// console.log("findAllBlogs: ", findBlogs[0])
 
 		const pagesCount: number = Math.ceil(totalCount / +pageSize);
 		const result: PaginationType<BlogsViewWithBanType> = {
@@ -107,6 +109,7 @@ export class BlogsQueryRepositoryForSA {
 			}
 			))
 		};
+		console.log("result: ", result)
 		return result;
 	}
 

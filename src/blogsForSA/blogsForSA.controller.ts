@@ -1,5 +1,5 @@
 import { CommandBus } from '@nestjs/cqrs';
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, HttpStatus, NotFoundException, Param, ParseUUIDPipe, Post, Put, Query, UseGuards } from "@nestjs/common";
 import { BanBlogInputModel, BodyBlogsModel, inputModelClass, inputModelUpdataPost } from "./dto/blogs.class-pipe";
 import {BlogsRepositoryForSA } from "./blogsForSA.repository";
 import { PostsQueryRepository } from "../posts/postQuery.repository";
@@ -21,6 +21,8 @@ import { Posts } from '../posts/entity/entity.posts';
 import { PostsViewModel } from '../posts/posts.type';
 import { PostsRepository } from '../posts/posts.repository';
 import { BandBlogCommand } from './use-case/updateBlogByBindWithUser-use-case';
+import { BannedType } from '../blogger/dto-class';
+import { BanUnbanBlogCommand } from './use-case/banUnbanSpecifyBlog-use-case';
 
 // @SkipThrottle()
 @UseGuards(AuthBasic)
@@ -33,6 +35,16 @@ export class BlogsControllerForSA {
 	protected postsRepository: PostsRepository,
 	protected commandBus: CommandBus
   ) {}
+
+  @Put(':id/ban')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async banUnbanBlog(
+	@Param('id', ParseUUIDPipe) id: string,
+	@Body() ban: BannedType,
+  ): Promise<void> {
+	const command = new BanUnbanBlogCommand(id, ban)
+	return await this.commandBus.execute<BanUnbanBlogCommand, void>(command)
+  }
 
   @Put(':id/bind-with-user/:userId')
   @HttpCode(HttpStatus.NO_CONTENT)

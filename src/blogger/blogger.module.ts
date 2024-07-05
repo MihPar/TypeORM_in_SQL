@@ -25,12 +25,13 @@ import { FindBannedUserSpecifyBloggerUserCase } from './use-case/getBannedUserSp
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { UserBlogger } from './domain/entity.userBlogger';
 import { DeleteUserBloggerUseCase } from './use-case/deleteUserBlogger-use-case';
+import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
 
 const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase
 ]
 
 const service = [JwtService];
-const repo = [BlogsRepository]
+const repo = [BlogsRepository, BlogsQueryRepository]
 
 @Module({
 	imports: [TypeOrmModule.forFeature([Blogs, User, LikeForComment, LikeForPost, Posts, Comments, UserBlogger]), CqrsModule],

@@ -71,10 +71,10 @@ export class Blogs {
 				userId: user!.id,
 				userLogin: user!.login,
 			  },
-			//   banInfo: {
-			// 	isBanned: inputBlog.isBanned,
-			// 	banDate: inputBlog.banDate,
-			//   },
+			  banInfo: {
+				isBanned: inputBlog.isBanned,
+				banDate: inputBlog.banDate,
+			  },
 		}
 	}
 

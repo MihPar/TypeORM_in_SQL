@@ -23,6 +23,9 @@ import { UpdateUserDataCommand } from '../use-case/updateUserDate-use-case';
 import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
 import { FindBannedUserSpecifyBloggerCommand } from '../use-case/getBannedUserSpecifyBlogger-use-case';
 import { UserBanBloggerViewType } from '../../users/user.type';
+import { CommentForCurrentBloggerResponse } from '../typtBlogger';
+import { BlogsRepository } from '../../blogs/blogs.repository';
+import { BlogsQueryRepository } from '../../blogs/blogs.queryReposity';
 
 @UseGuards(BearerTokenPairQuizGame)
 @Controller('blogger')
@@ -31,12 +34,43 @@ export class BloggerController {
 		private readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA,
 		private readonly blogsRepositoryForSA: BlogsRepositoryForSA,
 		private readonly postsQueryRepository: PostsQueryRepository,
+		private readonly blogsQueryRepository: BlogsQueryRepository,
 		protected commandBus: CommandBus
-	) { }
+	) {}
+
+	@Get('blogs/comments')
+	@HttpCode(HttpStatus.OK)
+	async getAllCommentsByPostCurrentBlogOfUser(
+		@Query('pageNumber') pageNumber: number,
+		@Query('pageSize') pageSize: number,
+		@Query('sortBy') sortBy: string,
+		@Query('sortDirection') sortDirection: 'asc' | 'desc',
+		@UserIdDecorator() userId: string
+ 	): Promise<CommentForCurrentBloggerResponse> {
+		if(!sortBy) {
+			sortBy = 'createdAt'
+		}
+		if(!sortDirection || sortDirection.toLocaleUpperCase() !== 'ASC') {
+			sortDirection = 'desc'
+		}
+		if(!pageSize || !Number.isInteger(pageSize) || pageSize <=0) {
+			pageSize = 10
+		}
+		if(!pageNumber || !Number.isInteger(pageNumber) || pageNumber <=0) {
+			pageNumber = 1
+		}
+		return await this.blogsQueryRepository.findAllCommentsForCurrentBlogger(
+			sortBy,
+			sortDirection,
+			pageSize,
+			pageNumber,
+			userId,
+		)
+	}
+	
 
 	@Put('blogs/:id')
 	@HttpCode(HttpStatus.NO_CONTENT)
-	@HttpCode(HttpStatus.CREATED)
 	async updateBlogsById(
 		@Param() dto: inputModelBlogIdClass,
 		@Body() inputDateMode: BodyBlogsModel,
@@ -190,13 +224,14 @@ export class BloggerController {
 		if(!sortBy) {
 			sortBy = 'createdAt'
 		}
-		if(sortBy === 'login') {
-			sortBy = 'login'
-		}
-		if(sortBy === 'email') {
-			sortBy = 'email'
-		}
-		if(!sortDirection || sortDirection.toUpperCase() !== 'asc') {
+		// if(sortBy === 'login') {
+		// 	sortBy = 'login'
+		// }
+		// if(sortBy === 'email') {
+		// 	sortBy = 'email'
+		// }
+		
+		if(!sortDirection || sortDirection.toUpperCase() !== 'ASC') {
 			sortDirection = 'desc'
 		}
 		if(!+pageSize || !Number.isInteger(+pageSize) || +pageSize <= 0) {

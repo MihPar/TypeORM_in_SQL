@@ -29,6 +29,7 @@ import { Comments } from '../comment/entity/comment.entity';
 import { BandBlogUseCase } from './use-case/updateBlogByBindWithUser-use-case';
 import { UsersRepository } from '../users/users.repository';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { BanUnbanBlogUseCase } from './use-case/banUnbanSpecifyBlog-use-case';
 
 const guards = [
 	CheckRefreshTokenForSA
@@ -41,7 +42,8 @@ const useCase = [
 	CreateNewPostForBlogUseCase,
 	UpdateExistingPostByIdWithBlogIdUseCase,
 	DeletePostByIdCommandUseCase,
-	BandBlogUseCase
+	BandBlogUseCase,
+	BanUnbanBlogUseCase
 ];
 
 const adapter = [];
