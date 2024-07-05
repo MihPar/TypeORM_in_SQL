@@ -73,6 +73,7 @@ export class UsersRepository {
 
 	async createBanUser(newUser: UserBlogger): Promise<void> {
 		const userCreatingResult = await this.userBloggerRepository.save(newUser)
+		// console.log("userCreatingResult: ", userCreatingResult)
 		return
 	}
 
@@ -296,11 +297,21 @@ export class UsersRepository {
 		pageNumber: number, 
 		blogId: string
 	): Promise<PaginationType<UserBanBloggerViewType | null>> {
-		const findBannedUserBlog = await this.blogsRepository.findBy({id: blogId})
+		const findBannedUserBlog = await this.userBloggerRepository.findBy({blogId})
+			// .createQueryBuilder('b')
+			// .where(`b.id = :blogId`, {blogId})
+			// .getRawMany()
+		// console.log("findBannedUserBlog: ", findBannedUserBlog)
+		// const userIds = findBannedUserBlog.map(
+		// 	(row) => row.b_userId,
+		//   );
+		// console.log("findBannedUserBlog: ", findBannedUserBlog)
 		const userIds = findBannedUserBlog.map(item => {return item.userId})
+		// console.log("userIds: ", userIds)
+
 		const query = await this.userRepository
 			.createQueryBuilder()
-			.where(`"id" = any(:userIds)`, {userIds: userIds})
+			.where(`id = any(:userIds)`, {userIds: userIds})
 			.orderBy(
 				`"${sortBy}"`,
 				sortDirection.toUpperCase() as 'ASC' | 'DESC',
@@ -311,11 +322,13 @@ export class UsersRepository {
 		const users = await query.getMany()
 		const count = await query.getCount();
 
+		// console.log('user and count', users, count)
+
 		const items = await Promise.all(
 			users.map(async (item) => {
-			const banUser = await this.blogsRepository
-				.createQueryBuilder('BannedUsersInBlogsEntityTrm')
-				.where('BannedUsersInBlogsEntityTrm.userId = :userId', {
+			const banUser = await this.userBloggerRepository
+				.createQueryBuilder()
+				.where(`"userId" = :userId`, {
 				userId: item.id
 				})
 				.getOne();

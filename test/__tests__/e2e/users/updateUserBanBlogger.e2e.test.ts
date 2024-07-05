@@ -172,7 +172,7 @@ describe('/blogs', () => {
 		let banUserForBlogDto: BanUserForBlogInputModel
 		it('ban user by id for specify blog', async() => {
 			banUserForBlogDto = {
-				isBanned: false,
+				isBanned: true,
 				banReason: "ban bansadfjsadfjsadklfjsdklfjjsdkf",
 				blogId: createBlog.id
 			}

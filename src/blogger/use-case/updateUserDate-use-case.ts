@@ -11,6 +11,7 @@ export class UpdateUserDataCommand {
 	constructor(
 		public id: string,
 		public banUserForBlogDto: BanUserForBlogInputModel,
+		public requestUserId: string
 	) {}
 }
 
@@ -22,14 +23,13 @@ export class UpdateUserDataUseCase implements ICommandHandler<UpdateUserDataComm
 		protected readonly usersRepository: UsersRepository
 	) { }
 	async execute(command: UpdateUserDataCommand): Promise<void> {
-		await this.blogsRepositoryForSA.findBlogByIdBanUser(command.banUserForBlogDto.blogId, command.id)
+		await this.blogsRepositoryForSA.findBlogByIdBanUser(command.banUserForBlogDto.blogId, command.requestUserId)
 
 		const findUserById = await this.usersQueryRepository.findUserById(command.id)
 
 		if(!findUserById) throw new NotFoundException([
 			{message: "user does not exist"}
 		])
-
 		if(command.banUserForBlogDto.isBanned) {
 			const banUser = new UserBlogger()
 			banUser.userId = command.id

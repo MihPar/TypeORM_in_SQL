@@ -167,8 +167,9 @@ export class BloggerController {
 	async updateUserData(
 		@Param('id', ParseUUIDPipe) id: string,
 		@Body() banUserForBlogDto: BanUserForBlogInputModel,
+		@UserIdDecorator() userId: string,
 	) {
-		const command = new UpdateUserDataCommand(id, banUserForBlogDto)
+		const command = new UpdateUserDataCommand(id, banUserForBlogDto, userId)
 		return await this.commandBus.execute<UpdateUserDataCommand, void>(command)
 	}
 

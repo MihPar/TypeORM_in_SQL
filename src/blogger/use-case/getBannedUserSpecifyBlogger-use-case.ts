@@ -34,6 +34,7 @@ export class FindBannedUserSpecifyBloggerUserCase implements ICommandHandler<Fin
 			command.pageNumber,
 			command.blogId
 		)
+		// console.log("findAllBannedUserForSpecifyBlogger: ", findAllBannedUserForSpecifyBlogger.items.map(item => item.banInfo))
 		return findAllBannedUserForSpecifyBlogger
 	}
 }

@@ -68,12 +68,15 @@ async findBlogByUserIdBlogId(userId: string, blogId: string) {
 	const findBlog = await this.blogsRepository
 		.createQueryBuilder()
 		.select()
-		.where(`"id" = :blogId AND "userId" = :userId`, {blogId, userId})
+		.where(`id = :blogId`, {blogId})
 		.getOne()
+
+		// console.log("findBlog: ", findBlog)
 
 	if(!findBlog) throw new NotFoundException([
 		{message: 'Blog not found'}
 	])
+	// return
 
 	if(findBlog.userId !== userId) {
 		throw new ForbiddenException([
