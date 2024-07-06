@@ -31,6 +31,7 @@ export class BlogsQueryRepository {
 			.createQueryBuilder()
 			.select()
 			.where("name ILIKE :name", { name: `%${searchNameTerm}%` })
+			.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 			.orderBy(`"${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)
@@ -76,17 +77,28 @@ export class BlogsQueryRepository {
 		userId: string
 	): Promise<CommentForCurrentBloggerResponse> {
 		const queryBuilder = await this.commentsRepository
-			.createQueryBuilder('c')
-			.innerJoinAndSelect('c.post', 'post')
-			.where(`"post.userId" = :userId`, { userId })
-			.orderBy(
-				'c.' + sortBy,
-				sortDirection.toUpperCase() as 'ASC' | 'DESC',
-			)
-			.take(pageSize)
-			.skip((pageNumber - 1) * pageSize);
+		.findAndCount({
+			relations: {post: {user: true}},
+			where: {post: {user: {id: userId}}},
+			order: {
+				[sortBy]: `${sortDirection.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'}`,
+			  },
+			  take: pageSize,
+			  skip: (pageNumber - 1) * pageSize,
+		})
+			// .createQueryBuilder("c")
+			// .innerJoinAndSelect("c.post", 'post')
+			// .where(`"c"."userId" = :userId`, { userId })
+			// .orderBy(
+			//     "c." + sortBy,
+			//     // `"${sortBy}"`,
+			// 	sortDirection.toUpperCase() as 'ASC' | 'DESC',
+			// )
+			// .take(pageSize)
+			// .skip((pageNumber - 1) * pageSize);
 
-		const [comments, totalCountQuery] = await queryBuilder.getManyAndCount();
+		const [comments, totalCountQuery] = queryBuilder
+		// const [comments, totalCountQuery] = await queryBuilder.getManyAndCount();
 
 		const items = await Promise.all(
 			comments.map(async (c) => {

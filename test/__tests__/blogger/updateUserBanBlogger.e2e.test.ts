@@ -3,7 +3,7 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { delay, find } from 'rxjs';
-import { createAddUser, createBlogBlogger, createToken } from '../../../src/helpers/helpers';
+import { createAddUser, createToken } from '../../../src/helpers/helpers';
 import { BanInputModel } from '../../../src/users/user.class';
 import { UserBanBloggerViewType, UserBanViewType } from '../../../src/users/user.type';
 import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
@@ -14,6 +14,7 @@ import { BlogsViewType } from '../../../src/blogs/blogs.type';
 import { BodyBlogsModel } from '../../../src/blogsForSA/dto/blogs.class-pipe';
 import { banUserSpecifyBlog, getAllBanUsers } from '../../../src/helpers/helperBanUserTest';
 import { PaginationType } from '../../../src/types/pagination.types';
+import { createBlogBlogger } from './helper/createBloggerBlog';
 
 
 export interface Content {
@@ -156,7 +157,7 @@ describe('/blogs', () => {
 
 		});
 
-		let createBlog: BlogsViewType
+		let createBlog: [number, BlogsViewType]
 		it('create blog by blogger', async () => {
 			// console.log("user1Token: ", user1Token)
 			const requestBodyAuthLogin: BodyBlogsModel = {
@@ -174,14 +175,14 @@ describe('/blogs', () => {
 			banUserForBlogDto = {
 				isBanned: true,
 				banReason: "ban bansadfjsadfjsadklfjsdklfjjsdkf",
-				blogId: createBlog.id
+				blogId: createBlog[1].id
 			}
 			let id = firstUser.id
 			const banUser = await banUserSpecifyBlog(server, id, banUserForBlogDto, user1Token)
 		})
 
 		it('get ban user', async() => {
-			const result = await getAllBanUsers(server, createBlog.id, user1Token)
+			const result = await getAllBanUsers(server, createBlog[1].id, user1Token)
 		})
 	})
 })

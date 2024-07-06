@@ -1,8 +1,9 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "../../posts/entity/entity.posts";
-import { BlogsViewType } from "../blogs.type";
+import { BlogsViewType, BlogsViewWithBanType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
 import { UserBlogger } from "../../blogger/domain/entity.userBlogger";
+import { PaginationType } from "../../types/pagination.types";
 
 @Entity()
 export class Blogs {
@@ -59,7 +60,7 @@ export class Blogs {
 		}
 	}
 
-	static findBlogForSAWithInfoBan(inputBlog: Blogs, user: User) {
+	static findBlogForSAWithInfoBan(inputBlog: Blogs, user: User): BlogsViewWithBanType {
 		return {
 			id: inputBlog.id,
 			name: inputBlog.name,

@@ -6,7 +6,7 @@ import { delay, find } from 'rxjs';
 import { AppModule } from '../../../src/app.module';
 import { appSettings } from '../../../src/setting';
 import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
-import { createAddUser, createBlogBlogger, createCom, createLike, createPostBlogger, createToken, findPost, findSABlog, getBlogByUseTwo, getCom, updateUserByIdBan } from '../../../src/helpers/helpers';
+import { createAddUser, createCom, createLike, createPostBlogger, createToken, findPost, getBlogByUseTwo, getCom, updateUserByIdBan } from '../../../src/helpers/helpers';
 import { BanInputModel } from '../../../src/users/user.class';
 import { User } from '../../../src/users/entities/user.entity';
 import { UserBanViewType } from '../../../src/users/user.type';
@@ -20,6 +20,7 @@ import { NewPasswordUseCase } from '../../../src/auth/useCase.ts/createNewPasswo
 import { PaginationType } from '../../../src/types/pagination.types';
 import { InputModelLikeStatusClass } from '../../../src/comment/dto/comment.class-pipe';
 import { LikeStatusEnum } from '../../../src/likes/likes.emun';
+import { createBlogBlogger } from '../blogger/helper/createBloggerBlog';
 
 export interface Content {
 	content: string
@@ -199,7 +200,7 @@ describe('/blogs', () => {
 		// })
 		
 
-		let createBlog: BlogsViewType
+		let createBlog: [number, BlogsViewType]
 		it('create blog by blogger', async () => {
 			// console.log("user1Token: ", user1Token)
 			const requestBodyAuthLogin: BodyBlogsModel = {
@@ -214,7 +215,7 @@ describe('/blogs', () => {
 
 		let createPost: PostsViewModel
 		it('create post by blogId by blogger', async() => {
-			const blogId = createBlog.id
+			const blogId = createBlog[1].id
 			// console.log("blogId: ", blogId)
 			const inputDateModel: bodyPostsModelClass = {
 				title: "title",

@@ -9,20 +9,11 @@ import {
   PlayerStatisticsView,
 } from '../../../../src/pairQuizGame/type/typeViewModel';
 import { PaginationType } from '../../../../src/types/pagination.types';
-import {
-  createAddUser,
-  createQuestionsAndPublished,
-  createToken,
-  findAllGames,
-  findGameById,
-  sendAnswers,
-  sendAnswersFirstPlayer,
-  sendAnswersSecondPlayer,
-  toCreatePair,
-} from '../../../../src/helpers/helpers';
+
 import { questionsInMemory } from '../../../../src/helpers/questionMemory';
 import { GameStatusEnum } from '../../../../src/pairQuizGame/enum/enumPendingPlayer';
 import { delay } from 'rxjs';
+import { findGameById } from '../../../src/helpers/helpers';
 
 describe('/blogs', () => {
   let app: INestApplication;

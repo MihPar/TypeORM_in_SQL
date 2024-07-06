@@ -47,6 +47,11 @@ async findBlogById(id: any): Promise<Blogs | null> {
 		.createQueryBuilder()
 		.where("id = :id", {id})
 		.getOne()
+
+		if(!getBlog) throw new NotFoundException([
+			{message: 'Blog not found'}
+		])
+
 		return getBlog
 }
 
@@ -100,7 +105,7 @@ async banBlog(id: string, isBanned: boolean, date: string) {
 		{ id },
 		{ isBanned, banDate: date },
 	  );
-  
+  console.log('banBlog: ', await this.blogsRepository.createQueryBuilder().where({id}).getOne())
 	  return (
 		blogBanned.affected !== null &&
 		blogBanned.affected !== undefined &&

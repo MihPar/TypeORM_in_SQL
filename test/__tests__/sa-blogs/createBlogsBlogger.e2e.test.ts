@@ -1,38 +1,20 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AppModule } from '../../../../src/app.module';
 import request from 'supertest';
-import { appSettings } from '../../../../src/setting';
-import { PairQuizGame } from '../../../../src/pairQuizGame/domain/entity.pairQuezGame';
-import {
-  GameTypeModel,
-  PlayerStatisticsView,
-} from '../../../../src/pairQuizGame/type/typeViewModel';
-import { PaginationType } from '../../../../src/types/pagination.types';
-import {
-  createAddUser,
-  createQuestionsAndPublished,
-  createToken,
-  findAllGames,
-  findGameById,
-  sendAnswers,
-  sendAnswersFirstPlayer,
-  sendAnswersSecondPlayer,
-  toCreatePair,
-} from '../../../../src/helpers/helpers';
-import { questionsInMemory } from '../../../../src/helpers/questionMemory';
-import { GameStatusEnum } from '../../../../src/pairQuizGame/enum/enumPendingPlayer';
-import { delay } from 'rxjs';
-import { BodyBlogsModel } from '../../../../src/blogsForSA/dto/blogs.class-pipe';
-import e from 'express';
-import { BlogsViewWithBanType } from '../../../../src/blogs/blogs.type';
+import { AppModule } from '../../../src/app.module';
+import { appSettings } from '../../../src/setting';
+import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
+import { createAddUser, createToken } from '../../../src/helpers/helpers';
+import { BodyBlogsModel } from '../../../src/blogsForSA/dto/blogs.class-pipe';
+
 
 describe('/blogs', () => {
   let app: INestApplication;
   let server: any;
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule
+	  ],
     }).compile();
 
     app = moduleFixture.createNestApplication();

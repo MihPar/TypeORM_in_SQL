@@ -91,10 +91,7 @@ export const updateUserByIdBan = async (server: any, id: string, body: BanInputM
 	return updateUser.body
 }
 
-export const createBlogBlogger = async (server: any, requestBodyAuthLogin: BodyBlogsModel, token: string): Promise<BlogsViewType> => {
-	const createBloByBlogger = await request(server).post('/blogger/blogs').send(requestBodyAuthLogin).set('Authorization', `Bearer ${token}`);
-	return createBloByBlogger.body
-}
+
 
 export const createPostBlogger = async (server: any, id: string, inputDateModel: bodyPostsModelClass, token: string) => {
 	const creatPost = await request(server).post(`/blogger/blogs/${id}/posts`).send(inputDateModel).set('Authorization', `Bearer ${token}`);
@@ -130,16 +127,7 @@ export const findPost = async(server: any, id: string) => {
 	return findPost.body
 }
 
-export const findSABlog = async(server: any) => {
-	const findBlog = await request(server).get('/sa/blogs').query({
-		searchNameTerm: "",
-		sortBy: "createdAt",
-		sortDirection: 'desc',
-		pageNumber: '1',
-		pageSize: '10'
-	}).auth('admin', 'qwerty')
-	return findBlog.body
-}
+
 
 export const aDescribe = (skip: boolean): jest.Describe => {
 	if (skip) {
