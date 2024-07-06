@@ -3,17 +3,17 @@ import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { delay, find } from 'rxjs';
-import { createAddUser, createBlogBlogger, createToken } from '../../../../src/helpers/helpers';
-import { BanInputModel } from '../../../../src/users/user.class';
-import { UserBanBloggerViewType, UserBanViewType } from '../../../../src/users/user.type';
-import { GameTypeModel } from '../../../../src/pairQuizGame/type/typeViewModel';
-import { AppModule } from '../../../../src/app.module';
-import { appSettings } from '../../../../src/setting';
-import { BanUserForBlogInputModel } from '../../../../src/blogger/dto-class';
-import { BlogsViewType } from '../../../../src/blogs/blogs.type';
-import { BodyBlogsModel } from '../../../../src/blogsForSA/dto/blogs.class-pipe';
-import { banUserSpecifyBlog, getAllBanUsers } from '../../../../src/helpers/helperBanUserTest';
-import { PaginationType } from '../../../../src/types/pagination.types';
+import { createAddUser, createBlogBlogger, createToken } from '../../../src/helpers/helpers';
+import { BanInputModel } from '../../../src/users/user.class';
+import { UserBanBloggerViewType, UserBanViewType } from '../../../src/users/user.type';
+import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
+import { AppModule } from '../../../src/app.module';
+import { appSettings } from '../../../src/setting';
+import { BanUserForBlogInputModel } from '../../../src/blogger/dto-class';
+import { BlogsViewType } from '../../../src/blogs/blogs.type';
+import { BodyBlogsModel } from '../../../src/blogsForSA/dto/blogs.class-pipe';
+import { banUserSpecifyBlog, getAllBanUsers } from '../../../src/helpers/helperBanUserTest';
+import { PaginationType } from '../../../src/types/pagination.types';
 
 
 export interface Content {
