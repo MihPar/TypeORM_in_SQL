@@ -16,7 +16,6 @@ export class CreateFileCommand {
 @CommandHandler(CreateFileCommand)
 export class CreateFileUseCase implements ICommandHandler<CreateFileCommand> {
 	constructor(
-		// protected readonly fileStorageAdapterUseCase: FileStorageAdapterUseCase,
 		protected commandBus: CommandBus
 
 	) {}
