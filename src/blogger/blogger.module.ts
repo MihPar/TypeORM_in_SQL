@@ -26,8 +26,10 @@ import { BlogsRepository } from '../blogs/blogs.repository';
 import { UserBlogger } from './domain/entity.userBlogger';
 import { DeleteUserBloggerUseCase } from './use-case/deleteUserBlogger-use-case';
 import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
+import { FileStorageAdapterUseCase } from './use-case/fileStorageAdapter-use-case';
+import { CreateFileUseCase } from './use-case/createFile-use-case';
 
-const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase
+const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase, FileStorageAdapterUseCase, CreateFileUseCase
 ]
 
 const service = [JwtService];

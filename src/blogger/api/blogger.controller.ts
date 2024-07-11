@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, NotFoundException, Query, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, NotFoundException, Query, ParseUUIDPipe, ParseIntPipe, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { BodyBlogsModel, inputModelBlogIdClass, inputModelClass, inputModelUpdataPost } from '../../blogsForSA/dto/blogs.class-pipe';
 import { User } from '../../users/entities/user.entity';
 import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
@@ -24,10 +24,14 @@ import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
 import { FindBannedUserSpecifyBloggerCommand } from '../use-case/getBannedUserSpecifyBlogger-use-case';
 import { UserBanBloggerViewType } from '../../users/user.type';
 import { CommentForCurrentBloggerResponse } from '../typtBlogger';
-import { BlogsRepository } from '../../blogs/blogs.repository';
 import { BlogsQueryRepository } from '../../blogs/blogs.queryReposity';
+import {readFile, existsSync, mkdirSync} from 'node:fs'
+import {dirname, join} from 'node:path'
+import { ensureDirSync, readTextFileAsync, saveFileAsync } from '../../utils/fs-utils';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateFileCommand } from '../use-case/createFile-use-case';
 
-@UseGuards(BearerTokenPairQuizGame)
+// @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
 export class BloggerController {
 	constructor(
@@ -37,6 +41,43 @@ export class BloggerController {
 		private readonly blogsQueryRepository: BlogsQueryRepository,
 		protected commandBus: CommandBus
 	) {}
+
+	@Post('blogs/:blogId/images/wallpaper') // change in future
+	@HttpCode(HttpStatus.CREATED)
+	@UseInterceptors(FileInterceptor("avatar123"))
+	async uploadBackgroundWallpaper(
+		@Param('blogId', ParseIntPipe) blogId: string,
+		@UploadedFile(
+
+		) avatarFile: Express.Multer.File
+		//@Body() file: any
+	) {
+		const command = new CreateFileCommand(blogId, avatarFile.originalname, avatarFile.buffer) 
+		await this.commandBus.execute<CreateFileCommand>(command)
+		// console.log(__dirname)
+		// console.log(process.env.NODE_PATH)
+		// console.log(dirname(require.main.filename))
+		// console.log(join('views', "files.html"))
+		// console.log(join(__dirname, ".." , "..", "..", 'views', "files.html"))
+		
+
+		// console.log(blogId, " blogId")
+		// console.log(avatarFile, " body")
+		 const content = await readTextFileAsync(join( ".." , 'views', "files.html"))
+		return // content
+	}
+
+
+	@Get('views') // change in future
+	@HttpCode(HttpStatus.CREATED)
+	async getView(
+		// @Param('blogId', ParseUUIDPipe) blogId: string,
+		@Body() file: string
+	) {
+		
+		const content = await readTextFileAsync(join( ".." , 'views', "files.html"))
+		return content
+	}
 
 	@Get('blogs/comments')
 	@HttpCode(HttpStatus.OK)
