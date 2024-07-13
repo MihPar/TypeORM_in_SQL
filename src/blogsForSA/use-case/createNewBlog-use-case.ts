@@ -27,6 +27,7 @@ export class CreateNewBlogForSAUseCase
 	  newBlog.userId = command.userId;
       newBlog.isMembership = false
 	  
+	  
     const createBlog: Blogs | null =
       await this.blogsRepositoryForSA.createNewBlogs(newBlog);
 	//   console.log("id: ", createBlog.id)

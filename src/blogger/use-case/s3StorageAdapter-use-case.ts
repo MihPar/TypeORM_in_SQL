@@ -1,9 +1,10 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs"
 import { PutObjectCommand, PutObjectCommandOutput, S3Client } from "@aws-sdk/client-s3"
 import { SaveFileResultType } from "../typtBlogger"
+import { S3StorageAdapter } from "../adapter/s3StorageAdapter"
 
 
-export class S3StorageAdapterCommand {
+export class UploadWallpaperForBlogCommand {
 	constructor(
 		public userId: string,
 		public blogId: string, 
@@ -13,23 +14,14 @@ export class S3StorageAdapterCommand {
 }
 
 
-@CommandHandler(S3StorageAdapterCommand)
-export class S3StorageAdapterUseCase implements ICommandHandler<S3StorageAdapterCommand, any> {
-	s3Client: S3Client
-	// bucketName: `michael-paramonov`
-	constructor() {
-		const REGION = 'us-east-1'
-		this.s3Client = new S3Client({
-			region: REGION,
-			endpoint: 'https://storage.yandexcloud.net',
-			credentials: {
-				secretAccessKey: "YCPYEGcmqi6x2EWQDk07BIBTgowJgFtN7CeEHI4n",
-				accessKeyId: 'YCAJEXc7e_rINV6X5mObUjCJI'
-			}
-		})
-	}
+@CommandHandler(UploadWallpaperForBlogCommand)
+export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWallpaperForBlogCommand, any> {
+	
+	constructor(
+		protected readonly s3StorageAdapter: S3StorageAdapter
+	) {}
 
-	async execute(command: S3StorageAdapterCommand): Promise<SaveFileResultType> {
+	async execute(command: UploadWallpaperForBlogCommand): Promise<SaveFileResultType> {
 		const key = `/content/users/${command.userId}/avatars/${command.originalname}`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
@@ -39,7 +31,7 @@ export class S3StorageAdapterUseCase implements ICommandHandler<S3StorageAdapter
 		}
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
-			const uploadResult: PutObjectCommandOutput = await this.s3Client.send(objectCommand)
+			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
 			return {
 					wallpaper: {
 					  url: key,

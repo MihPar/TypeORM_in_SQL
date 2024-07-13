@@ -56,7 +56,23 @@ export class Blogs {
 			description: inputBlog.description,
 			websiteUrl: inputBlog.websiteUrl,
 			createdAt: inputBlog.createdAt,
-			isMembership: inputBlog.isMembership
+			isMembership: inputBlog.isMembership,
+			images: {
+				wallpaper: {
+				url: `/content/users/${inputBlog.id}/avatars/${command.originalname}`,
+				width: 0,
+				height: 0,
+				fileSize: 0
+				},
+				main: [
+					{
+						url: ,
+						width: 0,
+						height: 0,
+						fileSize: 0
+					}
+				]
+			}
 		}
 	}
 

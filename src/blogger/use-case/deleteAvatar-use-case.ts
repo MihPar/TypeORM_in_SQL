@@ -3,10 +3,8 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs"
 
 export class DeleteAvatarCommand {
 	constructor(
-		public userId: string,
-		public blogId: string, 
-		public originalname: string, 
-		public buffer: Buffer
+		public userId: string, 
+		public originalname: string
 	) {}
 }
 
@@ -29,12 +27,13 @@ export class DeleteAvatarUseCase implements ICommandHandler<DeleteAvatarCommand>
 
 	async execute(command: DeleteAvatarCommand  ) {
 		// const fileId = await this.userProfileRepo.getProfile(command.userId)
-		const bucketParams = {Bucket: this.bucketName, Key: 'Key' /* fileId */}
+		const key = `/content/users/${command.userId}/avatars/${command.originalname}`
+		const bucketParams = {Bucket: this.bucketName, Key: 'key'}
 		try {
 			const data = await this.s3Client.send(new DeleteObjectCommand(bucketParams))
 			return data
 		} catch(exeption) {
-			console.log("E xeption", exeption)
+			console.log("Exeption", exeption)
 			throw exeption
 		}
 	}

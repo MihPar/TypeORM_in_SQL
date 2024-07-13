@@ -27,9 +27,10 @@ import { BlogsQueryRepository } from '../../blogs/blogs.queryReposity';
 import {join} from 'node:path'
 import { readTextFileAsync } from '../../utils/fs-utils';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { S3StorageAdapterCommand } from '../use-case/s3StorageAdapter-use-case';
+import { UploadWallpaperForBlogCommand } from '../use-case/s3StorageAdapter-use-case';
 import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
+import { DeleteAvatarCommand } from '../use-case/deleteAvatar-use-case';
 
 // @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -64,8 +65,8 @@ export class BloggerController {
 		// console.log(blogId, " blogId")
 		// console.log(avatarFile, " body")
 
-		const saveAvatarCommand = new S3StorageAdapterCommand(userId, blogId, avatarFile.originalname, avatarFile.buffer)
-		const result = await this.commandBus.execute<S3StorageAdapterCommand>(saveAvatarCommand)
+		const saveAvatarCommand = new UploadWallpaperForBlogCommand(userId, blogId, avatarFile.originalname, avatarFile.buffer)
+		const result = await this.commandBus.execute<UploadWallpaperForBlogCommand>(saveAvatarCommand)
 
 		// return "avatar saved"
 		console.log("result: ", result)
@@ -109,7 +110,7 @@ export class BloggerController {
 	// 	@UploadedFile() avatarFile: Express.Multer.File,
 	// 	@UserIdDecorator() userId: string
 	// ) {
-	// 	const command = new DeleteAvatarCommand(userId, blogId, avatarFile.originalname, avatarFile.buffer) 
+	// 	const command = new DeleteAvatarCommand(userId, avatarFile.originalname) 
 	// 	await this.commandBus.execute<DeleteAvatarCommand>(command)
 	// 	return 
 	// }
