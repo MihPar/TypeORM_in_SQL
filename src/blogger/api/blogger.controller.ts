@@ -27,10 +27,11 @@ import { BlogsQueryRepository } from '../../blogs/blogs.queryReposity';
 import {join} from 'node:path'
 import { readTextFileAsync } from '../../utils/fs-utils';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadWallpaperForBlogCommand } from '../use-case/s3StorageAdapter-use-case';
+import { UploadWallpaperForBlogCommand } from '../use-case/uploadWallpaperForBlog-use-case';
 import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
 import { DeleteAvatarCommand } from '../use-case/deleteAvatar-use-case';
+import { CreateFileCommand } from '../use-case/createFile-use-case';
 
 // @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')

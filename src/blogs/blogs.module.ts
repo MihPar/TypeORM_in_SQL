@@ -29,6 +29,7 @@ import { BlogsController } from './blogs.controller';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { S3StorageAdapter } from '../blogger/adapter/s3StorageAdapter';
 
 const userCase = [
   UpdateBlogForSAUseCase,
@@ -54,7 +55,7 @@ const repo = [
 
 const useGuard = [CheckRefreshTokenForGet, CheckRefreshTokenForSA];
 
-const adapter = [];
+const adapter = [S3StorageAdapter];
 const manager = [];
 const service = [JwtService];
 

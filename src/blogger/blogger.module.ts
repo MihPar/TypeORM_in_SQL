@@ -29,19 +29,21 @@ import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
 import { FileStorageAdapterUseCase } from './use-case/fileStorageAdapter-use-case';
 import { CreateFileUseCase } from './use-case/createFile-use-case';
 import { DeleteAvatarUseCase } from './use-case/deleteAvatar-use-case';
-import { UploadWallpaperForBlogUseCase } from './use-case/s3StorageAdapter-use-case';
+import { UploadWallpaperForBlogUseCase } from './use-case/uploadWallpaperForBlog-use-case';
 import { UploadImageForBlogUseCase } from './use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostUseCase } from './use-case/uploadImageForPost-use-case';
+import { S3StorageAdapter } from './adapter/s3StorageAdapter';
 
 const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase, FileStorageAdapterUseCase, CreateFileUseCase, UploadWallpaperForBlogUseCase, DeleteAvatarUseCase, UploadImageForBlogUseCase, UploadImageForPostUseCase
 ]
 
 const service = [JwtService];
 const repo = [BlogsRepository, BlogsQueryRepository]
+const adapter = [S3StorageAdapter]
 
 @Module({
 	imports: [TypeOrmModule.forFeature([Blogs, User, LikeForComment, LikeForPost, Posts, Comments, UserBlogger]), CqrsModule],
 	controllers: [BloggerController],
-	providers: [...useCase, ...service, ...repo],
+	providers: [...useCase, ...service, ...repo, ...adapter],
 })
 export class BloggerModule { }

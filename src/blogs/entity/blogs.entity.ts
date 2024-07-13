@@ -59,14 +59,14 @@ export class Blogs {
 			isMembership: inputBlog.isMembership,
 			images: {
 				wallpaper: {
-				url: `/content/users/${inputBlog.id}/avatars/${command.originalname}`,
+				url: `/content/users/111/avatars/222`,
 				width: 0,
 				height: 0,
 				fileSize: 0
 				},
 				main: [
 					{
-						url: ,
+						url: `/content/users/111/avatars/222`,
 						width: 0,
 						height: 0,
 						fileSize: 0

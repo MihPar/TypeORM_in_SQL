@@ -27,6 +27,7 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
+			console.log("uploadResult: ", uploadResult)
 			return {
 					wallpaper: {
 					  url: key,
@@ -37,9 +38,9 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 					main: [
 					  {
 						url: key,
-					  width: "156px",
-					  height: "156px",
-					  fileSize: "100KB"
+						width: "156px",
+						height: "156px",
+						fileSize: "100KB"
 					  }
 					]
 			}
