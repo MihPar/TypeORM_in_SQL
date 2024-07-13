@@ -32,6 +32,7 @@ import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-ca
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
 import { DeleteAvatarCommand } from '../use-case/deleteAvatar-use-case';
 import { CreateFileCommand } from '../use-case/createFile-use-case';
+import { GetSecretDownloadAvatarCommmand } from '../use-case/getSecretDownloadUrl-use-case';
 
 // @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -102,6 +103,18 @@ export class BloggerController {
 		
 		return uploadImageForPost
 	}
+
+	@Get('blogs/secret')
+	@HttpCode(HttpStatus.OK)
+	@UseInterceptors(FileInterceptor("avatarForPost"))
+	async getSecretDownloadUrl() {
+		const userId = '10'
+		const paymentId = '10 '
+		const command = new GetSecretDownloadAvatarCommmand(userId, paymentId)
+		const getSecret = await this.commandBus.execute<GetSecretDownloadAvatarCommmand>(command)
+		return getSecret
+	}
+
 
 	// @Delete('blogs/:blogId/images/wallpaper') // change in future
 	// @HttpCode(HttpStatus.CREATED)

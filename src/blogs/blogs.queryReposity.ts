@@ -17,7 +17,7 @@ export class BlogsQueryRepository {
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
 		@InjectRepository(LikeForComment) protected readonly commentLikesRepository: Repository<LikeForComment>,
 		@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>
-	) { }
+	) {}
 
 	async findAllBlogs(
 		searchNameTerm: string | null,

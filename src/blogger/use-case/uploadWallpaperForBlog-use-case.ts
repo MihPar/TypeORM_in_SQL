@@ -30,11 +30,11 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 			ContentType: 'image/png'
 		}
 		const objectCommand = new PutObjectCommand(bucketParams)
-		console.log("33: ")
+		// console.log("33: ")
 		try {
-		console.log("35: ")
+		// console.log("35: ")
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
-			console.log("uploadResult: ", uploadResult)
+			// console.log("uploadResult: ", uploadResult)
 			return {
 					wallpaper: {
 					  url: key,
