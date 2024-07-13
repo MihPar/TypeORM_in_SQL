@@ -26,3 +26,25 @@ export interface CommentForCurrentBloggerResponse {
 	  blogName: string;
 	};
   };
+
+  export type SaveFileResultType = {
+	wallpaper: {
+		url: string
+		width: string
+		height: string
+		fileSize: string
+	  },
+	  main: [
+		{
+		  url: string
+		  width: string
+		  height: string
+		  fileSize: string
+		}
+	  ]
+}
+
+export type SaveFileType = {
+	url: string
+	fileId: string
+}

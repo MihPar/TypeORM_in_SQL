@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, UseGuards, NotFoundException, Query, ParseUUIDPipe, ParseIntPipe, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, NotFoundException, Query, ParseUUIDPipe, ParseIntPipe, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { BodyBlogsModel, inputModelBlogIdClass, inputModelClass, inputModelUpdataPost } from '../../blogsForSA/dto/blogs.class-pipe';
 import { User } from '../../users/entities/user.entity';
 import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
@@ -17,7 +17,6 @@ import { PaginationType } from '../../types/pagination.types';
 import { PostsViewModel } from '../../posts/posts.type';
 import { UpdateExistingPostByIdWithBlogIdBloggerCommand } from '../use-case/updatePostByBlogIdBlogger-use-case';
 import { CreateNewBlogForSACommand } from '../../blogsForSA/use-case/createNewBlog-use-case';
-import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
 import { BanUserForBlogInputModel } from '../dto-class';
 import { UpdateUserDataCommand } from '../use-case/updateUserDate-use-case';
 import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
@@ -25,11 +24,12 @@ import { FindBannedUserSpecifyBloggerCommand } from '../use-case/getBannedUserSp
 import { UserBanBloggerViewType } from '../../users/user.type';
 import { CommentForCurrentBloggerResponse } from '../typtBlogger';
 import { BlogsQueryRepository } from '../../blogs/blogs.queryReposity';
-import {readFile, existsSync, mkdirSync} from 'node:fs'
-import {dirname, join} from 'node:path'
-import { ensureDirSync, readTextFileAsync, saveFileAsync } from '../../utils/fs-utils';
+import {join} from 'node:path'
+import { readTextFileAsync } from '../../utils/fs-utils';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateFileCommand } from '../use-case/createFile-use-case';
+import { S3StorageAdapterCommand } from '../use-case/s3StorageAdapter-use-case';
+import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-case';
+import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
 
 // @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -44,16 +44,16 @@ export class BloggerController {
 
 	@Post('blogs/:blogId/images/wallpaper') // change in future
 	@HttpCode(HttpStatus.CREATED)
-	@UseInterceptors(FileInterceptor("avatar123"))
+	@UseInterceptors(FileInterceptor("avatar"))
 	async uploadBackgroundWallpaper(
 		@Param('blogId', ParseIntPipe) blogId: string,
-		@UploadedFile(
-
-		) avatarFile: Express.Multer.File
+		@UploadedFile() avatarFile: Express.Multer.File,
+		@UserIdDecorator() userId: string
 		//@Body() file: any
 	) {
-		const command = new CreateFileCommand(blogId, avatarFile.originalname, avatarFile.buffer) 
-		await this.commandBus.execute<CreateFileCommand>(command)
+		// console.log("avatarFile.originalname: ", avatarFile.originalname)
+		// const command = new CreateFileCommand(blogId, avatarFile.originalname, avatarFile.buffer) 
+		// const content = await this.commandBus.execute<CreateFileCommand>(command)
 		// console.log(__dirname)
 		// console.log(process.env.NODE_PATH)
 		// console.log(dirname(require.main.filename))
@@ -63,10 +63,56 @@ export class BloggerController {
 
 		// console.log(blogId, " blogId")
 		// console.log(avatarFile, " body")
-		 const content = await readTextFileAsync(join( ".." , 'views', "files.html"))
-		return // content
+
+		const saveAvatarCommand = new S3StorageAdapterCommand(userId, blogId, avatarFile.originalname, avatarFile.buffer)
+		const result = await this.commandBus.execute<S3StorageAdapterCommand>(saveAvatarCommand)
+
+		// return "avatar saved"
+		console.log("result: ", result)
+		return result
 	}
 
+	@Post('blogs/:blogId/images/main')
+	@HttpCode(HttpStatus.CREATED)
+	@UseInterceptors(FileInterceptor("avatarForBlog"))
+	async uploadImageForBlog(
+		@Param('blogId', ParseIntPipe) blogId: string,
+		@UploadedFile() avatarFile: Express.Multer.File,
+		@UserIdDecorator() userId: string
+	) {
+		const command = new UploadImageForBlogCommand(blogId, userId,  avatarFile.originalname, avatarFile.buffer)
+		const upload = await this.commandBus.execute<UploadImageForBlogCommand>(command)
+		return upload
+	}
+
+	@Post('blogs/:blogId/posts/:postId/images/main')
+	@HttpCode(HttpStatus.CREATED)
+	@UseInterceptors(FileInterceptor("avatarForPost"))
+	async uploadImagesForPost(
+		@Param('blogId', ParseIntPipe) blogId: string,
+		@Param('postId', ParseIntPipe) postId: string,
+		@UploadedFile() avatarFile: Express.Multer.File,
+		@UserIdDecorator() userId: string
+	) {
+		const command = new UploadImageForPostCommand(blogId, postId, userId,  avatarFile.originalname, avatarFile.buffer)
+		const uploadImageForPost = await this.commandBus.execute<UploadImageForPostCommand>(command)
+		// console.log("uploadImageForPost: ", uploadImageForPost)
+		
+		return uploadImageForPost
+	}
+
+	// @Delete('blogs/:blogId/images/wallpaper') // change in future
+	// @HttpCode(HttpStatus.CREATED)
+	// @UseInterceptors(FileInterceptor("avatar123"))
+	// async deleteAvatar(
+	// 	@Param('blogId', ParseIntPipe) blogId: string,
+	// 	@UploadedFile() avatarFile: Express.Multer.File,
+	// 	@UserIdDecorator() userId: string
+	// ) {
+	// 	const command = new DeleteAvatarCommand(userId, blogId, avatarFile.originalname, avatarFile.buffer) 
+	// 	await this.commandBus.execute<DeleteAvatarCommand>(command)
+	// 	return 
+	// }
 
 	@Get('views') // change in future
 	@HttpCode(HttpStatus.CREATED)

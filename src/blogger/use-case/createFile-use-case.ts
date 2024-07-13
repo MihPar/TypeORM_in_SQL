@@ -26,8 +26,3 @@ export class CreateFileUseCase implements ICommandHandler<CreateFileCommand> {
 		// await this.fileStorageAdapterUseCase.execute(saveFile)
 	}
 }
-
-export type SaveFileResultType = {
-	url: string,
-	id: string
-}
