@@ -33,8 +33,9 @@ import { UploadWallpaperForBlogUseCase } from './use-case/uploadWallpaperForBlog
 import { UploadImageForBlogUseCase } from './use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostUseCase } from './use-case/uploadImageForPost-use-case';
 import { S3StorageAdapter } from './adapter/s3StorageAdapter';
+import { GetSecretDownloadAvatarUseCase } from './use-case/getSecretDownloadUrl-use-case';
 
-const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase, FileStorageAdapterUseCase, CreateFileUseCase, UploadWallpaperForBlogUseCase, DeleteAvatarUseCase, UploadImageForBlogUseCase, UploadImageForPostUseCase
+const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase, FileStorageAdapterUseCase, CreateFileUseCase, UploadWallpaperForBlogUseCase, DeleteAvatarUseCase, UploadImageForBlogUseCase, UploadImageForPostUseCase, GetSecretDownloadAvatarUseCase
 ]
 
 const service = [JwtService];

@@ -1,3 +1,6 @@
+import { MinLength } from 'class-validator';
+import { MaxLength } from 'class-validator';
+import { FromEnvInit } from './../../../node_modules/@aws-sdk/credential-provider-env/dist-types/fromEnv.d';
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "../../posts/entity/entity.posts";
 import { BlogsViewType, BlogsViewWithBanType } from "../blogs.type";
@@ -43,6 +46,18 @@ export class Blogs {
 	@Column({default: null})
 	banReason: string
 
+	@Column({nullable: true})
+	url: string
+
+	@Column({nullable: true})
+	width: number
+
+	@Column({nullable: true})
+	height: number
+
+	@Column({nullable: true})
+	fileSize: number
+
 	@OneToMany(() => Posts, p => p.blog)
 	post: Posts[]
 
@@ -58,15 +73,10 @@ export class Blogs {
 			createdAt: inputBlog.createdAt,
 			isMembership: inputBlog.isMembership,
 			images: {
-				wallpaper: {
-				url: `/content/users/111/avatars/222`,
-				width: 0,
-				height: 0,
-				fileSize: 0
-				},
+				wallpaper: null,
 				main: [
 					{
-						url: `/content/users/111/avatars/222`,
+						url: null,
 						width: 0,
 						height: 0,
 						fileSize: 0

@@ -30,7 +30,6 @@ export class CreateNewBlogForSAUseCase
 	  
     const createBlog: Blogs | null =
       await this.blogsRepositoryForSA.createNewBlogs(newBlog);
-	//   console.log("id: ", createBlog.id)
     if (!createBlog) return null;
     return Blogs.createNewBlogForSA(createBlog)
   }

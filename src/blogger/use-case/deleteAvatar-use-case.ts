@@ -27,7 +27,7 @@ export class DeleteAvatarUseCase implements ICommandHandler<DeleteAvatarCommand>
 
 	async execute(command: DeleteAvatarCommand  ) {
 		// const fileId = await this.userProfileRepo.getProfile(command.userId)
-		const key = `/content/users/${command.userId}/avatars/${command.originalname}`
+		const key = `/content/users/${command.userId}/avatars/${command.userId}_avatar.png`
 		const bucketParams = {Bucket: this.bucketName, Key: 'key'}
 		try {
 			const data = await this.s3Client.send(new DeleteObjectCommand(bucketParams))

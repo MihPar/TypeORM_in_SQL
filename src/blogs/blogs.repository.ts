@@ -4,9 +4,11 @@ import { DataSource, Repository } from "typeorm";
 import { Blogs } from "./entity/blogs.entity";
 import { BanInputModel } from "../users/user.class";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
+import { Metadata } from "sharp";
 
 @Injectable()
 export class BlogsRepository {
+	
 	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
@@ -111,6 +113,15 @@ async banBlog(id: string, isBanned: boolean, date: string) {
 		blogBanned.affected !== undefined &&
 		blogBanned.affected > 0
 	  );
+}
+
+async updateBlogForWallpaper(blogId: string, url: string, infoImage: Metadata): Promise<void> {
+	const updateBlog = await this.blogsRepository
+		.update(
+			{id: blogId}, 
+			{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size}
+		)
+	return
 }
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
 // 	try {

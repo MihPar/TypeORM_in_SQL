@@ -132,7 +132,7 @@ describe('/blogs', () => {
 			expect(server).toBeDefined();
 			firstUser = await createAddUser(server, user1Creds);
 			// console.log("user: ", firstUser)
-			secondUser = await createAddUser(server, user2Creds);
+			// secondUser = await createAddUser(server, user2Creds);
 			// console.log("second: ", secondUser)
 			// await createAddUser(server, user3Creds);
 			// await createAddUser(server, user4Creds);
@@ -143,17 +143,17 @@ describe('/blogs', () => {
 				await createToken(server, user1Creds.login, user1Creds.password)
 			).body.accessToken;
 
-			user2Token = (
-				await createToken(server, user2Creds.login, user2Creds.password)
-			).body.accessToken;
+			// user2Token = (
+			// 	await createToken(server, user2Creds.login, user2Creds.password)
+			// ).body.accessToken;
 
-			user3Token = (
-				await createToken(server, user3Creds.login, user3Creds.password)
-			).body.accessToken;
+			// user3Token = (
+			// 	await createToken(server, user3Creds.login, user3Creds.password)
+			// ).body.accessToken;
 
-			user4Token = (
-				await createToken(server, user4Creds.login, user4Creds.password)
-			).body.accessToken;
+			// user4Token = (
+			// 	await createToken(server, user4Creds.login, user4Creds.password)
+			// ).body.accessToken;
 
 		});
 
@@ -170,17 +170,6 @@ describe('/blogs', () => {
 			//  console.log("createBlog: ", createBlog)
 		})
 
-		let banUserForBlogDto: BanUserForBlogInputModel
-		it('ban user by id for specify blog', async() => {
-			banUserForBlogDto = {
-				isBanned: true,
-				banReason: "ban bansadfjsadfjsadklfjsdklfjjsdkf",
-				blogId: createBlog[1].id
-			}
-			let id = firstUser.id
-			const banUser = await banUserSpecifyBlog(server, id, banUserForBlogDto, user2Token)
-		})
-
 		let createPost: PostsViewModel
 		it('create post by blogId by blogger', async() => {
 			const blogId = createBlog[1].id
@@ -194,20 +183,14 @@ describe('/blogs', () => {
 			//  console.log("createPost: ", createPost)
 		})
 
-		let createCommnets: CommentViewModel
-		it('create comments by postId', async() => {
-			const postId = createPost.id
-			// console.log("postId: ", postId)
-
-			const content: Content = {
-				content: "string string string string string"
-			}
-			createCommnets = await createCom(server, postId, content, user1Token)
-			console.log("createCommnets: ", createCommnets)
-		})
-
-		it('get ban user', async() => {
-			const result = await getAllBanUsers(server, createBlog[1].id, user2Token)
+		it('upload background wallpaper', async() => {
+			const avatarFile = `https://storage.yandexcloud.net/michael-paramonov//content/users/111/avatars/111_avatar.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=YCAJEhVoFrKMRARF1bP9NcycH%2F20240714%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Date=20240714T164714Z&X-Amz-Expires=3600&X-Amz-Signature=E04B7CF8DF3AD13A795DD908F0D4DEB9030456A27843D950B5AB5BF269A87886&X-Amz-SignedHeaders=host`
+			const upload = await request(server)
+				.post(`/blogger/blogs/${createBlog[1].id}/images/wallpaper`)
+				.set('Authorization', `Bearer ${user1Token}`)
+				.send(avatarFile)
+				
+			console.log("upload: ", upload.body)
 		})
 	})
 })

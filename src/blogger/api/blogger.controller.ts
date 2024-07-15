@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, NotFoundException, Query, ParseUUIDPipe, ParseIntPipe, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, NotFoundException, Query, ParseUUIDPipe, ParseIntPipe, UploadedFile, UseInterceptors, UseGuards } from '@nestjs/common';
 import { BodyBlogsModel, inputModelBlogIdClass, inputModelClass, inputModelUpdataPost } from '../../blogsForSA/dto/blogs.class-pipe';
 import { User } from '../../users/entities/user.entity';
 import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
@@ -30,9 +30,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadWallpaperForBlogCommand } from '../use-case/uploadWallpaperForBlog-use-case';
 import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
-import { DeleteAvatarCommand } from '../use-case/deleteAvatar-use-case';
-import { CreateFileCommand } from '../use-case/createFile-use-case';
 import { GetSecretDownloadAvatarCommmand } from '../use-case/getSecretDownloadUrl-use-case';
+import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
 
 // @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -54,6 +53,7 @@ export class BloggerController {
 		@UserIdDecorator() userId: string
 		//@Body() file: any
 	) {
+		console.log("avatarFile:; ", avatarFile)
 		// console.log("avatarFile.originalname: ", avatarFile.originalname)
 		// const command = new CreateFileCommand(blogId, avatarFile.originalname, avatarFile.buffer) 
 		// const content = await this.commandBus.execute<CreateFileCommand>(command)
@@ -66,7 +66,7 @@ export class BloggerController {
 
 		// console.log(blogId, " blogId")
 		// console.log(avatarFile, " body")
-
+// const blogId = '111'
 		const saveAvatarCommand = new UploadWallpaperForBlogCommand(userId, blogId, avatarFile.originalname, avatarFile.buffer)
 		const result = await this.commandBus.execute<UploadWallpaperForBlogCommand>(saveAvatarCommand)
 
@@ -106,17 +106,18 @@ export class BloggerController {
 
 	@Get('blogs/secret')
 	@HttpCode(HttpStatus.OK)
-	@UseInterceptors(FileInterceptor("avatarForPost"))
-	async getSecretDownloadUrl() {
-		const userId = '10'
-		const paymentId = '10 '
-		const command = new GetSecretDownloadAvatarCommmand(userId, paymentId)
+	// @UseInterceptors(FileInterceptor("avatar"))
+	async getSecretDownloadUrl(
+		@Param('blogId', ParseIntPipe) blogId: string
+	) {
+		const fileId = `/content/users/${blogId}/avatars/${blogId}_avatar.png`
+		const command = new GetSecretDownloadAvatarCommmand(fileId)
 		const getSecret = await this.commandBus.execute<GetSecretDownloadAvatarCommmand>(command)
 		return getSecret
 	}
 
 
-	// @Delete('blogs/:blogId/images/wallpaper') // change in future
+	// @Delete('blogs/delete') // change in future
 	// @HttpCode(HttpStatus.CREATED)
 	// @UseInterceptors(FileInterceptor("avatar123"))
 	// async deleteAvatar(

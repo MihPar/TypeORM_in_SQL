@@ -30,16 +30,16 @@ export interface CommentForCurrentBloggerResponse {
   export type SaveFileResultType = {
 	wallpaper: {
 		url: string
-		width: string
-		height: string
-		fileSize: string
+		width: number
+		height: number
+		fileSize: number
 	  },
 	  main: [
 		{
 		  url: string
-		  width: string
-		  height: string
-		  fileSize: string
+		  width: number
+		  height: number
+		  fileSize: number
 		}
 	  ]
 }
