@@ -27,9 +27,11 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 
 	async execute(command: UploadWallpaperForBlogCommand): Promise<SaveFileResultType> {
 		// const infoImage = await sharp(command.buffer).metadata()
-		const infoImage = await sharp(command.buffer)
+		let image = await sharp(command.buffer)
+		// .metadata()
 		.resize(320, 240)
-		.toFile('output.webp', (err, info) => {});
+		// .toFile('output.webp', (err, info) => {});
+		const infoImage = await image.metadata()
 
 		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.png`
 		const bucketParams = {
