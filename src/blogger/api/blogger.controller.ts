@@ -32,6 +32,7 @@ import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-ca
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
 import { GetSecretDownloadAvatarCommmand } from '../use-case/getSecretDownloadUrl-use-case';
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
+import { DeleteAvatarCommand } from '../use-case/deleteAvatar-use-case';
 
 // @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -53,7 +54,7 @@ export class BloggerController {
 		@UserIdDecorator() userId: string
 		//@Body() file: any
 	) {
-		console.log("avatarFile:; ", avatarFile)
+		// console.log("avatarFile:; ", avatarFile)
 		// console.log("avatarFile.originalname: ", avatarFile.originalname)
 		// const command = new CreateFileCommand(blogId, avatarFile.originalname, avatarFile.buffer) 
 		// const content = await this.commandBus.execute<CreateFileCommand>(command)
@@ -71,7 +72,7 @@ export class BloggerController {
 		const result = await this.commandBus.execute<UploadWallpaperForBlogCommand>(saveAvatarCommand)
 
 		// return "avatar saved"
-		console.log("result: ", result)
+		// console.log("result: ", result)
 		return result
 	}
 
@@ -117,18 +118,19 @@ export class BloggerController {
 	}
 
 
-	// @Delete('blogs/delete') // change in future
-	// @HttpCode(HttpStatus.CREATED)
-	// @UseInterceptors(FileInterceptor("avatar123"))
-	// async deleteAvatar(
-	// 	@Param('blogId', ParseIntPipe) blogId: string,
-	// 	@UploadedFile() avatarFile: Express.Multer.File,
-	// 	@UserIdDecorator() userId: string
-	// ) {
-	// 	const command = new DeleteAvatarCommand(userId, avatarFile.originalname) 
-	// 	await this.commandBus.execute<DeleteAvatarCommand>(command)
-	// 	return 
-	// }
+	@Delete('blogs/delete') // change in future
+	@HttpCode(HttpStatus.CREATED)
+	@UseInterceptors(FileInterceptor("avatar123"))
+	async deleteAvatar(
+		@Param('blogId', ParseIntPipe) blogId: string,
+		@UploadedFile() avatarFile: Express.Multer.File,
+		@UserIdDecorator() userId: string,
+		@Param('fileId') fileId: string
+	) {
+		const command = new DeleteAvatarCommand(userId, avatarFile.originalname, fileId) 
+		await this.commandBus.execute<DeleteAvatarCommand>(command)
+		return 
+	}
 
 	@Get('views') // change in future
 	@HttpCode(HttpStatus.CREATED)

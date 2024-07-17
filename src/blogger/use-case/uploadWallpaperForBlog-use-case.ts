@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs"
-import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3"
+import { GetObjectCommand, PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3"
 import { SaveFileResultType } from "../typtBlogger"
 import { S3StorageAdapter } from "../adapter/s3StorageAdapter"
 import sharp from "sharp";
@@ -26,13 +26,6 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 	) {}
 
 	async execute(command: UploadWallpaperForBlogCommand): Promise<SaveFileResultType> {
-		// const infoImage = await sharp(command.buffer).metadata()
-		let image = await sharp(command.buffer)
-		// .metadata()
-		.resize(320, 240)
-		// .toFile('output.webp', (err, info) => {});
-		const infoImage = await image.metadata()
-
 		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.png`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
@@ -40,16 +33,66 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 			Body: command.buffer,
 			ContentType: 'image/png'
 		}
-		const objectCommand = new PutObjectCommand(bucketParams)
-		// console.log("33: ")
-		try {
-		// console.log("35: ")
-			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
-			// console.log("uploadResult: ", uploadResult)
-
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 
-		// await this.blogsRepository.updateBlogForWallpaper(command.blogId, url, infoImage)
+		let infoImage = await sharp(command.buffer)
+		.resize({width: 1028, height: 312})
+		.metadata()
+		const resizeImages = () => {
+			const today = new Date()
+			const year = today.getFullYear()
+			const month = `${today.getMonth + 1}`.padStart(2, "0")
+
+			const sizes = [
+				{
+					path: 'origin',
+					width: 940,
+					heigth: 432
+				},
+				{
+					path: 'middle',
+					width: 300,
+					heigth: 180
+				},
+				{
+					path: 'small',
+					width: 149,
+					heigth: 96
+				},
+			]
+		}
+
+		const resizeFile = new MulterSharpResizer(
+			sizes,
+			key,
+			url,
+		)
+
+		await resizeFile.resize()
+		// const infoImage = await sharp(command.buffer).metadata()
+		// console.log("command.buffer: ", command.buffer)
+		// let infoImage = await sharp(command.buffer)
+		// .metadata()
+		// .resize({width: 1028, height: 312})
+		// .toBuffer()
+		// .toFormat("png")
+		// .png({quality: 100})
+		// .toFile('optimized.png');
+		// console.log("infoImage: ", infoImage)
+		// const result = fs.readdirSync('optimized.png')
+		// console.log("result: ", result)
+
+		
+
+		const objectCommand = new PutObjectCommand(bucketParams)
+		try {
+			const uploadResult: PutObjectCommandOutput = 
+				await this.s3StorageAdapter.s3Client.send(objectCommand)
+			// console.log("uploadResult: ", uploadResult)
+
+		
+
+		await this.blogsRepository.updateBlogForWallpaper(command.blogId, url, infoImage)
 
 			return {
 					wallpaper: {

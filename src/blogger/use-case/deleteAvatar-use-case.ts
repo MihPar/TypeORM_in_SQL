@@ -4,7 +4,8 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs"
 export class DeleteAvatarCommand {
 	constructor(
 		public userId: string, 
-		public originalname: string
+		public originalname: string,
+		public fileId: string
 	) {}
 }
 
@@ -12,7 +13,7 @@ export class DeleteAvatarCommand {
 @CommandHandler(DeleteAvatarCommand)
 export class DeleteAvatarUseCase implements ICommandHandler<DeleteAvatarCommand> {
 	s3Client: S3Client
-	bucketName: 'michael-paramonov'
+	bucketName: string = 'michael-paramonov'
 	constructor() {
 		const REGION = 'us-east-1'
 		this.s3Client = new S3Client({
@@ -28,7 +29,7 @@ export class DeleteAvatarUseCase implements ICommandHandler<DeleteAvatarCommand>
 	async execute(command: DeleteAvatarCommand  ) {
 		// const fileId = await this.userProfileRepo.getProfile(command.userId)
 		const key = `/content/users/${command.userId}/avatars/${command.userId}_avatar.png`
-		const bucketParams = {Bucket: this.bucketName, Key: 'key'}
+		const bucketParams = {Bucket: this.bucketName, Key: command.fileId /* key */}
 		try {
 			const data = await this.s3Client.send(new DeleteObjectCommand(bucketParams))
 			return data

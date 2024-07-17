@@ -1,5 +1,4 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserViewType } from '../user.type';
 import { v4 as uuidv4 } from 'uuid';
 import { add } from 'date-fns';
 import { UsersRepository } from '../users.repository';
@@ -7,7 +6,6 @@ import { InputDataReqClass } from '../../auth/dto/auth.class.pipe';
 import { EmailManager } from '../../auth/adapter/email.manager';
 import { GenerateHashAdapter } from '../../auth/adapter/generateHashAdapter';
 import { UsersQueryRepository } from '../users.queryRepository';
-import { InsertResult } from 'typeorm';
 import { User } from '../entities/user.entity';
 
 export class RegistrationCommand {
