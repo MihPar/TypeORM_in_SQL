@@ -21,7 +21,7 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 			protected readonly blogsRepository: BlogsRepository
 		) {}
 	async execute(command: UploadImageForBlogCommand): Promise<any> {
-		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.png`
+		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.jpeg`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
 			Key: key,
