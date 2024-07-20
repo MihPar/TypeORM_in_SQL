@@ -1,4 +1,4 @@
-import { PutObjectCommand, PutObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
+import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { S3StorageAdapter } from "../adapter/s3StorageAdapter";
 import sharp from "sharp";
@@ -21,8 +21,6 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 			protected readonly blogsRepository: BlogsRepository
 		) {}
 	async execute(command: UploadImageForBlogCommand): Promise<any> {
-
-		// 403
 		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.png`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
@@ -47,14 +45,7 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 			// console.log("uploadResult: ", uploadResult)
 			await this.blogsRepository.updateBlogForWallpaper(command.blogId, url, infoImage)
 			return {
-					wallpaper: null
-					// {
-					//   url,
-					//   width: infoImage.width,
-					//   height: infoImage.height,
-					//   fileSize: infoImage.size
-					// }
-					,
+					wallpaper: null,
 					main: [
 					  {
 						url,

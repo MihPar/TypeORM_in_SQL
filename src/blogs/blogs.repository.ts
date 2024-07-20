@@ -132,10 +132,15 @@ async updateBlogForWallpaper(blogId: string, url: string, infoImage: Metadata): 
 
 async updateImageForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<void> {
 	const updateBlog = await this.blogsRepository
-		.update(
-			{id: blogId, postId}, 
-			{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size}
-		)
+		.createQueryBuilder()
+		.update()
+		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
+		.where(`id = :blogId AND "postId" = :postId`, {blogId, postId})
+		.execute()
+		// .update(
+		// 	{id: blogId, postId}, 
+		// 	{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size}
+		// )
 		// console.log("updateBlog: ", updateBlog)
 	return
 }
