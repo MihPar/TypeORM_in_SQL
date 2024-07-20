@@ -55,6 +55,18 @@ export class Posts {
 	@Column({default: null})
 	banDate: string
 
+	@Column({nullable: true})
+	url: string
+
+	@Column({nullable: true})
+	width: number
+
+	@Column({nullable: true})
+	height: number
+
+	@Column({nullable: true})
+	fileSize: number
+
 	@OneToMany(() => LikeForPost, lp => lp.post, {onDelete: "CASCADE"})
 	extendedLikesInfo: LikeForPost[]
 
@@ -79,7 +91,18 @@ export class Posts {
 				  addedAt: l.addedAt,
 				  userId: l.userId, 
 				  login: l.login,
-			  })) : []},
+			  })) : []
+			},
+			images: {
+				main: [
+				  {
+					url: post.url,
+					width: post.width,
+					height: post.height,
+					fileSize: post.fileSize
+				  }
+				]
+			  }
 		  };
 	  }
 
@@ -102,7 +125,18 @@ export class Posts {
 					  addedAt: l.addedAt,
 					  login: l.login,
 					  userId: l.userId
-				  })) : []},
+				  })) : []
+				},
+				  images: {
+					main: [
+					  {
+						url: post.url,
+						width: post.width,
+						height: post.height,
+						fileSize: post.fileSize
+					  }
+					]
+				  }
 			  };
 		  }
 

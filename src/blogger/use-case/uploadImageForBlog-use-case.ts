@@ -30,9 +30,7 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 
-		const infoImage = await sharp(command.buffer)
-			// .resize({width: 156, height: 156})
-			.metadata();
+		const infoImage = await sharp(command.buffer).metadata();
 
 			if(infoImage.width !== 156 && infoImage.height !== 156 && infoImage.size > 100) {
 				throw new BadRequestException([{message: 'This sizes are not according'}])

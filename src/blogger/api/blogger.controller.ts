@@ -33,7 +33,7 @@ import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-ca
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
 import { Blogs } from '../../blogs/entity/blogs.entity';
 
-// @UseGuards(BearerTokenPairQuizGame) // activate in future
+@UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
 export class BloggerController {
 	constructor(

@@ -1,4 +1,4 @@
-import { LikesInfoViewModel } from "../likes/likes.type";
+import { ImageType, LikesInfoViewModel } from "../likes/likes.type";
 
 export type PostsViewModel = {
 	id: string;
@@ -9,4 +9,5 @@ export type PostsViewModel = {
 	blogName: string;
 	createdAt: Date;
 	extendedLikesInfo: LikesInfoViewModel,
+	images: ImageType
   };

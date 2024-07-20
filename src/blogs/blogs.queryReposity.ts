@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PaginationType } from "../types/pagination.types";
 import { BlogsViewType } from "./blogs.type";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -50,7 +50,7 @@ export class BlogsQueryRepository {
 			page: +pageNumber,
 			pageSize: +pageSize,
 			totalCount: +totalCount,
-			items: findAllBlogs.map((item) => Blogs.createNewBlogForSA(item)),
+			items: findAllBlogs.map((item) => Blogs.getBlog(item)),
 		};
 		return result;
 	}
@@ -75,6 +75,7 @@ export class BlogsQueryRepository {
 			.select()
 			.where("id = :id", { id })
 			.getOne()
+			if(!findBlogById) throw new NotFoundException([{message: "This blog do not found"}])
 		return findBlogById ? Blogs.getBlog(findBlogById) : null;
 	}
 
@@ -84,6 +85,8 @@ export class BlogsQueryRepository {
 			.select()
 			.where(`id = :id`, {id})
 			.getOne()
+
+			if(!findBlogById) throw new NotFoundException([{message: "This blog do not found"}])
 			return findBlogById
 	}
 
@@ -92,6 +95,7 @@ export class BlogsQueryRepository {
 			.createQueryBuilder()
 			.where(`id = :blogId AND "postId" = :postId`, {blogId, postId})
 			.getOne()
+			if(!blog) throw new NotFoundException([{message: "This blog do not found"}])
 			return blog
 	}
 

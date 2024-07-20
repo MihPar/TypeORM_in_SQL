@@ -6,6 +6,14 @@ export interface LikesInfoViewModel {
 	myStatus: LikeStatusEnum,
 	newestLikes: NewestLikesType[]
 }
+export type ImageType = {
+	main: {
+		url: string
+		width: number
+		height: number
+		fileSize: number
+	}[]
+}
 
 export type NewestLikesType = {
     addedAt: string,
