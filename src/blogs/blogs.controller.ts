@@ -87,7 +87,7 @@ export class BlogsController {
 	if(findBlog.isBanned) throw new NotFoundException('404')
 
     const blogById: BlogsViewType | null =
-      await this.blogsQueryRepository.findBlogById(Dto.blogId);
+      await this.blogsQueryRepository.getBlogById(Dto.blogId);
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');
     return blogById;
   }

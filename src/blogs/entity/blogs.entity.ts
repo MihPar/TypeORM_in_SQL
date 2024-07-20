@@ -89,6 +89,33 @@ export class Blogs {
 		}
 	}
 
+	static getBlog(blog: Blogs) {
+		return {
+			id: blog.id,
+			name: blog.name,
+			description: blog.description,
+			websiteUrl: blog.websiteUrl,
+			createdAt: blog.createdAt,
+			isMembership: blog.isMembership,
+			images: {
+				wallpaper: {
+						url: blog.url,
+						width: blog.width,
+						height: blog.height,
+						fileSize: blog.fileSize
+				},
+				main: [
+					{
+						url: blog.url,
+						width: blog.width,
+						height: blog.height,
+						fileSize: blog.fileSize
+					}
+				]
+			}
+		}
+	}
+
 	static findBlogForSAWithInfoBan(inputBlog: Blogs, user: User): BlogsViewWithBanType {
 		return {
 			id: inputBlog.id,

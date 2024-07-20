@@ -69,6 +69,15 @@ export class BlogsQueryRepository {
 		return findBlogById ? Blogs.createNewBlogForSA(findBlogById) : null;
 	}
 
+	async getBlogById(id: string) {
+		const findBlogById = await this.blogsRepository
+			.createQueryBuilder()
+			.select()
+			.where("id = :id", { id })
+			.getOne()
+		return findBlogById ? Blogs.getBlog(findBlogById) : null;
+	}
+
 	async findBlog(id: string): Promise<Blogs> {
 		const findBlogById = await this.blogsRepository
 			.createQueryBuilder()

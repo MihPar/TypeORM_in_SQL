@@ -185,12 +185,32 @@ describe('/blogs', () => {
 
 		it('upload background wallpaper', async() => {
 			const avatarFile = `/Users/mihailparamonov/Documents/Моя папка/РЕЗЮМЕ/IMG_9166-Photoroom.png-Photoroom.jpeg`
-			const upload = await request(server)
+			const uploadWallpaper = await request(server)
 				.post(`/blogger/blogs/${createBlog[1].id}/images/wallpaper`)
 				.set('Authorization', `Bearer ${user1Token}`)
 				.send(avatarFile)
 				
-			console.log("upload: ", upload.body)
+			console.log("uploadWallpaper: ", uploadWallpaper.body)
+		})
+
+		it("upload image main blog", async() => {
+			const avatarFile = `/Users/mihailparamonov/Documents/Моя папка/РЕЗЮМЕ/IMG_9166-Photoroom.png-Photoroom.jpeg`
+			const uploadImageMain = await request(server)
+				.post(`/blogger/blogs/${createBlog[1].id}/images/main`)
+				.set('Authorization', `Bearer ${user1Token}`)
+				.send(avatarFile)
+				
+			console.log("uploadImageMain: ", uploadImageMain.body)
+		})
+
+		it("upload main image for post", async() => {
+			const avatarFile = `/Users/mihailparamonov/Documents/Моя папка/РЕЗЮМЕ/IMG_9166-Photoroom.png-Photoroom.jpeg`
+			const uploadImageForPost = await request(server)
+				.post(`/blogger/blogs/${createBlog[1].id}/posts/${createPost.id}images/main`)
+				.set('Authorization', `Bearer ${user1Token}`)
+				.send(avatarFile)
+				
+			console.log("uploadImageForPost: ", uploadImageForPost.body)
 		})
 	})
 })
