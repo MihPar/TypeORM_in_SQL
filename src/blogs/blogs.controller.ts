@@ -83,7 +83,6 @@ export class BlogsController {
   ): Promise<BlogsViewType | null> {
 	const findBlog = await this.blogsRepository.findBlogById(Dto.blogId)
 
-	// console.log("findBlog: ", findBlog)
 	if(findBlog.isBanned) throw new NotFoundException('404')
 
     const blogById: BlogsViewType | null =

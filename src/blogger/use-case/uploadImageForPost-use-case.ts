@@ -27,7 +27,7 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 			Bucket: `michael-paramonov`,
 			Key: key,
 			Body: command.buffer,
-			ContentType: 'image/png'
+			ContentType: 'image/jpeg'
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 

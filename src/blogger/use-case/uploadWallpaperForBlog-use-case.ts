@@ -26,7 +26,7 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 	) {}
 
 	async execute(command: UploadWallpaperForBlogCommand): Promise<SaveFileResultType> {
-		console.log("originalname: ", command.originalname)
+		// console.log("originalname: ", command.originalname)
 		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.jpeg`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
