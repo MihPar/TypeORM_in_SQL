@@ -34,14 +34,13 @@ export interface CommentForCurrentBloggerResponse {
 		height: number
 		fileSize: number
 	  },
-	  main: [
+	  main: 
 		{
 		  url: string
 		  width: number
 		  height: number
 		  fileSize: number
-		}
-	  ]
+		}[]
 }
 
 export type SaveFileType = {

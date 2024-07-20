@@ -117,10 +117,26 @@ async banBlog(id: string, isBanned: boolean, date: string) {
 
 async updateBlogForWallpaper(blogId: string, url: string, infoImage: Metadata): Promise<void> {
 	const updateBlog = await this.blogsRepository
+		.createQueryBuilder()
+		.update()
+		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
+		.where(`id = :blogId`, {blogId})
+		.execute()
+		// .update(
+		// 	{id: blogId}, 
+		// 	{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size}
+		// )
+		// console.log("updateBlog: ", updateBlog)
+	return
+}
+
+async updateImageForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<void> {
+	const updateBlog = await this.blogsRepository
 		.update(
-			{id: blogId}, 
+			{id: blogId, postId}, 
 			{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size}
 		)
+		// console.log("updateBlog: ", updateBlog)
 	return
 }
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {

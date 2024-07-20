@@ -1,9 +1,10 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs"
-import { GetObjectCommand, PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3"
+import { PutObjectCommand, PutObjectCommandOutput } from "@aws-sdk/client-s3"
 import { SaveFileResultType } from "../typtBlogger"
 import { S3StorageAdapter } from "../adapter/s3StorageAdapter"
 import sharp from "sharp";
 import { BlogsRepository } from "../../blogs/blogs.repository";
+import { BadRequestException } from "@nestjs/common";
 
 
 
@@ -16,7 +17,6 @@ export class UploadWallpaperForBlogCommand {
 	) {}
 }
 
-
 @CommandHandler(UploadWallpaperForBlogCommand)
 export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWallpaperForBlogCommand, any> {
 	
@@ -26,49 +26,56 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 	) {}
 
 	async execute(command: UploadWallpaperForBlogCommand): Promise<SaveFileResultType> {
-		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.png`
+		console.log("originalname: ", command.originalname)
+		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.jpeg`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
 			Key: key,
 			Body: command.buffer,
-			ContentType: 'image/png'
+			ContentType: 'image/jpeg'
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
-
+		
 		let infoImage = await sharp(command.buffer)
-		.resize({width: 1028, height: 312})
+		// .resize({width: 1028, height: 312})
 		.metadata()
-		const resizeImages = () => {
-			const today = new Date()
-			const year = today.getFullYear()
-			const month = `${today.getMonth + 1}`.padStart(2, "0")
 
-			const sizes = [
-				{
-					path: 'origin',
-					width: 940,
-					heigth: 432
-				},
-				{
-					path: 'middle',
-					width: 300,
-					heigth: 180
-				},
-				{
-					path: 'small',
-					width: 149,
-					heigth: 96
-				},
-			]
+		if(infoImage.width !== 1028 && infoImage.height !== 312 && infoImage.size > 100) {
+			throw new BadRequestException([{message: 'This sizes are not according'}])
 		}
 
-		const resizeFile = new MulterSharpResizer(
-			sizes,
-			key,
-			url,
-		)
 
-		await resizeFile.resize()
+		// const resizeImages = () => {
+		// 	const today = new Date()
+		// 	const year = today.getFullYear()
+		// 	const month = `${today.getMonth + 1}`.padStart(2, "0")
+
+		// 	const sizes = [
+		// 		{
+		// 			path: 'origin',
+		// 			width: 940,
+		// 			heigth: 432
+		// 		},
+		// 		{
+		// 			path: 'middle',
+		// 			width: 300,
+		// 			heigth: 180
+		// 		},
+		// 		{
+		// 			path: 'small',
+		// 			width: 149,
+		// 			heigth: 96
+		// 		},
+		// 	]
+		// }
+
+		// const resizeFile = new MulterSharpResizer(
+		// 	sizes,
+		// 	key,
+		// 	url,
+		// )
+
+		// await resizeFile.resize()
 		// const infoImage = await sharp(command.buffer).metadata()
 		// console.log("command.buffer: ", command.buffer)
 		// let infoImage = await sharp(command.buffer)
@@ -88,12 +95,8 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 		try {
 			const uploadResult: PutObjectCommandOutput = 
 				await this.s3StorageAdapter.s3Client.send(objectCommand)
-			// console.log("uploadResult: ", uploadResult)
-
-		
-
-		await this.blogsRepository.updateBlogForWallpaper(command.blogId, url, infoImage)
-
+				// console.log("uploadResult: ", uploadResult)
+				await this.blogsRepository.updateBlogForWallpaper(command.blogId, url, infoImage)
 			return {
 					wallpaper: {
 					  url,
@@ -102,12 +105,12 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadWall
 					  fileSize: infoImage.size
 					},
 					main: [
-					  {
-						url,
-						width: infoImage.width,
-						height: infoImage.height,
-						fileSize: infoImage.size
-					  }
+					//   {
+					// 	url,
+					// 	width: infoImage.width,
+					// 	height: infoImage.height,
+					// 	fileSize: infoImage.size
+					//   }
 					]
 			}
 		} catch(exeption) {

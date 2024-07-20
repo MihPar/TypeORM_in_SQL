@@ -2,6 +2,8 @@ import { PutObjectCommand, PutObjectCommandOutput, S3Client } from "@aws-sdk/cli
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { S3StorageAdapter } from "../adapter/s3StorageAdapter";
 import sharp from "sharp";
+import { BlogsRepository } from "../../blogs/blogs.repository";
+import { BadRequestException } from "@nestjs/common";
 
 export class UploadImageForBlogCommand {
 	constructor(
@@ -15,9 +17,12 @@ export class UploadImageForBlogCommand {
 @CommandHandler(UploadImageForBlogCommand)
 export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageForBlogCommand> {
 		constructor(
-			protected readonly s3StorageAdapter: S3StorageAdapter
+			protected readonly s3StorageAdapter: S3StorageAdapter,
+			protected readonly blogsRepository: BlogsRepository
 		) {}
 	async execute(command: UploadImageForBlogCommand): Promise<any> {
+
+		// 403
 		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.png`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
@@ -26,20 +31,30 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 			ContentType: 'image/png'
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
-		const objectCommand = new PutObjectCommand(bucketParams)
-		try {
-			const infoImage = await sharp(command.buffer).metadata();
+
+		const infoImage = await sharp(command.buffer)
+			// .resize({width: 156, height: 156})
+			.metadata();
+
+			if(infoImage.width !== 156 && infoImage.height !== 156 && infoImage.size > 100) {
+				throw new BadRequestException([{message: 'This sizes are not according'}])
+			}
 			// console.log("infoImage: ", infoImage)
 
+		const objectCommand = new PutObjectCommand(bucketParams)
+		try {
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
 			// console.log("uploadResult: ", uploadResult)
+			await this.blogsRepository.updateBlogForWallpaper(command.blogId, url, infoImage)
 			return {
-					wallpaper: {
-					  url,
-					  width: infoImage.width,
-					  height: infoImage.height,
-					  fileSize: infoImage.size
-					},
+					wallpaper: null
+					// {
+					//   url,
+					//   width: infoImage.width,
+					//   height: infoImage.height,
+					//   fileSize: infoImage.size
+					// }
+					,
 					main: [
 					  {
 						url,

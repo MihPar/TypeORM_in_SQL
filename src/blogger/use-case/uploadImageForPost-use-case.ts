@@ -2,6 +2,8 @@ import { PutObjectCommand, PutObjectCommandOutput, S3Client } from '@aws-sdk/cli
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { S3StorageAdapter } from '../adapter/s3StorageAdapter';
 import sharp from 'sharp';
+import { BlogsRepository } from '../../blogs/blogs.repository';
+import { BadRequestException } from '@nestjs/common';
 
 export class UploadImageForPostCommand {
 	constructor(
@@ -16,7 +18,8 @@ export class UploadImageForPostCommand {
 @CommandHandler(UploadImageForPostCommand)
 export class UploadImageForPostUseCase implements ICommandHandler<UploadImageForPostCommand> {
 	constructor(
-		protected readonly s3StorageAdapter: S3StorageAdapter
+		protected readonly s3StorageAdapter: S3StorageAdapter,
+		protected readonly blogsRepository: BlogsRepository
 	) {}
 	async execute(command: UploadImageForPostCommand): Promise<any> {
 		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.png`
@@ -27,10 +30,20 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 			ContentType: 'image/png'
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
+
+		const infoImage = await sharp(command.buffer)
+			// .resize({width: 940, height: 432})
+			.metadata();
+
+			if(infoImage.width !== 940 && infoImage.height !== 432 && infoImage.size > 100) {
+				throw new BadRequestException([{message: 'This sizes are not according'}])
+			}
+
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
-			const infoImage = await sharp(command.buffer).metadata();
+			
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
+			await this.blogsRepository.updateImageForPost(command.blogId, command.postId, url, infoImage)
 			return {
 				wallpaper: {
 				  url,

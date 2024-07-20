@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, NotFoundException, Query, ParseUUIDPipe, ParseIntPipe, UploadedFile, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode, HttpStatus, NotFoundException, Query, ParseUUIDPipe, ParseIntPipe, UploadedFile, UseInterceptors, UseGuards, ForbiddenException } from '@nestjs/common';
 import { BodyBlogsModel, inputModelBlogIdClass, inputModelClass, inputModelUpdataPost } from '../../blogsForSA/dto/blogs.class-pipe';
 import { User } from '../../users/entities/user.entity';
 import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
@@ -30,9 +30,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadWallpaperForBlogCommand } from '../use-case/uploadWallpaperForBlog-use-case';
 import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
-import { GetSecretDownloadAvatarCommmand } from '../use-case/getSecretDownloadUrl-use-case';
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
-import { DeleteAvatarCommand } from '../use-case/deleteAvatar-use-case';
+import { Blogs } from '../../blogs/entity/blogs.entity';
 
 // @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -47,14 +46,18 @@ export class BloggerController {
 
 	@Post('blogs/:blogId/images/wallpaper') // change in future
 	@HttpCode(HttpStatus.CREATED)
-	@UseInterceptors(FileInterceptor("avatar"))
+	@UseInterceptors(FileInterceptor("file"))
 	async uploadBackgroundWallpaper(
-		@Param('blogId', ParseIntPipe) blogId: string,
-		@UploadedFile() avatarFile: Express.Multer.File,
+		@Param('blogId', ParseUUIDPipe) blogId: string,
+		@UploadedFile() file: Express.Multer.File,
 		@UserIdDecorator() userId: string
 		//@Body() file: any
 	) {
-		// console.log("avatarFile:; ", avatarFile)
+		const findBlogById: Blogs = await this.blogsQueryRepository.findBlog(blogId)
+		// console.log("userId: ", findBlogById.userId)
+		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
+		// console.log("findBlogById: ", findBlogById)
+		// console.log("file:; ", file)
 		// console.log("avatarFile.originalname: ", avatarFile.originalname)
 		// const command = new CreateFileCommand(blogId, avatarFile.originalname, avatarFile.buffer) 
 		// const content = await this.commandBus.execute<CreateFileCommand>(command)
@@ -68,7 +71,7 @@ export class BloggerController {
 		// console.log(blogId, " blogId")
 		// console.log(avatarFile, " body")
 // const blogId = '111'
-		const saveAvatarCommand = new UploadWallpaperForBlogCommand(userId, blogId, avatarFile.originalname, avatarFile.buffer)
+		const saveAvatarCommand = new UploadWallpaperForBlogCommand(userId, blogId, file.originalname, file.buffer)
 		const result = await this.commandBus.execute<UploadWallpaperForBlogCommand>(saveAvatarCommand)
 
 		// return "avatar saved"
@@ -78,59 +81,63 @@ export class BloggerController {
 
 	@Post('blogs/:blogId/images/main')
 	@HttpCode(HttpStatus.CREATED)
-	@UseInterceptors(FileInterceptor("avatarForBlog"))
+	@UseInterceptors(FileInterceptor("file"))
 	async uploadImageForBlog(
-		@Param('blogId', ParseIntPipe) blogId: string,
-		@UploadedFile() avatarFile: Express.Multer.File,
+		@Param('blogId', ParseUUIDPipe) blogId: string,
+		@UploadedFile() file: Express.Multer.File,
 		@UserIdDecorator() userId: string
 	) {
-		const command = new UploadImageForBlogCommand(blogId, userId,  avatarFile.originalname, avatarFile.buffer)
+		const findBlogById: Blogs = await this.blogsQueryRepository.findBlog(blogId)
+		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
+		const command = new UploadImageForBlogCommand(blogId, userId, file.originalname, file.buffer)
 		const upload = await this.commandBus.execute<UploadImageForBlogCommand>(command)
 		return upload
 	}
 
 	@Post('blogs/:blogId/posts/:postId/images/main')
 	@HttpCode(HttpStatus.CREATED)
-	@UseInterceptors(FileInterceptor("avatarForPost"))
+	@UseInterceptors(FileInterceptor("file"))
 	async uploadImagesForPost(
-		@Param('blogId', ParseIntPipe) blogId: string,
-		@Param('postId', ParseIntPipe) postId: string,
-		@UploadedFile() avatarFile: Express.Multer.File,
+		@Param('postId', ParseUUIDPipe) postId: string,
+		@Param('blogId', ParseUUIDPipe) blogId: string,
+		@UploadedFile() file: Express.Multer.File,
 		@UserIdDecorator() userId: string
 	) {
-		const command = new UploadImageForPostCommand(blogId, postId, userId,  avatarFile.originalname, avatarFile.buffer)
+		const findBlogById: Blogs = await this.blogsQueryRepository.findBlogByIdAndPostId(blogId, postId)
+		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
+		const command = new UploadImageForPostCommand(blogId, postId, userId,  file.originalname, file.buffer)
 		const uploadImageForPost = await this.commandBus.execute<UploadImageForPostCommand>(command)
 		// console.log("uploadImageForPost: ", uploadImageForPost)
 		
 		return uploadImageForPost
 	}
 
-	@Get('blogs/secret')
-	@HttpCode(HttpStatus.OK)
-	// @UseInterceptors(FileInterceptor("avatar"))
-	async getSecretDownloadUrl(
-		@Param('blogId', ParseIntPipe) blogId: string
-	) {
-		const fileId = `/content/users/${blogId}/avatars/${blogId}_avatar.png`
-		const command = new GetSecretDownloadAvatarCommmand(fileId)
-		const getSecret = await this.commandBus.execute<GetSecretDownloadAvatarCommmand>(command)
-		return getSecret
-	}
+	// @Get('blogs/secret')
+	// @HttpCode(HttpStatus.OK)
+	// // @UseInterceptors(FileInterceptor("avatar"))
+	// async getSecretDownloadUrl(
+	// 	@Param('blogId', ParseUUIDPipe) blogId: string
+	// ) {
+	// 	const fileId = `/content/users/${blogId}/avatars/${blogId}_avatar.png`
+	// 	const command = new GetSecretDownloadAvatarCommmand(fileId)
+	// 	const getSecret = await this.commandBus.execute<GetSecretDownloadAvatarCommmand>(command)
+	// 	return getSecret
+	// }
 
 
-	@Delete('blogs/delete') // change in future
-	@HttpCode(HttpStatus.CREATED)
-	@UseInterceptors(FileInterceptor("avatar123"))
-	async deleteAvatar(
-		@Param('blogId', ParseIntPipe) blogId: string,
-		@UploadedFile() avatarFile: Express.Multer.File,
-		@UserIdDecorator() userId: string,
-		@Param('fileId') fileId: string
-	) {
-		const command = new DeleteAvatarCommand(userId, avatarFile.originalname, fileId) 
-		await this.commandBus.execute<DeleteAvatarCommand>(command)
-		return 
-	}
+	// @Delete('blogs/delete') // change in future
+	// @HttpCode(HttpStatus.CREATED)
+	// @UseInterceptors(FileInterceptor("avatar123"))
+	// async deleteAvatar(
+	// 	@Param('blogId', ParseIntPipe) blogId: string,
+	// 	@UploadedFile() avatarFile: Express.Multer.File,
+	// 	@UserIdDecorator() userId: string,
+	// 	@Param('fileId') fileId: string
+	// ) {
+	// 	const command = new DeleteAvatarCommand(userId, avatarFile.originalname, fileId) 
+	// 	await this.commandBus.execute<DeleteAvatarCommand>(command)
+	// 	return 
+	// }
 
 	@Get('views') // change in future
 	@HttpCode(HttpStatus.CREATED)

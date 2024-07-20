@@ -61,6 +61,9 @@ export class Blogs {
 	@OneToMany(() => Posts, p => p.blog)
 	post: Posts[]
 
+	@Column({nullable: true})
+	postId: string
+
 	@OneToMany(() => UserBlogger, b => b.blog)
 	userBlogger: UserBlogger
 

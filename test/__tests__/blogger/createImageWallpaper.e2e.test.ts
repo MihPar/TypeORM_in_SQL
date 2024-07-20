@@ -184,7 +184,7 @@ describe('/blogs', () => {
 		})
 
 		it('upload background wallpaper', async() => {
-			const avatarFile = `https://storage.yandexcloud.net/michael-paramonov//content/users/111/avatars/111_avatar.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=YCAJEhVoFrKMRARF1bP9NcycH%2F20240714%2Fru-central1%2Fs3%2Faws4_request&X-Amz-Date=20240714T164714Z&X-Amz-Expires=3600&X-Amz-Signature=E04B7CF8DF3AD13A795DD908F0D4DEB9030456A27843D950B5AB5BF269A87886&X-Amz-SignedHeaders=host`
+			const avatarFile = `/Users/mihailparamonov/Documents/Моя папка/РЕЗЮМЕ/IMG_9166-Photoroom.png-Photoroom.jpeg`
 			const upload = await request(server)
 				.post(`/blogger/blogs/${createBlog[1].id}/images/wallpaper`)
 				.set('Authorization', `Bearer ${user1Token}`)
