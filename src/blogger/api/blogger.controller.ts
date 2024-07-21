@@ -27,7 +27,6 @@ import { BlogsQueryRepository } from '../../blogs/blogs.queryReposity';
 import {join} from 'node:path'
 import { readTextFileAsync } from '../../utils/fs-utils';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadWallpaperForBlogCommand } from '../use-case/uploadWallpaperForBlog-use-case';
 import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
@@ -71,8 +70,8 @@ export class BloggerController {
 		// console.log(blogId, " blogId")
 		// console.log(avatarFile, " body")
 // const blogId = '111'
-		const saveAvatarCommand = new UploadWallpaperForBlogCommand(userId, blogId, file.originalname, file.buffer)
-		const result = await this.commandBus.execute<UploadWallpaperForBlogCommand>(saveAvatarCommand)
+		const saveAvatarCommand = new UploadImageForBlogCommand(userId, blogId, file.mimetype, file.originalname, file.buffer)
+		const result = await this.commandBus.execute<UploadImageForBlogCommand>(saveAvatarCommand)
 
 		// return "avatar saved"
 		// console.log("result: ", result)
@@ -89,7 +88,8 @@ export class BloggerController {
 	) {
 		const findBlogById: Blogs = await this.blogsQueryRepository.findBlog(blogId)
 		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
-		const command = new UploadImageForBlogCommand(blogId, userId, file.originalname, file.buffer)
+			// console.log("file 92 main: ", file)
+		const command = new UploadImageForBlogCommand(blogId, userId, file.mimetype, file.originalname, file.buffer)
 		const upload = await this.commandBus.execute<UploadImageForBlogCommand>(command)
 		return upload
 	}
@@ -105,7 +105,7 @@ export class BloggerController {
 	) {
 		const findBlogById: Blogs = await this.blogsQueryRepository.findBlogByIdAndPostId(blogId, postId)
 		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
-		const command = new UploadImageForPostCommand(blogId, postId, userId,  file.originalname, file.buffer)
+		const command = new UploadImageForPostCommand(blogId, postId, userId, file.mimetype, file.originalname, file.buffer)
 		const uploadImageForPost = await this.commandBus.execute<UploadImageForPostCommand>(command)
 		// console.log("uploadImageForPost: ", uploadImageForPost)
 		

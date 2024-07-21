@@ -1,3 +1,4 @@
+import { Post } from '@nestjs/common';
 import { PostsRepository } from './../../posts/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostsViewModel } from '../../posts/posts.type';
@@ -6,6 +7,7 @@ import { bodyPostsModelClass } from '../../posts/dto/posts.class.pipe';
 import { Posts } from '../../posts/entity/entity.posts';
 import { BlogsQueryRepositoryForSA } from '../../blogsForSA/blogsForSA.queryReposity';
 import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
+import { BlogsRepository } from '../../blogs/blogs.repository';
 
 export class CreateNewPostForBlogBloggerCommand {
   constructor(
@@ -24,6 +26,7 @@ export class CreateNewPostForBlogBloggerUseCase
 	protected readonly likesRepository: LikesRepository,
 	protected readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA,
 	protected readonly blogsRepositoryForSA: BlogsRepositoryForSA,
+	protected readonly blogsRepository: BlogsRepository,
   ) {}
   async execute(command: CreateNewPostForBlogBloggerCommand): Promise<PostsViewModel | null> {
 	const findBlog = await this.blogsRepositoryForSA.findBlogByIdBlogger(command.blogId, command.userId)
@@ -37,8 +40,9 @@ export class CreateNewPostForBlogBloggerUseCase
 	  newPost.userId = command.userId,
       0, 0
 
-	  const createPost: any = await this.postsRepository.createNewPosts(newPost)
+	const createPost: Posts = await this.postsRepository.createNewPosts(newPost)
 	if (!createPost) return null;
-	return Posts.getPostsViewModelForSA(createPost)
+	const getImageByPostId = await this.blogsRepository.getImageByPostId(createPost.id)
+	return Posts.getPostsWithImages(createPost, getImageByPostId)
   }
 }

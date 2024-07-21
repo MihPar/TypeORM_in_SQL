@@ -17,6 +17,7 @@ import { UsersQueryRepository } from '../users/users.queryRepository';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { Images } from '../blogs/entity/images.entity';
 
 const userCase = [
 	UpdateLikestatusForCommentUseCase
@@ -37,7 +38,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device, LikeForComment, Comments, Posts, LikeForPost, Blogs, UserBlogger]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, LikeForComment, Comments, Posts, LikeForPost, Blogs, UserBlogger, Images]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })

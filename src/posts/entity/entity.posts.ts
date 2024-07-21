@@ -7,6 +7,7 @@ import { LikesType, NewestLikesType } from "../../likes/likes.type";
 import { bodyPostsModelClass } from "../dto/posts.class.pipe";
 import { User } from "../../users/entities/user.entity";
 import { Comments } from "../../comment/entity/comment.entity";
+import { Images } from "../../blogs/entity/images.entity";
 
 @Entity()
 export class Posts {
@@ -67,6 +68,12 @@ export class Posts {
 	@Column({nullable: true})
 	fileSize: number
 
+	@OneToMany(() => Images, i => i.post)
+	image: Images[]
+
+	@Column({nullable: true})
+	imageId: string
+
 	@OneToMany(() => LikeForPost, lp => lp.post, {onDelete: "CASCADE"})
 	extendedLikesInfo: LikeForPost[]
 
@@ -74,7 +81,7 @@ export class Posts {
 	comment: Comments[]
 
 	static getPostsViewModelSAMyOwnStatus(post: Posts,
-		newestLikes: any[], myOwnStatus: LikeStatusEnum): PostsViewModel {
+		newestLikes: any[], myOwnStatus: LikeStatusEnum, images: Images): PostsViewModel {
 		return {
 		  id: post.id.toString(),
 		  title: post.title,
@@ -96,18 +103,19 @@ export class Posts {
 			images: {
 				main: [
 				  {
-					url: post.url,
-					width: post.width,
-					height: post.height,
-					fileSize: post.fileSize
+					url: images.url,
+					width: images.width,
+					height: images.height,
+					fileSize: images.fileSize
 				  }
 				]
 			  }
 		  };
 	  }
 
-	 static getPostsViewModelForSA(post: Posts,
-		newestLikes?: NewestLikesType[]
+	 static getPostsViewModelForSA(
+		post: Posts,
+		newestLikes?: NewestLikesType[],
 		): PostsViewModel {
 			return {
 			  id: post.id.toString(),
@@ -139,6 +147,45 @@ export class Posts {
 				  }
 			  };
 		  }
+
+
+	static getPostsWithImages(
+			post: Posts,
+			image: Images
+			): PostsViewModel {
+				return {
+				  id: post.id.toString(),
+				  title: post.title,
+				  shortDescription: post.shortDescription,
+				  content: post.content,
+				  blogId: post.blogId,
+				  blogName: post.blogName,
+				  createdAt: post.createdAt,
+				  extendedLikesInfo: {
+					  dislikesCount: 0, 
+					  likesCount: 0, 
+					  myStatus:LikeStatusEnum.None,
+					  newestLikes: [
+						{
+							addedAt: new Date().toISOString(),
+							userId: "",
+							login: ""
+						}
+					  ]
+					},
+					  images: {
+						main: [
+						  {
+							url: image.url,
+							width: image.width,
+							height: image.height,
+							fileSize: image.fileSize
+						  }
+						]
+					  }
+				  };
+			  }
+	
 
 	static updatePresentPost(post: Posts, newData: bodyPostsModelClass): Posts {
 		post.title = newData.title,

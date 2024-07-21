@@ -14,6 +14,7 @@ import { DeleteAllQuestionCommand } from '../question/useCases/deleteAllQuestion
 import { DeleteAllPairQuizGameProgressPlayerCommand } from '../pairQuizGameProgress/useCase/deleteAllPairQuizGameProgressFirstPlayer';
 import { DelectAllQuestionGamesCommand } from '../pairQuizGame/useCase/deleteAllQuestionGames-use-case';
 import { DeleteUserBloggerCommand } from '../blogger/use-case/deleteUserBlogger-use-case';
+import { DeleteAllImagesCommand } from '../blogs/use-case/deleteAllImages-use-case';
 
 // @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
@@ -31,6 +32,7 @@ export class TestingController {
       new DeleteAllPairQuizGameProgressPlayerCommand(),
     );
     await this.commandBus.execute(new DeleteAllQuestionCommand());
+	await this.commandBus.execute(new DeleteAllImagesCommand())
     await this.commandBus.execute(new DeleteAllDevicesCommnad());
     await this.commandBus.execute(new DeleteAllCommentLikesCommand());
     await this.commandBus.execute(new DeleteAllPostLikesCommand());

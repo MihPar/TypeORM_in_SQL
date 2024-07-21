@@ -31,6 +31,7 @@ import { BlogsRepository } from '../blogs/blogs.repository';
 import { GetAllUsersUseCase } from './useCase/getAllUsers-use-case';
 import { GetBannedUsersUseCase } from './useCase/getBannedUsers-use-case';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { Images } from '../blogs/entity/images.entity';
 
 const userCase = [
   CreateNewUserUseCase,
@@ -60,7 +61,7 @@ const manager = [EmailManager];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device, Blogs, Posts, Comments, LikeForComment, LikeForPost, UserBlogger]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, Blogs, Posts, Comments, LikeForComment, LikeForPost, UserBlogger, Images]), CqrsModule],
   controllers: [UsersController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })

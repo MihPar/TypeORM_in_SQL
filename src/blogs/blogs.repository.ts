@@ -5,14 +5,14 @@ import { Blogs } from "./entity/blogs.entity";
 import { BanInputModel } from "../users/user.class";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 import { Metadata } from "sharp";
+import { Images } from "./entity/images.entity";
 
 @Injectable()
 export class BlogsRepository {
-	
-	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
-		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>
+		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>,
+		@InjectRepository(Images) protected readonly imagesRepository: Repository<Images>
 	) {}
   async deleteRepoBlogs() {
     await this.blogsRepository
@@ -115,33 +115,23 @@ async banBlog(id: string, isBanned: boolean, date: string) {
 	  );
 }
 
-async updateBlogForWallpaper(blogId: string, url: string, infoImage: Metadata): Promise<void> {
-	const updateBlog = await this.blogsRepository
+async updateImageForBlogs(blogId: string, url: string, infoImage: Metadata): Promise<void> {
+	const updateBlog = await this.imagesRepository
 		.createQueryBuilder()
 		.update()
 		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
 		.where(`id = :blogId`, {blogId})
 		.execute()
-		// .update(
-		// 	{id: blogId}, 
-		// 	{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size}
-		// )
-		// console.log("updateBlog: ", updateBlog)
 	return
 }
 
 async updateImageForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<void> {
-	const updateBlog = await this.blogsRepository
+	const updateBlog = await this.imagesRepository
 		.createQueryBuilder()
 		.update()
 		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
 		.where(`id = :blogId AND "postId" = :postId`, {blogId, postId})
 		.execute()
-		// .update(
-		// 	{id: blogId, postId}, 
-		// 	{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size}
-		// )
-		// console.log("updateBlog: ", updateBlog)
 	return
 }
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
@@ -175,4 +165,29 @@ async updateImageForPost(blogId: string, postId: string,  url: string, infoImage
 //     const result = await this.blogModel.deleteOne({ _id: new ObjectId(id) });
 //     return result.deletedCount === 1;
 //   }
+	async getImageByBlogId(id: string) {
+		const getImage = await this.imagesRepository
+			.createQueryBuilder()
+			.where(`"blogId" = :id`, {id})
+			.getOne()
+			if(!getImage) throw new NotFoundException([{message: "This image does not found"}])
+		return getImage
+	}
+
+	async getImageByPostId(id: string) {
+		const getImage = await this.imagesRepository
+			.createQueryBuilder()
+			.where(`"postId" = :id`, {id})
+			.getOne()
+			if(!getImage) throw new NotFoundException([{message: "This image does not found"}])
+			return getImage
+	}
+
+	async deleteAllImages() {
+		await this.imagesRepository
+			.createQueryBuilder()
+			.delete()
+			.execute()
+			return true
+	}
 }

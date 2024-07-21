@@ -61,7 +61,7 @@ export class BlogsController {
 	query.sortBy = query.sortBy || 'createdAt'
 	query.sortDirection = query.sortDirection || "desc"
 
-    const blog = await this.blogsQueryRepository.findBlogById(Dto.blogId);
+    const blog = await this.blogsQueryRepository.getBlogById(Dto.blogId);
     if (!blog) throw new NotFoundException('Blogs by id not found');
     const getPosts =
       await this.postsQueryRepository.findPostsByBlogsId(

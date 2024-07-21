@@ -9,6 +9,7 @@ import { Comments } from "../comment/entity/comment.entity";
 import { LikeForComment } from "../likes/entity/likesForComment.entity";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { Posts } from "../posts/entity/entity.posts";
+import { Images } from "./entity/images.entity";
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -16,7 +17,8 @@ export class BlogsQueryRepository {
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
 		@InjectRepository(LikeForComment) protected readonly commentLikesRepository: Repository<LikeForComment>,
-		@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>
+		@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>,
+		@InjectRepository(Images) protected readonly imageRepositry: Repository<Images>
 	) {}
 
 	async findAllBlogs(
@@ -50,7 +52,13 @@ export class BlogsQueryRepository {
 			page: +pageNumber,
 			pageSize: +pageSize,
 			totalCount: +totalCount,
-			items: findAllBlogs.map((item) => Blogs.getBlog(item)),
+			items: await Promise.all(findAllBlogs.map(async(item) => {
+				const getImage: Images = await this.imageRepositry
+					.createQueryBuilder()
+					.where(`"blogId" = :blogId`, {blogId: item.id})
+					.getOne()
+				return Blogs.getBlog(item, getImage)
+			})),
 		};
 		return result;
 	}
@@ -60,14 +68,14 @@ export class BlogsQueryRepository {
 	// 	return blog
 	//   }
 
-	async findBlogById(blogId: string): Promise<BlogsViewType | null> {
-		const findBlogById = await this.blogsRepository
-			.createQueryBuilder()
-			.select()
-			.where("id = :id", { id: blogId })
-			.getOne()
-		return findBlogById ? Blogs.createNewBlogForSA(findBlogById) : null;
-	}
+	// async findBlogById(blogId: string): Promise<BlogsViewType | null> {
+	// 	const findBlogById = await this.blogsRepository
+	// 		.createQueryBuilder()
+	// 		.select()
+	// 		.where("id = :id", { id: blogId })
+	// 		.getOne()
+	// 	return findBlogById ? Blogs.createNewBlogForSA(findBlogById) : null;
+	// }
 
 	async getBlogById(id: string) {
 		const findBlogById = await this.blogsRepository
@@ -76,7 +84,15 @@ export class BlogsQueryRepository {
 			.where("id = :id", { id })
 			.getOne()
 			if(!findBlogById) throw new NotFoundException([{message: "This blog do not found"}])
-		return findBlogById ? Blogs.getBlog(findBlogById) : null;
+
+		const findImageByBlogId = await this.imageRepositry
+			.createQueryBuilder()
+			.select()
+			.where(`"blogId" = :blogId`, {blogId: findBlogById.id})
+			.getOne()
+			if(!findImageByBlogId) throw new NotFoundException([{message: "This image do not found"}])
+
+		return findBlogById ? Blogs.getBlog(findBlogById, findImageByBlogId) : null;
 	}
 
 	async findBlog(id: string): Promise<Blogs> {

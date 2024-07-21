@@ -7,6 +7,7 @@ import { BlogsViewType, BlogsViewWithBanType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
 import { UserBlogger } from "../../blogger/domain/entity.userBlogger";
 import { PaginationType } from "../../types/pagination.types";
+import { Images } from './images.entity';
 
 @Entity()
 export class Blogs {
@@ -46,18 +47,6 @@ export class Blogs {
 	@Column({default: null})
 	banReason: string
 
-	@Column({nullable: true})
-	url: string
-
-	@Column({nullable: true})
-	width: number
-
-	@Column({nullable: true})
-	height: number
-
-	@Column({nullable: true})
-	fileSize: number
-
 	@OneToMany(() => Posts, p => p.blog)
 	post: Posts[]
 
@@ -66,6 +55,13 @@ export class Blogs {
 
 	@OneToMany(() => UserBlogger, b => b.blog)
 	userBlogger: UserBlogger
+
+	@OneToMany(() => Images, i => i.blog)
+	image: Images[]
+
+	@Column({nullable: true})
+	imageId: string
+
 
 	static createNewBlogForSA(inputBlog: Blogs) {
 		return {
@@ -89,7 +85,7 @@ export class Blogs {
 		}
 	}
 
-	static getBlog(blog: Blogs) {
+	static getBlog(blog: Blogs, image: Images) {
 		return {
 			id: blog.id,
 			name: blog.name,
@@ -99,17 +95,17 @@ export class Blogs {
 			isMembership: blog.isMembership,
 			images: {
 				wallpaper: {
-						url: blog.url,
-						width: blog.width,
-						height: blog.height,
-						fileSize: blog.fileSize
+						url: image.url,
+						width: image.width,
+						height: image.height,
+						fileSize: image.fileSize
 				},
 				main: [
 					{
-						url: blog.url,
-						width: blog.width,
-						height: blog.height,
-						fileSize: blog.fileSize
+						url: image.url,
+						width: image.width,
+						height: image.height,
+						fileSize: image.fileSize
 					}
 				]
 			}

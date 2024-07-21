@@ -9,6 +9,7 @@ import { Comments } from '../../comment/entity/comment.entity';
 import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { BanStatus } from '../enum';
 import { UserBlogger } from '../../blogger/domain/entity.userBlogger';
+import { Images } from '../../blogs/entity/images.entity';
 
 @Entity()
 export class User {
@@ -78,6 +79,9 @@ export class User {
 
   @OneToMany(() => UserBlogger, u => u.user)
   userBlogger: UserBlogger
+
+  @OneToMany(() => Images, i => i.user)
+  image: Images[]
 
   static getViewUser(user: User): UserBanViewType {
     return {

@@ -7,13 +7,15 @@ import { Posts } from "./entity/entity.posts";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { PostsViewModel } from "./posts.type";
 import { Comments } from "../comment/entity/comment.entity";
+import { Images } from '../blogs/entity/images.entity';
 
 @Injectable()
 export class PostsQueryRepository {
 	constructor(
 		@InjectRepository(Posts) protected readonly postRepository: Repository<Posts>,
 		@InjectRepository(LikeForPost) protected readonly LikeForPostRepository: Repository<LikeForPost>,
-		@InjectRepository(Comments) protected readonly commentsRepositor: Repository<Comments>
+		@InjectRepository(Comments) protected readonly commentsRepositor: Repository<Comments>,
+		@InjectRepository(Images) protected readonly imagesRepositor: Repository<Images>
 	) { }
 
 	async findPostsById(
@@ -27,8 +29,8 @@ export class PostsQueryRepository {
 				.where("id = :id", { id: postId })
 				.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 				.getOne()
-// console.log("userId: ", findPostById.userId)
-			const newestLikesQuery = await this.LikeForPostRepository
+
+				const newestLikesQuery = await this.LikeForPostRepository
 				.find({
 					where: {
 						postId: postId,
@@ -53,7 +55,12 @@ export class PostsQueryRepository {
 
 				myStatus = likeQuery ? (likeQuery?.myStatus as LikeStatusEnum) : LikeStatusEnum.None
 			}
-			return findPostById ? Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus) : null
+			const getImageByPostId = await this.imagesRepositor
+					.createQueryBuilder()
+					.where(`"postId" = :postId`, {postId})
+					.getOne()
+		
+			return findPostById ? Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus, getImageByPostId) : null
 
 		} catch (err) {
 			console.log({ repo_err: err })
@@ -103,7 +110,13 @@ export class PostsQueryRepository {
 							order: { addedAt: 'DESC' },
 							take: 3,
 						});
-					return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus);
+
+						const getImageByPostId = await this.imagesRepositor
+							.createQueryBuilder()
+							.where(`"postId" = :postId`, {postId: post.id})
+							.getOne()
+		
+					return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus, getImageByPostId);
 				})
 			),
 		};
@@ -154,7 +167,12 @@ export class PostsQueryRepository {
 					.limit(3)
 					.getMany()
 
-				return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikes, myStatus)
+				const getImageByBlogIdPostId = await this.imagesRepositor
+					.createQueryBuilder()
+					.where(`"blogId = :blogId AND "postId" = :postId`, {blogId, postId: post.id})
+					.getOne()
+
+				return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikes, myStatus, getImageByBlogIdPostId)
 			}
 			))
 		};

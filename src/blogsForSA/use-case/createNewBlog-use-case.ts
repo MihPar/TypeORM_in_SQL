@@ -3,6 +3,8 @@ import { BlogsRepositoryForSA } from "../blogsForSA.repository";
 import { BlogsViewType } from "../../blogs/blogs.type";
 import { Blogs } from "../../blogs/entity/blogs.entity";
 import { BodyBlogsModel } from "../dto/blogs.class-pipe";
+import { BlogsQueryRepository } from "../../blogs/blogs.queryReposity";
+import { BlogsRepository } from "../../blogs/blogs.repository";
 
 export class CreateNewBlogForSACommand {
 	constructor(
@@ -15,7 +17,10 @@ export class CreateNewBlogForSACommand {
 export class CreateNewBlogForSAUseCase
   implements ICommandHandler<CreateNewBlogForSACommand>
 {
-  constructor(protected readonly blogsRepositoryForSA: BlogsRepositoryForSA) {}
+  constructor(
+	protected readonly blogsRepositoryForSA: BlogsRepositoryForSA,
+	protected readonly blogsRepository: BlogsRepository
+) {}
   async execute(
     command: CreateNewBlogForSACommand
   ): Promise<BlogsViewType | null> {
@@ -31,6 +36,7 @@ export class CreateNewBlogForSAUseCase
     const createBlog: Blogs | null =
       await this.blogsRepositoryForSA.createNewBlogs(newBlog);
     if (!createBlog) return null;
+	// const findImageByBlogId = await this.blogsRepository.getImageByBlogId(createBlog.id)
     return Blogs.createNewBlogForSA(createBlog)
   }
 }

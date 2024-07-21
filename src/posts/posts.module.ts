@@ -23,6 +23,7 @@ import { PostController } from "./post.controller";
 import { CheckRefreshTokenForGet } from "./guards/bearer.authGetComment";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 import { UsersRepository } from "../users/users.repository";
+import { Images } from "../blogs/entity/images.entity";
 
 const userCase = [
 	DeleteAllPostsUseCase,
@@ -45,7 +46,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs, UserBlogger]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs, UserBlogger, Images]), CqrsModule],
   controllers: [PostController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...userGuard],
 })

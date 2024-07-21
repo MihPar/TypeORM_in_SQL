@@ -31,6 +31,7 @@ import { CronFirstdUseCase } from './useCase/handleCronFirst-use-case';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { Images } from '../blogs/entity/images.entity';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -65,7 +66,8 @@ const useCase = [
       Question,
       QuestionGame,
 	  Blogs,
-	  UserBlogger
+	  UserBlogger,
+	  Images
     ]),
     CqrsModule,
     ScheduleModule.forRoot(),

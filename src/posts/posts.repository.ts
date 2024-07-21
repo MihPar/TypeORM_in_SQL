@@ -16,7 +16,7 @@ export class PostsRepository {
 	@InjectRepository(LikeForPost) protected readonly likeForPostRepository: Repository<LikeForPost>,
 	) {}
 
-  async createNewPosts(newPost: Posts) {
+  async createNewPosts(newPost: Posts): Promise<Posts> {
     try {
 		const createNewPost = await this.postsRepository.save(newPost)
       return createNewPost;
