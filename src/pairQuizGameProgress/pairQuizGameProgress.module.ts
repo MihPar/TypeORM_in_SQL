@@ -17,14 +17,15 @@ import { QuestionGame } from '../pairQuizGame/domain/entity.questionGame';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
-import { Images } from '../blogs/entity/images.entity';
+import { Wallpaper } from '../blogs/entity/wallpaper.entity';
+import { Main } from '../blogs/entity/main';
 
 const useCase = [CreateOrConnectGameUseCase]
 const serves = [PairQuizGameProgressService]
 const repo = [PairQuizGameRepository, PairQuizGameProgressRepository, UsersQueryRepository, QuestionRepository, BlogsRepository]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, PairQuizGame, Question, User, AnswersPlayer, QuestionGame, Blogs, UserBlogger, Images]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, PairQuizGame, Question, User, AnswersPlayer, QuestionGame, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
   controllers: [PairQuizGameProgressController],
   providers: [...useCase, ...serves, ...repo],
 })

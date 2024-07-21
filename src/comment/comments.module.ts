@@ -22,7 +22,8 @@ import { DeleteAllCommentsUseCase } from "./use-case/deleteAllComments-use-case"
 import { UpdateCommentByCommentIdUseCase } from "./use-case/updateCommentByCommentId-use-case";
 import { BlogsRepository } from "../blogs/blogs.repository";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
-import { Images } from "../blogs/entity/images.entity";
+import { Wallpaper } from "../blogs/entity/wallpaper.entity";
+import { Main } from "../blogs/entity/main";
 
 const useCase = [UpdateLikestatusForCommentUseCase, CreateNewCommentByPostIdUseCase, DeleteAllCommentsUseCase, UpdateCommentByCommentIdUseCase]
 const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGet]
@@ -42,7 +43,8 @@ const validator = [];
 	  User,
 	  Blogs,
 	  UserBlogger,
-	  Images
+	  Wallpaper,
+	  Main
     ]),
     CqrsModule,
   ],

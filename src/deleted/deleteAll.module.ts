@@ -42,8 +42,10 @@ import { QuestionGame } from '../pairQuizGame/domain/entity.questionGame';
 import { Comments } from '../comment/entity/comment.entity';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 import { DeleteUserBloggerUseCase } from '../blogger/use-case/deleteUserBlogger-use-case';
-import { Images } from '../blogs/entity/images.entity';
-import { DeleteAllImagesUseCase } from '../blogs/use-case/deleteAllImages-use-case';
+import { DeleteAllWallpaperUseCase } from '../blogs/use-case/deleteAllWallpaper-use-case';
+import { DeleteAllMainUseCase } from '../blogs/use-case/deleteAllMain-use-case copy';
+import { Wallpaper } from '../blogs/entity/wallpaper.entity';
+import { Main } from '../blogs/entity/main';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -62,7 +64,8 @@ const useCase = [
   QuestionRepository,
   DelectAllQuestionGamesUseCase,
   DeleteUserBloggerUseCase,
-  DeleteAllImagesUseCase
+  DeleteAllWallpaperUseCase,
+  DeleteAllMainUseCase
 ];
 
 const repo = [
@@ -80,7 +83,7 @@ const repo = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersPlayer, AnswersPlayer, PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, QuestionGame, Comments, UserBlogger, Images]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersPlayer, AnswersPlayer, PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, QuestionGame, Comments, UserBlogger, Wallpaper, Main]), CqrsModule],
   controllers: [TestingController],
   providers: [...useCase, ...repo],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]

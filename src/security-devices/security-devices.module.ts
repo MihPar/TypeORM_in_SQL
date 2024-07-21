@@ -19,7 +19,8 @@ import { User } from '../users/entities/user.entity';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
-import { Images } from '../blogs/entity/images.entity';
+import { Wallpaper } from '../blogs/entity/wallpaper.entity';
+import { Main } from '../blogs/entity/main';
 
 const useCase = [
   DeleteAllDevicesUseCase,
@@ -36,7 +37,7 @@ const adapter = [PayloadAdapter]
 const service = [JwtService]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Blogs, UserBlogger, Images]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
   controllers: [SecurityDeviceController],
   providers: [...useCase, ...repo, ...guard, ...adapter, ...service],
 })

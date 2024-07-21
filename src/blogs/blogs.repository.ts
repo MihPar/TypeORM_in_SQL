@@ -5,14 +5,16 @@ import { Blogs } from "./entity/blogs.entity";
 import { BanInputModel } from "../users/user.class";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 import { Metadata } from "sharp";
-import { Images } from "./entity/images.entity";
+import { Wallpaper } from "./entity/wallpaper.entity";
+import { Main } from "./entity/main";
 
 @Injectable()
 export class BlogsRepository {
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>,
-		@InjectRepository(Images) protected readonly imagesRepository: Repository<Images>
+		@InjectRepository(Wallpaper) protected readonly wallpaperRepository: Repository<Wallpaper>,
+		@InjectRepository(Main) protected readonly mainRepository: Repository<Main>
 	) {}
   async deleteRepoBlogs() {
     await this.blogsRepository
@@ -115,22 +117,32 @@ async banBlog(id: string, isBanned: boolean, date: string) {
 	  );
 }
 
-async updateImageForBlogs(blogId: string, url: string, infoImage: Metadata): Promise<void> {
-	const updateBlog = await this.imagesRepository
+async updateWallpaperForBlogs(blogId: string, url: string, infoImage: Metadata): Promise<void> {
+	await this.wallpaperRepository
 		.createQueryBuilder()
 		.update()
 		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
-		.where(`id = :blogId`, {blogId})
+		.where(`"blogId" = :blogId`, {blogId})
 		.execute()
 	return
 }
 
-async updateImageForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<void> {
-	const updateBlog = await this.imagesRepository
+async updateMainForBlogs(blogId: string, url: string, infoImage: Metadata): Promise<void> {
+	await this.wallpaperRepository
 		.createQueryBuilder()
 		.update()
 		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
-		.where(`id = :blogId AND "postId" = :postId`, {blogId, postId})
+		.where(`"blogId" = :blogId`, {blogId})
+		.execute()
+	return
+}
+
+async updateMainForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<void> {
+	const updateBlog = await this.wallpaperRepository
+		.createQueryBuilder()
+		.update()
+		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
+		.where(`"blogId" = :blogId AND "postId" = :postId`, {blogId, postId})
 		.execute()
 	return
 }
@@ -165,26 +177,43 @@ async updateImageForPost(blogId: string, postId: string,  url: string, infoImage
 //     const result = await this.blogModel.deleteOne({ _id: new ObjectId(id) });
 //     return result.deletedCount === 1;
 //   }
-	async getImageByBlogId(id: string) {
-		const getImage = await this.imagesRepository
+	async getWallpaperByBlogId(id: string) {
+		const getImage = await this.wallpaperRepository
 			.createQueryBuilder()
 			.where(`"blogId" = :id`, {id})
 			.getOne()
-			if(!getImage) throw new NotFoundException([{message: "This image does not found"}])
+			if(!getImage) throw new NotFoundException([{message: "This wallpaper does not found"}])
 		return getImage
 	}
 
-	async getImageByPostId(id: string) {
-		const getImage = await this.imagesRepository
+	async getMainByBlogId(id: string) {
+		const getImage = await this.mainRepository
 			.createQueryBuilder()
-			.where(`"postId" = :id`, {id})
+			.where(`"blogId" = :id`, {id})
 			.getOne()
-			if(!getImage) throw new NotFoundException([{message: "This image does not found"}])
+			if(!getImage) throw new NotFoundException([{message: "This main does not found"}])
+		return getImage
+	}
+
+	async getImageMainByPostId(postId: string) {
+		const getImage = await this.mainRepository
+			.createQueryBuilder()
+			.where(`"postId" = :postId`, {postId})
+			.getOne()
+			if(!getImage) throw new NotFoundException([{message: "This image main does not found"}])
 			return getImage
 	}
 
-	async deleteAllImages() {
-		await this.imagesRepository
+	async deleteAllMain() {
+		await this.mainRepository
+			.createQueryBuilder()
+			.delete()
+			.execute()
+			return true
+	}
+
+	async deleteAllWallpaper() {
+		await this.wallpaperRepository
 			.createQueryBuilder()
 			.delete()
 			.execute()

@@ -8,7 +8,7 @@ import { BadRequestException } from "@nestjs/common";
 
 
 
-export class UploadImageForBlogCommand {
+export class UploadImageForBlogWallpaperCommand {
 	constructor(
 		public userId: string,
 		public blogId: string, 
@@ -18,15 +18,15 @@ export class UploadImageForBlogCommand {
 	) {}
 }
 
-@CommandHandler(UploadImageForBlogCommand)
-export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImageForBlogCommand, any> {
+@CommandHandler(UploadImageForBlogWallpaperCommand)
+export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImageForBlogWallpaperCommand, any> {
 	
 	constructor(
 		protected readonly s3StorageAdapter: S3StorageAdapter,
 		protected readonly blogsRepository: BlogsRepository
 	) {}
 
-	async execute(command: UploadImageForBlogCommand): Promise<SaveFileResultType> {
+	async execute(command: UploadImageForBlogWallpaperCommand): Promise<SaveFileResultType> {
 		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.jpeg`
 		const bucketParams = {
 			Bucket: `michael-paramonov`,
@@ -37,17 +37,17 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImag
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 
 		if(command.mimetype !== "image/jpeg") {
-			throw new BadRequestException([{message: 'This sizes are not according'}])
+			throw new BadRequestException([{message: 'Type are not according'}])
 		}
 
 		let infoImage = await sharp(command.buffer).metadata()
 
 		if(infoImage.width !== 1028 || infoImage.height !== 312) {
-			throw new BadRequestException([{message: 'This sizes are not according'}])
+			throw new BadRequestException([{message: 'Width and heigth are not according'}])
 		}
 
 		if(infoImage.size > 100000) {
-			throw new BadRequestException([{message: 'This sizes are not according'}])
+			throw new BadRequestException([{message: 'Sizes are not according'}])
 		}
 
 		// const resizeImages = () => {
@@ -99,7 +99,7 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImag
 		try {
 			const uploadResult: PutObjectCommandOutput = 
 				await this.s3StorageAdapter.s3Client.send(objectCommand)
-				await this.blogsRepository.updateImageForBlogs(command.blogId, url, infoImage)
+				await this.blogsRepository.updateWallpaperForBlogs(command.blogId, url, infoImage)
 			return {
 					wallpaper: {
 					  url,

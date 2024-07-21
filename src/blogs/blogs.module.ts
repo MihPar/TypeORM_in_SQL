@@ -30,8 +30,10 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 import { S3StorageAdapter } from '../blogger/adapter/s3StorageAdapter';
-import { Images } from './entity/images.entity';
-import { DeleteAllImagesUseCase } from './use-case/deleteAllImages-use-case';
+import { Wallpaper } from './entity/wallpaper.entity';
+import { DeleteAllWallpaperUseCase } from './use-case/deleteAllWallpaper-use-case';
+import { Main } from './entity/main';
+import { DeleteAllMainUseCase } from './use-case/deleteAllMain-use-case copy';
 
 const userCase = [
   UpdateBlogForSAUseCase,
@@ -42,7 +44,8 @@ const userCase = [
   DeletePostByIdCommandUseCase,
   DeleteAllBlogsUseCase,
   DeleteAllBlogsForSAUseCase,
-  DeleteAllImagesUseCase
+  DeleteAllWallpaperUseCase,
+  DeleteAllMainUseCase
 ];
 
 const repo = [
@@ -63,7 +66,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment, Blogs, UserBlogger, Images]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment, Blogs, UserBlogger, Main, Wallpaper]), CqrsModule],
   controllers: [BlogsController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })

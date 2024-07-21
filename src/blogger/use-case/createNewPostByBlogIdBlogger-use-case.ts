@@ -42,7 +42,7 @@ export class CreateNewPostForBlogBloggerUseCase
 
 	const createPost: Posts = await this.postsRepository.createNewPosts(newPost)
 	if (!createPost) return null;
-	const getImageByPostId = await this.blogsRepository.getImageByPostId(createPost.id)
-	return Posts.getPostsWithImages(createPost, getImageByPostId)
+	const getMainByPostId = await this.blogsRepository.getImageMainByPostId(createPost.id)
+	return Posts.getPostsWithImagesMain(createPost, getMainByPostId)
   }
 }

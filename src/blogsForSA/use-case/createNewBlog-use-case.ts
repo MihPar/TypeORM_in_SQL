@@ -36,7 +36,8 @@ export class CreateNewBlogForSAUseCase
     const createBlog: Blogs | null =
       await this.blogsRepositoryForSA.createNewBlogs(newBlog);
     if (!createBlog) return null;
-	// const findImageByBlogId = await this.blogsRepository.getImageByBlogId(createBlog.id)
-    return Blogs.createNewBlogForSA(createBlog)
+	const findWallpaperByBlogId = await this.blogsRepository.getWallpaperByBlogId(createBlog.id)
+	const findMainByBlogId = await this.blogsRepository.getMainByBlogId(createBlog.id)
+    return Blogs.getBlog(createBlog, findWallpaperByBlogId, findMainByBlogId)
   }
 }

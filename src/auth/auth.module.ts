@@ -36,7 +36,8 @@ import { ApiJwtService } from './adapter/jwt/jwt.service';
 import { ApiConfigService } from '../config/configService';
 import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
-import { Images } from '../blogs/entity/images.entity';
+import { Wallpaper } from '../blogs/entity/wallpaper.entity';
+import { Main } from '../blogs/entity/main';
 
 const guards = [
   CheckRefreshTokenFor,
@@ -75,7 +76,7 @@ const service = [JwtService, ApiJwtService, ApiConfigService];
 const validator = [CustomLoginvalidation, CustomEmailvalidation]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Blogs, UserBlogger, Images]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
   controllers: [AuthController],
   providers: [
     ...useCase,

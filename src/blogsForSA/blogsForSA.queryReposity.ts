@@ -6,7 +6,8 @@ import { BlogsViewType, BlogsViewTypeWithUserId, BlogsViewWithBanType } from "..
 import { Blogs } from "../blogs/entity/blogs.entity";
 import { User } from "../users/entities/user.entity";
 import { UsersQueryRepository } from "../users/users.queryRepository";
-import { Images } from "../blogs/entity/images.entity";
+import { Wallpaper } from "../blogs/entity/wallpaper.entity";
+import { Main } from "../blogs/entity/main";
 
 @Injectable()
 export class BlogsQueryRepositoryForSA {
@@ -15,7 +16,8 @@ export class BlogsQueryRepositoryForSA {
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(User) protected readonly userQueryRepository: UsersQueryRepository,
 		@InjectRepository(User) protected readonly userRepository: Repository<User>,
-		@InjectRepository(Images) protected readonly imagesRepository: Repository<Images>,
+		@InjectRepository(Wallpaper) protected readonly wallpaperRepository: Repository<Wallpaper>,
+		@InjectRepository(Main) protected readonly mainRepository: Repository<Main>,
 	) { }
 
 	async findAllBlogs(
@@ -56,11 +58,16 @@ export class BlogsQueryRepositoryForSA {
 			pageSize: +pageSize,
 			totalCount: +totalCount,
 			items: await Promise.all(findAllBlogs.map(async(item) => {
-				const getImage = await this.imagesRepository
+				const getWallpaper = await this.wallpaperRepository
 					.createQueryBuilder()
 					.where(`"blogId" = :id`, {id: item.id})
 					.getOne()
-				return Blogs.getBlog(item, getImage)
+
+				const getMain = await this.mainRepository
+					.createQueryBuilder()
+					.where(`"blogId" = :id`, {id: item.id})
+					.getOne()
+				return Blogs.getBlog(item, getWallpaper, getMain)
 			})),
 		};
 		return result;

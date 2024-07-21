@@ -1,13 +1,10 @@
-import { MinLength } from 'class-validator';
-import { MaxLength } from 'class-validator';
-import { FromEnvInit } from './../../../node_modules/@aws-sdk/credential-provider-env/dist-types/fromEnv.d';
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "../../posts/entity/entity.posts";
 import { BlogsViewType, BlogsViewWithBanType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
 import { UserBlogger } from "../../blogger/domain/entity.userBlogger";
-import { PaginationType } from "../../types/pagination.types";
-import { Images } from './images.entity';
+import { Wallpaper } from './wallpaper.entity';
+import { Main } from "./main";
 
 @Entity()
 export class Blogs {
@@ -56,11 +53,17 @@ export class Blogs {
 	@OneToMany(() => UserBlogger, b => b.blog)
 	userBlogger: UserBlogger
 
-	@OneToMany(() => Images, i => i.blog)
-	image: Images[]
+	@OneToMany(() => Wallpaper, i => i.blog)
+	wallpaper: Wallpaper[]
 
 	@Column({nullable: true})
-	imageId: string
+	wallpaperId: string
+
+	@OneToMany(() => Main, i => i.blog)
+	main: Main[]
+
+	@Column({nullable: true})
+	mainId: string
 
 
 	static createNewBlogForSA(inputBlog: Blogs) {
@@ -85,7 +88,7 @@ export class Blogs {
 		}
 	}
 
-	static getBlog(blog: Blogs, image: Images) {
+	static getBlog(blog: Blogs, wallpaper: Wallpaper, main: Main) {
 		return {
 			id: blog.id,
 			name: blog.name,
@@ -95,17 +98,17 @@ export class Blogs {
 			isMembership: blog.isMembership,
 			images: {
 				wallpaper: {
-						url: image.url,
-						width: image.width,
-						height: image.height,
-						fileSize: image.fileSize
+						url: wallpaper.url,
+						width: wallpaper.width,
+						height: wallpaper.height,
+						fileSize: wallpaper.fileSize
 				},
 				main: [
 					{
-						url: image.url,
-						width: image.width,
-						height: image.height,
-						fileSize: image.fileSize
+						url: main.url,
+						width: main.width,
+						height: main.height,
+						fileSize: main.fileSize
 					}
 				]
 			}

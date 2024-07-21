@@ -61,7 +61,7 @@ export class BlogsController {
 	query.sortBy = query.sortBy || 'createdAt'
 	query.sortDirection = query.sortDirection || "desc"
 
-    const blog = await this.blogsQueryRepository.getBlogById(Dto.blogId);
+    const blog = await this.blogsQueryRepository.getBlogByBlogId(Dto.blogId);
     if (!blog) throw new NotFoundException('Blogs by id not found');
     const getPosts =
       await this.postsQueryRepository.findPostsByBlogsId(
@@ -83,10 +83,10 @@ export class BlogsController {
   ): Promise<BlogsViewType | null> {
 	const findBlog = await this.blogsRepository.findBlogById(Dto.blogId)
 
-	if(findBlog.isBanned) throw new NotFoundException('404')
+	if(findBlog.isBanned) throw new NotFoundException([{message: "This blog does not found"}])
 
     const blogById: BlogsViewType | null =
-      await this.blogsQueryRepository.getBlogById(Dto.blogId);
+      await this.blogsQueryRepository.getBlogById(findBlog);
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');
     return blogById;
   }

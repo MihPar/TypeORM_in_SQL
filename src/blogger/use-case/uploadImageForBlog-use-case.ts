@@ -35,25 +35,25 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 // console.log("buffer 33: ", command.buffer)
 
 if(command.mimetype !== "image/jpeg") {
-	throw new BadRequestException([{message: 'This sizes are not according'}])
+	throw new BadRequestException([{message: 'This type are not according'}])
 }
 
 		const infoImage = await sharp(command.buffer).metadata();
 
 			if(infoImage.width !== 156 || infoImage.height !== 156) {
-				throw new BadRequestException([{message: 'This sizes are not according'}])
+				throw new BadRequestException([{message: 'Width and height are not according'}])
 			}
 
 			if(infoImage.size > 100000) {
-				throw new BadRequestException([{message: 'This sizes are not according'}])
+				throw new BadRequestException([{message: 'Sizes are not according'}])
 			}
-			console.log("infoImage: ", infoImage)
+			// console.log("infoImage: ", infoImage)
 
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
 			// console.log("uploadResult: ", uploadResult)
-			await this.blogsRepository.updateImageForBlogs(command.blogId, url, infoImage)
+			await this.blogsRepository.updateMainForBlogs(command.blogId, url, infoImage)
 			return {
 					wallpaper: null,
 					main: [

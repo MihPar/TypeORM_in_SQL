@@ -52,14 +52,8 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 		try {
 			
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
-			await this.blogsRepository.updateImageForPost(command.blogId, command.postId, url, infoImage)
+			await this.blogsRepository.updateMainForPost(command.blogId, command.postId, url, infoImage)
 			return {
-				wallpaper: {
-				  url,
-				  width: infoImage.width,
-				  height: infoImage.height,
-				  fileSize: infoImage.size
-				},
 				main: [
 				  {
 					url,

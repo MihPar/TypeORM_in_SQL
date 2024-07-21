@@ -9,7 +9,8 @@ import { Comments } from '../../comment/entity/comment.entity';
 import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { BanStatus } from '../enum';
 import { UserBlogger } from '../../blogger/domain/entity.userBlogger';
-import { Images } from '../../blogs/entity/images.entity';
+import { Wallpaper } from '../../blogs/entity/wallpaper.entity';
+import { Main } from '../../blogs/entity/main';
 
 @Entity()
 export class User {
@@ -80,8 +81,17 @@ export class User {
   @OneToMany(() => UserBlogger, u => u.user)
   userBlogger: UserBlogger
 
-  @OneToMany(() => Images, i => i.user)
-  image: Images[]
+  @OneToMany(() => Wallpaper, i => i.user)
+  wallpaper: Wallpaper[]
+
+  @Column({nullable: true})
+  wallpaperId: string
+
+  @OneToMany(() => Main, i => i.user)
+  main: Main[]
+
+  @Column({nullable: true})
+  mainId: string
 
   static getViewUser(user: User): UserBanViewType {
     return {

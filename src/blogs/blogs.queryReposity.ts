@@ -9,7 +9,8 @@ import { Comments } from "../comment/entity/comment.entity";
 import { LikeForComment } from "../likes/entity/likesForComment.entity";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { Posts } from "../posts/entity/entity.posts";
-import { Images } from "./entity/images.entity";
+import { Wallpaper } from "./entity/wallpaper.entity";
+import { Main } from "./entity/main";
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -18,7 +19,8 @@ export class BlogsQueryRepository {
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
 		@InjectRepository(LikeForComment) protected readonly commentLikesRepository: Repository<LikeForComment>,
 		@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>,
-		@InjectRepository(Images) protected readonly imageRepositry: Repository<Images>
+		@InjectRepository(Wallpaper) protected readonly wallpaperRepositry: Repository<Wallpaper>,
+		@InjectRepository(Main) protected readonly mainRepositry: Repository<Main>
 	) {}
 
 	async findAllBlogs(
@@ -53,11 +55,17 @@ export class BlogsQueryRepository {
 			pageSize: +pageSize,
 			totalCount: +totalCount,
 			items: await Promise.all(findAllBlogs.map(async(item) => {
-				const getImage: Images = await this.imageRepositry
+				const getWallpaper: Wallpaper = await this.wallpaperRepositry
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId`, {blogId: item.id})
 					.getOne()
-				return Blogs.getBlog(item, getImage)
+					
+				const getMain: Wallpaper = await this.mainRepositry
+					.createQueryBuilder()
+					.where(`"blogId" = :blogId`, {blogId: item.id})
+					.getOne()
+					
+				return Blogs.getBlog(item, getWallpaper, getMain)
 			})),
 		};
 		return result;
@@ -76,23 +84,33 @@ export class BlogsQueryRepository {
 	// 		.getOne()
 	// 	return findBlogById ? Blogs.createNewBlogForSA(findBlogById) : null;
 	// }
-
-	async getBlogById(id: string) {
+	async getBlogByBlogId(id: string) {
 		const findBlogById = await this.blogsRepository
 			.createQueryBuilder()
 			.select()
 			.where("id = :id", { id })
 			.getOne()
 			if(!findBlogById) throw new NotFoundException([{message: "This blog do not found"}])
+			
+			return findBlogById
+	}
 
-		const findImageByBlogId = await this.imageRepositry
+	async getBlogById(blog: Blogs) {
+		const findWallpaperByBlogId = await this.wallpaperRepositry
 			.createQueryBuilder()
 			.select()
-			.where(`"blogId" = :blogId`, {blogId: findBlogById.id})
+			.where(`"blogId" = :id`, {id: blog.id})
 			.getOne()
-			if(!findImageByBlogId) throw new NotFoundException([{message: "This image do not found"}])
+			if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This image does not found"}])
 
-		return findBlogById ? Blogs.getBlog(findBlogById, findImageByBlogId) : null;
+		const findMainByBlogId = await this.mainRepositry
+			.createQueryBuilder()
+			.select()
+			.where(`"blogId" = :id`, {id: blog.id})
+			.getOne()
+			if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This image does not found"}])
+
+		return blog ? Blogs.getBlog(blog, findWallpaperByBlogId, findMainByBlogId) : null;
 	}
 
 	async findBlog(id: string): Promise<Blogs> {

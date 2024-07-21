@@ -30,7 +30,8 @@ import { BandBlogUseCase } from './use-case/updateBlogByBindWithUser-use-case';
 import { UsersRepository } from '../users/users.repository';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 import { BanUnbanBlogUseCase } from './use-case/banUnbanSpecifyBlog-use-case';
-import { Images } from '../blogs/entity/images.entity';
+import { Wallpaper } from '../blogs/entity/wallpaper.entity';
+import { Main } from '../blogs/entity/main';
 
 const guards = [
 	CheckRefreshTokenForSA
@@ -66,7 +67,7 @@ const service = [JwtService];
 const validator = [CustomLoginvalidation, CustomEmailvalidation]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForComment, LikeForPost, Blogs, Comments, UserBlogger, Images]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForComment, LikeForPost, Blogs, Comments, UserBlogger, Wallpaper, Main]), CqrsModule],
   controllers: [BlogsControllerForSA],
   providers: [
     ...useCase,

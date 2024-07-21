@@ -31,6 +31,7 @@ import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-ca
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
 import { Blogs } from '../../blogs/entity/blogs.entity';
+import { UploadImageForBlogWallpaperCommand } from '../use-case/uploadWallpaperForBlog-use-case';
 
 @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -70,8 +71,8 @@ export class BloggerController {
 		// console.log(blogId, " blogId")
 		// console.log(avatarFile, " body")
 // const blogId = '111'
-		const saveAvatarCommand = new UploadImageForBlogCommand(userId, blogId, file.mimetype, file.originalname, file.buffer)
-		const result = await this.commandBus.execute<UploadImageForBlogCommand>(saveAvatarCommand)
+		const saveAvatarCommand = new UploadImageForBlogWallpaperCommand(userId, blogId, file.mimetype, file.originalname, file.buffer)
+		const result = await this.commandBus.execute<UploadImageForBlogWallpaperCommand>(saveAvatarCommand)
 
 		// return "avatar saved"
 		// console.log("result: ", result)

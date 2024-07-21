@@ -7,7 +7,8 @@ import { LikesType, NewestLikesType } from "../../likes/likes.type";
 import { bodyPostsModelClass } from "../dto/posts.class.pipe";
 import { User } from "../../users/entities/user.entity";
 import { Comments } from "../../comment/entity/comment.entity";
-import { Images } from "../../blogs/entity/images.entity";
+import { Wallpaper } from "../../blogs/entity/wallpaper.entity";
+import { Main } from "../../blogs/entity/main";
 
 @Entity()
 export class Posts {
@@ -68,11 +69,18 @@ export class Posts {
 	@Column({nullable: true})
 	fileSize: number
 
-	@OneToMany(() => Images, i => i.post)
-	image: Images[]
+	@OneToMany(() => Wallpaper, i => i.post)
+	wallpaper: Wallpaper[]
 
 	@Column({nullable: true})
-	imageId: string
+	wallpaperId: string
+
+
+	@OneToMany(() => Main, i => i.post)
+	main: Main[]
+
+	@Column({nullable: true})
+	mainId: string
 
 	@OneToMany(() => LikeForPost, lp => lp.post, {onDelete: "CASCADE"})
 	extendedLikesInfo: LikeForPost[]
@@ -81,7 +89,7 @@ export class Posts {
 	comment: Comments[]
 
 	static getPostsViewModelSAMyOwnStatus(post: Posts,
-		newestLikes: any[], myOwnStatus: LikeStatusEnum, images: Images): PostsViewModel {
+		newestLikes: any[], myOwnStatus: LikeStatusEnum, main: Main): PostsViewModel {
 		return {
 		  id: post.id.toString(),
 		  title: post.title,
@@ -103,10 +111,10 @@ export class Posts {
 			images: {
 				main: [
 				  {
-					url: images.url,
-					width: images.width,
-					height: images.height,
-					fileSize: images.fileSize
+					url: main.url,
+					width: main.width,
+					height: main.height,
+					fileSize: main.fileSize
 				  }
 				]
 			  }
@@ -149,9 +157,9 @@ export class Posts {
 		  }
 
 
-	static getPostsWithImages(
+	static getPostsWithImagesMain(
 			post: Posts,
-			image: Images
+			main: Main
 			): PostsViewModel {
 				return {
 				  id: post.id.toString(),
@@ -176,10 +184,10 @@ export class Posts {
 					  images: {
 						main: [
 						  {
-							url: image.url,
-							width: image.width,
-							height: image.height,
-							fileSize: image.fileSize
+							url: main.url,
+							width: main.width,
+							height: main.height,
+							fileSize: main.fileSize
 						  }
 						]
 					  }
