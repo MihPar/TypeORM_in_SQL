@@ -32,7 +32,7 @@ import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 import { S3StorageAdapter } from '../blogger/adapter/s3StorageAdapter';
 import { Wallpaper } from './entity/wallpaper.entity';
 import { DeleteAllWallpaperUseCase } from './use-case/deleteAllWallpaper-use-case';
-import { Main } from './entity/main';
+import { Main } from './entity/main.entity';
 import { DeleteAllMainUseCase } from './use-case/deleteAllMain-use-case copy';
 
 const userCase = [

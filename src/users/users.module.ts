@@ -32,7 +32,7 @@ import { GetAllUsersUseCase } from './useCase/getAllUsers-use-case';
 import { GetBannedUsersUseCase } from './useCase/getBannedUsers-use-case';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
-import { Main } from '../blogs/entity/main';
+import { Main } from '../blogs/entity/main.entity';
 
 const userCase = [
   CreateNewUserUseCase,

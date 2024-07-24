@@ -31,7 +31,7 @@ import { UsersRepository } from '../users/users.repository';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 import { BanUnbanBlogUseCase } from './use-case/banUnbanSpecifyBlog-use-case';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
-import { Main } from '../blogs/entity/main';
+import { Main } from '../blogs/entity/main.entity';
 
 const guards = [
 	CheckRefreshTokenForSA

@@ -4,7 +4,7 @@ import { BlogsViewType, BlogsViewWithBanType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
 import { UserBlogger } from "../../blogger/domain/entity.userBlogger";
 import { Wallpaper } from './wallpaper.entity';
-import { Main } from "./main";
+import { Main } from "./main.entity";
 
 @Entity()
 export class Blogs {

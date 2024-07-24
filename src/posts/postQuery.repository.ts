@@ -7,7 +7,7 @@ import { Posts } from "./entity/entity.posts";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { PostsViewModel } from "./posts.type";
 import { Comments } from "../comment/entity/comment.entity";
-import { Main } from '../blogs/entity/main';
+import { Main } from '../blogs/entity/main.entity';
 
 @Injectable()
 export class PostsQueryRepository {

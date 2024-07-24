@@ -6,7 +6,7 @@ import { BanInputModel } from "../users/user.class";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 import { Metadata } from "sharp";
 import { Wallpaper } from "./entity/wallpaper.entity";
-import { Main } from "./entity/main";
+import { Main } from "./entity/main.entity";
 
 @Injectable()
 export class BlogsRepository {

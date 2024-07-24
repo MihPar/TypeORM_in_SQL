@@ -23,7 +23,7 @@ import { UpdateCommentByCommentIdUseCase } from "./use-case/updateCommentByComme
 import { BlogsRepository } from "../blogs/blogs.repository";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
-import { Main } from "../blogs/entity/main";
+import { Main } from "../blogs/entity/main.entity";
 
 const useCase = [UpdateLikestatusForCommentUseCase, CreateNewCommentByPostIdUseCase, DeleteAllCommentsUseCase, UpdateCommentByCommentIdUseCase]
 const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGet]

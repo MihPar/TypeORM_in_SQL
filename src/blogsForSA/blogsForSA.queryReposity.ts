@@ -7,7 +7,7 @@ import { Blogs } from "../blogs/entity/blogs.entity";
 import { User } from "../users/entities/user.entity";
 import { UsersQueryRepository } from "../users/users.queryRepository";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
-import { Main } from "../blogs/entity/main";
+import { Main } from "../blogs/entity/main.entity";
 
 @Injectable()
 export class BlogsQueryRepositoryForSA {

@@ -45,7 +45,7 @@ import { DeleteUserBloggerUseCase } from '../blogger/use-case/deleteUserBlogger-
 import { DeleteAllWallpaperUseCase } from '../blogs/use-case/deleteAllWallpaper-use-case';
 import { DeleteAllMainUseCase } from '../blogs/use-case/deleteAllMain-use-case copy';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
-import { Main } from '../blogs/entity/main';
+import { Main } from '../blogs/entity/main.entity';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,

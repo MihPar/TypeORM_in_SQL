@@ -167,7 +167,7 @@ describe('/blogs', () => {
 			}
 			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
 
-			//  console.log("createBlog: ", createBlog)
+			 console.log("createBlog: ", createBlog[1])
 		})
 
 		let createPost: PostsViewModel

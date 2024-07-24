@@ -10,7 +10,7 @@ import { LikeForComment } from "../likes/entity/likesForComment.entity";
 import { LikeStatusEnum } from "../likes/likes.emun";
 import { Posts } from "../posts/entity/entity.posts";
 import { Wallpaper } from "./entity/wallpaper.entity";
-import { Main } from "./entity/main";
+import { Main } from "./entity/main.entity";
 
 @Injectable()
 export class BlogsQueryRepository {

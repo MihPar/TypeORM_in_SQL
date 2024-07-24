@@ -8,7 +8,7 @@ import { bodyPostsModelClass } from "../dto/posts.class.pipe";
 import { User } from "../../users/entities/user.entity";
 import { Comments } from "../../comment/entity/comment.entity";
 import { Wallpaper } from "../../blogs/entity/wallpaper.entity";
-import { Main } from "../../blogs/entity/main";
+import { Main } from "../../blogs/entity/main.entity";
 
 @Entity()
 export class Posts {

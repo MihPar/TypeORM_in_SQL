@@ -34,7 +34,7 @@ import { UploadImageForBlogUseCase } from './use-case/uploadImageForBlog-use-cas
 import { UploadImageForPostUseCase } from './use-case/uploadImageForPost-use-case';
 import { S3StorageAdapter } from './adapter/s3StorageAdapter';
 import { GetSecretDownloadAvatarUseCase } from './use-case/getSecretDownloadUrl-use-case';
-import { Main } from '../blogs/entity/main';
+import { Main } from '../blogs/entity/main.entity';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 
 const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase, FileStorageAdapterUseCase, CreateFileUseCase, UploadWallpaperForBlogUseCase, DeleteAvatarUseCase, UploadImageForBlogUseCase, UploadImageForPostUseCase, GetSecretDownloadAvatarUseCase

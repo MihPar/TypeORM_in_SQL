@@ -24,7 +24,7 @@ import { CheckRefreshTokenForGet } from "./guards/bearer.authGetComment";
 import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 import { UsersRepository } from "../users/users.repository";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
-import { Main } from "../blogs/entity/main";
+import { Main } from "../blogs/entity/main.entity";
 
 const userCase = [
 	DeleteAllPostsUseCase,

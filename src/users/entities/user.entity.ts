@@ -10,7 +10,7 @@ import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/en
 import { BanStatus } from '../enum';
 import { UserBlogger } from '../../blogger/domain/entity.userBlogger';
 import { Wallpaper } from '../../blogs/entity/wallpaper.entity';
-import { Main } from '../../blogs/entity/main';
+import { Main } from '../../blogs/entity/main.entity';
 
 @Entity()
 export class User {
