@@ -34,7 +34,7 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 
 // console.log("buffer 33: ", command.buffer)
 
-if(command.mimetype !== "image/jpeg") {
+if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
 	throw new BadRequestException([{message: 'This type are not according'}])
 }
 

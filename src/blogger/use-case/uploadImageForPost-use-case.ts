@@ -32,25 +32,22 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 		
-		if(command.mimetype !== "image/jpeg") {
-			throw new BadRequestException([{message: 'This sizes are not according'}])
+		if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
+			throw new BadRequestException([{message: 'This type are not according'}])
 		}
 
-		const infoImage = await sharp(command.buffer)
-			// .resize({width: 940, height: 432})
-			.metadata();
+		const infoImage = await sharp(command.buffer).metadata();
 
-			if(infoImage.width !== 940 || infoImage.height !== 432) {
-				throw new BadRequestException([{message: 'This sizes are not according'}])
+		if((infoImage.width !== (940 || 300 || 149)) &&  (infoImage.height !== (432 || 180 || 96))) {
+				throw new BadRequestException([{message: 'This width and height are not according'}])
 			}
 
-			if(infoImage.size > 100000) {
+		if(infoImage.size > 100000) {
 				throw new BadRequestException([{message: 'This sizes are not according'}])
 			}
 
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
-			
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
 			await this.blogsRepository.updateMainForPost(command.blogId, command.postId, url, infoImage)
 			return {

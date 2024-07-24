@@ -36,7 +36,7 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImag
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 
-		if(command.mimetype !== "image/jpeg") {
+		if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
 			throw new BadRequestException([{message: 'Type are not according'}])
 		}
 
@@ -99,7 +99,7 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImag
 		try {
 			const uploadResult: PutObjectCommandOutput = 
 				await this.s3StorageAdapter.s3Client.send(objectCommand)
-				await this.blogsRepository.updateWallpaperForBlogs(command.blogId, url, infoImage)
+				await this.blogsRepository.createWallpaperForBlogs(command.blogId, url, infoImage)
 			return {
 					wallpaper: {
 					  url,

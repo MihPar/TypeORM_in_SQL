@@ -101,14 +101,14 @@ export class BlogsQueryRepository {
 			.select()
 			.where(`"blogId" = :id`, {id: blog.id})
 			.getOne()
-			if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This image does not found"}])
+			if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This wallpaper does not found"}])
 
 		const findMainByBlogId = await this.mainRepositry
 			.createQueryBuilder()
 			.select()
 			.where(`"blogId" = :id`, {id: blog.id})
 			.getOne()
-			if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This image does not found"}])
+			if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This main does not found"}])
 
 		return blog ? Blogs.getBlog(blog, findWallpaperByBlogId, findMainByBlogId) : null;
 	}
@@ -124,10 +124,10 @@ export class BlogsQueryRepository {
 			return findBlogById
 	}
 
-	async findBlogByIdAndPostId(blogId: string, postId: string) {
+	async findBlogByIdAndPostId(blogId: string, postId?: string) {
 		const blog = await this.blogsRepository
 			.createQueryBuilder()
-			.where(`id = :blogId AND "postId" = :postId`, {blogId, postId})
+			.where(`id = :blogId`, {blogId})
 			.getOne()
 			if(!blog) throw new NotFoundException([{message: "This blog do not found"}])
 			return blog

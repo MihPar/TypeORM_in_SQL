@@ -32,6 +32,7 @@ import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-ca
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
 import { Blogs } from '../../blogs/entity/blogs.entity';
 import { UploadImageForBlogWallpaperCommand } from '../use-case/uploadWallpaperForBlog-use-case';
+import { CreateFileCommand } from '../use-case/createFile-use-case';
 
 @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')
@@ -104,7 +105,7 @@ export class BloggerController {
 		@UploadedFile() file: Express.Multer.File,
 		@UserIdDecorator() userId: string
 	) {
-		const findBlogById: Blogs = await this.blogsQueryRepository.findBlogByIdAndPostId(blogId, postId)
+		const findBlogById: Blogs = await this.blogsQueryRepository.findBlogByIdAndPostId(blogId)
 		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
 		const command = new UploadImageForPostCommand(blogId, postId, userId, file.mimetype, file.originalname, file.buffer)
 		const uploadImageForPost = await this.commandBus.execute<UploadImageForPostCommand>(command)
@@ -214,7 +215,6 @@ export class BloggerController {
 		@Body() inputDataModel: bodyPostsModelClass,
 		@UserIdDecorator() userId: string,
 	): Promise<Posts | null> {
-
 		const command = new CreateNewPostForBlogBloggerCommand(dto.blogId, inputDataModel, userId)
 		const createNewPost: Posts | null = await this.commandBus.execute<CreateNewPostForBlogBloggerCommand, Posts | null>(command)
 		if (!createNewPost) throw new NotFoundException('Blogs by id not found 404');

@@ -117,32 +117,38 @@ async banBlog(id: string, isBanned: boolean, date: string) {
 	  );
 }
 
-async updateWallpaperForBlogs(blogId: string, url: string, infoImage: Metadata): Promise<void> {
+async createWallpaperForBlogs(blogId: string, url: string, infoImage: Metadata): Promise<void> {
 	await this.wallpaperRepository
 		.createQueryBuilder()
-		.update()
-		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
-		.where(`"blogId" = :blogId`, {blogId})
+		.insert()
+		.into(Wallpaper)
+		.values([
+			{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size, blogId}
+		])
 		.execute()
 	return
 }
 
 async updateMainForBlogs(blogId: string, url: string, infoImage: Metadata): Promise<void> {
-	await this.wallpaperRepository
+	await this.mainRepository
 		.createQueryBuilder()
-		.update()
-		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
-		.where(`"blogId" = :blogId`, {blogId})
+		.insert()
+		.into(Main)
+		.values([
+			{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size, blogId}
+		])
 		.execute()
 	return
 }
 
 async updateMainForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<void> {
-	const updateBlog = await this.wallpaperRepository
+	const updateBlog = await this.mainRepository
 		.createQueryBuilder()
-		.update()
-		.set({url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size})
-		.where(`"blogId" = :blogId AND "postId" = :postId`, {blogId, postId})
+		.insert()
+		.into(Main)
+		.values([
+			{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size, blogId, postId}
+		])
 		.execute()
 	return
 }
@@ -182,6 +188,8 @@ async updateMainForPost(blogId: string, postId: string,  url: string, infoImage:
 			.createQueryBuilder()
 			.where(`"blogId" = :id`, {id})
 			.getOne()
+
+			console.log("getImge: ", getImage)
 			if(!getImage) throw new NotFoundException([{message: "This wallpaper does not found"}])
 		return getImage
 	}

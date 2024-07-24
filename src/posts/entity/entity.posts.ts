@@ -146,10 +146,10 @@ export class Posts {
 				  images: {
 					main: [
 					  {
-						url: post.url,
-						width: post.width,
-						height: post.height,
-						fileSize: post.fileSize
+						url: null,
+						width: 0,
+						height: 0,
+						fileSize: 0
 					  }
 					]
 				  }

@@ -25,7 +25,7 @@ import { BlogsRepository } from './blogs.repository';
 import { Posts } from '../posts/entity/entity.posts';
 import { Comments } from '../comment/entity/comment.entity';
 import { LikeForComment } from '../likes/entity/likesForComment.entity';
-import { BlogsController } from './blogs.controller';
+import { BlogsController } from './api/blogs.controller';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';

@@ -1,13 +1,13 @@
 import { Controller, Get, HttpCode, NotFoundException, Param, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
-import { BlogsQueryRepository } from "./blogs.queryReposity";
-import { inputModelClass } from "./dto/blogs.class.pipe";
-import { BlogsViewType } from "./blogs.type";
-import { PaginationType } from "../types/pagination.types";
-import { CheckRefreshTokenForGet } from './use-case/bearer.authGetComment';
-import { UserDecorator, UserIdDecorator } from '../users/infrastructure/decorators/decorator.user';
-import { PostsQueryRepository } from "../posts/postQuery.repository";
-import { User } from "../users/entities/user.entity";
-import { BlogsRepository } from "./blogs.repository";
+import { BlogsQueryRepository } from "../blogs.queryReposity";
+import { inputModelClass } from "../dto/blogs.class.pipe";
+import { BlogsViewType } from "../blogs.type";
+import { PaginationType } from "../../types/pagination.types";
+import { CheckRefreshTokenForGet } from '../use-case/bearer.authGetComment';
+import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decorators/decorator.user';
+import { PostsQueryRepository } from "../../posts/postQuery.repository";
+import { User } from "../../users/entities/user.entity";
+import { BlogsRepository } from "../blogs.repository";
 
 // @SkipThrottle()
 @Controller('blogs')

@@ -6,15 +6,13 @@ import { appSettings } from '../../../src/setting';
 import { GameTypeModel } from '../../../src/pairQuizGame/type/typeViewModel';
 import { BanInputModel } from '../../../src/users/user.class';
 import { UserBanViewType } from '../../../src/users/user.type';
-import { createAddUser, createCom, createPostBlogger, createToken } from '../../../src/helpers/helpers';
+import { createAddUser, createPostBlogger, createToken } from '../../../src/helpers/helpers';
 import { BlogsViewType } from '../../../src/blogs/blogs.type';
 import { BodyBlogsModel } from '../../../src/blogsForSA/dto/blogs.class-pipe';
-import { BanUserForBlogInputModel } from '../../../src/blogger/dto-class';
-import { banUserSpecifyBlog, getAllBanUsers } from '../../../src/helpers/helperBanUserTest';
 import { PostsViewModel } from '../../../src/posts/posts.type';
 import { bodyPostsModelClass } from '../../../src/posts/dto/posts.class.pipe';
-import { CommentViewModel } from '../../../src/comment/comment.type';
 import { createBlogBlogger } from './helper/createBloggerBlog';
+import { getBlogById } from '../blogs/helper/blogs';
 
 
 export interface Content {
@@ -167,7 +165,7 @@ describe('/blogs', () => {
 			}
 			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
 
-			 console.log("createBlog: ", createBlog[1])
+			//  console.log("createBlog: ", createBlog[1])
 		})
 
 		let createPost: PostsViewModel
@@ -184,33 +182,38 @@ describe('/blogs', () => {
 		})
 
 		it('upload background wallpaper', async() => {
-			const avatarFile = `/Users/mihailparamonov/Documents/Моя папка/РЕЗЮМЕ/IMG_9166-Photoroom.png-Photoroom.jpeg`
+			const file = `/Users/mihailparamonov/Documents/programmer/it-incubator/1028*321/6b285022-b168-4fe9-a6fa-fe5f6f5f1eb1_avatar.jpeg`
 			const uploadWallpaper = await request(server)
 				.post(`/blogger/blogs/${createBlog[1].id}/images/wallpaper`)
 				.set('Authorization', `Bearer ${user1Token}`)
-				.send(avatarFile)
+				.attach('file', file)
 				
-			console.log("uploadWallpaper: ", uploadWallpaper.body)
+			// console.log("uploadWallpaper: ", uploadWallpaper.body)
 		})
 
 		it("upload image main blog", async() => {
-			const avatarFile = `/Users/mihailparamonov/Documents/Моя папка/РЕЗЮМЕ/IMG_9166-Photoroom.png-Photoroom.jpeg`
+			const file = `/Users/mihailparamonov/Documents/programmer/it-incubator/156*156/014a9a8f-7953-466e-83ed-00db88dbe2c4_avatar.jpeg`
 			const uploadImageMain = await request(server)
 				.post(`/blogger/blogs/${createBlog[1].id}/images/main`)
 				.set('Authorization', `Bearer ${user1Token}`)
-				.send(avatarFile)
+				.attach('file', file)
 				
-			console.log("uploadImageMain: ", uploadImageMain.body)
+			// console.log("uploadImageMain: ", uploadImageMain.body)
 		})
 
 		it("upload main image for post", async() => {
-			const avatarFile = `/Users/mihailparamonov/Documents/Моя папка/РЕЗЮМЕ/IMG_9166-Photoroom.png-Photoroom.jpeg`
+			const file = `/Users/mihailparamonov/Documents/programmer/it-incubator/156*156/014a9a8f-7953-466e-83ed-00db88dbe2c4_avatar.jpeg`
 			const uploadImageForPost = await request(server)
-				.post(`/blogger/blogs/${createBlog[1].id}/posts/${createPost.id}images/main`)
+				.post(`/blogger/blogs/${createBlog[1].id}/posts/${createPost.id}/images/main`)
 				.set('Authorization', `Bearer ${user1Token}`)
-				.send(avatarFile)
+				.attach('file', file)
 				
 			console.log("uploadImageForPost: ", uploadImageForPost.body)
+		})
+
+		it("get blog by id", async() => {
+			const blog = await getBlogById(server, createBlog[1].id)
+			// console.log("blog: ", blog)
 		})
 	})
 })
