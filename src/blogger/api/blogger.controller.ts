@@ -141,16 +141,16 @@ export class BloggerController {
 	// 	return 
 	// }
 
-	@Get('views') // change in future
-	@HttpCode(HttpStatus.CREATED)
-	async getView(
-		// @Param('blogId', ParseUUIDPipe) blogId: string,
-		@Body() file: string
-	) {
+	// @Get('views') // change in future
+	// @HttpCode(HttpStatus.CREATED)
+	// async getView(
+	// 	// @Param('blogId', ParseUUIDPipe) blogId: string,
+	// 	@Body() file: string
+	// ) {
 		
-		const content = await readTextFileAsync(join( ".." , 'views', "files.html"))
-		return content
-	}
+	// 	const content = await readTextFileAsync(join( ".." , 'views', "files.html"))
+	// 	return content
+	// }
 
 	@Get('blogs/comments')
 	@HttpCode(HttpStatus.OK)
