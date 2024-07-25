@@ -58,7 +58,7 @@ export class PostsQueryRepository {
 			const getMainByPostId = await this.mainRepository
 					.createQueryBuilder()
 					.where(`"postId" = :postId`, {postId})
-					.getOne()
+					.getMany()
 		
 			return findPostById ? Posts.getPostsViewModelSAMyOwnStatus(findPostById, newestLikesQuery, myStatus, getMainByPostId) : null
 
@@ -114,7 +114,7 @@ export class PostsQueryRepository {
 						const getMainByPostId = await this.mainRepository
 							.createQueryBuilder()
 							.where(`"postId" = :postId`, {postId: post.id})
-							.getOne()
+							.getMany()
 		
 					return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikesQuery, myStatus, getMainByPostId);
 				})
@@ -170,7 +170,7 @@ export class PostsQueryRepository {
 				const getMainByBlogIdPostId = await this.mainRepository
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId AND "postId" = :postId`, {blogId, postId: post.id})
-					.getOne()
+					.getMany()
 
 				return Posts.getPostsViewModelSAMyOwnStatus(post, newestLikes, myStatus, getMainByBlogIdPostId)
 			}

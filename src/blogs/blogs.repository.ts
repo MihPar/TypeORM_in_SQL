@@ -152,7 +152,12 @@ async updateMainForPost(blogId: string, postId: string,  url: string, infoImage:
 		])
 		.execute()
 
-	return updateBlog
+		const get = await this.mainRepository
+			.createQueryBuilder()
+			.where(`id = :id`, {id: updateBlog.raw[0].id})
+			.getOne()
+
+	return get
 }
 
 async getMain(id: string): Promise<Main> {

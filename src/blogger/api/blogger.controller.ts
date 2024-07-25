@@ -103,11 +103,11 @@ export class BloggerController {
 		@UserIdDecorator() userId: string
 	) {
 		const findBlogById: Blogs = await this.blogsQueryRepository.findBlogByIdAndPostId(blogId)
+		const findPostByPostId: Posts | false = await this.postsQueryRepository.findPostById(postId)
+		if(!findPostByPostId) throw new NotFoundException([{message: "Post does not found"}])
 		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
 		const command = new UploadImageForPostCommand(blogId, postId, userId, file.mimetype, file.originalname, file.buffer)
 		const uploadImageForPost = await this.commandBus.execute<UploadImageForPostCommand>(command)
-		// console.log("uploadImageForPost: ", uploadImageForPost)
-		
 		return uploadImageForPost
 	}
 

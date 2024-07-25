@@ -1,3 +1,4 @@
+import { Metadata } from 'sharp';
 import { PutObjectCommand, PutObjectCommandOutput, S3Client } from '@aws-sdk/client-s3';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { S3StorageAdapter } from '../adapter/s3StorageAdapter';
@@ -24,63 +25,95 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 		protected readonly blogsRepository: BlogsRepository
 	) {}
 	async execute(command: UploadImageForPostCommand): Promise<any> {
-		const key = `/content/users/${command.blogId}/avatars/${command.blogId}_avatar.jpeg`
-		const bucketParams = {
+		const originalKey = `/content/users/${command.blogId}/avatars/${command.blogId}_original_avatar.jpeg`
+		const bucketParamsOriginal = {
 			Bucket: `michael-paramonov`,
-			Key: key,
+			Key: originalKey,
 			Body: command.buffer,
 			ContentType: 'image/jpeg'
 		}
-		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
+		const urlOriginal = `https://storage.yandexcloud.net/michael-paramonov/${originalKey}`
 		
-		// if((command.mimetype !== "image/jpeg") && (command.mimetype !== "image/jpg") && (command.mimetype !== "image/png")) {
-		// 	throw new BadRequestException([{message: 'Type are not according'}])
-		// }
-
+		if((command.mimetype !== "image/jpeg") && (command.mimetype !== "image/jpg") && (command.mimetype !== "image/png")) {
+			throw new BadRequestException([{message: 'Type are not according'}])
+		}
 		const originalPhoto = await sharp(command.buffer).metadata();
+		if((originalPhoto.width !== 940) ||  (originalPhoto.height !== 432)) {
+				throw new BadRequestException([{message: 'This width and height are not according'}])
+			}
 
-		// if((originalPhoto.width !== 940) ||  (originalPhoto.height !== 432)) {
-		// 		throw new BadRequestException([{message: 'This width and height are not according'}])
-		// 	}
+		if(originalPhoto.size > 100000) {
+				throw new BadRequestException([{message: 'This sizes are not according'}])
+			}
+		const objectCommandOriginal = new PutObjectCommand(bucketParamsOriginal)
 
-		// if(originalPhoto.size > 100000) {
-		// 		throw new BadRequestException([{message: 'This sizes are not according'}])
-		// 	}
-
-		const objectCommand = new PutObjectCommand(bucketParams)
-		try {
-			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
-			const createMain = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, url, originalPhoto)
-
-			const createPostByBlogId = await this.blogsRepository.getMain(createMain.raw[0].id)
-
-			const middlePhoto = await sharp(command.buffer)
+		const middlePhotoBuffer= await sharp(command.buffer)
 			.resize({width: 300, height: 180})
-			.metadata();
+			.toBuffer()
+		const middlePhoto = await sharp(middlePhotoBuffer).metadata()
+		const middleKey = `/content/users/${command.blogId}/avatars/${command.blogId}_middle_avatar.jpeg`
+		const bucketParamsMiddle = {
+			Bucket: `michael-paramonov`,
+			Key: middleKey,
+			Body: middlePhotoBuffer,
+			ContentType: 'image/jpeg'
+		}
+		const urlMiddle = `https://storage.yandexcloud.net/michael-paramonov/${middleKey}`
+		const objectCommandMiddle = new PutObjectCommand(bucketParamsMiddle)
 
-			const smallPhoto = await sharp(command.buffer)
+
+		const smallPhotoBuffer= await sharp(command.buffer)
 			.resize({width: 149, height: 96})
-			.metadata();
+			.toBuffer()
+		const smallPhoto = await sharp(smallPhotoBuffer).metadata()
+		const smallKey = `/content/users/${command.blogId}/avatars/${command.blogId}_small_avatar.jpeg`
+		const bucketParamsSmall = {
+			Bucket: `michael-paramonov`,
+			Key: smallKey,
+			Body: smallPhotoBuffer,
+			ContentType: 'image/jpeg'
+		}
+		const urlSmall = `https://storage.yandexcloud.net/michael-paramonov/${smallKey}`
+		const objectCommandSmall = new PutObjectCommand(bucketParamsSmall)
 
-			console.log("middle: ", middlePhoto)
-			console.log("smallPhoto: ", smallPhoto)
+		try {
+			const uploadResultOriginal: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommandOriginal)
+			const uploadResultMiddle: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommandMiddle)
+			const uploadResultSmall: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send
+			(objectCommandSmall)
+
+
+			const createMainOriginal = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, urlOriginal, originalPhoto)
+			// console.log("original: ", createMainOriginal)
+
+			const createMainMiddle = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, urlMiddle, middlePhoto)
+			// console.log("middle: ", createMainMiddle)
+
+			const createMainSmall = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, urlSmall, smallPhoto)
+			// console.log("small: ", createMainSmall)
+
+
+		
+			// console.log("originalPhoto: ", originalPhoto)
+			// console.log("middle: ", middlePhoto)
+			// console.log("smallPhoto: ", smallPhoto)
 
 			return {
 				main: [
 				  {
-					url,
+					url: urlOriginal,
 					width: originalPhoto.width,
 					height: originalPhoto.height,
 					fileSize: originalPhoto.size
 				  },
 				  {
-					url,
+					url: urlMiddle,
 					width: middlePhoto.width,
 					height: middlePhoto.height,
 					fileSize: middlePhoto.size
 				  },
 				  {
-					url,
+					url: urlSmall,
 					width: smallPhoto.width,
 					height: smallPhoto.height,
 					fileSize: smallPhoto.size

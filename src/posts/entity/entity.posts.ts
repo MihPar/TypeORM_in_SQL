@@ -89,7 +89,7 @@ export class Posts {
 	comment: Comments[]
 
 	static getPostsViewModelSAMyOwnStatus(post: Posts,
-		newestLikes: any[], myOwnStatus: LikeStatusEnum, main: Main): PostsViewModel {
+		newestLikes: any[], myOwnStatus: LikeStatusEnum, main: Main[]): PostsViewModel {
 		return {
 		  id: post.id.toString(),
 		  title: post.title,
@@ -109,14 +109,14 @@ export class Posts {
 			  })) : []
 			},
 			images: {
-				main: [
-				  {
-					url: main.url,
-					width: main.width,
-					height: main.height,
-					fileSize: main.fileSize
-				  }
-				]
+				main: main.map(item => ({
+					url: item.url,
+					width: item.width,
+					height: item.height,
+					fileSize: item.fileSize
+				  }))
+				  
+				
 			  }
 		  };
 	  }
