@@ -24,15 +24,12 @@ import { FindBannedUserSpecifyBloggerCommand } from '../use-case/getBannedUserSp
 import { UserBanBloggerViewType } from '../../users/user.type';
 import { CommentForCurrentBloggerResponse } from '../typtBlogger';
 import { BlogsQueryRepository } from '../../blogs/blogs.queryReposity';
-import {join} from 'node:path'
-import { readTextFileAsync } from '../../utils/fs-utils';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageForBlogCommand } from '../use-case/uploadImageForBlog-use-case';
 import { UploadImageForPostCommand } from '../use-case/uploadImageForPost-use-case';
 import { BearerTokenPairQuizGame } from '../../pairQuizGame/guards/bearerTokenPairQuizGame';
 import { Blogs } from '../../blogs/entity/blogs.entity';
 import { UploadImageForBlogWallpaperCommand } from '../use-case/uploadWallpaperForBlog-use-case';
-import { CreateFileCommand } from '../use-case/createFile-use-case';
 
 @UseGuards(BearerTokenPairQuizGame) // activate in future
 @Controller('blogger')

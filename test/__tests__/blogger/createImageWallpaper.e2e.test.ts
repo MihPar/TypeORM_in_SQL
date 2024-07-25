@@ -202,7 +202,7 @@ describe('/blogs', () => {
 		})
 
 		it("upload main image for post", async() => {
-			const file = `/Users/mihailparamonov/Documents/programmer/it-incubator/156*156/014a9a8f-7953-466e-83ed-00db88dbe2c4_avatar.jpeg`
+			const file = `/Users/mihailparamonov/Documents/programmer/it-incubator/149*96/image.jpg`
 			const uploadImageForPost = await request(server)
 				.post(`/blogger/blogs/${createBlog[1].id}/posts/${createPost.id}/images/main`)
 				.set('Authorization', `Bearer ${user1Token}`)

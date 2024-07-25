@@ -7,6 +7,7 @@ import { UserBlogger } from "../blogger/domain/entity.userBlogger";
 import { Metadata } from "sharp";
 import { Wallpaper } from "./entity/wallpaper.entity";
 import { Main } from "./entity/main.entity";
+import { Posts } from "../posts/entity/entity.posts";
 
 @Injectable()
 export class BlogsRepository {
@@ -14,7 +15,7 @@ export class BlogsRepository {
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>,
 		@InjectRepository(Wallpaper) protected readonly wallpaperRepository: Repository<Wallpaper>,
-		@InjectRepository(Main) protected readonly mainRepository: Repository<Main>
+		@InjectRepository(Main) protected readonly mainRepository: Repository<Main>,
 	) {}
   async deleteRepoBlogs() {
     await this.blogsRepository
@@ -141,7 +142,7 @@ async updateMainForBlogs(blogId: string, url: string, infoImage: Metadata): Prom
 	return
 }
 
-async updateMainForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<void> {
+async updateMainForPost(blogId: string, postId: string,  url: string, infoImage: Metadata): Promise<any> {
 	const updateBlog = await this.mainRepository
 		.createQueryBuilder()
 		.insert()
@@ -150,7 +151,17 @@ async updateMainForPost(blogId: string, postId: string,  url: string, infoImage:
 			{url, width: infoImage.width, height: infoImage.height, fileSize: infoImage.size, blogId, postId}
 		])
 		.execute()
-	return
+
+	return updateBlog
+}
+
+async getMain(id: string): Promise<Main> {
+	const getMain: Main = await this.mainRepository
+	.createQueryBuilder()
+	.where(`id = :id`, {id})
+	.getOne()
+
+	return getMain
 }
 //   async createNewBlogs(newBlog: BlogClass): Promise<BlogClass | null> {
 // 	try {

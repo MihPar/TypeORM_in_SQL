@@ -4,6 +4,7 @@ import { S3StorageAdapter } from '../adapter/s3StorageAdapter';
 import sharp from 'sharp';
 import { BlogsRepository } from '../../blogs/blogs.repository';
 import { BadRequestException } from '@nestjs/common';
+import { Main } from '../../blogs/entity/main.entity';
 
 export class UploadImageForPostCommand {
 	constructor(
@@ -33,30 +34,53 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 		
 		if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
-			throw new BadRequestException([{message: 'This type are not according'}])
+			throw new BadRequestException([{message: 'Type are not according'}])
 		}
 
-		const infoImage = await sharp(command.buffer).metadata();
+		const originalPhoto = await sharp(command.buffer).metadata();
 
-		if((infoImage.width !== (940 || 300 || 149)) &&  (infoImage.height !== (432 || 180 || 96))) {
+		if((originalPhoto.width !== 940) ||  (originalPhoto.height !== 432)) {
 				throw new BadRequestException([{message: 'This width and height are not according'}])
 			}
 
-		if(infoImage.size > 100000) {
+		if(originalPhoto.size > 100000) {
 				throw new BadRequestException([{message: 'This sizes are not according'}])
 			}
 
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
-			await this.blogsRepository.updateMainForPost(command.blogId, command.postId, url, infoImage)
+			const createMain = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, url, originalPhoto)
+
+			const createPostByBlogId = await this.blogsRepository.getMain(createMain.raw[0].id)
+
+			const middlePhoto = await sharp(command.buffer)
+			.resize({width: 300, height: 180})
+			.metadata();
+
+			const smallPhoto = await sharp(command.buffer)
+			.resize({width: 149, height: 96})
+			.metadata();
+
 			return {
 				main: [
 				  {
 					url,
-					width: infoImage.width,
-					height: infoImage.height,
-					fileSize: infoImage.size
+					width: originalPhoto.width,
+					height: originalPhoto.height,
+					fileSize: originalPhoto.size
+				  },
+				  {
+					url,
+					width: middlePhoto.width,
+					height: middlePhoto.height,
+					fileSize: middlePhoto.size
+				  },
+				  {
+					url,
+					width: smallPhoto.width,
+					height: smallPhoto.height,
+					fileSize: smallPhoto.size
 				  }
 				]
 		}
