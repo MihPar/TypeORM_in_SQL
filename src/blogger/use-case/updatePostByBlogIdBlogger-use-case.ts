@@ -25,9 +25,6 @@ export class UpdateExistingPostByIdWithBlogIdBloggerUseCase
 	) { }
 	async execute(command: UpdateExistingPostByIdWithBlogIdBloggerCommand): Promise<PostsViewModel | null> {
 		const blog = await this.blogsRepositoryForSA.findBlogByIdBlogger(command.dto.blogId, command.userId);
-		// const findPost = await this.postsQueryRepository.findPostsById(command.dto.postId)
-		// if (!findPost) throw new NotFoundException("404")
-
 		const findPostById: Posts = await this.postsRepository.findPostByIdAndBlogId(command.dto.postId, command.dto.blogId)
 		if (!findPostById) return null
 		const findNewestLike: any = await this.postsRepository.findNewestLike(command.dto.postId)

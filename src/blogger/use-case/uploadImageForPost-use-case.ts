@@ -33,19 +33,19 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 		
-		if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
-			throw new BadRequestException([{message: 'Type are not according'}])
-		}
+		// if((command.mimetype !== "image/jpeg") && (command.mimetype !== "image/jpg") && (command.mimetype !== "image/png")) {
+		// 	throw new BadRequestException([{message: 'Type are not according'}])
+		// }
 
 		const originalPhoto = await sharp(command.buffer).metadata();
 
-		if((originalPhoto.width !== 940) ||  (originalPhoto.height !== 432)) {
-				throw new BadRequestException([{message: 'This width and height are not according'}])
-			}
+		// if((originalPhoto.width !== 940) ||  (originalPhoto.height !== 432)) {
+		// 		throw new BadRequestException([{message: 'This width and height are not according'}])
+		// 	}
 
-		if(originalPhoto.size > 100000) {
-				throw new BadRequestException([{message: 'This sizes are not according'}])
-			}
+		// if(originalPhoto.size > 100000) {
+		// 		throw new BadRequestException([{message: 'This sizes are not according'}])
+		// 	}
 
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
@@ -61,6 +61,9 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 			const smallPhoto = await sharp(command.buffer)
 			.resize({width: 149, height: 96})
 			.metadata();
+
+			console.log("middle: ", middlePhoto)
+			console.log("smallPhoto: ", smallPhoto)
 
 			return {
 				main: [

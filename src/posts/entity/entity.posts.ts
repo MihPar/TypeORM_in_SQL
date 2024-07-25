@@ -156,45 +156,6 @@ export class Posts {
 			  };
 		  }
 
-
-	static getPostsWithImagesMain(
-			post: Posts,
-			main: Main
-			): PostsViewModel {
-				return {
-				  id: post.id.toString(),
-				  title: post.title,
-				  shortDescription: post.shortDescription,
-				  content: post.content,
-				  blogId: post.blogId,
-				  blogName: post.blogName,
-				  createdAt: post.createdAt,
-				  extendedLikesInfo: {
-					  dislikesCount: 0, 
-					  likesCount: 0, 
-					  myStatus:LikeStatusEnum.None,
-					  newestLikes: [
-						{
-							addedAt: new Date().toISOString(),
-							userId: "",
-							login: ""
-						}
-					  ]
-					},
-					  images: {
-						main: [
-						  {
-							url: main.url,
-							width: main.width,
-							height: main.height,
-							fileSize: main.fileSize
-						  }
-						]
-					  }
-				  };
-			  }
-	
-
 	static updatePresentPost(post: Posts, newData: bodyPostsModelClass): Posts {
 		post.title = newData.title,
 		post.shortDescription = newData.shortDescription,

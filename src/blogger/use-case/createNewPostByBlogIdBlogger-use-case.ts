@@ -42,7 +42,8 @@ export class CreateNewPostForBlogBloggerUseCase
 
 	const createPost: Posts = await this.postsRepository.createNewPosts(newPost)
 	if (!createPost) return null;
+	const findNewestLike: any = await this.postsRepository.findNewestLike(createPost.id)
 	// const getMainByPostId = await this.blogsRepository.getImageMainByPostId(createPost.id)
-	return Posts.getPostsViewModelForSA(createPost)
+	return Posts.getPostsViewModelForSA(createPost, findNewestLike)
   }
 }
