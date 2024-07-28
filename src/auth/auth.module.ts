@@ -1,6 +1,4 @@
 import { Module, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
 import { CheckRefreshTokenFor } from './useCase.ts/bearer.authForComments';
 import { LogoutUseCase } from '../security-devices/useCase/logout-use-case';
 import { RegistrationEmailResendingUseCase } from '../users/useCase/registrationEmailResending-use-case';
@@ -38,6 +36,7 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/domain/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
+import { AuthController } from './api/auth.controller';
 
 const guards = [
   CheckRefreshTokenFor,

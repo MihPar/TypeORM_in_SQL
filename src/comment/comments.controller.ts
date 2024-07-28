@@ -1,14 +1,12 @@
-import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, ParseUUIDPipe, Put, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, HttpCode, NotFoundException, Param, ParseUUIDPipe, Put, UseGuards } from '@nestjs/common';
 import { CommentQueryRepository } from './comment.queryRepository';
 import { CommentViewModel } from './comment.type';
-import { InputModelContent, InputModelLikeStatusClass, inputModelCommentId, inputModelId } from './dto/comment.class-pipe';
+import { InputModelContent, InputModelLikeStatusClass, inputModelCommentId } from './dto/comment.class-pipe';
 import { CommentRepository } from './comment.repository';
 import { CommandBus } from '@nestjs/cqrs';
-import { UserDecorator, UserIdDecorator } from '../users/infrastructure/decorators/decorator.user';
-import { CommentClass } from './comment.class';
+import { UserIdDecorator } from '../users/infrastructure/decorators/decorator.user';
 import { CheckRefreshTokenForGet } from '../blogs/use-case/bearer.authGetComment';
 import { CheckRefreshTokenForComments } from './guards/bearer.authForComments';
-import { User } from '../users/entities/user.entity';
 import { UpdateLikestatusCommand } from './use-case/updateLikeStatus-use-case';
 import { Comments } from './entity/comment.entity';
 import { UpdateCommentByCommentIdCommand } from './use-case/updateCommentByCommentId-use-case';
