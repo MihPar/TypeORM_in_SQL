@@ -3,9 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TelegramAdapter } from './adapter/telegram.adapter';
 import { TelegramController } from './api/telegramm.controler';
+import { HandleTelegramUseCase } from './use-case/handleTelegram.use-case';
+import { HowManyTimeUseCase } from './use-case/howManyTime.use-case';
 
 
-const userCase = [];
+const userCase = [HandleTelegramUseCase, HowManyTimeUseCase];
 
 const repo = [];
 
@@ -18,6 +20,6 @@ const service = [];
 @Module({
   imports: [TypeOrmModule.forFeature([]), CqrsModule],
   controllers: [TelegramController],
-  providers: [...adapter],
+  providers: [...adapter, ...userCase],
 })
 export class TelegrammModule {}

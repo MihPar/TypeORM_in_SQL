@@ -4,7 +4,7 @@ const axios = require('axios')
 
 @Injectable()
 export class TelegramAdapter {
-	token = "7458802020:AAH7YP0wUgtr4IrxhZi8qv9Z835CvZ0XN3c"
+	token = process.env.TOKEN_TELEGRAM
 	private axiosInstanse: AxiosInstance
 	constructor() {
 		this.axiosInstanse = axios.create({
