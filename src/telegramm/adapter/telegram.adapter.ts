@@ -7,6 +7,7 @@ export class TelegramAdapter {
 	token = process.env.TOKEN_TELEGRAM
 	private axiosInstanse: AxiosInstance
 	constructor() {
+		// console.log(process.env.TOKEN_TELEGRAM)
 		this.axiosInstanse = axios.create({
 			baseURL: `https://api.telegram.org/bot${this.token}/`
 		})
@@ -17,7 +18,11 @@ export class TelegramAdapter {
 	}
 
 	async setWebhook (url: string) {
+		// console.log("setWebhook")
+		// const link = await this.axiosInstanse.get(`getUpdates`)
+		// console.log(link, " link")
 		await this.axiosInstanse.post(`setWebhook`, {url})
+
 	}
 
 }
