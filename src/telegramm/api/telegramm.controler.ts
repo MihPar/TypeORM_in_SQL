@@ -1,15 +1,17 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
 import { TelegramAdapter } from "../adapter/telegram.adapter";
 import { TelegramUpdateMessage } from "../types";
-import { CommandBus } from "@nestjs/cqrs";
-import { HandleTelegramCommand } from "../use-case/handleTelegram.use-case";
+import { CommandBus, QueryBus } from "@nestjs/cqrs";
+import { HandleTelegramCommand } from "../use-case/commandBus/handleTelegram.use-case";
+import { GetAuthBotLinkQuery } from "../use-case/queryBus/getAuthBotLink-use-case";
 
 
 @Controller('integrations/telegram')
 export class TelegramController {
 	constructor(
 		protected readonly telegramAdapter: TelegramAdapter,
-		protected readonly commandBus: CommandBus
+		protected readonly commandBus: CommandBus,
+		private readonly queryBus: QueryBus
 	) {}
 
 	@Post('webhook')
@@ -24,8 +26,13 @@ export class TelegramController {
 
 	@Get('auth-bot-link')
 	@HttpCode(HttpStatus.OK)
-	async getAuthBot(@Body() payload: any) {
-		console.log("payload: ", payload)
+	async getAuthBot(@Body() payload: TelegramUpdateMessage) {
+		// console.log("payload: ", payload)
+		// console.log("try: ")
+		const query = new GetAuthBotLinkQuery(payload)
+		// console.log("try2: ")
+		const getAuthbotLink = await this.queryBus.execute<GetAuthBotLinkQuery>(query)
+		return getAuthbotLink
 	}
 }
 

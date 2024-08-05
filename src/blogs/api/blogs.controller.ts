@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, NotFoundException, Param, ParseIntPipe, Query, UseGuards } from "@nestjs/common";
+import { Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, UseGuards } from "@nestjs/common";
 import { BlogsQueryRepository } from "../blogs.queryReposity";
 import { inputModelClass } from "../dto/blogs.class.pipe";
 import { BlogsViewType } from "../blogs.type";
@@ -8,6 +8,7 @@ import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decor
 import { PostsQueryRepository } from "../../posts/postQuery.repository";
 import { User } from "../../users/entities/user.entity";
 import { BlogsRepository } from "../blogs.repository";
+import { AuthBasic } from "../../users/gards/basic.auth";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -17,6 +18,20 @@ export class BlogsController {
     protected postsQueryRepository: PostsQueryRepository,
 	protected readonly blogsRepository: BlogsRepository
   ) {}
+
+  @UseGuards(AuthBasic)
+  @Post(':blogId/subscription')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async subscribeToBlog(
+	@Param('blogId', ParseUUIDPipe) blogId: string
+  ) {}
+
+  @UseGuards(AuthBasic)
+  @Delete(':blogId/subscription')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteSubscribeToBlog(
+	@Param('blogId', ParseUUIDPipe) blogId: string
+) {}
 
   @Get()
   @HttpCode(200)

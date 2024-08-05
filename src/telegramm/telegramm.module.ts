@@ -3,11 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { TelegramAdapter } from './adapter/telegram.adapter';
 import { TelegramController } from './api/telegramm.controler';
-import { HandleTelegramUseCase } from './use-case/handleTelegram.use-case';
-import { HowManyTimeUseCase } from './use-case/howManyTime.use-case';
+import { HandleTelegramUseCase } from './use-case/commandBus/handleTelegram.use-case';
+import { HowManyTimeUseCase } from './use-case/commandBus/howManyTime.use-case';
+import { GetAuthBotLinkUseCase } from './use-case/queryBus/getAuthBotLink-use-case';
 
 
-const userCase = [HandleTelegramUseCase, HowManyTimeUseCase];
+const commandUserCase = [HandleTelegramUseCase, HowManyTimeUseCase];
+const queryUseCase = [GetAuthBotLinkUseCase]
 
 const repo = [];
 
@@ -20,6 +22,6 @@ const service = [];
 @Module({
   imports: [TypeOrmModule.forFeature([]), CqrsModule],
   controllers: [TelegramController],
-  providers: [...adapter, ...userCase],
+  providers: [...adapter, ...commandUserCase, ...queryUseCase],
 })
 export class TelegrammModule {}

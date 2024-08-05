@@ -1,5 +1,5 @@
-import { TelegramUpdateMessage } from '../types';
-import { TelegramAdapter } from './../adapter/telegram.adapter';
+import { TelegramUpdateMessage } from '../../types';
+import { TelegramAdapter } from '../../adapter/telegram.adapter';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 
 export class HowManyTimeCommand {
