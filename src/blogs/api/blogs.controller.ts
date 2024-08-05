@@ -24,7 +24,9 @@ export class BlogsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async subscribeToBlog(
 	@Param('blogId', ParseUUIDPipe) blogId: string
-  ) {}
+  ) {
+	// User OneToMany Subscribe ManyToOne Blog
+  }
 
   @UseGuards(AuthBasic)
   @Delete(':blogId/subscription')

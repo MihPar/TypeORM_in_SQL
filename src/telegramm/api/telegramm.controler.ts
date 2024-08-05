@@ -27,13 +27,15 @@ export class TelegramController {
 	@Get('auth-bot-link')
 	@HttpCode(HttpStatus.OK)
 	async getAuthBot(@Body() payload: TelegramUpdateMessage) {
-		// console.log("payload: ", payload)
-		// console.log("try: ")
 		const query = new GetAuthBotLinkQuery(payload)
-		// console.log("try2: ")
 		const getAuthbotLink = await this.queryBus.execute<GetAuthBotLinkQuery>(query)
 		// console.log("getAuthbotLink: ", getAuthbotLink)
-		return getAuthbotLink
+		//generate code 
+		//set code to user
+		// Entity Telegram (@OneToOne) to User
+		return {
+			link: 't.me/Incubator34Lessonbot?code=123'
+		}
 	}
 }
 

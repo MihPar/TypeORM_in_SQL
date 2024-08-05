@@ -16,10 +16,8 @@ export class GetAuthBotLinkUseCase implements IQueryHandler<GetAuthBotLinkQuery>
 		protected readonly telegramAdapter: TelegramAdapter
 	) {}
 	async execute(query: GetAuthBotLinkQuery): Promise<any> {
-
 		const getAuhBotLink = await this.telegramAdapter.getLink()
 		return getAuhBotLink
-
 
 		// const bot = new Telegraf(process.env.TOKEN_TELEGRAM);
 // bot.launch();
