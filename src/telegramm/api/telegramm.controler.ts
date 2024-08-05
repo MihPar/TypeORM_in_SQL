@@ -32,6 +32,7 @@ export class TelegramController {
 		const query = new GetAuthBotLinkQuery(payload)
 		// console.log("try2: ")
 		const getAuthbotLink = await this.queryBus.execute<GetAuthBotLinkQuery>(query)
+		// console.log("getAuthbotLink: ", getAuthbotLink)
 		return getAuthbotLink
 	}
 }

@@ -1,6 +1,7 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { Telegraf } from 'telegraf';
 import { TelegramUpdateMessage } from "../../types";
+import { TelegramAdapter } from "../../adapter/telegram.adapter";
 
 
 export class GetAuthBotLinkQuery {
@@ -11,16 +12,22 @@ export class GetAuthBotLinkQuery {
 
 @QueryHandler(GetAuthBotLinkQuery)
 export class GetAuthBotLinkUseCase implements IQueryHandler<GetAuthBotLinkQuery> {
-	constructor() {}
+	constructor(
+		protected readonly telegramAdapter: TelegramAdapter
+	) {}
 	async execute(query: GetAuthBotLinkQuery): Promise<any> {
-		// console.log("try3: ")
-const bot = new Telegraf(process.env.TOKEN_TELEGRAM);
-bot.launch();
+
+		const getAuhBotLink = await this.telegramAdapter.getLink()
+		return getAuhBotLink
+
+
+		// const bot = new Telegraf(process.env.TOKEN_TELEGRAM);
+// bot.launch();
 
 // Получаем ссылку на бота
-const botLink = `https://t.me/${bot.telegram}`
-console.log("botLink: ", bot.telegram)
-return botLink
+// const botLink = `https://t.me/${bot.telegram}`
+// console.log("botLink: ", bot.telegram)
+// return botLink
 
 // // Создаем обработчик сообщений для проверки подлинности пользователя
 // bot.start(async (ctx) => {
