@@ -26,6 +26,11 @@ export class BlogsController {
 	@Param('blogId', ParseUUIDPipe) blogId: string
   ) {
 	// User OneToMany Subscribe ManyToOne Blog
+	// class Subscribe {
+	// userId: ...,
+	// blogId: ...
+	// }
+	// 
   }
 
   @UseGuards(AuthBasic)

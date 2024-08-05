@@ -26,9 +26,9 @@ export class TelegramAdapter {
 	}
 
 	async getLink() {
-		// const result = await this.axiosInstanse.post("setWebhook")
-		// console.log("result: ", result.config.data)
-		// return result.config
+		const result = await this.axiosInstanse.post("setWebhook")
+		console.log("result: ", result.config.baseURL)
+		return result.config
 	}
 
 }
