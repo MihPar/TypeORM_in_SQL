@@ -30,7 +30,7 @@ import { CronSecondUseCase } from './useCase/handleCronSecon-use-case';
 import { CronFirstdUseCase } from './useCase/handleCronFirst-use-case';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
 

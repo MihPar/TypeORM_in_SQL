@@ -5,7 +5,7 @@ import { UsersQueryRepository } from "../../users/users.queryRepository";
 import { ForbiddenException, NotFoundException } from "@nestjs/common";
 import { User } from "../../users/entities/user.entity";
 import { UsersRepository } from "../../users/users.repository";
-import { UserBlogger } from "../domain/entity.userBlogger";
+import { UserBlogger } from "../entity/entity.userBlogger";
 
 export class UpdateUserDataCommand {
 	constructor(

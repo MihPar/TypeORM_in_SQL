@@ -40,7 +40,7 @@ import { DeleteAllPairQuizGameProgressPlayerUseCase } from '../pairQuizGameProgr
 import { DelectAllQuestionGamesUseCase } from '../pairQuizGame/useCase/deleteAllQuestionGames-use-case';
 import { QuestionGame } from '../pairQuizGame/domain/entity.questionGame';
 import { Comments } from '../comment/entity/comment.entity';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { DeleteUserBloggerUseCase } from '../blogger/use-case/deleteUserBlogger-use-case';
 import { DeleteAllWallpaperUseCase } from '../blogs/use-case/deleteAllWallpaper-use-case';
 import { DeleteAllMainUseCase } from '../blogs/use-case/deleteAllMain-use-case copy';

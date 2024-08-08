@@ -18,7 +18,7 @@ import { UsersRepository } from '../users/users.repository';
 import { User } from '../users/entities/user.entity';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
 

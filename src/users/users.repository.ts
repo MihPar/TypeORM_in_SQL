@@ -8,7 +8,7 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { BanInputModel } from './user.class';
 import { UserBanBloggerViewType, UserBanViewType } from './user.type';
 import { PaginationType } from '../types/pagination.types';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 
 @Injectable()
 export class UsersRepository {

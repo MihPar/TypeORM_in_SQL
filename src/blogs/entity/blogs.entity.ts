@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 import { Posts } from "../../posts/entity/entity.posts";
 import { BlogsViewType, BlogsViewWithBanType } from "../blogs.type";
 import { User } from "../../users/entities/user.entity";
-import { UserBlogger } from "../../blogger/domain/entity.userBlogger";
+import { UserBlogger } from "../../blogger/entity/entity.userBlogger";
 import { Wallpaper } from './wallpaper.entity';
 import { Main } from "./main.entity";
 

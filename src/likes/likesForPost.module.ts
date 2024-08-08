@@ -16,7 +16,7 @@ import { Comments } from "../comment/entity/comment.entity";
 import { Blogs } from "../blogs/entity/blogs.entity";
 import { DeleteAllPostLikesUseCase } from "./use-case/deleteAllPostLikes-use-case";
 import { BlogsRepository } from "../blogs/blogs.repository";
-import { UserBlogger } from "../blogger/domain/entity.userBlogger";
+import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
 import { Main } from "../blogs/entity/main.entity";
 

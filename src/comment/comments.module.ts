@@ -21,7 +21,7 @@ import { CreateNewCommentByPostIdUseCase } from "./use-case/createNewCommentByPo
 import { DeleteAllCommentsUseCase } from "./use-case/deleteAllComments-use-case";
 import { UpdateCommentByCommentIdUseCase } from "./use-case/updateCommentByCommentId-use-case";
 import { BlogsRepository } from "../blogs/blogs.repository";
-import { UserBlogger } from "../blogger/domain/entity.userBlogger";
+import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
 import { Main } from "../blogs/entity/main.entity";
 

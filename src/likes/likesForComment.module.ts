@@ -16,7 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { Blogs } from '../blogs/entity/blogs.entity';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
 

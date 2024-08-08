@@ -23,7 +23,7 @@ import { UpdateExistingPostByIdWithBlogIdBloggerUseCase } from './use-case/updat
 import { UpdateUserDataUseCase } from './use-case/updateUserDate-use-case';
 import { FindBannedUserSpecifyBloggerUserCase } from './use-case/getBannedUserSpecifyBlogger-use-case';
 import { BlogsRepository } from '../blogs/blogs.repository';
-import { UserBlogger } from './domain/entity.userBlogger';
+import { UserBlogger } from './entity/entity.userBlogger';
 import { DeleteUserBloggerUseCase } from './use-case/deleteUserBlogger-use-case';
 import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
 import { FileStorageAdapterUseCase } from './use-case/fileStorageAdapter-use-case';

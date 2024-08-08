@@ -8,9 +8,11 @@ import { Posts } from '../../posts/entity/entity.posts';
 import { Comments } from '../../comment/entity/comment.entity';
 import { PairQuizGameProgressPlayer } from '../../pairQuizGameProgress/domain/entity.pairQuizGameProgressPlayer';
 import { BanStatus } from '../enum';
-import { UserBlogger } from '../../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../../blogs/entity/wallpaper.entity';
 import { Main } from '../../blogs/entity/main.entity';
+import { Telegram } from 'telegraf';
+import { Telegramm } from '../../telegramm/entity/telegram.entity';
 
 @Entity()
 export class User {
@@ -92,6 +94,9 @@ export class User {
 
   @Column({nullable: true})
   mainId: string
+
+  @OneToMany(() => Telegramm, t => t.user)
+  telegram: Telegramm[]
 
   static getViewUser(user: User): UserBanViewType {
     return {

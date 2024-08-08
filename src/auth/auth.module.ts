@@ -33,7 +33,7 @@ import { EmailManager } from './adapter/email.manager';
 import { ApiJwtService } from './adapter/jwt/jwt.service';
 import { ApiConfigService } from '../config/configService';
 import { Blogs } from '../blogs/entity/blogs.entity';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
 import { AuthController } from './api/auth.controller';

@@ -28,7 +28,7 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { Comments } from '../comment/entity/comment.entity';
 import { BandBlogUseCase } from './use-case/updateBlogByBindWithUser-use-case';
 import { UsersRepository } from '../users/users.repository';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { BanUnbanBlogUseCase } from './use-case/banUnbanSpecifyBlog-use-case';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';

@@ -3,7 +3,7 @@ import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { Blogs } from "./entity/blogs.entity";
 import { BanInputModel } from "../users/user.class";
-import { UserBlogger } from "../blogger/domain/entity.userBlogger";
+import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { Metadata } from "sharp";
 import { Wallpaper } from "./entity/wallpaper.entity";
 import { Main } from "./entity/main.entity";

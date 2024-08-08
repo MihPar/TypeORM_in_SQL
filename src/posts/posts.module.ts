@@ -21,7 +21,7 @@ import { JwtService } from "@nestjs/jwt";
 import { UsersQueryRepository } from "../users/users.queryRepository";
 import { PostController } from "./post.controller";
 import { CheckRefreshTokenForGet } from "./guards/bearer.authGetComment";
-import { UserBlogger } from "../blogger/domain/entity.userBlogger";
+import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { UsersRepository } from "../users/users.repository";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
 import { Main } from "../blogs/entity/main.entity";

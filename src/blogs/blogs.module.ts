@@ -28,7 +28,7 @@ import { LikeForComment } from '../likes/entity/likesForComment.entity';
 import { BlogsController } from './api/blogs.controller';
 import { JwtService } from '@nestjs/jwt';
 import { UsersQueryRepository } from '../users/users.queryRepository';
-import { UserBlogger } from '../blogger/domain/entity.userBlogger';
+import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { S3StorageAdapter } from '../blogger/adapter/s3StorageAdapter';
 import { Wallpaper } from './entity/wallpaper.entity';
 import { DeleteAllWallpaperUseCase } from './use-case/deleteAllWallpaper-use-case';

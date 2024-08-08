@@ -1,10 +1,13 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { TelegramAdapter } from "../adapter/telegram.adapter";
 import { TelegramUpdateMessage } from "../types";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { HandleTelegramCommand } from "../use-case/commandBus/handleTelegram.use-case";
 import { GetAuthBotLinkQuery } from "../use-case/queryBus/getAuthBotLink-use-case";
 import {v4 as uuidv4} from "uuid"
+import { CreateCodeCommand } from "../use-case/commandBus/createCode.use-case";
+import { BearerTokenPairQuizGame } from "../../pairQuizGame/guards/bearerTokenPairQuizGame";
+import { UserIdDecorator } from "../../users/infrastructure/decorators/decorator.user";
 
 
 
@@ -28,7 +31,11 @@ export class TelegramController {
 
 	@Get('auth-bot-link')
 	@HttpCode(HttpStatus.OK)
-	async getAuthBot(@Body() payload: TelegramUpdateMessage) {
+	@UseGuards(BearerTokenPairQuizGame)
+	async getAuthBot(
+		@Body() payload: TelegramUpdateMessage,
+		@UserIdDecorator() userId: string
+	) {
 		// const query = new GetAuthBotLinkQuery(payload)
 		// const getAuthbotLink = await this.queryBus.execute<GetAuthBotLinkQuery>(query)
 		// console.log("getAuthbotLink: ", getAuthbotLink)
@@ -36,6 +43,8 @@ export class TelegramController {
 		//set code to user
 		// Entity Telegram (@ManyToOne) to User
 		const code = uuidv4();
+		const command = new CreateCodeCommand(code, userId)
+		await this.commandBus.execute<CreateCodeCommand, void>(command)
 		return {
 			link: `t.me/Incubator34Lessonbot?code=${code}`
 		}
