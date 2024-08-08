@@ -1,17 +1,24 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
+import { Blogs } from "./blogs.entity";
 
 @Entity()
-export class Telegramm {
+export class Subscribe {
 	@PrimaryGeneratedColumn("uuid")
 	id: string
 
-	@ManyToOne(() => User, u => u.telegramm)
+	@ManyToOne(() => User, u => u.subscribe)
 	user: User
 
 	@Column()
 	userId: string
 
+	@ManyToOne(() => Blogs, b => b.subscribe)
+	blog: Blogs
+
 	@Column()
-	code: string
+	blogId: string
+
+	@Column()
+	subscribe: boolean
 }

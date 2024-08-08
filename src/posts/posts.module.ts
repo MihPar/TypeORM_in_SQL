@@ -25,6 +25,7 @@ import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { UsersRepository } from "../users/users.repository";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
 import { Main } from "../blogs/entity/main.entity";
+import { Subscribe } from "../blogs/entity/subscribe.entity";
 
 const userCase = [
 	DeleteAllPostsUseCase,
@@ -47,7 +48,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Posts, User, Device, LikeForPost, LikeForComment, Comments, Blogs, UserBlogger, Wallpaper, Main, Subscribe]), CqrsModule],
   controllers: [PostController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...userGuard],
 })

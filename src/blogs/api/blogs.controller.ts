@@ -9,6 +9,9 @@ import { PostsQueryRepository } from "../../posts/postQuery.repository";
 import { User } from "../../users/entities/user.entity";
 import { BlogsRepository } from "../blogs.repository";
 import { AuthBasic } from "../../users/gards/basic.auth";
+import { CommandBus } from "@nestjs/cqrs";
+import { SubscribeForPostCommand } from "../use-case/subscribeForPost.use-case";
+import { DeleteSubscribeForPostCommand } from "../use-case/deleteSubscribe.use-case";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -16,7 +19,8 @@ export class BlogsController {
   constructor(
     protected blogsQueryRepository: BlogsQueryRepository,
     protected postsQueryRepository: PostsQueryRepository,
-	protected readonly blogsRepository: BlogsRepository
+	protected readonly blogsRepository: BlogsRepository,
+	protected readonly commandBus: CommandBus
   ) {}
 
   @UseGuards(AuthBasic)
@@ -24,13 +28,15 @@ export class BlogsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async subscribeToBlog(
 	@Param('blogId', ParseUUIDPipe) blogId: string
-  ) {
+  ): Promise<void> {
 	// User OneToMany Subscribe ManyToOne Blog
 	// class Subscribe {
 	// userId: ...,
 	// blogId: ...
 	// }
-	// 
+	const command = new SubscribeForPostCommand(blogId)
+	const createSubscribeForPost = await this.commandBus.execute<SubscribeForPostCommand, void>(command)
+	return
   }
 
   @UseGuards(AuthBasic)
@@ -38,7 +44,11 @@ export class BlogsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSubscribeToBlog(
 	@Param('blogId', ParseUUIDPipe) blogId: string
-) {}
+) {
+	const command = new DeleteSubscribeForPostCommand(blogId)
+	await this.commandBus.execute<DeleteSubscribeForPostCommand, void>(command)
+	return
+}
 
   @Get()
   @HttpCode(200)

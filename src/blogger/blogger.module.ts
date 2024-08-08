@@ -36,6 +36,7 @@ import { S3StorageAdapter } from './adapter/s3StorageAdapter';
 import { GetSecretDownloadAvatarUseCase } from './use-case/getSecretDownloadUrl-use-case';
 import { Main } from '../blogs/entity/main.entity';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
+import { Subscribe } from '../blogs/entity/subscribe.entity';
 
 const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase, FileStorageAdapterUseCase, CreateFileUseCase, UploadWallpaperForBlogUseCase, DeleteAvatarUseCase, UploadImageForBlogUseCase, UploadImageForPostUseCase, GetSecretDownloadAvatarUseCase
 ]
@@ -45,7 +46,7 @@ const repo = [BlogsRepository, BlogsQueryRepository]
 const adapter = [S3StorageAdapter]
 
 @Module({
-	imports: [TypeOrmModule.forFeature([Blogs, User, LikeForComment, LikeForPost, Posts, Comments, UserBlogger, Main, Wallpaper]), CqrsModule],
+	imports: [TypeOrmModule.forFeature([Blogs, User, LikeForComment, LikeForPost, Posts, Comments, UserBlogger, Main, Wallpaper, Subscribe]), CqrsModule],
 	controllers: [BloggerController],
 	providers: [...useCase, ...service, ...repo, ...adapter],
 })

@@ -34,6 +34,8 @@ import { Wallpaper } from './entity/wallpaper.entity';
 import { DeleteAllWallpaperUseCase } from './use-case/deleteAllWallpaper-use-case';
 import { Main } from './entity/main.entity';
 import { DeleteAllMainUseCase } from './use-case/deleteAllMain-use-case copy';
+import { SubscribeForPostUseCase } from './use-case/subscribeForPost.use-case';
+import { Subscribe } from './entity/subscribe.entity';
 
 const userCase = [
   UpdateBlogForSAUseCase,
@@ -45,7 +47,8 @@ const userCase = [
   DeleteAllBlogsUseCase,
   DeleteAllBlogsForSAUseCase,
   DeleteAllWallpaperUseCase,
-  DeleteAllMainUseCase
+  DeleteAllMainUseCase,
+  SubscribeForPostUseCase
 ];
 
 const repo = [
@@ -66,7 +69,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment, Blogs, UserBlogger, Main, Wallpaper]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Blogs, User, Device, LikeForPost, Posts, Comments, LikeForComment, Blogs, UserBlogger, Main, Wallpaper, Subscribe]), CqrsModule],
   controllers: [BlogsController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })

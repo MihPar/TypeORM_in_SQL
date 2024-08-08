@@ -5,6 +5,7 @@ import { User } from "../../users/entities/user.entity";
 import { UserBlogger } from "../../blogger/entity/entity.userBlogger";
 import { Wallpaper } from './wallpaper.entity';
 import { Main } from "./main.entity";
+import { Subscribe } from "./subscribe.entity";
 
 @Entity()
 export class Blogs {
@@ -64,6 +65,12 @@ export class Blogs {
 
 	@Column({nullable: true})
 	mainId: string
+
+	@OneToMany(() => Subscribe, s => s.blog)
+	subscribe: Subscribe
+
+	@Column({nullable: true})
+	subscribeId: string
 
 
 	static createNewBlogForSA(inputBlog: Blogs) {

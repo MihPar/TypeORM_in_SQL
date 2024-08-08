@@ -13,6 +13,7 @@ import { Wallpaper } from '../../blogs/entity/wallpaper.entity';
 import { Main } from '../../blogs/entity/main.entity';
 import { Telegram } from 'telegraf';
 import { Telegramm } from '../../telegramm/entity/telegram.entity';
+import { Subscribe } from '../../blogs/entity/subscribe.entity';
 
 @Entity()
 export class User {
@@ -96,7 +97,16 @@ export class User {
   mainId: string
 
   @OneToMany(() => Telegramm, t => t.user)
-  telegram: Telegramm[]
+  telegramm: Telegramm[]
+
+  @Column({nullable: true})
+  telegrammId: string
+
+  @OneToMany(() => Subscribe, s => s.user)
+  subscribe: Subscribe
+
+  @Column({nullable: true})
+  subscribeId: string
 
   static getViewUser(user: User): UserBanViewType {
     return {

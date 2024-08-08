@@ -19,6 +19,7 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
+import { Subscribe } from '../blogs/entity/subscribe.entity';
 
 const userCase = [
 	UpdateLikestatusForCommentUseCase
@@ -39,7 +40,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device, LikeForComment, Comments, Posts, LikeForPost, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([User, Device, LikeForComment, Comments, Posts, LikeForPost, Blogs, UserBlogger, Wallpaper, Main, Subscribe]), CqrsModule],
   controllers: [],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service, ...useGuard],
 })

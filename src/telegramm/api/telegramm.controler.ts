@@ -22,10 +22,10 @@ export class TelegramController {
 	@Post('webhook')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async webHook(@Body() payload: TelegramUpdateMessage) {
-		console.log("payload: ", payload)
+		// console.log("payload: ", payload)
 		const command = new HandleTelegramCommand(payload)
 		const sendMessage = await this.commandBus.execute<HandleTelegramCommand>(command)
-		console.log("entity: ", payload.message)
+		// console.log("entity: ", payload.message)
 		return {status: 'success'}
 	}
 
@@ -35,7 +35,7 @@ export class TelegramController {
 	async getAuthBot(
 		@Body() payload: TelegramUpdateMessage,
 		@UserIdDecorator() userId: string
-	) {
+	): Promise<{link: string}> {
 		// const query = new GetAuthBotLinkQuery(payload)
 		// const getAuthbotLink = await this.queryBus.execute<GetAuthBotLinkQuery>(query)
 		// console.log("getAuthbotLink: ", getAuthbotLink)

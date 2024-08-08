@@ -11,16 +11,20 @@ import { LikeStatusEnum } from "../likes/likes.emun";
 import { Posts } from "../posts/entity/entity.posts";
 import { Wallpaper } from "./entity/wallpaper.entity";
 import { Main } from "./entity/main.entity";
+import { Subscribe } from "./entity/subscribe.entity";
+import { prototype } from "events";
 
 @Injectable()
 export class BlogsQueryRepository {
+	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
 		@InjectRepository(LikeForComment) protected readonly commentLikesRepository: Repository<LikeForComment>,
 		@InjectRepository(Posts) protected readonly postsRepository: Repository<Posts>,
 		@InjectRepository(Wallpaper) protected readonly wallpaperRepositry: Repository<Wallpaper>,
-		@InjectRepository(Main) protected readonly mainRepositry: Repository<Main>
+		@InjectRepository(Main) protected readonly mainRepositry: Repository<Main>,
+		@InjectRepository(Subscribe) protected readonly subscribeRepository: Repository<Subscribe>
 	) {}
 
 	async findAllBlogs(
@@ -215,5 +219,16 @@ export class BlogsQueryRepository {
 			totalCount: totalCountQuery,
 			items,
 		};
+	}
+
+	async deleteSubscribeForPost(blogId: string): Promise<boolean> {
+		const deleteSubscribe = await this.subscribeRepository
+			.createQueryBuilder()
+			.delete()
+			.from(Subscribe)
+			.where(`"blogId" = :blogId`, {blogId})
+
+			if(!deleteSubscribe) throw new NotFoundException([{message: 'Blog have not deleted'}])
+			return true
 	}
 }
