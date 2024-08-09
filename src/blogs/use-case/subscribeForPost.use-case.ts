@@ -9,7 +9,8 @@ import { NotFoundException } from "@nestjs/common";
 
 export class SubscribeForPostCommand {
 	constructor(
-		public blogId: string
+		public blogId: string,
+		public userId: string
 	) {}
 }
 
@@ -22,21 +23,24 @@ export class SubscribeForPostUseCase implements ICommandHandler<SubscribeForPost
 	) {}
 	async execute(command: SubscribeForPostCommand): Promise<void> {
 		await this.blogsQueryRepository.getBlogByBlogId(command.blogId)
-		const findUser = await this.usersQueryRepository.findUserByBlogId(command.blogId)
+		// const findUser = await this.usersQueryRepository.findUserByBlogId(command.blogId)
 		
 		const subscribeForBlog = new Subscribe()
 		subscribeForBlog.blogId = command.blogId
-		subscribeForBlog.userId = findUser.id
+		subscribeForBlog.userId = command.userId
 		subscribeForBlog.currentUserSubscriptionStatus = SubscribeEnum.Subscribed
 		subscribeForBlog.subscribersCount = 0
 
 		const subscribe: Subscribe = await this.subscribeRepositor.save(subscribeForBlog)
+
+		console.log("subscribe: ", subscribe)
 		const id = subscribe.id
 		const count = await this.subscribeRepositor.increment(
 			{id},
 			'subscribersCount',
 			1
 		)
+		console.log("count: ", count)
 			return 
 	}
 }

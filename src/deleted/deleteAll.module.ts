@@ -46,6 +46,9 @@ import { DeleteAllWallpaperUseCase } from '../blogs/use-case/deleteAllWallpaper-
 import { DeleteAllMainUseCase } from '../blogs/use-case/deleteAllMain-use-case copy';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
+import { Subscribe } from '../blogs/entity/subscribe.entity';
+import { DeleteSubscribeUseCase } from '../blogs/use-case/deleteAllSubscribe.use-case';
+import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
 
 const useCase = [
   DeleteAllCommentLikesUseCase,
@@ -65,7 +68,9 @@ const useCase = [
   DelectAllQuestionGamesUseCase,
   DeleteUserBloggerUseCase,
   DeleteAllWallpaperUseCase,
-  DeleteAllMainUseCase
+  DeleteAllMainUseCase,
+  DeleteSubscribeUseCase,
+  BlogsQueryRepository
 ];
 
 const repo = [
@@ -83,7 +88,7 @@ const repo = [
 ];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersPlayer, AnswersPlayer, PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, QuestionGame, Comments, UserBlogger, Wallpaper, Main]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForPost, LikeForComment, Blogs, PairQuizGame, Question, AnswersPlayer, AnswersPlayer, PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, QuestionGame, Comments, UserBlogger, Wallpaper, Main, Subscribe]), CqrsModule],
   controllers: [TestingController],
   providers: [...useCase, ...repo],
   exports: [DeleteAllDevicesUseCase, DeleteAllUsersUseCase]

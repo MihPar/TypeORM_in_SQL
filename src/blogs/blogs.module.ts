@@ -36,6 +36,7 @@ import { Main } from './entity/main.entity';
 import { DeleteAllMainUseCase } from './use-case/deleteAllMain-use-case copy';
 import { SubscribeForPostUseCase } from './use-case/subscribeForPost.use-case';
 import { Subscribe } from './entity/subscribe.entity';
+import { DeleteSubscribeUseCase } from './use-case/deleteAllSubscribe.use-case';
 
 const userCase = [
   UpdateBlogForSAUseCase,
@@ -48,7 +49,8 @@ const userCase = [
   DeleteAllBlogsForSAUseCase,
   DeleteAllWallpaperUseCase,
   DeleteAllMainUseCase,
-  SubscribeForPostUseCase
+  SubscribeForPostUseCase,
+  DeleteSubscribeUseCase
 ];
 
 const repo = [

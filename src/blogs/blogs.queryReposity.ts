@@ -17,6 +17,7 @@ import { prototype } from "events";
 @Injectable()
 export class BlogsQueryRepository {
 	
+	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
@@ -230,5 +231,10 @@ export class BlogsQueryRepository {
 
 			if(!deleteSubscribe) throw new NotFoundException([{message: 'Blog have not deleted'}])
 			return true
+	}
+
+	async deleteAllSubscribe() {
+		await this.subscribeRepository.createQueryBuilder().delete().execute()
+		return 
 	}
 }

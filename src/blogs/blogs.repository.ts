@@ -205,7 +205,7 @@ async getMain(id: string): Promise<Main> {
 			.where(`"blogId" = :id`, {id})
 			.getOne()
 
-			console.log("getImge: ", getImage)
+			// console.log("getImge: ", getImage)
 			if(!getImage) throw new NotFoundException([{message: "This wallpaper does not found"}])
 		return getImage
 	}

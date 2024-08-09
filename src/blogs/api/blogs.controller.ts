@@ -29,9 +29,10 @@ export class BlogsController {
   @UseGuards(BearerTokenPairQuizGame)
   @HttpCode(HttpStatus.NO_CONTENT)
   async subscribeToBlog(
-	@Param('blogId', ParseUUIDPipe) blogId: string
+	@Param('blogId', ParseUUIDPipe) blogId: string,
+	@UserIdDecorator() userId: string
   ): Promise<void> {
-	const command = new SubscribeForPostCommand(blogId)
+	const command = new SubscribeForPostCommand(blogId, userId)
 	const createSubscribeForPost = await this.commandBus.execute<SubscribeForPostCommand, void>(command)
 	return
   }
