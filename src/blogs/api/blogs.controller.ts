@@ -23,24 +23,19 @@ export class BlogsController {
 	protected readonly commandBus: CommandBus
   ) {}
 
-  @UseGuards(AuthBasic)
   @Post(':blogId/subscription')
+  @UseGuards(AuthBasic)
   @HttpCode(HttpStatus.NO_CONTENT)
   async subscribeToBlog(
 	@Param('blogId', ParseUUIDPipe) blogId: string
   ): Promise<void> {
-	// User OneToMany Subscribe ManyToOne Blog
-	// class Subscribe {
-	// userId: ...,
-	// blogId: ...
-	// }
 	const command = new SubscribeForPostCommand(blogId)
-	const createSubscribeForPost = await this.commandBus.execute<SubscribeForPostCommand, void | null>(command)
+	const createSubscribeForPost = await this.commandBus.execute<SubscribeForPostCommand, void>(command)
 	return
   }
 
-  @UseGuards(AuthBasic)
   @Delete(':blogId/subscription')
+  @UseGuards(AuthBasic)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSubscribeToBlog(
 	@Param('blogId', ParseUUIDPipe) blogId: string

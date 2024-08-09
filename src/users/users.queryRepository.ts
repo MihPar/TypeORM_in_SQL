@@ -151,6 +151,9 @@ export class UsersQueryRepository {
 			.createQueryBuilder()
 			.where(`"blogId" = :blogId`, {blogId})
 			.getOne()
+			if(!findUser) throw new NotFoundException([
+				{message: 'User does not found'}
+			])
 		return findUser
 	}
 }
