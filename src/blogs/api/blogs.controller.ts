@@ -35,7 +35,7 @@ export class BlogsController {
 	// blogId: ...
 	// }
 	const command = new SubscribeForPostCommand(blogId)
-	const createSubscribeForPost = await this.commandBus.execute<SubscribeForPostCommand, void>(command)
+	const createSubscribeForPost = await this.commandBus.execute<SubscribeForPostCommand, void | null>(command)
 	return
   }
 

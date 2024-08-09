@@ -12,8 +12,6 @@ import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 
 @Injectable()
 export class UsersRepository {
-	
-	
 	constructor(
 		@InjectRepository(User) protected readonly userRepository: Repository<User>,
 		protected readonly usersQueryRepository: UsersQueryRepository,
@@ -296,8 +294,8 @@ export class UsersRepository {
 				`"${sortBy}"`,
 				sortDirection.toUpperCase() as 'ASC' | 'DESC',
 			  )
-			  .take(pageSize)
-			  .skip((pageNumber - 1) * pageSize);
+			.take(pageSize)
+			.skip((pageNumber - 1) * pageSize);
 
 		const users = await query.getMany()
 		const count = await query.getCount();

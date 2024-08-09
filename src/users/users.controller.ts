@@ -44,16 +44,6 @@ async banUnbanUser(
     @Query('sortDirection') sortDirection: 'asc' | 'desc',
     @Query('pageSize') pageSize: string,
     @Query('pageNumber') pageNumber: string,
-    // @Query()
-    // query: {
-	//   banStatus: BanStatus;
-    //   sortBy: string;
-    //   sortDirection: string;
-    //   pageNumber: string;
-    //   pageSize: string;
-    //   searchLoginTerm: string;
-    //   searchEmailTerm: string;
-    // },
   ):  Promise<PaginationType<UserBanViewType>> {
 	if (!banStatus) {
 		banStatus = 'all';
@@ -102,7 +92,6 @@ async banUnbanUser(
 	  }
   
 	  if (banStatus === 'all') {
-		// console.log(banStatus, 'status controller all ');
 		return await this.commandBus.execute(
 		  new GetAllUsersCommand(
 			searchLoginTerm,
@@ -114,7 +103,6 @@ async banUnbanUser(
 		  ),
 		)
 	  } else  if(banStatus === ('banned' || 'notBanned')) {
-		// console.log(banStatus, 'status controller not all');
 		return await this.commandBus.execute(
 		  new GetBannedUsersCommand(
 			banStatus,
@@ -127,27 +115,6 @@ async banUnbanUser(
 		  ),
 		)
 	}
-	// 	query.banStatus = query.banStatus || BanStatus.all
-	// 	query.sortBy = query.sortBy || 'createdAt'
-	// 	query.sortDirection = query.sortDirection || "desc"
-	// 	query.pageNumber = query.pageNumber || '1'
-	// 	query.pageSize = query.pageSize || "10"
-	// 	query.searchLoginTerm = query.searchLoginTerm || ''
-	// 	query.searchEmailTerm = query.searchEmailTerm || ''
-		
-    // const users = await this.usersQueryRepository.getAllUsers(
-	// 	query.banStatus,
-	// 	query.sortBy,
-	// 	query.sortDirection,
-	// 	query.pageNumber,
-	// 	query.pageSize,
-	// 	query.searchLoginTerm,
-	// 	query.searchEmailTerm
-    // );
-
-	// // console.log("users 70: ", users.items.map(item => item.banInfo))
-
-	// return users
   }
 
   @HttpCode(HttpStatus.CREATED)

@@ -145,4 +145,12 @@ export class UsersQueryRepository {
 
 		return user;
 	}
+
+	async findUserByBlogId(blogId: string) {
+		const findUser = await this.userRepository
+			.createQueryBuilder()
+			.where(`"blogId" = :blogId`, {blogId})
+			.getOne()
+		return findUser
+	}
 }

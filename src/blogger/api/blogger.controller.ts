@@ -334,13 +334,6 @@ export class BloggerController {
 		if(!sortBy) {
 			sortBy = 'createdAt'
 		}
-		// if(sortBy === 'login') {
-		// 	sortBy = 'login'
-		// }
-		// if(sortBy === 'email') {
-		// 	sortBy = 'email'
-		// }
-		
 		if(!sortDirection || sortDirection.toUpperCase() !== 'ASC') {
 			sortDirection = 'desc'
 		}
@@ -359,7 +352,6 @@ export class BloggerController {
 			id,
 			userId
 		)
-
 		const getBannedUser = await this.commandBus.execute<FindBannedUserSpecifyBloggerCommand, PaginationType<UserBanBloggerViewType | null>>(command)
 		return getBannedUser
 	}

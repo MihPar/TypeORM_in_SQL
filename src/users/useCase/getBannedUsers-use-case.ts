@@ -24,7 +24,6 @@ export class GetBannedUsersUseCase
   ) {}
 
   async execute(command: GetBannedUsersCommand): Promise<PaginationType<UserBanViewType>> {
-    // console.log(command.banStatus, 'status use case not all');
     let banStatus = true;
 
     if (command.banStatus === 'notBanned') {
