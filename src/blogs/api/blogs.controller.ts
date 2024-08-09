@@ -12,6 +12,7 @@ import { AuthBasic } from "../../users/gards/basic.auth";
 import { CommandBus } from "@nestjs/cqrs";
 import { SubscribeForPostCommand } from "../use-case/subscribeForPost.use-case";
 import { DeleteSubscribeForPostCommand } from "../use-case/deleteSubscribe.use-case";
+import { BearerTokenPairQuizGame } from "../../pairQuizGame/guards/bearerTokenPairQuizGame";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -24,7 +25,8 @@ export class BlogsController {
   ) {}
 
   @Post(':blogId/subscription')
-  @UseGuards(AuthBasic)
+//   @UseGuards(AuthBasic)
+  @UseGuards(BearerTokenPairQuizGame)
   @HttpCode(HttpStatus.NO_CONTENT)
   async subscribeToBlog(
 	@Param('blogId', ParseUUIDPipe) blogId: string
@@ -35,7 +37,8 @@ export class BlogsController {
   }
 
   @Delete(':blogId/subscription')
-  @UseGuards(AuthBasic)
+//   @UseGuards(AuthBasic)
+  @UseGuards(BearerTokenPairQuizGame)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSubscribeToBlog(
 	@Param('blogId', ParseUUIDPipe) blogId: string
