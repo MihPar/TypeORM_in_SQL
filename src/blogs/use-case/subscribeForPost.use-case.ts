@@ -30,8 +30,7 @@ export class SubscribeForPostUseCase implements ICommandHandler<SubscribeForPost
 		subscribeForBlog.subscribersCount = 0
 
 		const subscribe: Subscribe = await this.subscribeRepositor.save(subscribeForBlog)
-
-		if(!subscribe) return null
+			if(!subscribe) return null
 		const id = subscribe.id
 		const count = await this.subscribeRepositor.increment(
 			{id},
