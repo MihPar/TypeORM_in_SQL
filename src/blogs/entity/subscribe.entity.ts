@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../../users/entities/user.entity";
 import { Blogs } from "./blogs.entity";
+import { SubscribeEnum } from "../enum/subscribeEnum";
 
 @Entity()
 export class Subscribe {
@@ -20,5 +21,8 @@ export class Subscribe {
 	blogId: string
 
 	@Column()
-	subscribe: boolean
+	currentUserSubscriptionStatus: SubscribeEnum
+
+	@Column()
+	subscribersCount: number
 }

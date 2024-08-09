@@ -153,18 +153,7 @@ export class UsersRepository {
 		const result = await this.userRepository.findOne({
 			where: {id}
 		})
-				
-			// console.log("user: ", result)
-
 		return result
-		// if(!banUser) throw new Error('Ban user is not update in user repository')
-		
-		
-		// return (
-		// 	banUser.affected !== null &&
-		// 	banUser.affected !== undefined &&
-		// 	banUser.affected > 0
-		//   );
 	}
 
 	async findAllUsers(
@@ -299,17 +288,7 @@ export class UsersRepository {
 		blogId: string
 	): Promise<PaginationType<UserBanBloggerViewType | null>> {
 		const findBannedUserBlog = await this.userBloggerRepository.findBy({blogId})
-			// .createQueryBuilder('b')
-			// .where(`b.id = :blogId`, {blogId})
-			// .getRawMany()
-		// console.log("findBannedUserBlog: ", findBannedUserBlog)
-		// const userIds = findBannedUserBlog.map(
-		// 	(row) => row.b_userId,
-		//   );
-		// console.log("findBannedUserBlog: ", findBannedUserBlog)
 		const userIds = findBannedUserBlog.map(item => {return item.userId})
-		// console.log("userIds: ", userIds)
-
 		const query = await this.userRepository
 			.createQueryBuilder()
 			.where(`id = any(:userIds)`, {userIds: userIds})
@@ -322,9 +301,6 @@ export class UsersRepository {
 
 		const users = await query.getMany()
 		const count = await query.getCount();
-
-		// console.log('user and count', users, count)
-
 		const items = await Promise.all(
 			users.map(async (item) => {
 			const banUser = await this.userBloggerRepository
