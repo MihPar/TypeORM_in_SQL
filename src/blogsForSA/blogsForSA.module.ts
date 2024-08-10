@@ -32,6 +32,7 @@ import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { BanUnbanBlogUseCase } from './use-case/banUnbanSpecifyBlog-use-case';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
+import { Subscribe } from '../blogs/entity/subscribe.entity';
 
 const guards = [
 	CheckRefreshTokenForSA
@@ -67,7 +68,7 @@ const service = [JwtService];
 const validator = [CustomLoginvalidation, CustomEmailvalidation]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForComment, LikeForPost, Blogs, Comments, UserBlogger, Wallpaper, Main]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Device, User, Posts, LikeForComment, LikeForPost, Blogs, Comments, UserBlogger, Wallpaper, Main, Subscribe]), CqrsModule],
   controllers: [BlogsControllerForSA],
   providers: [
     ...useCase,

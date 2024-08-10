@@ -8,6 +8,7 @@ import { User } from "../users/entities/user.entity";
 import { UsersQueryRepository } from "../users/users.queryRepository";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
 import { Main } from "../blogs/entity/main.entity";
+import { Subscribe } from "../blogs/entity/subscribe.entity";
 
 @Injectable()
 export class BlogsQueryRepositoryForSA {
@@ -18,6 +19,7 @@ export class BlogsQueryRepositoryForSA {
 		@InjectRepository(User) protected readonly userRepository: Repository<User>,
 		@InjectRepository(Wallpaper) protected readonly wallpaperRepository: Repository<Wallpaper>,
 		@InjectRepository(Main) protected readonly mainRepository: Repository<Main>,
+		@InjectRepository(Subscribe) protected readonly subscribeRepository: Repository<Subscribe>,
 	) { }
 
 	async findAllBlogs(
@@ -67,7 +69,13 @@ export class BlogsQueryRepositoryForSA {
 					.createQueryBuilder()
 					.where(`"blogId" = :id`, {id: item.id})
 					.getOne()
-				return Blogs.getBlog(item, getWallpaper, getMain)
+
+				const findSubscibe = await this.subscribeRepository
+					.createQueryBuilder()
+					.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId: item.userId})
+					.getOne()
+
+				return Blogs.getBlog(item, findSubscibe, getWallpaper, getMain)
 			})),
 		};
 		return result;

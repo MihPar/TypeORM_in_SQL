@@ -22,25 +22,38 @@ export class SubscribeForPostUseCase implements ICommandHandler<SubscribeForPost
 		@InjectRepository(Subscribe) protected readonly subscribeRepositor: Repository<Subscribe>,
 	) {}
 	async execute(command: SubscribeForPostCommand): Promise<void> {
-		await this.blogsQueryRepository.getBlogByBlogId(command.blogId)
+		const findBlog = await this.blogsQueryRepository.getBlogByBlogIdSubscription(command.blogId)
+		console.log("findBlog: ", findBlog)
 		// const findUser = await this.usersQueryRepository.findUserByBlogId(command.blogId)
+		const findSubscription = await this.blogsQueryRepository.findSubscribe(command.blogId, command.userId)
+		if(!findSubscription) {
+			const subscribeForBlog = new Subscribe()
+			subscribeForBlog.blogId = command.blogId
+			subscribeForBlog.userId = command.userId
+			subscribeForBlog.currentUserSubscriptionStatus = SubscribeEnum.Subscribed
+			subscribeForBlog.subscribersCount = 1
+	
+			await this.subscribeRepositor.save(subscribeForBlog)
+	
+			// console.log("subscribe: ", subscribe)
+			// const id = subscribe.id
+			// const count = await this.subscribeRepositor.increment(
+			// 	{id},
+			// 	'subscribersCount',
+			// 	1
+			// )
+			// console.log("count: ", count)
+				return 
+		} else {
+			const id = findSubscription.id
+			const count = await this.subscribeRepositor.increment(
+				{id},
+				'subscribersCount',
+				1
+			)
+			// console.log("count: ", count)
+				return 
+		}
 		
-		const subscribeForBlog = new Subscribe()
-		subscribeForBlog.blogId = command.blogId
-		subscribeForBlog.userId = command.userId
-		subscribeForBlog.currentUserSubscriptionStatus = SubscribeEnum.Subscribed
-		subscribeForBlog.subscribersCount = 0
-
-		const subscribe: Subscribe = await this.subscribeRepositor.save(subscribeForBlog)
-
-		console.log("subscribe: ", subscribe)
-		const id = subscribe.id
-		const count = await this.subscribeRepositor.increment(
-			{id},
-			'subscribersCount',
-			1
-		)
-		console.log("count: ", count)
-			return 
 	}
 }

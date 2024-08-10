@@ -103,10 +103,10 @@ export class User {
   telegrammId: string
 
   @OneToMany(() => Subscribe, s => s.user)
-  subscribe: Subscribe
+  subscribe: Subscribe[]
 
-  @Column({nullable: true})
-  subscribeId: string
+//   @Column({nullable: true})
+//   subscribeId: string
 
   static getViewUser(user: User): UserBanViewType {
     return {

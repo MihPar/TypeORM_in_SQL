@@ -6,6 +6,7 @@ import { UserBlogger } from "../../blogger/entity/entity.userBlogger";
 import { Wallpaper } from './wallpaper.entity';
 import { Main } from "./main.entity";
 import { Subscribe } from "./subscribe.entity";
+import { SubscribeEnum } from "../enum/subscribeEnum";
 
 @Entity()
 export class Blogs {
@@ -67,10 +68,10 @@ export class Blogs {
 	mainId: string
 
 	@OneToMany(() => Subscribe, s => s.blog)
-	subscribe: Subscribe
+	subscribe: Subscribe[]
 
-	@Column({nullable: true})
-	subscribeId: string
+	// @Column({nullable: true})
+	// subscribeId: string
 
 
 	static createNewBlogForSA(inputBlog: Blogs) {
@@ -91,11 +92,13 @@ export class Blogs {
 						fileSize: 0
 					}
 				]
-			}
+			},
+			currentUserSubscriptionStatus: SubscribeEnum.None,
+			subscribersCount: 0
 		}
 	}
 
-	static getBlog(blog: Blogs, wallpaper: Wallpaper, main: Main) {
+	static getBlog(blog: Blogs, subscribe: Subscribe, wallpaper?: Wallpaper, main?: Main,) {
 		return {
 			id: blog.id,
 			name: blog.name,
@@ -105,20 +108,22 @@ export class Blogs {
 			isMembership: blog.isMembership,
 			images: {
 				wallpaper: {
-						url: wallpaper.url,
-						width: wallpaper.width,
-						height: wallpaper.height,
-						fileSize: wallpaper.fileSize
+						url: wallpaper?.url,
+						width: wallpaper?.width,
+						height: wallpaper?.height,
+						fileSize: wallpaper?.fileSize
 				},
 				main: [
 					{
-						url: main.url,
-						width: main.width,
-						height: main.height,
-						fileSize: main.fileSize
+						url: main?.url,
+						width: main?.width,
+						height: main?.height,
+						fileSize: main?.fileSize
 					}
 				]
-			}
+			},
+			currentUserSubscriptionStatus: subscribe.currentUserSubscriptionStatus,
+			subscribersCount: subscribe.subscribersCount
 		}
 	}
 

@@ -41,8 +41,8 @@ export class TestingController {
     await this.commandBus.execute(new DeleteAllPostLikesCommand());
     await this.commandBus.execute(new DeleteAllCommentsCommand());
     await this.commandBus.execute(new DeleteAllPostsComand());
-    await this.commandBus.execute(new DeleteAllBlogsCommnad());
 	await this.commandBus.execute(new DeleteSubscribeCommand())
+    await this.commandBus.execute(new DeleteAllBlogsCommnad());
 	await this.commandBus.execute(new DeleteUserBloggerCommand())
     await this.commandBus.execute(new DeleteAllBlogsForSACommnad());
     await this.commandBus.execute(new DeleteAllUsersCommnad());

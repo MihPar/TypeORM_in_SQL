@@ -69,8 +69,14 @@ export class BlogsQueryRepository {
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId`, {blogId: item.id})
 					.getOne()
+
+
+				const findSubscibe = await this.subscribeRepository
+					.createQueryBuilder()
+					.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId: item.userId})
+					.getOne()
 					
-				return Blogs.getBlog(item, getWallpaper, getMain)
+				return Blogs.getBlog(item, findSubscibe, getWallpaper, getMain)
 			})),
 		};
 		return result;
@@ -92,15 +98,30 @@ export class BlogsQueryRepository {
 	async getBlogByBlogId(id: string) {
 		const findBlogById = await this.blogsRepository
 			.createQueryBuilder()
-			.select()
-			.where("id = :id", { id })
+			.where(`id = :id`, { id })
 			.getOne()
+			console.log("findBlogById: ", findBlogById)
+
 			if(!findBlogById) throw new NotFoundException([{message: "This blog do not found"}])
-			
+			return findBlogById
+	}
+	async getBlogByBlogIdSubscription(id: string) {
+		const findBlogById = await this.blogsRepository
+			.createQueryBuilder()
+			.where(`id = :id`, { id })
+			.getOne()
+
+			if(!findBlogById) throw new NotFoundException([{message: "This blog do not found"}])
 			return findBlogById
 	}
 
 	async getBlogById(blog: Blogs) {
+		const findSubscibe = await this.subscribeRepository
+			.createQueryBuilder()
+			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: blog.id, userId: blog.userId})
+			.getOne()
+			if(!findSubscibe) throw new NotFoundException([{message: "This subscription does not found"}])
+
 		const findWallpaperByBlogId = await this.wallpaperRepositry
 			.createQueryBuilder()
 			.select()
@@ -115,7 +136,8 @@ export class BlogsQueryRepository {
 			.getOne()
 			if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This main does not found"}])
 
-		return blog ? Blogs.getBlog(blog, findWallpaperByBlogId, findMainByBlogId) : null;
+		
+		return blog ? Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId) : null;
 	}
 
 	async findBlog(id: string): Promise<Blogs> {
@@ -231,6 +253,15 @@ export class BlogsQueryRepository {
 
 			if(!deleteSubscribe) throw new NotFoundException([{message: 'Blog have not deleted'}])
 			return true
+	}
+
+	async findSubscribe(blogId: string, userId: string): Promise<Subscribe> {
+		const subscribe = await this.subscribeRepository
+			.createQueryBuilder()
+			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId, userId})
+			.getOne()
+			
+			return subscribe
 	}
 
 	async deleteAllSubscribe() {
