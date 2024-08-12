@@ -72,7 +72,6 @@ export class UsersRepository {
 
 	async createBanUser(newUser: UserBlogger): Promise<void> {
 		const userCreatingResult = await this.userBloggerRepository.save(newUser)
-		// console.log("userCreatingResult: ", userCreatingResult)
 		return
 	}
 

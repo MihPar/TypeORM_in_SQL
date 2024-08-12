@@ -32,8 +32,6 @@ export class UploadImageForBlogUseCase implements ICommandHandler<UploadImageFor
 		}
 		const url = `https://storage.yandexcloud.net/michael-paramonov/${key}`
 
-// console.log("buffer 33: ", command.buffer)
-
 if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
 	throw new BadRequestException([{message: 'This type are not according'}])
 }
@@ -52,7 +50,6 @@ if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)
-			// console.log("uploadResult: ", uploadResult)
 			await this.blogsRepository.updateMainForBlogs(command.blogId, url, infoImage)
 			return {
 					wallpaper: null,

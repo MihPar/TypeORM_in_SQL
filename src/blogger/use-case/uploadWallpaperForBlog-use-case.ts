@@ -50,51 +50,6 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImag
 			throw new BadRequestException([{message: 'Sizes are not according'}])
 		}
 
-		// const resizeImages = () => {
-		// 	const today = new Date()
-		// 	const year = today.getFullYear()
-		// 	const month = `${today.getMonth + 1}`.padStart(2, "0")
-
-		// 	const sizes = [
-		// 		{
-		// 			path: 'origin',
-		// 			width: 940,
-		// 			heigth: 432
-		// 		},
-		// 		{
-		// 			path: 'middle',
-		// 			width: 300,
-		// 			heigth: 180
-		// 		},
-		// 		{
-		// 			path: 'small',
-		// 			width: 149,
-		// 			heigth: 96
-		// 		},
-		// 	]
-		// }
-
-		// const resizeFile = new MulterSharpResizer(
-		// 	sizes,
-		// 	key,
-		// 	url,
-		// )
-
-		// await resizeFile.resize()
-		// const infoImage = await sharp(command.buffer).metadata()
-		// let infoImage = await sharp(command.buffer)
-		// .metadata()
-		// .resize({width: 1028, height: 312})
-		// .toBuffer()
-		// .toFormat("png")
-		// .png({quality: 100})
-		// .toFile('optimized.png');
-		// console.log("infoImage: ", infoImage)
-		// const result = fs.readdirSync('optimized.png')
-		// console.log("result: ", result)
-
-		
-
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
 			const uploadResult: PutObjectCommandOutput = 
@@ -107,14 +62,7 @@ export class UploadWallpaperForBlogUseCase implements ICommandHandler<UploadImag
 					  height: infoImage.height,
 					  fileSize: infoImage.size
 					},
-					main: [
-					//   {
-					// 	url,
-					// 	width: infoImage.width,
-					// 	height: infoImage.height,
-					// 	fileSize: infoImage.size
-					//   }
-					]
+					main: []
 			}
 		} catch(exeption) {
 			console.log(exeption)

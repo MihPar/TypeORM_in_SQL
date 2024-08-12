@@ -5,7 +5,6 @@ import { Repository } from "typeorm";
 import { BlogsQueryRepository } from "../blogs.queryReposity";
 import { SubscribeEnum } from "../enum/subscribeEnum";
 import { UsersQueryRepository } from "../../users/users.queryRepository";
-import { NotFoundException } from "@nestjs/common";
 
 export class SubscribeForPostCommand {
 	constructor(
@@ -23,7 +22,7 @@ export class SubscribeForPostUseCase implements ICommandHandler<SubscribeForPost
 	) {}
 	async execute(command: SubscribeForPostCommand): Promise<void> {
 		const findBlog = await this.blogsQueryRepository.getBlogByBlogIdSubscription(command.blogId)
-		console.log("findBlog: ", findBlog)
+		// console.log("findBlog: ", findBlog)
 		// const findUser = await this.usersQueryRepository.findUserByBlogId(command.blogId)
 		const findSubscription = await this.blogsQueryRepository.findSubscribe(command.blogId, command.userId)
 		if(!findSubscription) {
@@ -31,29 +30,34 @@ export class SubscribeForPostUseCase implements ICommandHandler<SubscribeForPost
 			subscribeForBlog.blogId = command.blogId
 			subscribeForBlog.userId = command.userId
 			subscribeForBlog.currentUserSubscriptionStatus = SubscribeEnum.Subscribed
-			subscribeForBlog.subscribersCount = 1
+			// subscribeForBlog.subscribersCount = 0
+			// console.log("score: ", subscribeForBlog.subscribersCount)
 	
 			await this.subscribeRepositor.save(subscribeForBlog)
 	
-			// console.log("subscribe: ", subscribe)
-			// const id = subscribe.id
-			// const count = await this.subscribeRepositor.increment(
-			// 	{id},
-			// 	'subscribersCount',
-			// 	1
-			// )
-			// console.log("count: ", count)
-				return 
-		} else {
-			const id = findSubscription.id
+			// console.log("subscribeForBlog 39: ", subscribeForBlog)
+			const id = subscribeForBlog.id
 			const count = await this.subscribeRepositor.increment(
 				{id},
 				'subscribersCount',
 				1
 			)
-			// console.log("count: ", count)
+			const getScore = await this.blogsQueryRepository.findSubscribe(command.blogId, command.userId)
+			// console.log("getScore 47: ", getScore)
 				return 
-		}
+		} else if(findSubscription.currentUserSubscriptionStatus === SubscribeEnum.Subscribed) {
+			return 
+		} 
+		// else if(findSubscription.currentUserSubscriptionStatus === SubscribeEnum.None) {
+		// 	const id = findSubscription.id
+		// 	const count = await this.subscribeRepositor.increment(
+		// 		{id},
+		// 		'subscribersCount',
+		// 		1
+		// 	)
+		// 	// console.log("count: ", count)
+		// 		return 
+		// }
 		
 	}
 }

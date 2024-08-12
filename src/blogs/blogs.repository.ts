@@ -1,13 +1,11 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
-import { DataSource, Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 import { Blogs } from "./entity/blogs.entity";
-import { BanInputModel } from "../users/user.class";
 import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { Metadata } from "sharp";
 import { Wallpaper } from "./entity/wallpaper.entity";
 import { Main } from "./entity/main.entity";
-import { Posts } from "../posts/entity/entity.posts";
 
 @Injectable()
 export class BlogsRepository {
@@ -81,8 +79,6 @@ async findBlogByUserIdBlogId(userId: string, blogId: string) {
 		.select()
 		.where(`id = :blogId`, {blogId})
 		.getOne()
-
-		// console.log("findBlog: ", findBlog)
 
 	if(!findBlog) {
 		throw new NotFoundException([

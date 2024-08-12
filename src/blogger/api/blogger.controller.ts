@@ -66,14 +66,9 @@ export class BloggerController {
 		// console.log(join(__dirname, ".." , "..", "..", 'views', "files.html"))
 		
 
-		// console.log(blogId, " blogId")
-		// console.log(avatarFile, " body")
-// const blogId = '111'
 		const saveAvatarCommand = new UploadImageForBlogWallpaperCommand(userId, blogId, file.mimetype, file.originalname, file.buffer)
 		const result = await this.commandBus.execute<UploadImageForBlogWallpaperCommand>(saveAvatarCommand)
 
-		// return "avatar saved"
-		// console.log("result: ", result)
 		return result
 	}
 

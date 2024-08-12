@@ -173,7 +173,6 @@ async increaseDislike(postId: string, likeStatus: string, userId: string) {
 			isBanned: false,
 			banDate: new Date().toISOString()	
 		})
-		// .where("id = :id", {id})
 		.where("userId = :useId", {userId})
 		.execute()
 
@@ -219,18 +218,13 @@ async banPostLikes(id: string, ban: boolean) {
 						if(myStatus === LikeStatusEnum.Dislike) {
 							const updateLikeCount = await this.postsRepository
 								.decrement({id: commentId}, "dislikesCount", 1)
-								// if(!updateLikeCount) return false
-								// return true
+							
 						} else {
 							const updateLikeCount = await this.postsRepository
 								.decrement({id: commentId}, "likesCount", 1)
-							// if(!updateLikeCount) return false
-							// 	return true
+							
 						} 
 			}
-			
-	
-	//   console.log("result: ", await this.likeForPostRepository.createQueryBuilder().where({userId: id}).getOne())
 	  return (
 		postLikeBanned.affected !== null &&
 		postLikeBanned.affected !== undefined &&
@@ -252,7 +246,6 @@ async unbanPostLikes(id: string, ban: boolean) {
 			.select()
 			.where(`"userId" = :id`, {id})
 			.getMany()
-			// console.log("likePosts: ", findLikeByUser)
 
 			for(let i = 0; i < findLikeByUser.length; i++) {
 				const postId = findLikeByUser[i].postId
@@ -260,19 +253,11 @@ async unbanPostLikes(id: string, ban: boolean) {
 						if(myStatus === LikeStatusEnum.Dislike) {
 							const updateLikeCount = await this.postsRepository
 								.increment({id: postId}, "dislikesCount", 1)
-								// if(!updateLikeCount) return false
-								// return true
 						} else {
 							const updateLikeCount = await this.postsRepository
 								.increment({id: postId}, "likesCount", 1)
-							// if(!updateLikeCount) return false
-							// 	return true
 						} 
 			}
-
-	
-  
-	//   console.log("result: ", await this.likeForPostRepository.createQueryBuilder().where({userId: id}).getOne())
 	  return (
 		postLikeBanned.affected !== null &&
 		postLikeBanned.affected !== undefined &&
@@ -288,7 +273,6 @@ async findPostByIdUserId(id: string, userId?: string) {
 		.andWhere(`"isBanned" = :isBanned`, {isBanned: false})
 		.getOne()
 
-		// console.log("getPOst: ", getPost)
 	return getPost
 }
 

@@ -84,20 +84,11 @@ export class UploadImageForPostUseCase implements ICommandHandler<UploadImageFor
 
 
 			const createMainOriginal = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, urlOriginal, originalPhoto)
-			// console.log("original: ", createMainOriginal)
 
 			const createMainMiddle = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, urlMiddle, middlePhoto)
-			// console.log("middle: ", createMainMiddle)
 
 			const createMainSmall = await this.blogsRepository.updateMainForPost(command.blogId, command.postId, urlSmall, smallPhoto)
-			// console.log("small: ", createMainSmall)
-
-
 		
-			// console.log("originalPhoto: ", originalPhoto)
-			// console.log("middle: ", middlePhoto)
-			// console.log("smallPhoto: ", smallPhoto)
-
 			return {
 				main: [
 				  {

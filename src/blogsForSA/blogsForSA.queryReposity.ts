@@ -68,7 +68,7 @@ export class BlogsQueryRepositoryForSA {
 				const getMain = await this.mainRepository
 					.createQueryBuilder()
 					.where(`"blogId" = :id`, {id: item.id})
-					.getOne()
+					.getMany()
 
 				const findSubscibe = await this.subscribeRepository
 					.createQueryBuilder()

@@ -98,7 +98,7 @@ export class Blogs {
 		}
 	}
 
-	static getBlog(blog: Blogs, subscribe: Subscribe, wallpaper?: Wallpaper, main?: Main,) {
+	static getBlog(blog: Blogs, subscribe?: Subscribe, wallpaper?: Wallpaper, main?: Main[],) {
 		return {
 			id: blog.id,
 			name: blog.name,
@@ -106,24 +106,37 @@ export class Blogs {
 			websiteUrl: blog.websiteUrl,
 			createdAt: blog.createdAt,
 			isMembership: blog.isMembership,
-			images: {
-				wallpaper: {
+			images: { 
+				wallpaper: wallpaper ? (() => (
+					{
 						url: wallpaper?.url,
 						width: wallpaper?.width,
 						height: wallpaper?.height,
 						fileSize: wallpaper?.fileSize
-				},
-				main: [
-					{
-						url: main?.url,
-						width: main?.width,
-						height: main?.height,
-						fileSize: main?.fileSize
-					}
-				]
+					})) : null,
+				// wallpaper: {
+				// 		url: wallpaper?.url,
+				// 		width: wallpaper?.width,
+				// 		height: wallpaper?.height,
+				// 		fileSize: wallpaper?.fileSize
+				// },
+				main: main ? main.map(m => ({
+						url: m?.url,
+						width: m?.width,
+						height: m?.height,
+						fileSize: m?.fileSize
+				})) : []
+				// [
+				// 	{
+				// 		url: main?.url,
+				// 		width: main?.width,
+				// 		height: main?.height,
+				// 		fileSize: main?.fileSize
+				// 	}
+				// ]
 			},
-			currentUserSubscriptionStatus: subscribe.currentUserSubscriptionStatus,
-			subscribersCount: subscribe.subscribersCount
+			currentUserSubscriptionStatus: subscribe ? subscribe.currentUserSubscriptionStatus : SubscribeEnum.None,
+			subscribersCount: subscribe ? subscribe?.subscribersCount : 0 
 		}
 	}
 
