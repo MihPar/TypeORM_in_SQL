@@ -46,7 +46,7 @@ export class TelegramController {
 		const command = new CreateCodeCommand(code, userId)
 		await this.commandBus.execute<CreateCodeCommand, void>(command)
 		return {
-			link: `t.me/Incubator34Lessonbot?code=${code}`
+			link: `https://t.me/Incubator34Lessonbot?start=${code}`
 		}
 	}
 }

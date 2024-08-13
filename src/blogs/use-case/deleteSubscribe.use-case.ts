@@ -14,7 +14,7 @@ export class DeleteSubscribeForPostUseCase implements ICommandHandler<DeleteSubs
 		protected readonly blogsQueryRepository: BlogsQueryRepository
 	) {}
 	async execute(command: DeleteSubscribeForPostCommand): Promise<void> {
-		const findBlog = await this.blogsQueryRepository.getBlogByBlogIdSubscription(command.blogId)
+		await this.blogsQueryRepository.getBlogByBlogIdSubscription(command.blogId)
 		await this.blogsQueryRepository.deleteSubscribeForPost(command.blogId, command.userId)
 		return
 	}

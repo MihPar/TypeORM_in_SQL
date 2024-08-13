@@ -120,20 +120,24 @@ export class Blogs {
 				// 		height: wallpaper?.height,
 				// 		fileSize: wallpaper?.fileSize
 				// },
-				main: main ? main.map(m => ({
-						url: m?.url,
-						width: m?.width,
-						height: m?.height,
-						fileSize: m?.fileSize
-				})) : [{url: null, width: 0, height: 0, fileSize: 0}]
-				// [
-				// 	{
-				// 		url: main?.url,
-				// 		width: main?.width,
-				// 		height: main?.height,
-				// 		fileSize: main?.fileSize
-				// 	}
-				// ]
+				
+				main:
+				//  main.length ? main.map(m => ({
+				// 		url: m?.url,
+				// 		width: m?.width,
+				// 		height: m?.height,
+				// 		fileSize: m?.fileSize
+				// })) : [{url: null, width: 0, height: 0, fileSize: 0}]
+				// pseodofalse " false undefined 0 NaN null"
+					[
+						{
+							url: null,
+							width: 0,
+							height: 0,
+							fileSize: 0
+						}
+					]
+				
 			},
 			currentUserSubscriptionStatus: subscribe ? subscribe.currentUserSubscriptionStatus : SubscribeEnum.None,
 			subscribersCount: count || 0 

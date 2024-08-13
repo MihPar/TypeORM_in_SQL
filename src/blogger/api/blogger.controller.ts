@@ -82,7 +82,6 @@ export class BloggerController {
 	) {
 		const findBlogById: Blogs = await this.blogsQueryRepository.findBlog(blogId)
 		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
-			// console.log("file 92 main: ", file)
 		const command = new UploadImageForBlogCommand(blogId, userId, file.mimetype, file.originalname, file.buffer)
 		const upload = await this.commandBus.execute<UploadImageForBlogCommand>(command)
 		return upload

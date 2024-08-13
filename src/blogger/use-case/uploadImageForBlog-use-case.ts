@@ -45,8 +45,6 @@ if(command.mimetype !== ("image/jpeg" || "image/jpg" || "image/png")) {
 			if(infoImage.size > 100000) {
 				throw new BadRequestException([{message: 'Sizes are not according'}])
 			}
-			// console.log("infoImage: ", infoImage)
-
 		const objectCommand = new PutObjectCommand(bucketParams)
 		try {
 			const uploadResult: PutObjectCommandOutput = await this.s3StorageAdapter.s3Client.send(objectCommand)

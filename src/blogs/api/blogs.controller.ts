@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, UseGuards } from "@nestjs/common";
+import { Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, ParseUUIDPipe, Post, Query, UseGuards } from "@nestjs/common";
 import { BlogsQueryRepository } from "../blogs.queryReposity";
 import { inputModelClass } from "../dto/blogs.class.pipe";
 import { BlogsViewType } from "../blogs.type";
@@ -8,12 +8,10 @@ import { UserDecorator, UserIdDecorator } from '../../users/infrastructure/decor
 import { PostsQueryRepository } from "../../posts/postQuery.repository";
 import { User } from "../../users/entities/user.entity";
 import { BlogsRepository } from "../blogs.repository";
-import { AuthBasic } from "../../users/gards/basic.auth";
 import { CommandBus } from "@nestjs/cqrs";
 import { SubscribeForPostCommand } from "../use-case/subscribeForPost.use-case";
 import { DeleteSubscribeForPostCommand } from "../use-case/deleteSubscribe.use-case";
 import { BearerTokenPairQuizGame } from "../../pairQuizGame/guards/bearerTokenPairQuizGame";
-import { CheckRefreshTokenForGetLike } from "../../posts/guards/bearer.authGetComment";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -51,6 +49,7 @@ export class BlogsController {
 
   @Get()
   @HttpCode(200)
+  @UseGuards(CheckRefreshTokenForGet)
   async getBlogsWithPagin(
     @Query()
     query: {
@@ -60,6 +59,7 @@ export class BlogsController {
       pageNumber: string;
       pageSize: string;
     },
+	@UserIdDecorator() userId: string
   ) {
     const getAllBlogs: PaginationType<BlogsViewType> =
       await this.blogsQueryRepository.findAllBlogs(
@@ -68,6 +68,7 @@ export class BlogsController {
 		(query.sortDirection || 'desc'),
         (query.pageNumber || '1'),
         (query.pageSize || '10'),
+		userId
       );
     return getAllBlogs;
   }

@@ -196,12 +196,12 @@ describe('/blogs', () => {
 
 		it("get blog by userId and blogId", async() => {
 			const findBlog = await getBlogById(server, createdBlog[1].id, user2Token)
-			// console.log("get blog by user2: ", findBlog)
+			console.log("get blog by user2: ", findBlog)
 		})
 
 		it("get blog by userId and blogId", async() => {
 			const findBlog = await getBlogById(server, createdBlog[1].id, user1Token)
-			// console.log("get blog by user1: ", findBlog)
+			console.log("get blog by user1: ", findBlog)
 		})
 
 		it("get all blogs by subscribe", async() => {

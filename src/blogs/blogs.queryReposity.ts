@@ -18,8 +18,6 @@ import { SubscribeEnum } from './enum/subscribeEnum';
 
 @Injectable()
 export class BlogsQueryRepository {
-	
-	
 	constructor(
 		@InjectRepository(Blogs) protected readonly blogsRepository: Repository<Blogs>,
 		@InjectRepository(Comments) protected readonly commentsRepository: Repository<Comments>,
@@ -35,7 +33,8 @@ export class BlogsQueryRepository {
 		sortBy: string,
 		sortDirection: string,
 		pageNumber: string,
-		pageSize: string
+		pageSize: string,
+		userId?: string
 	): Promise<PaginationType<BlogsViewType>> {
 
 		const findAllBlogs = await this.blogsRepository
@@ -66,16 +65,20 @@ export class BlogsQueryRepository {
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId`, {blogId: item.id})
 					.getOne()
+
+					// console.log("wallpaper: ", getWallpaper)
 					
-				const getMain: Main[] = await this.mainRepositry
+				const getMain = await this.mainRepositry
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId`, {blogId: item.id})
 					.getMany()
 
+					// console.log("main: ", getMain)
+
 
 				const findSubscibe = await this.subscribeRepository
 					.createQueryBuilder()
-					.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId: item.userId})
+					.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId})
 					.getOne()
 
 					console.log("subscribe: ", findSubscibe)
@@ -271,6 +274,7 @@ export class BlogsQueryRepository {
 		const subscribe = await this.subscribeRepository
 			.createQueryBuilder()
 			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId, userId})
+			.andWhere(`"currentUserSubscriptionStatus" = :currentUserSubscriptionStatus`, 		{currentUserSubscriptionStatus: SubscribeEnum.Subscribed})
 			.getOne()
 			
 			return subscribe
