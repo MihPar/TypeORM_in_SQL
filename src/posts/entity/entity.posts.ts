@@ -121,7 +121,7 @@ export class Posts {
 		  };
 	  }
 
-	 static getPostsViewModelForSA(
+	static getPostsViewModelForSA(
 		post: Posts,
 		newestLikes?: NewestLikesType[],
 		): PostsViewModel {

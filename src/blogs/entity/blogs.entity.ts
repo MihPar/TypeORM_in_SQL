@@ -114,30 +114,13 @@ export class Blogs {
 						height: wallpaper?.height,
 						fileSize: wallpaper?.fileSize
 					})) : null,
-				// wallpaper: {
-				// 		url: wallpaper?.url,
-				// 		width: wallpaper?.width,
-				// 		height: wallpaper?.height,
-				// 		fileSize: wallpaper?.fileSize
-				// },
-				
 				main:
-				//  main.length ? main.map(m => ({
-				// 		url: m?.url,
-				// 		width: m?.width,
-				// 		height: m?.height,
-				// 		fileSize: m?.fileSize
-				// })) : [{url: null, width: 0, height: 0, fileSize: 0}]
-				// pseodofalse " false undefined 0 NaN null"
-					[
-						{
-							url: null,
-							width: 0,
-							height: 0,
-							fileSize: 0
-						}
-					]
-				
+				 main.length ? main.map(m => ({
+						url: m?.url,
+						width: m?.width,
+						height: m?.height,
+						fileSize: m?.fileSize
+				})) : [{url: null, width: 0, height: 0, fileSize: 0}]
 			},
 			currentUserSubscriptionStatus: subscribe ? subscribe.currentUserSubscriptionStatus : SubscribeEnum.None,
 			subscribersCount: count || 0 

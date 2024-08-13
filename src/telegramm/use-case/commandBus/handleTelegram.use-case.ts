@@ -16,7 +16,9 @@ export class HandleTelegramUseCase implements ICommandHandler<HandleTelegramComm
 	) {}
 	async execute(command: HandleTelegramCommand): Promise<any> {
 		console.log(command.payload, " payload222")
-		const sendMessage = await this.telegramAdapter.sendMessage(command.payload.message.text, command.payload.message.from.id)
-		return
+		const text1 = `I know you ${command.payload.message.from.first_name} why did you write me?`
+		const text2 = `New post published for blog "It-inc news`
+		const sendMessage = await this.telegramAdapter.sendMessage(text2, command.payload.message.from.id)
+		return sendMessage
 	}
 }

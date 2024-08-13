@@ -26,7 +26,7 @@ export class TelegramController {
 		const command = new HandleTelegramCommand(payload)
 		const sendMessage = await this.commandBus.execute<HandleTelegramCommand>(command)
 		// console.log("entity: ", payload.message)
-		return {status: 'success'}
+		return {status: sendMessage}
 	}
 
 	@Get('auth-bot-link')

@@ -15,7 +15,7 @@ export class TelegramAdapter {
 	}
 
 	async sendMessage(text: string, recipiendId: number) {
-		await this.axiosInstanse.post(`sendMessage`, {text: text, chat_id: recipiendId})
+		await this.axiosInstanse.post(`sendMessage`, {text, chat_id: recipiendId})
 	}
 
 	async setWebhook (url: string) {
