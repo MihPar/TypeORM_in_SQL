@@ -15,7 +15,5 @@ console.log("getBlogs", getBlogs.body)
 
 export const getBlogById = async (server: any, id: string, token: string) => {
 	const getBlogById = await request(server).get(`/blogs/${id}`).set('Authorization', `Bearer ${token}`)
-	console.log('getBlogById: ', getBlogById.body)
-
 	return getBlogById.body
 }

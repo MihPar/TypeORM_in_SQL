@@ -26,7 +26,6 @@ export class BlogsController {
   ) {}
 
   @Post(':blogId/subscription')
-//   @UseGuards(AuthBasic)
   @UseGuards(BearerTokenPairQuizGame)
   @HttpCode(HttpStatus.NO_CONTENT)
   async subscribeToBlog(
@@ -39,7 +38,6 @@ export class BlogsController {
   }
 
   @Delete(':blogId/subscription')
-//   @UseGuards(AuthBasic)
   @UseGuards(BearerTokenPairQuizGame)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSubscribeToBlog(
@@ -116,11 +114,8 @@ export class BlogsController {
     @Param() Dto: inputModelClass,
 	@UserIdDecorator() userId: string | null,
   ): Promise<BlogsViewType | null> {
-	const findBlog = await this.blogsRepository.findBlogByIdSubscribe(Dto.blogId, userId)
-	console.log("blog: ", findBlog)
-
+	const findBlog = await this.blogsRepository.findBlogByIdSubscribe(Dto.blogId)
 	if(findBlog.isBanned) throw new NotFoundException([{message: "This blog does not found"}])
-
     const blogById: BlogsViewType | null =
       await this.blogsQueryRepository.getBlogById(findBlog, userId);
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');

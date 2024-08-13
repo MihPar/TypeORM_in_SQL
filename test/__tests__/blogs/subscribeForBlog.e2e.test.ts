@@ -169,13 +169,17 @@ describe('/blogs', () => {
 			}
 			createdBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
 
-			 console.log("createBlog: ", createdBlog)
+			//  console.log("createBlog: ", createdBlog)
 		})
 
 		// it("create subscription by userOne for blog", async() => {
 		// 	const createSubscribe = await request(server)
 		// 		.post(`/blogs/${createdBlog[1].id}/subscription`)
 		// 		.set('Authorization', `Bearer ${user1Token}`)
+		// })
+
+		// it("get blog by userId and blogId", async() => {
+		// 	const findBlog = await getBlogById(server, createdBlog[1].id, user1Token)
 		// })
 
 		it("create subscription by userTwo for blog", async() => {
@@ -191,7 +195,13 @@ describe('/blogs', () => {
 		})
 
 		it("get blog by userId and blogId", async() => {
+			const findBlog = await getBlogById(server, createdBlog[1].id, user2Token)
+			// console.log("get blog by user2: ", findBlog)
+		})
+
+		it("get blog by userId and blogId", async() => {
 			const findBlog = await getBlogById(server, createdBlog[1].id, user1Token)
+			// console.log("get blog by user1: ", findBlog)
 		})
 	// 	let banUserForBlogDto: BanUserForBlogInputModel
 	// 	it('ban user by id for specify blog', async() => {

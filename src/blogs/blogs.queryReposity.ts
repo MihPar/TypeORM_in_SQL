@@ -129,27 +129,22 @@ export class BlogsQueryRepository {
 			.select()
 			.where(`"blogId" = :id`, {id: blog.id})
 			.getOne()
-			// if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This wallpaper does not found"}])
 
 		const findMainByBlogId = await this.mainRepositry
 			.createQueryBuilder()
 			.select()
 			.where(`"blogId" = :id`, {id: blog.id})
 			.getMany()
-			// if(!findWallpaperByBlogId) throw new NotFoundException([{message: "This main does not found"}])
 
 		const findSubscibe = await this.subscribeRepository
 			.createQueryBuilder()
 			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: blog.id, userId})
 			.getOne()
-			// if(!findSubscibe) throw new NotFoundException([{message: "This subscription does not found"}])
 			
 		const count = await this.subscribeRepository
 			.createQueryBuilder()
-			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: blog.id, userId})
+			.where(`"blogId" = :blogId AND "currentUserSubscriptionStatus" = :currentStatus`, {blogId: blog.id, currentStatus: SubscribeEnum.Subscribed})
 			.getCount()
-			console.log("count: ", count)
-			console.log("Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId): ", Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId))
 		
 		return blog ? Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId, +count) : null;
 	}

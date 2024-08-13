@@ -58,10 +58,10 @@ async findBlogById(id: any): Promise<Blogs | null> {
 		return getBlog
 }
 
-async findBlogByIdSubscribe(id: string, userId?: string) {
+async findBlogByIdSubscribe(id: string) {
 	const getBlog = await this.blogsRepository
 		.createQueryBuilder()
-		.where(`id = :id AND "userId" = :userId`, {id, userId})
+		.where(`id = :id`, {id})
 		.getOne()
 
 		if(!getBlog) throw new NotFoundException([
