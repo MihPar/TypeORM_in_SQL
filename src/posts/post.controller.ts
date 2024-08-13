@@ -19,7 +19,7 @@ import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
 import { CommandBus } from '@nestjs/cqrs';
 import { UserDecorator, UserIdDecorator } from '../users/infrastructure/decorators/decorator.user';
 import { CheckRefreshTokenForPost } from './guards/bearer.authForPost';
-import { CheckRefreshTokenForGet } from './guards/bearer.authGetComment';
+import { CheckRefreshTokenForGetLike } from './guards/bearer.authGetComment';
 import { PostsViewModel } from './posts.type';
 import { CommentQueryRepository } from '../comment/comment.queryRepository';
 import { InputModelLikeStatusClass } from '../comment/dto/comment.class-pipe';
@@ -60,7 +60,7 @@ export class PostController {
 
   @Get(':postId/comments')
   @HttpCode(200)
-  @UseGuards(CheckRefreshTokenForGet)
+  @UseGuards(CheckRefreshTokenForGetLike)
   async getCommentByPostId(
     @Param() Dto: InputModelClassPostId, 
     @UserIdDecorator() userId: string | null,
@@ -108,7 +108,7 @@ export class PostController {
 
   @Get()
   @HttpCode(200)
-  @UseGuards(CheckRefreshTokenForGet)
+  @UseGuards(CheckRefreshTokenForGetLike)
   async getPosts(
     @UserIdDecorator() userId: string | null,
     @Query()
@@ -133,7 +133,7 @@ export class PostController {
 
   @Get(':id')
   @HttpCode(200)
-  @UseGuards(CheckRefreshTokenForGet)
+  @UseGuards(CheckRefreshTokenForGetLike)
   async getPostById(
     @Param('id', ParseUUIDPipe) id: string, 
 	@UserIdDecorator() userId: string | null,

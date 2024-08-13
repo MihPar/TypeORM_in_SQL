@@ -22,7 +22,4 @@ export class Subscribe {
 
 	@Column()
 	currentUserSubscriptionStatus: SubscribeEnum
-
-	@Column({default: 0})
-	subscribersCount: number
 }

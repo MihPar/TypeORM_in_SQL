@@ -38,6 +38,7 @@ import { SubscribeForPostUseCase } from './use-case/subscribeForPost.use-case';
 import { Subscribe } from './entity/subscribe.entity';
 import { DeleteSubscribeUseCase } from './use-case/deleteAllSubscribe.use-case';
 import { DeleteSubscribeForPostUseCase } from './use-case/deleteSubscribe.use-case';
+import { CheckRefreshTokenForGetLike } from '../posts/guards/bearer.authGetComment';
 
 const userCase = [
   UpdateBlogForSAUseCase,
@@ -66,7 +67,7 @@ const repo = [
   UsersQueryRepository
 ];
 
-const useGuard = [CheckRefreshTokenForGet, CheckRefreshTokenForSA];
+const useGuard = [CheckRefreshTokenForGet, CheckRefreshTokenForSA, CheckRefreshTokenForGetLike];
 
 const adapter = [S3StorageAdapter];
 const manager = [];

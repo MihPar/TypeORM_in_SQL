@@ -3,7 +3,8 @@ import { BlogsQueryRepository } from "../blogs.queryReposity";
 
 export class DeleteSubscribeForPostCommand {
 	constructor(
-		public blogId: string
+		public blogId: string,
+		public userId: string
 	) {}
 }
 
@@ -13,7 +14,7 @@ export class DeleteSubscribeForPostUseCase implements ICommandHandler<DeleteSubs
 		protected readonly blogsQueryRepository: BlogsQueryRepository
 	) {}
 	async execute(command: DeleteSubscribeForPostCommand): Promise<void> {
-		await this.blogsQueryRepository.deleteSubscribeForPost(command.blogId)
+		await this.blogsQueryRepository.deleteSubscribeForPost(command.blogId, command.userId)
 		return
 	}
 }

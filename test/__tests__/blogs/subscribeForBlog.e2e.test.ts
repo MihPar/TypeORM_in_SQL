@@ -15,6 +15,7 @@ import { PostsViewModel } from '../../../src/posts/posts.type';
 import { bodyPostsModelClass } from '../../../src/posts/dto/posts.class.pipe';
 import { CommentViewModel } from '../../../src/comment/comment.type';
 import { createBlogBlogger } from '../blogger/helper/createBloggerBlog';
+import { getBlogById } from './helper/blogs';
 
 
 export interface Content {
@@ -126,6 +127,7 @@ describe('/blogs', () => {
 	let body: BanInputModel
 	let firstUser: UserBanViewType
 	let secondUser: UserBanViewType
+	let thirdUser: UserBanViewType
 
 	describe('some description', () => {
 		it('creting users in db', async () => {
@@ -134,7 +136,7 @@ describe('/blogs', () => {
 			// console.log("user: ", firstUser)
 			secondUser = await createAddUser(server, user2Creds);
 			// console.log("second: ", secondUser)
-			// await createAddUser(server, user3Creds);
+			thirdUser = await createAddUser(server, user3Creds);
 			// await createAddUser(server, user4Creds);
 		});
 
@@ -157,7 +159,7 @@ describe('/blogs', () => {
 
 		});
 
-		let createBlog: [number, BlogsViewType]
+		let createdBlog: [number, BlogsViewType]
 		it('create blog by blogger', async () => {
 			// console.log("user1Token: ", user1Token)
 			const requestBodyAuthLogin: BodyBlogsModel = {
@@ -165,19 +167,32 @@ describe('/blogs', () => {
 				description: "skdjfksjfksjfksfj",
 				websiteUrl: `https://learn.javascript.ru`
 			}
-			createBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
+			createdBlog = await createBlogBlogger(server, requestBodyAuthLogin, user1Token)
 
-			//  console.log("createBlog: ", createBlog)
+			 console.log("createBlog: ", createdBlog)
 		})
 
-		it("create subscription for blog", async() => {
+		// it("create subscription by userOne for blog", async() => {
+		// 	const createSubscribe = await request(server)
+		// 		.post(`/blogs/${createdBlog[1].id}/subscription`)
+		// 		.set('Authorization', `Bearer ${user1Token}`)
+		// })
+
+		it("create subscription by userTwo for blog", async() => {
 			const createSubscribe = await request(server)
-				.post(`/blogs/${createBlog[1].id}/subscription`)
-				.set('Authorization', `Bearer ${user1Token}`)
-
-				console.log("createSubscribe: ", createSubscribe)
+				.post(`/blogs/${createdBlog[1].id}/subscription`)
+				.set('Authorization', `Bearer ${user2Token}`)
 		})
 
+		it("create subscription by userThird for blog", async() => {
+			const createSubscribe = await request(server)
+				.post(`/blogs/${createdBlog[1].id}/subscription`)
+				.set('Authorization', `Bearer ${user3Token}`)
+		})
+
+		it("get blog by userId and blogId", async() => {
+			const findBlog = await getBlogById(server, createdBlog[1].id, user1Token)
+		})
 	// 	let banUserForBlogDto: BanUserForBlogInputModel
 	// 	it('ban user by id for specify blog', async() => {
 	// 		banUserForBlogDto = {

@@ -14,7 +14,6 @@ import { CommentRepository } from "./comment.repository";
 import { CheckRefreshTokenForComments } from "./guards/bearer.authForComments";
 import { UpdateLikestatusForCommentUseCase } from "./use-case/updateLikeStatus-use-case";
 import { LikesRepository } from "../likes/likes.repository";
-import { CheckRefreshTokenForGet } from "../posts/guards/bearer.authGetComment";
 import { JwtService } from "@nestjs/jwt";
 import { UsersQueryRepository } from "../users/users.queryRepository";
 import { CreateNewCommentByPostIdUseCase } from "./use-case/createNewCommentByPotsId-use-case";
@@ -24,9 +23,11 @@ import { BlogsRepository } from "../blogs/blogs.repository";
 import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
 import { Main } from "../blogs/entity/main.entity";
+import { CheckRefreshTokenForGetLike } from "../posts/guards/bearer.authGetComment";
 
 const useCase = [UpdateLikestatusForCommentUseCase, CreateNewCommentByPostIdUseCase, DeleteAllCommentsUseCase, UpdateCommentByCommentIdUseCase]
-const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGet]
+const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGetLike
+]
 const adapter = []
 const repo = [CommentQueryRepository, CommentRepository, LikesRepository, UsersQueryRepository, BlogsRepository]
 const manager = []

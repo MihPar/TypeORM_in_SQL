@@ -10,7 +10,7 @@ import { Request } from 'express';
 import { UsersQueryRepository } from '../../users/users.queryRepository';
 
 @Injectable()
-export class CheckRefreshTokenForGet implements CanActivate {
+export class CheckRefreshTokenForGetLike implements CanActivate {
   constructor(
     protected jwtService: JwtService,
     protected usersQueryRepository: UsersQueryRepository,
@@ -44,7 +44,6 @@ export class CheckRefreshTokenForGet implements CanActivate {
         req['user'] = resultAuth;
         return true;
       }
-	  
       return false;
     } else {
       return true;

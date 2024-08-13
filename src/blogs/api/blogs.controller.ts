@@ -13,6 +13,7 @@ import { CommandBus } from "@nestjs/cqrs";
 import { SubscribeForPostCommand } from "../use-case/subscribeForPost.use-case";
 import { DeleteSubscribeForPostCommand } from "../use-case/deleteSubscribe.use-case";
 import { BearerTokenPairQuizGame } from "../../pairQuizGame/guards/bearerTokenPairQuizGame";
+import { CheckRefreshTokenForGetLike } from "../../posts/guards/bearer.authGetComment";
 
 // @SkipThrottle()
 @Controller('blogs')
@@ -42,9 +43,10 @@ export class BlogsController {
   @UseGuards(BearerTokenPairQuizGame)
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteSubscribeToBlog(
-	@Param('blogId', ParseUUIDPipe) blogId: string
+	@Param('blogId', ParseUUIDPipe) blogId: string,
+	@UserIdDecorator() userId: string
 ) {
-	const command = new DeleteSubscribeForPostCommand(blogId)
+	const command = new DeleteSubscribeForPostCommand(blogId, userId)
 	await this.commandBus.execute<DeleteSubscribeForPostCommand, void>(command)
 	return
 }
@@ -109,15 +111,18 @@ export class BlogsController {
 
   @Get(':blogId')
   @HttpCode(200)
+  @UseGuards(CheckRefreshTokenForGet)
   async getBlogsById(
     @Param() Dto: inputModelClass,
+	@UserIdDecorator() userId: string | null,
   ): Promise<BlogsViewType | null> {
-	const findBlog = await this.blogsRepository.findBlogById(Dto.blogId)
+	const findBlog = await this.blogsRepository.findBlogByIdSubscribe(Dto.blogId, userId)
+	console.log("blog: ", findBlog)
 
 	if(findBlog.isBanned) throw new NotFoundException([{message: "This blog does not found"}])
 
     const blogById: BlogsViewType | null =
-      await this.blogsQueryRepository.getBlogById(findBlog);
+      await this.blogsQueryRepository.getBlogById(findBlog, userId);
     if (!blogById) throw new NotFoundException('Blogs by id not found 404');
     return blogById;
   }

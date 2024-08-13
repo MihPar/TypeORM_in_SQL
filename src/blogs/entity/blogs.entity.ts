@@ -98,7 +98,7 @@ export class Blogs {
 		}
 	}
 
-	static getBlog(blog: Blogs, subscribe?: Subscribe, wallpaper?: Wallpaper, main?: Main[],) {
+	static getBlog(blog: Blogs, subscribe?: Subscribe, wallpaper?: Wallpaper, main?: Main[], count?: number) {
 		return {
 			id: blog.id,
 			name: blog.name,
@@ -136,7 +136,7 @@ export class Blogs {
 				// ]
 			},
 			currentUserSubscriptionStatus: subscribe ? subscribe.currentUserSubscriptionStatus : SubscribeEnum.None,
-			subscribersCount: subscribe ? subscribe?.subscribersCount : 0 
+			subscribersCount: count || 0 
 		}
 	}
 

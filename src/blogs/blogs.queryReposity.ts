@@ -1,3 +1,4 @@
+import { strict } from 'assert';
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PaginationType } from "../types/pagination.types";
 import { BlogsViewType } from "./blogs.type";
@@ -13,6 +14,7 @@ import { Wallpaper } from "./entity/wallpaper.entity";
 import { Main } from "./entity/main.entity";
 import { Subscribe } from "./entity/subscribe.entity";
 import { prototype } from "events";
+import { SubscribeEnum } from './enum/subscribeEnum';
 
 @Injectable()
 export class BlogsQueryRepository {
@@ -75,8 +77,14 @@ export class BlogsQueryRepository {
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId: item.userId})
 					.getOne()
+
 					
-				return Blogs.getBlog(item, findSubscibe, getWallpaper, getMain)
+			const count = await this.subscribeRepository
+				.createQueryBuilder()
+				.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId: item.userId})
+				.getCount()
+					
+				return Blogs.getBlog(item, findSubscibe, getWallpaper, getMain, count)
 			})),
 		};
 		return result;
@@ -115,7 +123,7 @@ export class BlogsQueryRepository {
 			return findBlogById
 	}
 
-	async getBlogById(blog: Blogs) {
+	async getBlogById(blog: Blogs, userId: string) {
 		const findWallpaperByBlogId = await this.wallpaperRepositry
 			.createQueryBuilder()
 			.select()
@@ -132,13 +140,18 @@ export class BlogsQueryRepository {
 
 		const findSubscibe = await this.subscribeRepository
 			.createQueryBuilder()
-			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: blog.id, userId: blog.userId})
+			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: blog.id, userId})
 			.getOne()
 			// if(!findSubscibe) throw new NotFoundException([{message: "This subscription does not found"}])
-
-			// console.log("Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId): ", Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId))
+			
+		const count = await this.subscribeRepository
+			.createQueryBuilder()
+			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: blog.id, userId})
+			.getCount()
+			console.log("count: ", count)
+			console.log("Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId): ", Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId))
 		
-		return blog ? Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId) : null;
+		return blog ? Blogs.getBlog(blog, findSubscibe, findWallpaperByBlogId, findMainByBlogId, +count) : null;
 	}
 
 	async findBlog(id: string): Promise<Blogs> {
@@ -245,12 +258,13 @@ export class BlogsQueryRepository {
 		};
 	}
 
-	async deleteSubscribeForPost(blogId: string): Promise<boolean> {
+	async deleteSubscribeForPost(blogId: string, userId: string): Promise<boolean> {
 		const deleteSubscribe = await this.subscribeRepository
 			.createQueryBuilder()
-			.delete()
-			.from(Subscribe)
-			.where(`"blogId" = :blogId`, {blogId})
+			.update(Subscribe)
+			.set({currentUserSubscriptionStatus: SubscribeEnum.Unsubscribed})
+			.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId, userId})
+			.execute()
 
 			if(!deleteSubscribe) throw new NotFoundException([{message: 'Blog have not deleted'}])
 			return true

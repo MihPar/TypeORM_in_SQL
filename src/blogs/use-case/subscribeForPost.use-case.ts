@@ -25,39 +25,38 @@ export class SubscribeForPostUseCase implements ICommandHandler<SubscribeForPost
 		// console.log("findBlog: ", findBlog)
 		// const findUser = await this.usersQueryRepository.findUserByBlogId(command.blogId)
 		const findSubscription = await this.blogsQueryRepository.findSubscribe(command.blogId, command.userId)
+		
 		if(!findSubscription) {
 			const subscribeForBlog = new Subscribe()
 			subscribeForBlog.blogId = command.blogId
 			subscribeForBlog.userId = command.userId
 			subscribeForBlog.currentUserSubscriptionStatus = SubscribeEnum.Subscribed
-			// subscribeForBlog.subscribersCount = 0
-			// console.log("score: ", subscribeForBlog.subscribersCount)
 	
 			await this.subscribeRepositor.save(subscribeForBlog)
+			// const getScore1 = await this.blogsQueryRepository.findSubscribe(command.blogId, command.userId)
+			// console.log("getScore 39: ", getScore1)
+
+			// await this.subscribeRepositor
+			// 	.createQueryBuilder()
+			// 	.update(Subscribe)
+			// 	.set({subscribersCount: () => 'subscribersCount + 1'})
+			// 	.execute()
 	
 			// console.log("subscribeForBlog 39: ", subscribeForBlog)
-			const id = subscribeForBlog.id
-			const count = await this.subscribeRepositor.increment(
-				{id},
-				'subscribersCount',
-				1
-			)
-			const getScore = await this.blogsQueryRepository.findSubscribe(command.blogId, command.userId)
+
+			// const id = subscribeForBlog.id
+			// const count = await this.subscribeRepositor.increment(
+			// 	{id},
+			// 	'subscribersCount',
+			// 	1
+			// )
+			// const getScore = await this.blogsQueryRepository.findSubscribe(command.blogId, command.userId)
 			// console.log("getScore 47: ", getScore)
-				return 
-		} else if(findSubscription.currentUserSubscriptionStatus === SubscribeEnum.Subscribed) {
 			return 
 		} 
-		// else if(findSubscription.currentUserSubscriptionStatus === SubscribeEnum.None) {
-		// 	const id = findSubscription.id
-		// 	const count = await this.subscribeRepositor.increment(
-		// 		{id},
-		// 		'subscribersCount',
-		// 		1
-		// 	)
-		// 	// console.log("count: ", count)
-		// 		return 
-		// }
-		
+		// else if(findSubscription.currentUserSubscriptionStatus === SubscribeEnum.Subscribed) {
+		// 	return 
+		// } 
+		return 
 	}
 }
