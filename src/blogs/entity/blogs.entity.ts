@@ -125,7 +125,7 @@ export class Blogs {
 						width: m?.width,
 						height: m?.height,
 						fileSize: m?.fileSize
-				})) : []
+				})) : [{url: null, width: 0, height: 0, fileSize: 0}]
 				// [
 				// 	{
 				// 		url: main?.url,

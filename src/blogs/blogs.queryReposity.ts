@@ -78,13 +78,15 @@ export class BlogsQueryRepository {
 					.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId: item.userId})
 					.getOne()
 
+					console.log("subscribe: ", findSubscibe)
+
 					
-			const count = await this.subscribeRepository
-				.createQueryBuilder()
-				.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId: item.userId})
-				.getCount()
+				const count = await this.subscribeRepository
+					.createQueryBuilder()
+					.where(`"blogId" = :blogId AND "currentUserSubscriptionStatus" = :currentStatus`, {blogId: item.id, currentStatus: SubscribeEnum.Subscribed})
+					.getCount()
 					
-				return Blogs.getBlog(item, findSubscibe, getWallpaper, getMain, count)
+				return Blogs.getBlog(item, findSubscibe, getWallpaper, getMain, +count)
 			})),
 		};
 		return result;

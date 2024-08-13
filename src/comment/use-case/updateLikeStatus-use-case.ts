@@ -36,19 +36,19 @@ export class UpdateLikestatusForCommentUseCase implements ICommandHandler<Update
 	
 	if(findLike.myStatus === 'Dislike' && command.status.likeStatus === 'None') {
 		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
-		const resultCheckListOrDislike = await this.commentRepositoriy.decreaseDislike(command.id, findLike.myStatus)
+		await this.commentRepositoriy.decreaseDislike(command.id, findLike.myStatus)
 		return true
 	}
 
 	if(findLike.myStatus === 'Like' && command.status.likeStatus === "None") {
 		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
-		const resultCheckListOrDislike = await this.commentRepositoriy.decreaseLike(command.id, findLike.myStatus)
+		await this.commentRepositoriy.decreaseLike(command.id, findLike.myStatus)
 		return true
 	}
 
 	if(findLike.myStatus === 'None' && (command.status.likeStatus === 'Dislike' || command.status.likeStatus === 'Like')) {
 		await this.likesRepository.updateLikeStatusForComment(command.id, command.userId, command.status.likeStatus)
-		const resultCheckListOrDislike = await this.commentRepositoriy.increase(command.id, command.status.likeStatus)
+		await this.commentRepositoriy.increase(command.id, command.status.likeStatus)
 		return true
 	}
 

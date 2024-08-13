@@ -15,7 +15,7 @@ import { PostsViewModel } from '../../../src/posts/posts.type';
 import { bodyPostsModelClass } from '../../../src/posts/dto/posts.class.pipe';
 import { CommentViewModel } from '../../../src/comment/comment.type';
 import { createBlogBlogger } from '../blogger/helper/createBloggerBlog';
-import { getBlogById } from './helper/blogs';
+import { getAllBlogs, getBlogById } from './helper/blogs';
 
 
 export interface Content {
@@ -202,6 +202,12 @@ describe('/blogs', () => {
 		it("get blog by userId and blogId", async() => {
 			const findBlog = await getBlogById(server, createdBlog[1].id, user1Token)
 			// console.log("get blog by user1: ", findBlog)
+		})
+
+		it("get all blogs by subscribe", async() => {
+			const getAllBlogsBySubscribe = await getAllBlogs(server)
+			console.log("getAllBlogsBySubscribe", getAllBlogsBySubscribe.body)
+
 		})
 	// 	let banUserForBlogDto: BanUserForBlogInputModel
 	// 	it('ban user by id for specify blog', async() => {

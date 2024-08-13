@@ -9,7 +9,6 @@ export const getAllBlogs = async (server: any) => {
 		pageNumber: '1',
 		pageSize: '10'
 	})
-console.log("getBlogs", getBlogs.body)
 	return getBlogs.body
 }
 
