@@ -44,6 +44,11 @@ export class CreateNewPostForBlogBloggerUseCase
 	if (!createPost) return null;
 	const findNewestLike: any = await this.postsRepository.findNewestLike(createPost.id)
 	// const getMainByPostId = await this.blogsRepository.getImageMainByPostId(createPost.id)
+
+	// await const subscribes = this.subscribe.findByUseId(userId, blogId)
+	//if(subscribe === true) {}
+	//отправить ссообщение в телеграм юзерам которые подписаны на этот блог "sendMessage"
+	// const sendMessage = await this.telegramAdapter.sendMessage(text2, command.payload.from.id)
 	return Posts.getPostsViewModelForSA(createPost, findNewestLike)
   }
 }

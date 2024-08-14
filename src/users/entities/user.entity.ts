@@ -1,5 +1,5 @@
 import { LikeForComment } from './../../likes/entity/likesForComment.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserBanViewType, UserViewType } from '../user.type';
 import { Device } from '../../security-devices/entities/security-device.entity';
 import { LikeForPost } from '../../likes/entity/likesForPost.entity';
@@ -51,6 +51,9 @@ export class User {
   @Column({default: null})
   banDate: string
 
+  @Column({nullable: true})
+  tegId: number
+
   @Column({default: BanStatus.all})
   banStatus: BanStatus
 
@@ -96,8 +99,8 @@ export class User {
   @Column({nullable: true})
   mainId: string
 
-  @OneToMany(() => Telegramm, t => t.user)
-  telegramm: Telegramm[]
+  @OneToOne(() => Telegramm, t => t.user)
+  telegramm: Telegramm
 
   @Column({nullable: true})
   telegrammId: string

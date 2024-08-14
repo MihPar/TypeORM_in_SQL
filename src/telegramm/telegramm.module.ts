@@ -16,14 +16,16 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
+import { UsersRepository } from '../users/users.repository';
+import { BearerTokenPairQuizGame } from '../pairQuizGame/guards/bearerTokenPairQuizGame';
 
 
 const commandUserCase = [HandleTelegramUseCase, HowManyTimeUseCase, CreateCodeUseCase];
 const queryUseCase = [GetAuthBotLinkUseCase]
 
-const repo = [UsersQueryRepository, BlogsRepository];
+const repo = [UsersQueryRepository, BlogsRepository, UsersRepository];
 
-const useGuard = [];
+const useGuard = [BearerTokenPairQuizGame];
 
 const adapter = [TelegramAdapter];
 const manager = [];

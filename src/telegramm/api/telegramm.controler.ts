@@ -23,9 +23,11 @@ export class TelegramController {
 	async webHook(@Body() payload: TelegramUpdateMessage) {
 		console.log("payload: ", payload)
 		const command = new HandleTelegramCommand(payload)
-		const sendMessage = await this.commandBus.execute<HandleTelegramCommand>(command)
+		//достать из пейлоада телеграм ид пользователя и привязаьт к пользователю
+		const saveTegIdForUser = await this.commandBus.execute<HandleTelegramCommand>(command) 
+		// const sendMessage = await this.commandBus.execute<HandleTelegramCommand>(command)
 		// console.log("entity: ", payload.message)
-		return {status: sendMessage}
+		return {status: "success"}
 	}
 
 	@Get('auth-bot-link')

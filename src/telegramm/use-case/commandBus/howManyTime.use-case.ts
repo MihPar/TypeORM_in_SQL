@@ -15,10 +15,10 @@ export class HowManyTimeUseCase implements ICommandHandler<HowManyTimeCommand> {
 		protected readonly telegramAdapter: TelegramAdapter
 	) {}
 	async execute(command: HowManyTimeCommand): Promise<any> {
-		if(command.payload.message.text === "How many time") {
-			this.telegramAdapter.sendMessage(`${new Date()}`, command.payload.message.from.id)
+		if(command.payload.text === "How many time") {
+			this.telegramAdapter.sendMessage(`${new Date()}`, command.payload.from.id)
 		} else {
-			this.telegramAdapter.sendMessage(`I do not undestude your question`, command.payload.message.from.id)
+			this.telegramAdapter.sendMessage(`I do not undestude your question`, command.payload.from.id)
 		}
 	}
 }

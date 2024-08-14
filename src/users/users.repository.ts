@@ -12,6 +12,7 @@ import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 
 @Injectable()
 export class UsersRepository {
+	
 	constructor(
 		@InjectRepository(User) protected readonly userRepository: Repository<User>,
 		protected readonly usersQueryRepository: UsersQueryRepository,
@@ -341,5 +342,15 @@ export class UsersRepository {
 			}
 		}
 		)
+	}
+
+	async updateUser(id: number) {
+		await this.userRepository
+			.createQueryBuilder()
+			.update()
+			.set({tegId: id})
+			.where(``)
+			.execute()
+			return
 	}
 }
