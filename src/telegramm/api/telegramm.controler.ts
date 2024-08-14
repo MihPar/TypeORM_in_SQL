@@ -16,13 +16,12 @@ export class TelegramController {
 	constructor(
 		protected readonly telegramAdapter: TelegramAdapter,
 		protected readonly commandBus: CommandBus,
-		private readonly queryBus: QueryBus
 	) {}
 
 	@Post('webhook')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async webHook(@Body() payload: TelegramUpdateMessage) {
-		// console.log("payload: ", payload)
+		console.log("payload: ", payload)
 		const command = new HandleTelegramCommand(payload)
 		const sendMessage = await this.commandBus.execute<HandleTelegramCommand>(command)
 		// console.log("entity: ", payload.message)
