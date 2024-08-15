@@ -7,7 +7,7 @@ import { UsersQueryRepository } from '../../../users/users.queryRepository';
 
 export class HandleTelegramCommand {
 	constructor(
-		public payload: TelegramUpdateMessage
+		public payload: any
 	) {}
 }
 
@@ -23,13 +23,18 @@ export class HandleTelegramUseCase implements ICommandHandler<HandleTelegramComm
 	async execute(command: HandleTelegramCommand): Promise<any> {
 		// console.log(command.payload, " payload222")
 		// const text1 = `I know you ${command.payload.message.from.first_name} why did you write me?`
-		const code = command.payload.text
-		console.log("code: ", code)
+		// console.log("payload: ", command.payload.message.text)
+		const code = command.payload.message.text.split(" ")[1]
+		// console.log("code: ", code)
 		// получить userId по command.payload.text у Telegramm
 
-		const getTelegramm = await this.telegrammRepository.getTelegy(command.payload.text)
+		// const allTelegramm = await this.telegrammRepository.getAllTelegramm()
+		// console.log("allTelegramm: ", allTelegramm)
 
-		const createTegIdForUser = await this.usersRepository.updateUser(command.payload.from.id, getTelegramm.userId)
+		const getTelegramm = await this.telegrammRepository.getTelegy(code)
+		// console.log("telegrammByCode: ", getTelegramm)
+
+		const createTegIdForUser = await this.usersRepository.updateUser(command.payload.message.from.id, getTelegramm.userId)
 		// const sendMessage = await this.telegramAdapter.sendMessage(text2, command.payload.from.id)
 		return 
 	}

@@ -9,14 +9,17 @@ export class TelegrammRepository {
 		@InjectRepository(Telegramm) protected readonly telegrammRepository: Repository<Telegramm>
 	) {}
 
-	async getTelegy(payloadText: string) {
-		console.log("text: ", payloadText)
-	const code = payloadText.split(' ')
+	async getTelegy(code: string) {
 	const getTelegramm = await this.telegrammRepository
 		.createQueryBuilder()
 		.where(`code = :code`, {code})
 		.getOne()
 
 		return getTelegramm
+	}
+
+	async getAllTelegramm() {
+		const teg = await this.telegrammRepository.createQueryBuilder().getMany()
+		return teg
 	}
 }

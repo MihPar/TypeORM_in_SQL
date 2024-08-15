@@ -19,7 +19,7 @@ export class TelegramController {
 
 	@Post('webhook')
 	@HttpCode(HttpStatus.NO_CONTENT)
-	async webHook(@Body() payload: TelegramUpdateMessage) {
+	async webHook(@Body() payload: any) {
 		console.log("payload: ", payload)
 		const command = new HandleTelegramCommand(payload)
 		//достать из пейлоада телеграм ид пользователя и привязаьт к пользователю
@@ -31,9 +31,9 @@ export class TelegramController {
 
 	@Get('auth-bot-link')
 	@HttpCode(HttpStatus.OK)
-	// @UseGuards(BearerTokenPairQuizGame)
+	@UseGuards(BearerTokenPairQuizGame)
 	async getAuthBot(
-		@Body() payload: TelegramUpdateMessage,
+		@Body() payload: any,
 		@UserIdDecorator() userId: string
 	): Promise<{link: string}> {
 		// const query = new GetAuthBotLinkQuery(payload)
