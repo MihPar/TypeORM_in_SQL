@@ -1,12 +1,9 @@
 import { TelegramUpdateMessage } from '../../types';
 import { TelegramAdapter } from '../../adapter/telegram.adapter';
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { InjectRepository } from '@nestjs/typeorm';
-import { Telegram } from 'telegraf';
-import { Repository } from 'typeorm';
-import { User } from '../../../users/entities/user.entity';
 import { UsersRepository } from '../../../users/users.repository';
-import { Telegramm } from '../../entity/telegram.entity';
+import { TelegrammRepository } from '../../telegramm.repository';
+import { UsersQueryRepository } from '../../../users/users.queryRepository';
 
 export class HandleTelegramCommand {
 	constructor(
@@ -20,16 +17,19 @@ export class HandleTelegramUseCase implements ICommandHandler<HandleTelegramComm
 	constructor(
 		protected readonly telegramAdapter: TelegramAdapter,
 		protected readonly usersRepository: UsersRepository,
-		@InjectRepository(Telegramm) protected readonly telegramm: Repository<Telegramm>,
+		protected readonly telegrammRepository: TelegrammRepository,
+		protected readonly usersQueryRepository: UsersQueryRepository
 	) {}
 	async execute(command: HandleTelegramCommand): Promise<any> {
 		// console.log(command.payload, " payload222")
 		// const text1 = `I know you ${command.payload.message.from.first_name} why did you write me?`
-		const text2 = `New post published for blog "It-inc news`
-		console.log("text: ", command.payload.text)
+		const code = command.payload.text
+		console.log("code: ", code)
 		// получить userId по command.payload.text у Telegramm
 
-		const createTegIdForUser = await this.usersRepository.updateUser(command.payload.from.id, userId)
+		const getTelegramm = await this.telegrammRepository.getTelegy(command.payload.text)
+
+		const createTegIdForUser = await this.usersRepository.updateUser(command.payload.from.id, getTelegramm.userId)
 		// const sendMessage = await this.telegramAdapter.sendMessage(text2, command.payload.from.id)
 		return 
 	}

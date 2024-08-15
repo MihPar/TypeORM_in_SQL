@@ -1,4 +1,4 @@
-import { Post } from '@nestjs/common';
+import { NotFoundException, Post } from '@nestjs/common';
 import { PostsRepository } from './../../posts/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostsViewModel } from '../../posts/posts.type';
@@ -8,6 +8,8 @@ import { Posts } from '../../posts/entity/entity.posts';
 import { BlogsQueryRepositoryForSA } from '../../blogsForSA/blogsForSA.queryReposity';
 import { BlogsRepositoryForSA } from '../../blogsForSA/blogsForSA.repository';
 import { BlogsRepository } from '../../blogs/blogs.repository';
+import { TelegramAdapter } from '../../telegramm/adapter/telegram.adapter';
+import { UsersQueryRepository } from '../../users/users.queryRepository';
 
 export class CreateNewPostForBlogBloggerCommand {
   constructor(
@@ -27,6 +29,8 @@ export class CreateNewPostForBlogBloggerUseCase
 	protected readonly blogsQueryRepositoryForSA: BlogsQueryRepositoryForSA,
 	protected readonly blogsRepositoryForSA: BlogsRepositoryForSA,
 	protected readonly blogsRepository: BlogsRepository,
+	protected readonly telegramAdapter: TelegramAdapter,
+	protected readonly usersQueryRepository: UsersQueryRepository
   ) {}
   async execute(command: CreateNewPostForBlogBloggerCommand): Promise<PostsViewModel | null> {
 	const findBlog = await this.blogsRepositoryForSA.findBlogByIdBlogger(command.blogId, command.userId)
@@ -45,10 +49,14 @@ export class CreateNewPostForBlogBloggerUseCase
 	const findNewestLike: any = await this.postsRepository.findNewestLike(createPost.id)
 	// const getMainByPostId = await this.blogsRepository.getImageMainByPostId(createPost.id)
 
-	// await const subscribes = this.subscribe.findByUseId(userId, blogId)
-	//if(subscribe === true) {}
+	const isSubscribe = this.blogsRepository.findIsSubscibe(command.userId, createPost.blogId)
+	if(!isSubscribe) throw new NotFoundException([
+		{message: "Subscribe do not found"}
+	])
+	const findTegIdByUserId = await this.usersQueryRepository.findUserById(command.userId)
 	//отправить ссообщение в телеграм юзерам которые подписаны на этот блог "sendMessage"
-	// const sendMessage = await this.telegramAdapter.sendMessage(text2, command.payload.from.id)
+	const text = `'New post published for blog ${createPost.blogName}'`
+	const sendMessage = await this.telegramAdapter.sendMessage(text, findTegIdByUserId.tegId)
 	return Posts.getPostsViewModelForSA(createPost, findNewestLike)
   }
 }

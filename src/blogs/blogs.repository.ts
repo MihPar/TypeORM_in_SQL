@@ -6,6 +6,7 @@ import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { Metadata } from "sharp";
 import { Wallpaper } from "./entity/wallpaper.entity";
 import { Main } from "./entity/main.entity";
+import { Subscribe } from "./entity/subscribe.entity";
 
 @Injectable()
 export class BlogsRepository {
@@ -14,6 +15,7 @@ export class BlogsRepository {
 		@InjectRepository(UserBlogger) protected readonly userBloggerRepository: Repository<UserBlogger>,
 		@InjectRepository(Wallpaper) protected readonly wallpaperRepository: Repository<Wallpaper>,
 		@InjectRepository(Main) protected readonly mainRepository: Repository<Main>,
+		@InjectRepository(Subscribe) protected readonly subscribeRepository: Repository<Subscribe>,
 	) {}
   async deleteRepoBlogs() {
     await this.blogsRepository
@@ -251,5 +253,14 @@ async getMain(id: string): Promise<Main> {
 			.delete()
 			.execute()
 			return true
+	}
+
+	async findIsSubscibe(userId: string, blogId: string) {
+		const findSubscibe = await this.subscribeRepository
+			.createQueryBuilder()
+			.where(`"blogId" = :blogId AND "userId" = :userId`, {userId, blogId})
+			.getOne()
+			
+			return findSubscibe
 	}
 }

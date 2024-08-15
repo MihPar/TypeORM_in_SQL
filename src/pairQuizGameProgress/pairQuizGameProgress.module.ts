@@ -19,13 +19,14 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
+import { Subscribe } from '../blogs/entity/subscribe.entity';
 
 const useCase = [CreateOrConnectGameUseCase]
 const serves = [PairQuizGameProgressService]
 const repo = [PairQuizGameRepository, PairQuizGameProgressRepository, UsersQueryRepository, QuestionRepository, BlogsRepository]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, PairQuizGame, Question, User, AnswersPlayer, QuestionGame, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([PairQuizGameProgressPlayer, PairQuizGameProgressPlayer, PairQuizGame, Question, User, AnswersPlayer, QuestionGame, Blogs, UserBlogger, Wallpaper, Main, Subscribe]), CqrsModule],
   controllers: [PairQuizGameProgressController],
   providers: [...useCase, ...serves, ...repo],
 })

@@ -10,7 +10,6 @@ import { BearerTokenPairQuizGame } from "../../pairQuizGame/guards/bearerTokenPa
 import { UserIdDecorator } from "../../users/infrastructure/decorators/decorator.user";
 
 
-
 @Controller('integrations/telegram')
 export class TelegramController {
 	constructor(
@@ -32,7 +31,7 @@ export class TelegramController {
 
 	@Get('auth-bot-link')
 	@HttpCode(HttpStatus.OK)
-	@UseGuards(BearerTokenPairQuizGame)
+	// @UseGuards(BearerTokenPairQuizGame)
 	async getAuthBot(
 		@Body() payload: TelegramUpdateMessage,
 		@UserIdDecorator() userId: string

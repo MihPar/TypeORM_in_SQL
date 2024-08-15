@@ -37,13 +37,14 @@ import { GetSecretDownloadAvatarUseCase } from './use-case/getSecretDownloadUrl-
 import { Main } from '../blogs/entity/main.entity';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Subscribe } from '../blogs/entity/subscribe.entity';
+import { TelegramAdapter } from '../telegramm/adapter/telegram.adapter';
 
 const useCase = [UpdateBlogBloggerForSAUseCase, DeleteBlogByIdBloggerForSAUseCase, CreateNewPostForBlogBloggerUseCase, BlogsRepositoryForSA, BlogsQueryRepositoryForSA, PostsRepository, LikesRepository, UsersRepository, UsersQueryRepository, PostsQueryRepository, UpdateExistingPostByIdWithBlogIdBloggerUseCase, UpdateUserDataUseCase, FindBannedUserSpecifyBloggerUserCase, DeleteUserBloggerUseCase, FileStorageAdapterUseCase, CreateFileUseCase, UploadWallpaperForBlogUseCase, DeleteAvatarUseCase, UploadImageForBlogUseCase, UploadImageForPostUseCase, GetSecretDownloadAvatarUseCase
 ]
 
 const service = [JwtService];
 const repo = [BlogsRepository, BlogsQueryRepository]
-const adapter = [S3StorageAdapter]
+const adapter = [S3StorageAdapter, TelegramAdapter]
 
 @Module({
 	imports: [TypeOrmModule.forFeature([Blogs, User, LikeForComment, LikeForPost, Posts, Comments, UserBlogger, Main, Wallpaper, Subscribe]), CqrsModule],

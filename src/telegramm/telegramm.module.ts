@@ -18,12 +18,14 @@ import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
 import { UsersRepository } from '../users/users.repository';
 import { BearerTokenPairQuizGame } from '../pairQuizGame/guards/bearerTokenPairQuizGame';
+import { TelegrammRepository } from './telegramm.repository';
+import { Subscribe } from '../blogs/entity/subscribe.entity';
 
 
 const commandUserCase = [HandleTelegramUseCase, HowManyTimeUseCase, CreateCodeUseCase];
 const queryUseCase = [GetAuthBotLinkUseCase]
 
-const repo = [UsersQueryRepository, BlogsRepository, UsersRepository];
+const repo = [UsersQueryRepository, BlogsRepository, UsersRepository, TelegrammRepository];
 
 const useGuard = [BearerTokenPairQuizGame];
 
@@ -32,7 +34,7 @@ const manager = [];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Telegramm, User, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
+  imports: [TypeOrmModule.forFeature([Telegramm, User, Blogs, UserBlogger, Wallpaper, Main, Subscribe]), CqrsModule],
   controllers: [TelegramController],
   providers: [...adapter, ...commandUserCase, ...queryUseCase, ...service, ...repo],
 })

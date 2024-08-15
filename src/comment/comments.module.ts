@@ -24,6 +24,7 @@ import { UserBlogger } from "../blogger/entity/entity.userBlogger";
 import { Wallpaper } from "../blogs/entity/wallpaper.entity";
 import { Main } from "../blogs/entity/main.entity";
 import { CheckRefreshTokenForGetLike } from "../posts/guards/bearer.authGetComment";
+import { Subscribe } from "../blogs/entity/subscribe.entity";
 
 const useCase = [UpdateLikestatusForCommentUseCase, CreateNewCommentByPostIdUseCase, DeleteAllCommentsUseCase, UpdateCommentByCommentIdUseCase]
 const guards = [CheckRefreshTokenForComments, CheckRefreshTokenForGetLike
@@ -45,7 +46,8 @@ const validator = [];
 	  Blogs,
 	  UserBlogger,
 	  Wallpaper,
-	  Main
+	  Main,
+	  Subscribe
     ]),
     CqrsModule,
   ],

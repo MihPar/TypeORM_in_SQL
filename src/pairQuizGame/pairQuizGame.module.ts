@@ -33,6 +33,7 @@ import { Blogs } from '../blogs/entity/blogs.entity';
 import { UserBlogger } from '../blogger/entity/entity.userBlogger';
 import { Wallpaper } from '../blogs/entity/wallpaper.entity';
 import { Main } from '../blogs/entity/main.entity';
+import { Subscribe } from '../blogs/entity/subscribe.entity';
 
 const guards = [BearerTokenPairQuizGame];
 const services = [JwtService];
@@ -69,7 +70,8 @@ const useCase = [
 	  Blogs,
 	  UserBlogger,
 	  Wallpaper,
-	  Main
+	  Main,
+	  Subscribe
     ]),
     CqrsModule,
     ScheduleModule.forRoot(),
