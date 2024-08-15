@@ -22,6 +22,9 @@ export class CreateCodeUseCase implements ICommandHandler<CreateCodeCommand> {
 			{code: command.code}
 		)
 
+		// const teg = await this.telegrammRepositor.createQueryBuilder().where(`code = :code`, {code: command.code}).getOne()
+		// console.log("teg: ", teg)
+
 		if(!update) throw new NotFoundException([
 			{message: 'telegramm of Entity does not update'}
 		])

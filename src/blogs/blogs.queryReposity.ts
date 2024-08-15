@@ -66,24 +66,16 @@ export class BlogsQueryRepository {
 					.where(`"blogId" = :blogId`, {blogId: item.id})
 					.getOne()
 
-					// console.log("wallpaper: ", getWallpaper)
-					
 				const getMain = await this.mainRepositry
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId`, {blogId: item.id})
 					.getMany()
-
-					// console.log("main: ", getMain)
-
 
 				const findSubscibe = await this.subscribeRepository
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId AND "userId" = :userId`, {blogId: item.id, userId})
 					.getOne()
 
-					console.log("subscribe: ", findSubscibe)
-
-					
 				const count = await this.subscribeRepository
 					.createQueryBuilder()
 					.where(`"blogId" = :blogId AND "currentUserSubscriptionStatus" = :currentStatus`, {blogId: item.id, currentStatus: SubscribeEnum.Subscribed})

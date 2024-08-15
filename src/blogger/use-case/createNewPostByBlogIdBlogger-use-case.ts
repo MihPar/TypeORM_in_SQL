@@ -54,6 +54,9 @@ export class CreateNewPostForBlogBloggerUseCase
 		{message: "Subscribe do not found"}
 	])
 	const findTegIdByUserId = await this.usersQueryRepository.findUserById(command.userId)
+	if(!findTegIdByUserId) throw new NotFoundException([
+		{message: "User do not found"}
+	])
 	//отправить ссообщение в телеграм юзерам которые подписаны на этот блог "sendMessage"
 	const text = `'New post published for blog ${createPost.blogName}'`
 	const sendMessage = await this.telegramAdapter.sendMessage(text, findTegIdByUserId.tegId)

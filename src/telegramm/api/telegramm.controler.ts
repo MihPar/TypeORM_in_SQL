@@ -20,7 +20,7 @@ export class TelegramController {
 	@Post('webhook')
 	@HttpCode(HttpStatus.NO_CONTENT)
 	async webHook(@Body() payload: any) {
-		console.log("payload: ", payload)
+		// console.log("payload: ", payload)
 		const command = new HandleTelegramCommand(payload)
 		//достать из пейлоада телеграм ид пользователя и привязаьт к пользователю
 		const saveTegIdForUser = await this.commandBus.execute<HandleTelegramCommand>(command) 
@@ -43,6 +43,7 @@ export class TelegramController {
 		//set code to user
 		// Entity Telegram (@ManyToOne) to User
 		const code = uuidv4();
+		// console.log("code 46: ", code)
 		const command = new CreateCodeCommand(code, userId)
 		await this.commandBus.execute<CreateCodeCommand, void>(command)
 		return {

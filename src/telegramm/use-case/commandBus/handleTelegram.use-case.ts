@@ -23,8 +23,10 @@ export class HandleTelegramUseCase implements ICommandHandler<HandleTelegramComm
 	async execute(command: HandleTelegramCommand): Promise<any> {
 		// console.log(command.payload, " payload222")
 		// const text1 = `I know you ${command.payload.message.from.first_name} why did you write me?`
-		// console.log("payload: ", command.payload.message.text)
-		const code = command.payload.message.text.split(" ")[1]
+		// console.log("payload: ", command.payload)
+		// console.log("payloadText: ", command.payload.message.text)
+		// console.log("id: ", command.payload.message.from.id)
+		const code = command.payload.message?.text.split(" ")[1]
 		// console.log("code: ", code)
 		// получить userId по command.payload.text у Telegramm
 
