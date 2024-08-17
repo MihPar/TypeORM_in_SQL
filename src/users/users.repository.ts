@@ -344,7 +344,7 @@ export class UsersRepository {
 		)
 	}
 
-	async updateUser(id: number, userId: string) {
+	async updateUser(id: string, userId: string) {
 		await this.userRepository
 			.createQueryBuilder()
 			.update()

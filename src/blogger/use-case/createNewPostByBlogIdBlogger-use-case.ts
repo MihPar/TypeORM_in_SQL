@@ -59,7 +59,7 @@ export class CreateNewPostForBlogBloggerUseCase
 	])
 	//отправить ссообщение в телеграм юзерам которые подписаны на этот блог "sendMessage"
 	const text = `'New post published for blog ${createPost.blogName}'`
-	const sendMessage = await this.telegramAdapter.sendMessage(text, findTegIdByUserId.tegId)
+	const sendMessage = await this.telegramAdapter.sendMessage(text, Number(findTegIdByUserId.tegId))
 	return Posts.getPostsViewModelForSA(createPost, findNewestLike)
   }
 }

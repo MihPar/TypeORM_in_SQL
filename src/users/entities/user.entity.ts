@@ -51,8 +51,8 @@ export class User {
   @Column({default: null})
   banDate: string
 
-  @Column({nullable: true})
-  tegId: number
+  @Column({default: null})
+  tegId: string
 
   @Column({default: BanStatus.all})
   banStatus: BanStatus
