@@ -49,13 +49,9 @@ export class BloggerController {
 		@Param('blogId', ParseUUIDPipe) blogId: string,
 		@UploadedFile() file: Express.Multer.File,
 		@UserIdDecorator() userId: string
-		//@Body() file: any
 	) {
 		const findBlogById: Blogs = await this.blogsQueryRepository.findBlog(blogId)
-		// console.log("userId: ", findBlogById.userId)
 		if(userId !== findBlogById.userId) throw new ForbiddenException([{message: "This user does not delong current user"}])
-		// console.log("findBlogById: ", findBlogById)
-		// console.log("file:; ", file)
 		// console.log("avatarFile.originalname: ", avatarFile.originalname)
 		// const command = new CreateFileCommand(blogId, avatarFile.originalname, avatarFile.buffer) 
 		// const content = await this.commandBus.execute<CreateFileCommand>(command)
@@ -285,7 +281,6 @@ export class BloggerController {
 				(query.pageSize || '10'),
 				userId
 			);
-			// console.log("getAllBlogs: ", getAllBlogs)
 		return getAllBlogs;
 	}
 

@@ -28,35 +28,11 @@ export class CreateCodeUseCase implements ICommandHandler<CreateCodeCommand> {
 			.into(Telegramm)
 			.values({code: command.code, userId: command.userId})
 			.execute()
-		// .update(
-		// 	{userId: command.userId},
-		// 	{code: command.code}
-		// )
-
-		// const teg = await this.telegrammRepositor.createQueryBuilder().where(`code = :code`, {code: command.code}).getOne()
-		// console.log("teg: ", teg)
 
 		if(!createTelegramm) throw new NotFoundException([
 			{message: 'telegramm of Entity does not update'}
 		])
 
-		// const text = `https://t.me/Incubator34Lessonbot?start=${command.code}`
-		// const sendMessage = await this.adapter.sendMessage(text, getUserById.tegId)
-
-		// console.log("code: ", typeof +command.code)
-
-		// const updateUser = await this.userRepository
-		// 	.createQueryBuilder()
-		// 	.update(User)
-		// 	.set({telegrammCode: command.code})
-		// 	.where(`id = :id`, {id: command.userId})
-		// 	.execute()
-
-		// if(!updateUser) {
-		// 	console.error("User does not update")
-		// }
-			// const findTegIdByUserId = await this.userRepository.createQueryBuilder().where(`id = :id`, {id: command.userId}).getOne()
-			// console.log("findTegIdByUserId: ", findTegIdByUserId)
 		return
 	}
 }
