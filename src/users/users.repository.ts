@@ -344,11 +344,11 @@ export class UsersRepository {
 		)
 	}
 
-	async updateUser(id: string, userId: string) {
+	async updateUser(id: number, userId: string) {
 		await this.userRepository
 			.createQueryBuilder()
 			.update()
-			.set({tegId: id})
+			.set({tegId: String(id)})
 			.where(`id = :userId`, {userId})
 			.execute()
 			return

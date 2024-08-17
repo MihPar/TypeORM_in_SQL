@@ -43,7 +43,7 @@ export class TelegramController {
 		//set code to user
 		// Entity Telegram (@ManyToOne) to User
 		const code = uuidv4();
-		// console.log("code 46: ", code)
+		console.log("code 46: ", code)
 		const command = new CreateCodeCommand(code, userId)
 		await this.commandBus.execute<CreateCodeCommand, void>(command)
 		return {

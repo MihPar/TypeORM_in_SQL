@@ -33,16 +33,16 @@ export class CreateCodeUseCase implements ICommandHandler<CreateCodeCommand> {
 
 		// console.log("code: ", typeof +command.code)
 
-		const updateUser = await this.userRepository
-			.createQueryBuilder()
-			.update(User)
-			.set({tegId: command.code})
-			.where(`id = :id`, {id: command.userId})
-			.execute()
+		// const updateUser = await this.userRepository
+		// 	.createQueryBuilder()
+		// 	.update(User)
+		// 	.set({telegrammCode: command.code})
+		// 	.where(`id = :id`, {id: command.userId})
+		// 	.execute()
 
-		if(!updateUser) {
-			console.error("User does not update")
-		}
+		// if(!updateUser) {
+		// 	console.error("User does not update")
+		// }
 			// const findTegIdByUserId = await this.userRepository.createQueryBuilder().where(`id = :id`, {id: command.userId}).getOne()
 			// console.log("findTegIdByUserId: ", findTegIdByUserId)
 		return
