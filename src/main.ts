@@ -13,16 +13,13 @@ async function bootstrap() {
   await app.listen(4000);
 
   const telegramAdapter = await app.resolve<TelegramAdapter>(TelegramAdapter)
-  
 //   const settings = {
 // 	currentAppBaseUrl: 'https://localhost:4000'
 //   }
-
   async function connectToNgrok(): Promise<string> {
 	const url = await ngrok.connect(4000)
 	return url
 	}
-	
 	// let baseUrl: any = settings.currentAppBaseUrl
 	// if(true) {
 		const baseUrl = await connectToNgrok()

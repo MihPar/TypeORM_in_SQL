@@ -29,15 +29,10 @@ export class UsersQueryRepository {
 			.createQueryBuilder('user')
 			.select(['user'])
 			.where('user.login ILIKE :loginTerm OR user.email ILIKE :emailTerm', { loginTerm: `%${searchLoginTerm}%`, emailTerm: `%${searchEmailTerm}%` })
-			// .andWhere(`"banStatus" = :banStatus`, {banStatus})
-			// .andWhere(banStatus !== BanStatus.all ? `"isBanned" = :isBanned` : "", {isBanned: banStatus === BanStatus.banned })		
 			.orderBy(`"user"."${sortBy}"`, `${sortDirection.toUpperCase() === "ASC" ? "ASC" : "DESC"}`)
 			.limit(+pageSize)
 			.offset((+pageNumber - 1) * +pageSize)
 			.getMany();
-
-			// console.log("user: ", users)
-
 
 		const queryBuilderTotalCount =
 			this.userRepository.createQueryBuilder('user');
@@ -135,13 +130,8 @@ export class UsersQueryRepository {
 		let user: User | null = await this.userRepository
 			.createQueryBuilder("user")
 			.select("user")
-			//.leftJoinAndSelect("device", "d")
 			.where("user.id = :id", { id })
-			// .andWhere("d.")
 			.getOne()
-
-		// const sqlRequest = user.getSql()
-		// await writeSql(sqlRequest)
 
 		return user;
 	}
