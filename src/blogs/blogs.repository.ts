@@ -7,6 +7,7 @@ import { Metadata } from "sharp";
 import { Wallpaper } from "./entity/wallpaper.entity";
 import { Main } from "./entity/main.entity";
 import { Subscribe } from "./entity/subscribe.entity";
+import { SubscribeEnum } from "./enum/subscribeEnum";
 
 @Injectable()
 export class BlogsRepository {
@@ -255,11 +256,11 @@ async getMain(id: string): Promise<Main> {
 			return true
 	}
 
-	async findIsSubscibe(userId: string, blogId: string) {
+	async findIsSubscibe(userId: string, blogId: string): Promise<Subscribe[]> {
 		const findSubscibe = await this.subscribeRepository
 			.createQueryBuilder()
-			.where(`"blogId" = :blogId AND "userId" = :userId`, {userId, blogId})
-			.getOne()
+			.where(`"blogId" = :blogId AND "currentUserSubscriptionStatus" = :subscribe`, {blogId, subscribe: SubscribeEnum.Subscribed})
+			.getMany()
 			
 			return findSubscibe
 	}

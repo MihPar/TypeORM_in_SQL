@@ -1,9 +1,7 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { TelegramAdapter } from "../adapter/telegram.adapter";
-import { TelegramUpdateMessage } from "../types";
-import { CommandBus, QueryBus } from "@nestjs/cqrs";
+import { CommandBus } from "@nestjs/cqrs";
 import { HandleTelegramCommand } from "../use-case/commandBus/handleTelegram.use-case";
-import { GetAuthBotLinkQuery } from "../use-case/queryBus/getAuthBotLink-use-case";
 import {v4 as uuidv4} from "uuid"
 import { CreateCodeCommand } from "../use-case/commandBus/createCode.use-case";
 import { BearerTokenPairQuizGame } from "../../pairQuizGame/guards/bearerTokenPairQuizGame";
@@ -43,7 +41,7 @@ export class TelegramController {
 		//set code to user
 		// Entity Telegram (@ManyToOne) to User
 		const code = uuidv4();
-		console.log("code 46: ", code)
+		// console.log("code 46: ", code)
 		const command = new CreateCodeCommand(code, userId)
 		await this.commandBus.execute<CreateCodeCommand, void>(command)
 		return {

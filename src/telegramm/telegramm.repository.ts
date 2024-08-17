@@ -22,4 +22,9 @@ export class TelegrammRepository {
 		const teg = await this.telegrammRepository.createQueryBuilder().getMany()
 		return teg
 	}
+
+	async deleteAllTelegramm() {
+		await this.telegrammRepository.createQueryBuilder().delete().execute()
+		return true
+	}
 }

@@ -4,7 +4,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { TelegramAdapter } from './adapter/telegram.adapter';
 import { TelegramController } from './api/telegramm.controler';
 import { HandleTelegramUseCase } from './use-case/commandBus/handleTelegram.use-case';
-import { HowManyTimeUseCase } from './use-case/commandBus/howManyTime.use-case';
+// import { HowManyTimeUseCase } from './use-case/commandBus/howManyTime.use-case';
 import { GetAuthBotLinkUseCase } from './use-case/queryBus/getAuthBotLink-use-case';
 import { CreateCodeUseCase } from './use-case/commandBus/createCode.use-case';
 import { Telegramm } from './entity/telegram.entity';
@@ -20,9 +20,10 @@ import { UsersRepository } from '../users/users.repository';
 import { BearerTokenPairQuizGame } from '../pairQuizGame/guards/bearerTokenPairQuizGame';
 import { TelegrammRepository } from './telegramm.repository';
 import { Subscribe } from '../blogs/entity/subscribe.entity';
+import { DeleteAllTelegrammUseCase } from './use-case/commandBus/deleteAllTelergramm.use-case';
 
 
-const commandUserCase = [HandleTelegramUseCase, HowManyTimeUseCase, CreateCodeUseCase];
+const commandUserCase = [HandleTelegramUseCase, CreateCodeUseCase, DeleteAllTelegrammUseCase];
 const queryUseCase = [GetAuthBotLinkUseCase]
 
 const repo = [UsersQueryRepository, BlogsRepository, UsersRepository, TelegrammRepository];

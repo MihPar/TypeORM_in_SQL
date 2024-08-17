@@ -14,8 +14,13 @@ export class TelegramAdapter {
 		})
 	}
 
-	async sendMessage(text: string, id: number) {
-		await this.axiosInstanse.post(`sendMessage`, {text, chat_id: id})
+	async sendMessage(text: string, id: string) {
+		try {
+			await this.axiosInstanse.post(`sendMessage`, {text, chat_id: +id})
+		} catch(error) {
+			console.log('error: ', error)
+		}
+		
 	}
 
 	async setWebhook (url: string) {

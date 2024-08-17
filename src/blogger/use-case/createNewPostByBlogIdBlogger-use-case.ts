@@ -1,4 +1,4 @@
-import { NotFoundException, Post } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { PostsRepository } from './../../posts/posts.repository';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostsViewModel } from '../../posts/posts.type';
@@ -49,17 +49,18 @@ export class CreateNewPostForBlogBloggerUseCase
 	const findNewestLike: any = await this.postsRepository.findNewestLike(createPost.id)
 	// const getMainByPostId = await this.blogsRepository.getImageMainByPostId(createPost.id)
 
-	const isSubscribe = this.blogsRepository.findIsSubscibe(command.userId, createPost.blogId)
-	if(!isSubscribe) throw new NotFoundException([
-		{message: "Subscribe do not found"}
-	])
-	const findTegIdByUserId = await this.usersQueryRepository.findUserById(command.userId)
-	if(!findTegIdByUserId) throw new NotFoundException([
-		{message: "User do not found"}
-	])
+	const subscribeArr = await this.blogsRepository.findIsSubscibe(command.userId, createPost.blogId)
+		// console.log("userId: ", command.userId)
+		// console.log("getUserById: ", getUserById)
 	//отправить ссообщение в телеграм юзерам которые подписаны на этот блог "sendMessage"
 	const text = `'New post published for blog ${createPost.blogName}'`
-	const sendMessage = await this.telegramAdapter.sendMessage(text, Number(findTegIdByUserId.tegId))
+	// const text1 = "/start 123"
+	
+	for(let i = 0; i < subscribeArr.length; i++) {
+		const userId = subscribeArr[i].userId
+		const getUserById = await this.usersQueryRepository.findUserById(userId)
+		await this.telegramAdapter.sendMessage(text, getUserById.tegId)
+	}
 	return Posts.getPostsViewModelForSA(createPost, findNewestLike)
   }
 }

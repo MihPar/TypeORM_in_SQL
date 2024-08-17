@@ -17,6 +17,7 @@ import { DeleteUserBloggerCommand } from '../blogger/use-case/deleteUserBlogger-
 import { DeleteAllWallpaperCommand } from '../blogs/use-case/deleteAllWallpaper-use-case';
 import { DeleteAllMainCommand } from '../blogs/use-case/deleteAllMain-use-case copy';
 import { DeleteSubscribeCommand } from '../blogs/use-case/deleteAllSubscribe.use-case';
+import { DeleteAllTelegrammCommnad } from '../telegramm/use-case/commandBus/deleteAllTelergramm.use-case';
 
 // @UseGuards(ThrottlerGuard)
 @Controller('testing/all-data')
@@ -40,6 +41,7 @@ export class TestingController {
     await this.commandBus.execute(new DeleteAllCommentLikesCommand());
     await this.commandBus.execute(new DeleteAllPostLikesCommand());
     await this.commandBus.execute(new DeleteAllCommentsCommand());
+	await this.commandBus.execute(new DeleteAllTelegrammCommnad())
     await this.commandBus.execute(new DeleteAllPostsComand());
 	await this.commandBus.execute(new DeleteSubscribeCommand())
     await this.commandBus.execute(new DeleteAllBlogsCommnad());
