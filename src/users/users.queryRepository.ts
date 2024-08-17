@@ -1,9 +1,8 @@
-import { BandBlogCommand } from './../blogsForSA/use-case/updateBlogByBindWithUser-use-case';
 import "reflect-metadata"
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserBanViewType, UserViewType } from './user.type';
+import { UserBanViewType } from './user.type';
 import { PaginationType } from "../types/pagination.types";
 import { User } from "./entities/user.entity";
 import { Blogs } from "../blogs/entity/blogs.entity";
