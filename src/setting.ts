@@ -1,7 +1,12 @@
 import cookieParser from 'cookie-parser';
-import { BadRequestException, INestApplication, ValidationError, ValidationPipe } from "@nestjs/common";
-import { useContainer } from "class-validator";
-import { AppModule } from "./app.module";
+import {
+  BadRequestException,
+  INestApplication,
+  ValidationError,
+  ValidationPipe,
+} from '@nestjs/common';
+import { useContainer } from 'class-validator';
+import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './exeption/exceptionFilter';
 
 export const appSettings = (app: INestApplication): void => {
@@ -28,9 +33,9 @@ export const appSettings = (app: INestApplication): void => {
       },
     }),
   );
-  	app.useGlobalFilters(new HttpExceptionFilter());
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
-    app.enableCors()
-    app.use(cookieParser())
-	app.init()
-}
+  app.useGlobalFilters(new HttpExceptionFilter());
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.enableCors();
+  app.use(cookieParser());
+  app.init();
+};
