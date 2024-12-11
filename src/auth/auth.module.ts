@@ -1,4 +1,4 @@
-import { Module, UseGuards } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CheckRefreshTokenFor } from './useCase.ts/bearer.authForComments';
 import { LogoutUseCase } from '../security-devices/useCase/logout-use-case';
 import { RegistrationEmailResendingUseCase } from '../users/useCase/registrationEmailResending-use-case';
@@ -20,7 +20,7 @@ import { UsersRepository } from '../users/users.repository';
 import { GenerateHashAdapter } from './adapter/generateHashAdapter';
 import { JwtService } from '@nestjs/jwt';
 import { DeviceQueryRepository } from '../security-devices/security-deviceQuery.repository';
-import { CommandBus, CqrsModule } from '@nestjs/cqrs';
+import { CqrsModule } from '@nestjs/cqrs';
 import { AuthRepository } from './auth.repository';
 import { CheckLoginOrEmail } from './guards/checkEmailOrLogin';
 import { Device } from '../security-devices/entities/security-device.entity';
@@ -42,7 +42,7 @@ const guards = [
   CheckRefreshTokenFor,
   CheckRefreshToken,
   IsExistEmailUser,
-  CheckLoginOrEmail
+  CheckLoginOrEmail,
 ];
 
 const useCase = [
@@ -72,10 +72,20 @@ const repo = [
 const manager = [EmailManager];
 
 const service = [JwtService, ApiJwtService, ApiConfigService];
-const validator = [CustomLoginvalidation, CustomEmailvalidation]
+const validator = [CustomLoginvalidation, CustomEmailvalidation];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Device, User, Blogs, UserBlogger, Wallpaper, Main]), CqrsModule],
+  imports: [
+    TypeOrmModule.forFeature([
+      Device,
+      User,
+      Blogs,
+      UserBlogger,
+      Wallpaper,
+      Main,
+    ]),
+    CqrsModule,
+  ],
   controllers: [AuthController],
   providers: [
     ...useCase,
@@ -84,7 +94,7 @@ const validator = [CustomLoginvalidation, CustomEmailvalidation]
     ...repo,
     ...manager,
     ...service,
-	...validator
+    ...validator,
   ],
 })
 export class AuthModule {}
