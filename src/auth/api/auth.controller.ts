@@ -60,7 +60,7 @@ export class AuthController {
   @Post('password-recovery')
   async createPasswordRecovery(@Body() emailInputData: emailInputDataClass) {
     const command = new RecoveryPasswordCommand(emailInputData.email);
-    const passwordRecovery = await this.commandBus.execute(command);
+    await this.commandBus.execute(command);
   }
 
   @HttpCode(204)
@@ -183,7 +183,7 @@ export class AuthController {
   @Get('me')
   // @SkipThrottle({default: true})
   @UseGuards(CheckRefreshTokenFor)
-  async findMe(@Req() req: Request, @UserDecorator() user: User) {
+  async findMe(@Req() req: Request) {
     if (!req.headers.authorization)
       throw new UnauthorizedException('Not authorization 401');
     const command = new GetUserIdByTokenCommand(req);

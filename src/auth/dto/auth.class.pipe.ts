@@ -1,75 +1,82 @@
-import { applyDecorators } from "@nestjs/common"
-import { Transform, TransformFnParams } from "class-transformer"
-import { IsEmail, IsNotEmpty, IsString, IsUUID, MaxLength, MinLength, Validate } from "class-validator"
-import { CustomLoginvalidation } from "../adapter/customLoginValidator"
-import { CustomEmailvalidation } from "../adapter/customEmailValidatro"
-import { CustomCodeValidation } from "../adapter/custormCodeValidation"
+import { applyDecorators } from '@nestjs/common';
+import { Transform, TransformFnParams } from 'class-transformer';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  MaxLength,
+  MinLength,
+  Validate,
+} from 'class-validator';
+import { CustomLoginvalidation } from '../adapter/customLoginValidator';
+import { CustomEmailvalidation } from '../adapter/customEmailValidatro';
 
-// const UUID_VERSION = '4' 
+// const UUID_VERSION = '4'
 // const UUID = () => IsUUID(UUID_VERSION)
 
 export class InputDataModelClassAuth {
-	@IsString()
-	loginOrEmail: string
-	@IsString()
-  	password: string
+  @IsString()
+  loginOrEmail: string;
+  @IsString()
+  password: string;
 }
 
-const Trim = () => Transform(({value}: TransformFnParams) => value?.trim())
+const Trim = () => Transform(({ value }: TransformFnParams) => value?.trim());
 
 function RequiredString() {
-	return applyDecorators(IsString(), Trim(), IsNotEmpty())
+  return applyDecorators(IsString(), Trim(), IsNotEmpty());
 }
 
 export class emailInputDataClass {
-	@RequiredString()
-	@IsEmail()
-	email: string
+  @RequiredString()
+  @IsEmail()
+  email: string;
 }
 
 export class InputModelNewPasswordClass {
-	@IsString()
-	@Trim() 
-	@MinLength(6)
-	@MaxLength(20)
-	newPassword: string
+  @IsString()
+  @Trim()
+  @MinLength(6)
+  @MaxLength(20)
+  newPassword: string;
 
-	@IsString()
-	@Trim() 
-	@IsNotEmpty()
-	recoveryCode: string
+  @IsString()
+  @Trim()
+  @IsNotEmpty()
+  recoveryCode: string;
 }
 
 export class InputDateReqConfirmClass {
-	@IsString()
-	@Trim()
-	@IsUUID()
-	// @ApiProperty()
-	// @Validate(CustomCodeValidation)
-	code: string
+  @IsString()
+  @Trim()
+  @IsUUID()
+  // @ApiProperty()
+  // @Validate(CustomCodeValidation)
+  code: string;
 }
 
 export class InputDataReqClass {
-	@IsString()
-	@Trim() 
-	@IsNotEmpty()
-	@MinLength(3)
-	@MaxLength(10)
-	@Validate(CustomLoginvalidation)
-	login: string
-	
-	@IsString()
-	@Trim() 
-	@IsNotEmpty()
-	@MinLength(6)
-	@MaxLength(20)
-	password: string
+  @IsString()
+  @Trim()
+  @IsNotEmpty()
+  @MinLength(3)
+  @MaxLength(10)
+  @Validate(CustomLoginvalidation)
+  login: string;
 
-	@IsEmail()
-	@IsString()
-	@Trim() 
-	@IsNotEmpty()
-	@IsEmail()
-	@Validate(CustomEmailvalidation)
-	email: string
+  @IsString()
+  @Trim()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(20)
+  password: string;
+
+  @IsEmail()
+  @IsString()
+  @Trim()
+  @IsNotEmpty()
+  @IsEmail()
+  @Validate(CustomEmailvalidation)
+  email: string;
 }
