@@ -24,36 +24,37 @@ import { TelegrammModule } from './telegramm/telegramm.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ".env",
-	  load: [databaseConf]
+      envFilePath: '.env',
+      load: [databaseConf],
     }),
-	// ThrottlerModule.forRoot([{
-	// 	ttl: 10000,
-	// 	limit: 5,
-	//   }]),
-	TypeOrmModule.forRootAsync({
-		useFactory(config: ConfigService<DatabaseConfig>) {
-			return {...config.get('database', {infer: true}), synchronize: true}
-		},
-		inject: [
-			ConfigService,
-		]
-	}),
-	SecurityDevicesModule,
-	AuthModule,
-	DeletedModule,
-	UsersModule,
-	PostsModule,
-	BlogsModule,
-	LikeForPostModule,
-	LikeForCommentModue,
-	BlogsForSAModule,
-	CommentsModule,
-	QuestionModule,
-	PairQuizGameModule,
-	PairQuizGameProgressModule,
-	BloggerModule,
-	TelegrammModule
-  ]
+    // ThrottlerModule.forRoot([{
+    // 	ttl: 10000,
+    // 	limit: 5,
+    //   }]),
+    TypeOrmModule.forRootAsync({
+      useFactory(config: ConfigService<DatabaseConfig>) {
+        return {
+          ...config.get('database', { infer: true }),
+          synchronize: true,
+        };
+      },
+      inject: [ConfigService],
+    }),
+    SecurityDevicesModule,
+    AuthModule,
+    DeletedModule,
+    UsersModule,
+    PostsModule,
+    BlogsModule,
+    LikeForPostModule,
+    LikeForCommentModue,
+    BlogsForSAModule,
+    CommentsModule,
+    QuestionModule,
+    PairQuizGameModule,
+    PairQuizGameProgressModule,
+    BloggerModule,
+    TelegrammModule,
+  ],
 })
 export class AppModule {}

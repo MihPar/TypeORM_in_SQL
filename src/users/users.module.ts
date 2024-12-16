@@ -44,7 +44,7 @@ const userCase = [
   RegistrationEmailResendingUseCase,
   BanUnbanUserUseCase,
   GetAllUsersUseCase,
-  GetBannedUsersUseCase
+  GetBannedUsersUseCase,
 ];
 
 const repo = [
@@ -63,7 +63,22 @@ const manager = [EmailManager];
 const service = [JwtService];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Device, Blogs, Posts, Comments, LikeForComment, LikeForPost, UserBlogger, Wallpaper, Main, Subscribe]), CqrsModule],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Device,
+      Blogs,
+      Posts,
+      Comments,
+      LikeForComment,
+      LikeForPost,
+      UserBlogger,
+      Wallpaper,
+      Main,
+      Subscribe,
+    ]),
+    CqrsModule,
+  ],
   controllers: [UsersController],
   providers: [...userCase, ...repo, ...adapter, ...manager, ...service],
 })
