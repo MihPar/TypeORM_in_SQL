@@ -13,11 +13,18 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PaginationType } from '../types/pagination.types';
-import { InputModelClassId, InputModelClassPostId, InputModelContentePostClass } from './dto/posts.class.pipe';
+import {
+  InputModelClassId,
+  InputModelClassPostId,
+  InputModelContentePostClass,
+} from './dto/posts.class.pipe';
 import { PostsQueryRepository } from './postQuery.repository';
 import { BlogsQueryRepository } from '../blogs/blogs.queryReposity';
 import { CommandBus } from '@nestjs/cqrs';
-import { UserDecorator, UserIdDecorator } from '../users/infrastructure/decorators/decorator.user';
+import {
+  UserDecorator,
+  UserIdDecorator,
+} from '../users/infrastructure/decorators/decorator.user';
 import { CheckRefreshTokenForPost } from './guards/bearer.authForPost';
 import { CheckRefreshTokenForGetLike } from './guards/bearer.authGetComment';
 import { PostsViewModel } from './posts.type';
@@ -37,32 +44,37 @@ export class PostController {
   constructor(
     protected postsQueryRepository: PostsQueryRepository,
     protected blogsQueryRepository: BlogsQueryRepository,
-	protected commentQueryRepository: CommentQueryRepository,
-	protected postsRepository: PostsRepository,
-	protected usersRepository: UsersRepository,
-	protected commandBus: CommandBus
+    protected commentQueryRepository: CommentQueryRepository,
+    protected postsRepository: PostsRepository,
+    protected usersRepository: UsersRepository,
+    protected commandBus: CommandBus,
   ) {}
 
   @Put(':postId/like-status')
   @HttpCode(204)
   @UseGuards(CheckRefreshTokenForPost)
   async updateLikeStatus(
-	@Param() Dto: InputModelClassPostId, 
-	@Body() status: InputModelLikeStatusClass,
-	@UserDecorator() user: User,
+    @Param() Dto: InputModelClassPostId,
+    @Body() status: InputModelLikeStatusClass,
+    @UserDecorator() user: User,
     @UserIdDecorator() userId: string | null,
-	) {
-	const commnad = new UpdateLikeStatusCommand(status, Dto.postId, userId, user)
-	const result = await this.commandBus.execute(commnad)
-    if (!result) throw new NotFoundException('404')
-	return
+  ) {
+    const commnad = new UpdateLikeStatusCommand(
+      status,
+      Dto.postId,
+      userId,
+      user,
+    );
+    const result = await this.commandBus.execute(commnad);
+    if (!result) throw new NotFoundException('404');
+    return;
   }
 
   @Get(':postId/comments')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGetLike)
   async getCommentByPostId(
-    @Param() Dto: InputModelClassPostId, 
+    @Param() Dto: InputModelClassPostId,
     @UserIdDecorator() userId: string | null,
     @UserDecorator() user: User,
     @Query()
@@ -71,20 +83,22 @@ export class PostController {
       pageSize: string;
       sortBy: string;
       sortDirection: string;
-    }
+    },
   ) {
-    const isExistPots: PostsViewModel | boolean= await this.postsQueryRepository.getPostById(Dto.postId);
+    const isExistPots: PostsViewModel | boolean =
+      await this.postsQueryRepository.getPostById(Dto.postId);
     if (!isExistPots) throw new NotFoundException('Blogs by id not found');
     const commentByPostsId: PaginationType<CommentViewModel> | null =
       await this.commentQueryRepository.findCommentsByPostId(
         Dto.postId,
-        (query.pageNumber || '1'),
-        (query.pageSize || '10'),
-        (query.sortBy || 'createdAt'),
-        (query.sortDirection || 'desc'),
+        query.pageNumber || '1',
+        query.pageSize || '10',
+        query.sortBy || 'createdAt',
+        query.sortDirection || 'desc',
         userId,
       );
-    if (!commentByPostsId) throw new NotFoundException('Blogs by id not found 404');
+    if (!commentByPostsId)
+      throw new NotFoundException('Blogs by id not found 404');
     return commentByPostsId;
   }
 
@@ -92,18 +106,31 @@ export class PostController {
   @HttpCode(201)
   @UseGuards(CheckRefreshTokenForPost)
   async createNewCommentByPostId(
-	@Param('postId', ParseUUIDPipe) postId: string, 
-	@Body() inputModelContent: InputModelContentePostClass,
-  	@UserDecorator() user: User,
-	@UserIdDecorator() userId: string | null
-	) {
-    const post: Posts | boolean = await this.postsQueryRepository.findPostById(postId)
-    if (!post) throw new NotFoundException('Post by id not found 404')
-	const banByBlogger = await this.usersRepository.getBloggerBan(post.blogId, userId)
-	if(banByBlogger) throw new ForbiddenException("You are banned for the blog of this user. Comment creation forbidden")
-	const command = new CreateNewCommentByPostIdCommnad(postId, inputModelContent, user)
-	const createNewCommentByPostId: CommentViewModel | null = await this.commandBus.execute(command)
-	return createNewCommentByPostId
+    @Param('postId', ParseUUIDPipe) postId: string,
+    @Body() inputModelContent: InputModelContentePostClass,
+    @UserDecorator() user: User,
+    @UserIdDecorator() userId: string | null,
+  ) {
+    const post: Posts | boolean = await this.postsQueryRepository.findPostById(
+      postId,
+    );
+    if (!post) throw new NotFoundException('Post by id not found 404');
+    const banByBlogger = await this.usersRepository.getBloggerBan(
+      post.blogId,
+      userId,
+    );
+    if (banByBlogger)
+      throw new ForbiddenException(
+        'You are banned for the blog of this user. Comment creation forbidden',
+      );
+    const command = new CreateNewCommentByPostIdCommnad(
+      postId,
+      inputModelContent,
+      user,
+    );
+    const createNewCommentByPostId: CommentViewModel | null =
+      await this.commandBus.execute(command);
+    return createNewCommentByPostId;
   }
 
   @Get()
@@ -121,22 +148,21 @@ export class PostController {
   ) {
     const getAllPosts: PaginationType<PostsViewModel> =
       await this.postsQueryRepository.findAllPosts(
-        (query.pageNumber || '1'),
-        (query.pageSize || '10'),
-        (query.sortBy || 'createdAt'),
-        (query.sortDirection || 'desc'),
+        query.pageNumber || '1',
+        query.pageSize || '10',
+        query.sortBy || 'createdAt',
+        query.sortDirection || 'desc',
         userId,
       );
     return getAllPosts;
   }
 
-
   @Get(':id')
   @HttpCode(200)
   @UseGuards(CheckRefreshTokenForGetLike)
   async getPostById(
-    @Param('id', ParseUUIDPipe) id: string, 
-	@UserIdDecorator() userId: string | null,
+    @Param('id', ParseUUIDPipe) id: string,
+    @UserIdDecorator() userId: string | null,
   ) {
     const getPostById: PostsViewModel | null =
       await this.postsQueryRepository.findPostsById(id, userId);
