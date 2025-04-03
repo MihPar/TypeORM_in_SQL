@@ -1,171 +1,190 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Posts } from "../../posts/entity/entity.posts";
-import { BlogsViewType, BlogsViewWithBanType } from "../blogs.type";
-import { User } from "../../users/entities/user.entity";
-import { UserBlogger } from "../../blogger/entity/entity.userBlogger";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Posts } from '../../posts/entity/entity.posts';
+import { BlogsViewType, BlogsViewWithBanType } from '../blogs.type';
+import { User } from '../../users/entities/user.entity';
+import { UserBlogger } from '../../blogger/entity/entity.userBlogger';
 import { Wallpaper } from './wallpaper.entity';
-import { Main } from "./main.entity";
-import { Subscribe } from "./subscribe.entity";
-import { SubscribeEnum } from "../enum/subscribeEnum";
+import { Main } from './main.entity';
+import { Subscribe } from './subscribe.entity';
+import { SubscribeEnum } from '../enum/subscribeEnum';
 
 @Entity()
 export class Blogs {
-	@PrimaryGeneratedColumn("uuid")
-	id: string
-	
-	@Column()
-	name: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-	@Column()
-	description: string
+  @Column()
+  name: string;
 
-	@Column()
-	websiteUrl: string
+  @Column()
+  description: string;
 
-	@CreateDateColumn()
-	createdAt: Date
+  @Column()
+  websiteUrl: string;
 
-	@Column()
-	isMembership: boolean
+  @CreateDateColumn()
+  createdAt: Date;
 
-	@ManyToOne(() => User, u => u.blog)
-	user: User
+  @Column()
+  isMembership: boolean;
 
-	@Column({nullable: true})
-	userId: string
+  @ManyToOne(() => User, (u) => u.blog)
+  user: User;
 
-	// @Column()
-	// bloggerId: string
+  @Column({ nullable: true })
+  userId: string;
 
-	@Column({ default: false })
-	isBanned: boolean
+  // @Column()
+  // bloggerId: string
 
-	@Column({default: null})
-	banDate: string
+  @Column({ default: false })
+  isBanned: boolean;
 
-	@Column({default: null})
-	banReason: string
+  @Column({ default: null })
+  banDate: string;
 
-	@OneToMany(() => Posts, p => p.blog)
-	post: Posts[]
+  @Column({ default: null })
+  banReason: string;
 
-	@Column({nullable: true})
-	postId: string
+  @OneToMany(() => Posts, (p) => p.blog)
+  post: Posts[];
 
-	@OneToMany(() => UserBlogger, b => b.blog)
-	userBlogger: UserBlogger
+  @Column({ nullable: true })
+  postId: string;
 
-	@OneToMany(() => Wallpaper, i => i.blog)
-	wallpaper: Wallpaper[]
+  @OneToMany(() => UserBlogger, (b) => b.blog)
+  userBlogger: UserBlogger;
 
-	@Column({nullable: true})
-	wallpaperId: string
+  @OneToMany(() => Wallpaper, (i) => i.blog)
+  wallpaper: Wallpaper[];
 
-	@OneToMany(() => Main, i => i.blog)
-	main: Main[]
+  @Column({ nullable: true })
+  wallpaperId: string;
 
-	@Column({nullable: true})
-	mainId: string
+  @OneToMany(() => Main, (i) => i.blog)
+  main: Main[];
 
-	@OneToMany(() => Subscribe, s => s.blog)
-	subscribe: Subscribe[]
+  @Column({ nullable: true })
+  mainId: string;
 
-	// @Column({nullable: true})
-	// subscribeId: string
+  @OneToMany(() => Subscribe, (s) => s.blog)
+  subscribe: Subscribe[];
 
+  // @Column({nullable: true})
+  // subscribeId: string
 
-	static createNewBlogForSA(inputBlog: Blogs) {
-		return {
-			id: inputBlog.id,
-			name: inputBlog.name,
-			description: inputBlog.description,
-			websiteUrl: inputBlog.websiteUrl,
-			createdAt: inputBlog.createdAt,
-			isMembership: inputBlog.isMembership,
-			images: {
-				wallpaper: null,
-				main: [
-					{
-						url: null,
-						width: 0,
-						height: 0,
-						fileSize: 0
-					}
-				]
-			},
-			currentUserSubscriptionStatus: SubscribeEnum.None,
-			subscribersCount: 0
-		}
-	}
+  static createNewBlogForSA(inputBlog: Blogs) {
+    return {
+      id: inputBlog.id,
+      name: inputBlog.name,
+      description: inputBlog.description,
+      websiteUrl: inputBlog.websiteUrl,
+      createdAt: inputBlog.createdAt,
+      isMembership: inputBlog.isMembership,
+      images: {
+        wallpaper: null,
+        main: [
+          {
+            url: null,
+            width: 0,
+            height: 0,
+            fileSize: 0,
+          },
+        ],
+      },
+      currentUserSubscriptionStatus: SubscribeEnum.None,
+      subscribersCount: 0,
+    };
+  }
 
-	static getBlog(blog: Blogs, subscribe?: Subscribe, wallpaper?: Wallpaper, main?: Main[], count?: number) {
-		return {
-			id: blog.id,
-			name: blog.name,
-			description: blog.description,
-			websiteUrl: blog.websiteUrl,
-			createdAt: blog.createdAt,
-			isMembership: blog.isMembership,
-			images: { 
-				wallpaper: wallpaper ? (() => (
-					{
-						url: wallpaper?.url,
-						width: wallpaper?.width,
-						height: wallpaper?.height,
-						fileSize: wallpaper?.fileSize
-					})) : null,
-				main:
-				 main.length ? main.map(m => ({
-						url: m?.url,
-						width: m?.width,
-						height: m?.height,
-						fileSize: m?.fileSize
-				})) : [{url: null, width: 0, height: 0, fileSize: 0}]
-			},
-			currentUserSubscriptionStatus: subscribe ? subscribe.currentUserSubscriptionStatus : SubscribeEnum.None,
-			subscribersCount: count || 0 
-		}
-	}
+  static getBlog(
+    blog: Blogs,
+    subscribe?: Subscribe,
+    wallpaper?: Wallpaper,
+    main?: Main[],
+    count?: number,
+  ) {
+    return {
+      id: blog.id,
+      name: blog.name,
+      description: blog.description,
+      websiteUrl: blog.websiteUrl,
+      createdAt: blog.createdAt,
+      isMembership: blog.isMembership,
+      images: {
+        wallpaper: wallpaper
+          ? () => ({
+              url: wallpaper?.url,
+              width: wallpaper?.width,
+              height: wallpaper?.height,
+              fileSize: wallpaper?.fileSize,
+            })
+          : null,
+        main: main.length
+          ? main.map((m) => ({
+              url: m?.url,
+              width: m?.width,
+              height: m?.height,
+              fileSize: m?.fileSize,
+            }))
+          : [{ url: null, width: 0, height: 0, fileSize: 0 }],
+      },
+      currentUserSubscriptionStatus: subscribe
+        ? subscribe.currentUserSubscriptionStatus
+        : SubscribeEnum.None,
+      subscribersCount: count || 0,
+    };
+  }
 
-	static findBlogForSAWithInfoBan(inputBlog: Blogs, user: User): BlogsViewWithBanType {
-		return {
-			id: inputBlog.id,
-			name: inputBlog.name,
-			description: inputBlog.description,
-			websiteUrl: inputBlog.websiteUrl,
-			createdAt: inputBlog.createdAt,
-			isMembership: inputBlog.isMembership,
-			blogOwnerInfo: {
-				userId: user!.id,
-				userLogin: user!.login,
-			  },
-			  banInfo: {
-				isBanned: inputBlog.isBanned,
-				banDate: inputBlog.banDate,
-			  },
-		}
-	}
+  static findBlogForSAWithInfoBan(
+    inputBlog: Blogs,
+    user: User,
+  ): BlogsViewWithBanType {
+    return {
+      id: inputBlog.id,
+      name: inputBlog.name,
+      description: inputBlog.description,
+      websiteUrl: inputBlog.websiteUrl,
+      createdAt: inputBlog.createdAt,
+      isMembership: inputBlog.isMembership,
+      blogOwnerInfo: {
+        userId: user!.id,
+        userLogin: user!.login,
+      },
+      banInfo: {
+        isBanned: inputBlog.isBanned,
+        banDate: inputBlog.banDate,
+      },
+    };
+  }
 
-	static getBlogViewModel(item ): BlogsViewType {
-			return {
-				id: item.id,
-				name: item.name,
-				description: item.description,
-				websiteUrl: item.websiteUrl,
-				createdAt: item.createdAt,
-				isMembership: item.isMembership
-			}
-	}
+  static getBlogViewModel(item): BlogsViewType {
+    return {
+      id: item.id,
+      name: item.name,
+      description: item.description,
+      websiteUrl: item.websiteUrl,
+      createdAt: item.createdAt,
+      isMembership: item.isMembership,
+    };
+  }
 
-	static getBlogsViewModel(inputBlog: Blogs) {
-		return {
-			id: inputBlog.id,
-			name: inputBlog.name,
-			description: inputBlog.description,
-			websiteUrl: inputBlog.websiteUrl,
-			createdAt: inputBlog.createdAt,
-			isMembership: inputBlog.isMembership,
-			userId: inputBlog.userId
-		}
-	}
+  static getBlogsViewModel(inputBlog: Blogs) {
+    return {
+      id: inputBlog.id,
+      name: inputBlog.name,
+      description: inputBlog.description,
+      websiteUrl: inputBlog.websiteUrl,
+      createdAt: inputBlog.createdAt,
+      isMembership: inputBlog.isMembership,
+      userId: inputBlog.userId,
+    };
+  }
 }
