@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common';
 import { PaginationType } from '../types/pagination.types';
 import {
-  InputModelClassId,
   InputModelClassPostId,
   InputModelContentePostClass,
 } from './dto/posts.class.pipe';
