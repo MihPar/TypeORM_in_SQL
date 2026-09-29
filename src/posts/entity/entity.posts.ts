@@ -2,17 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { LikeForPost } from '../../likes/entity/likesForPost.entity';
 import { Blogs } from '../../blogs/entity/blogs.entity';
 import { LikeStatusEnum } from '../../likes/likes.emun';
 import { PostsViewModel } from '../posts.type';
-import { LikesType, NewestLikesType } from '../../likes/likes.type';
+import { NewestLikesType } from '../../likes/likes.type';
 import { bodyPostsModelClass } from '../dto/posts.class.pipe';
 import { User } from '../../users/entities/user.entity';
 import { Comments } from '../../comment/entity/comment.entity';
