@@ -1,5 +1,12 @@
 import { LikeForComment } from './../../likes/entity/likesForComment.entity';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserBanViewType, UserViewType } from '../user.type';
 import { Device } from '../../security-devices/entities/security-device.entity';
 import { LikeForPost } from '../../likes/entity/likesForPost.entity';
@@ -43,25 +50,25 @@ export class User {
   isConfirmed: boolean = false;
 
   @Column({ default: false })
-  isBanned: boolean
+  isBanned: boolean;
 
-  @Column({default: null})
-  banReason: string
+  @Column({ default: null })
+  banReason: string;
 
-  @Column({default: null})
-  banDate: string
+  @Column({ default: null })
+  banDate: string;
 
-  @Column({default: null})
-  tegId: string
+  @Column({ default: null })
+  tegId: string;
 
-  @Column({default: BanStatus.all})
-  banStatus: BanStatus
+  @Column({ default: BanStatus.all })
+  banStatus: BanStatus;
 
   @OneToMany(() => Blogs, (b) => b.user)
   blog: Blogs;
 
-  @Column({default: null})
-  blogId: string
+  @Column({ default: null })
+  blogId: string;
 
   @OneToMany(() => Posts, (p) => p.user)
   post: Posts;
@@ -84,33 +91,33 @@ export class User {
   @OneToMany(() => PairQuizGameProgressPlayer, (pqg) => pqg.user)
   progressPlayer: PairQuizGameProgressPlayer[];
 
-  @OneToMany(() => UserBlogger, u => u.user)
-  userBlogger: UserBlogger
+  @OneToMany(() => UserBlogger, (u) => u.user)
+  userBlogger: UserBlogger;
 
-  @OneToMany(() => Wallpaper, i => i.user)
-  wallpaper: Wallpaper[]
+  @OneToMany(() => Wallpaper, (i) => i.user)
+  wallpaper: Wallpaper[];
 
-  @Column({nullable: true})
-  wallpaperId: string
+  @Column({ nullable: true })
+  wallpaperId: string;
 
-  @OneToMany(() => Main, i => i.user)
-  main: Main[]
+  @OneToMany(() => Main, (i) => i.user)
+  main: Main[];
 
-  @Column({nullable: true})
-  mainId: string
+  @Column({ nullable: true })
+  mainId: string;
 
-  @OneToOne(() => Telegramm, t => t.user)
+  @OneToOne(() => Telegramm, (t) => t.user)
   @JoinColumn()
-  telegramm: Telegramm
+  telegramm: Telegramm;
 
-  @Column({nullable: true})
-  telegrammId: string
+  @Column({ nullable: true })
+  telegrammId: string;
 
-  @OneToMany(() => Subscribe, s => s.user)
-  subscribe: Subscribe[]
+  @OneToMany(() => Subscribe, (s) => s.user)
+  subscribe: Subscribe[];
 
-//   @Column({nullable: true})
-//   subscribeId: string
+  //   @Column({nullable: true})
+  //   subscribeId: string
 
   static getViewUser(user: User): UserBanViewType {
     return {
@@ -118,11 +125,11 @@ export class User {
       login: user.login,
       email: user.email,
       createdAt: user.createdAt,
-	  banInfo: {
-		isBanned: user.isBanned,
-		banDate: user.banDate,
-		banReason: user.banReason
-	  }
+      banInfo: {
+        isBanned: user.isBanned,
+        banDate: user.banDate,
+        banReason: user.banReason,
+      },
     };
   }
 }
